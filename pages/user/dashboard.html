@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>IPIM - User Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #003d33;
+      --green-mid: #006644;
+      --green: #00a859;
+      --green-light: #e8f5e9;
+      --green-pale: #f0faf5;
+      --gold: #f5c842;
+      --gold-light: #fffbee;
+      --white: #ffffff;
+      --gray-50: #f9f9f9;
+      --gray-100: #f0f0f0;
+      --gray-200: #d1ead8;
+      --gray-600: #666666;
+      --gray-800: #222222;
+      --red: #e53935;
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 18px;
+      --transition: all 0.3s ease;
+      --bottom-nav-height: 68px;
+      --header-max-height: 175px;
+      --header-min-height: 60px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--green-pale);
+      color: var(--gray-800);
+      padding-top: var(--header-max-height);
+      padding-bottom: var(--bottom-nav-height);
+      transition: padding-top 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.scrolled { padding-top: var(--header-min-height); }
+
+    /* ── HEADER ── */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 61, 51, 0.35);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      height: var(--header-max-height);
+    }
+    .app-header.scrolled { height: var(--header-min-height); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+    .header-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; height: 58px;
+    }
+    .header-logo { display: flex; align-items: center; gap: 9px; }
+    .logo-icon-wrap {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon-wrap i { font-size: 16px; color: var(--gold); }
+    .header-logo span { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 0.2px; }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white; font-size: 16px;
+      width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .icon-btn:active { background: rgba(255,255,255,0.25); }
+    .header-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-weight: 800; font-size: 14px;
+      cursor: pointer; border: 2px solid rgba(255,255,255,0.45);
+    }
+
+    .header-info {
+      padding: 2px 16px 14px;
+      transition: all 0.3s ease; opacity: 1; max-height: 120px;
+    }
+    .app-header.scrolled .header-info { opacity: 0; max-height: 0; padding: 0; }
+
+    .header-greeting h2 { font-size: 17px; font-weight: 700; line-height: 1.25; }
+    .header-greeting h2 span { color: var(--gold); }
+    .header-greeting p { font-size: 11px; opacity: 0.75; margin-top: 3px; }
+    .header-date {
+      display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap;
+    }
+    .date-pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px; padding: 4px 10px;
+      font-size: 10px; color: rgba(255,255,255,0.9);
+    }
+    .date-pill.hijri { background: rgba(245,200,66,0.18); border-color: rgba(245,200,66,0.35); color: #fde992; }
+
+    /* ── SHOLAT MINI (di header) ── */
+    .sholat-mini {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 12px; padding: 9px 12px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .sholat-mini:active { background: rgba(255,255,255,0.18); }
+    .sholat-mini-left { display: flex; align-items: center; gap: 8px; }
+    .sholat-mini-icon { font-size: 15px; color: var(--gold); }
+    .sholat-mini-name { font-size: 12px; font-weight: 700; }
+    .sholat-mini-time { font-size: 10.5px; opacity: 0.75; margin-left: 4px; }
+    .sholat-mini-right { font-size: 10px; opacity: 0.7; display: flex; align-items: center; gap: 4px; }
+
+    /* ── MENU SHORTCUT (quran & dzikir) ── */
+    .shortcut-row { display: flex; gap: 8px; }
+    .shortcut-item {
+      flex: 1; background: var(--white); border-radius: var(--radius-lg);
+      padding: 12px; border: 0.5px solid var(--gray-200);
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      transition: var(--transition);
+    }
+    .shortcut-item:active { background: var(--green-pale); }
+    .shortcut-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--green-light); color: var(--green-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .shortcut-icon.dzikir-icon { background: var(--gold-light); color: #a08000; }
+    .shortcut-text { flex: 1; min-width: 0; }
+    .shortcut-title { font-size: 12px; font-weight: 700; color: var(--gray-800); }
+    .shortcut-badge { font-size: 10px; color: var(--green-mid); font-weight: 600; margin-top: 1px; }
+    .shortcut-badge.dzikir-badge { color: #a08000; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: var(--bottom-nav-height);
+      background: var(--white);
+      border-top: 0.5px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bottom-nav .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      font-size: 10px; color: var(--gray-600); cursor: pointer;
+      text-decoration: none; padding: 8px 0;
+      transition: var(--transition); flex: 1;
+    }
+    .bottom-nav .nav-item i { font-size: 20px; }
+    .bottom-nav .nav-item.active { color: var(--green-mid); font-weight: 700; }
+
+    /* ── MAIN ── */
+    .main-content { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      border: 0.5px solid var(--gray-200);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .card-title {
+      font-size: 13px; font-weight: 700; color: var(--green-dark);
+      margin-bottom: 13px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .card-title i { font-size: 15px; color: var(--green); }
+
+    /* ── SHOLAT ── */
+    .sholat-progress { margin-bottom: 12px; }
+    .sholat-progress:last-of-type { margin-bottom: 0; }
+    .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 12px; }
+    .progress-label span:first-child { font-weight: 600; color: #333; }
+    .progress-label span:last-child { font-weight: 700; color: var(--green-mid); }
+    .progress-bar { width: 100%; height: 9px; background: var(--green-light); border-radius: 9px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 9px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+    .progress-fill.high { background: linear-gradient(90deg, #00a859, #00d46a); }
+    .progress-fill.mid  { background: linear-gradient(90deg, #f5a623, #f7c550); }
+    .progress-fill.low  { background: linear-gradient(90deg, #e53935, #ef5350); }
+    .progress-sub { font-size: 10px; color: var(--gray-600); margin-top: 3px; }
+
+    .absensi-btn {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      margin-top: 13px; padding: 11px;
+      background: linear-gradient(135deg, var(--green-mid), var(--green));
+      color: white; border-radius: var(--radius-sm);
+      text-decoration: none; font-size: 13px; font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0,166,89,0.3);
+      transition: var(--transition);
+    }
+    .absensi-btn:active { opacity: 0.88; transform: scale(0.99); }
+
+    /* ── STATS ── */
+    .quick-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-mini {
+      background: var(--green-pale);
+      border: 0.5px solid #c8e6d4;
+      border-radius: var(--radius-sm); padding: 13px; text-align: center;
+    }
+    .stat-mini .value { font-size: 22px; font-weight: 800; color: var(--green-dark); }
+    .stat-mini .label { font-size: 10px; color: var(--gray-600); margin-top: 3px; }
+
+    /* ── JADWAL ── */
+    .jadwal-list { display: flex; flex-direction: column; }
+    .jadwal-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--gray-100);
+    }
+    .jadwal-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .jadwal-time {
+      background: var(--green-light); color: var(--green-mid);
+      font-size: 10px; font-weight: 700;
+      border-radius: 7px; padding: 4px 8px;
+      white-space: nowrap;
+    }
+    .jadwal-info { flex: 1; }
+    .jadwal-mk { font-size: 12px; font-weight: 700; color: #222; }
+    .jadwal-kls { font-size: 10px; color: var(--gray-600); margin-top: 1px; }
+    .btn-absensi {
+      background: var(--green-mid); color: white;
+      border: none; padding: 6px 11px;
+      border-radius: 20px; font-size: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600; cursor: pointer;
+      white-space: nowrap; text-decoration: none;
+      transition: var(--transition);
+    }
+    .btn-absensi:active { opacity: 0.85; }
+
+    /* ── MOTIVASI ── */
+    .motivation-scroll {
+      display: flex; gap: 9px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+    .motivation-scroll::-webkit-scrollbar { display: none; }
+    .motivation-card {
+      min-width: 210px;
+      background: linear-gradient(135deg, #fffbee, #fff8e1);
+      border: 0.5px solid #f0d96a;
+      border-radius: var(--radius-sm); padding: 11px 13px;
+      flex-shrink: 0;
+    }
+    .motivation-card .quote { font-size: 11px; color: #7a6000; line-height: 1.6; font-style: italic; }
+    .motivation-card .src { font-size: 10px; color: #a08000; font-weight: 700; margin-top: 6px; }
+
+    @media (min-width: 768px) {
+      .main-content { max-width: 600px; margin: 0 auto; }
+      .quick-stats { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header" id="appHeader">
+    <div class="header-top">
+      <div class="header-logo">
+        <div class="logo-icon-wrap"><i class="fa-solid fa-graduation-cap"></i></div>
+        <span>IPIM Maghfirah</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="goTo('notifikasi.html')"><i class="fa-solid fa-bell"></i></button>
+        <div class="header-avatar" onclick="goTo('profil.html')" id="avatarText">U</div>
+      </div>
+    </div>
+    <div class="header-info">
+      <div class="header-greeting">
+        <h2>Assalamu'alaikum, <span id="greetingName">...</span> 👋</h2>
+        <p>Semoga aktivitas hari ini dimudahkan Alloh</p>
+      </div>
+      <div class="header-date">
+        <span class="date-pill" id="masehiDate">...</span>
+        <span class="date-pill hijri" id="hijriDate">...</span>
+      </div>
+      <div class="sholat-mini" onclick="goTo('sholat.html')" id="sholatMini">
+        <div class="sholat-mini-left">
+          <i class="fa-solid fa-mosque sholat-mini-icon"></i>
+          <span class="sholat-mini-name" id="sholatMiniName">Memuat...</span>
+          <span class="sholat-mini-time" id="sholatMiniTime"></span>
+        </div>
+        <div class="sholat-mini-right"><span id="sholatMiniCountdown"></span> <i class="fa-solid fa-chevron-right"></i></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- Shortcut Quran & Dzikir -->
+    <div class="shortcut-row">
+      <div class="shortcut-item" onclick="goTo('quran.html')">
+        <div class="shortcut-icon"><i class="fa-solid fa-book-quran"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title">Al-Qur'an</div>
+          <div class="shortcut-badge" id="tilawahBadge">Tilawahku: 0 hlm</div>
+        </div>
+      </div>
+      <div class="shortcut-item" onclick="goTo('dzikir.html')">
+        <div class="shortcut-icon dzikir-icon" id="dzikirIcon"><i class="fa-solid fa-sun"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title" id="dzikirTitle">Dzikir Pagi</div>
+          <div class="shortcut-badge dzikir-badge" id="dzikirBadge">0/0 selesai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rekap Sholat -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-mosque"></i> Rekap Sholat Berjamaah</div>
+      <div id="sholatProgressContainer">
+        <p style="text-align:center;color:var(--gray-600);font-size:13px;">Memuat data sholat...</p>
+      </div>
+      <a href="absensi.html" class="absensi-btn">
+        <i class="fa-solid fa-check-circle"></i> Isi Absensi Sholat Hari Ini
+      </a>
+    </div>
+
+    <!-- Ringkasan -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Ringkasan</div>
+      <div class="quick-stats" id="quickStats">
+        <p style="text-align:center;font-size:12px;color:var(--gray-600);">Memuat...</p>
+      </div>
+    </div>
+
+    <!-- Jadwal -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-calendar-day"></i> Jadwalku Hari Ini</div>
+      <div class="jadwal-list" id="jadwalList">
+        <p style="font-size:12px;color:var(--gray-600);">Memuat...</p>
+      </div>
+    </div>
+
+    <!-- Motivasi -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-comment-dots"></i> Motivasi</div>
+      <div class="motivation-scroll" id="motivationScroll">
+        <div class="motivation-card">
+          <div class="quote">"Ilmu tanpa amal bagaikan pohon tanpa buah."</div>
+          <div class="src">— Pepatah Ulama</div>
+        </div>
+        <div class="motivation-card">
+          <div class="quote">"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya."</div>
+          <div class="src">— HR. Bukhari</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    // SCROLL
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY > 10;
+      document.getElementById('appHeader').classList.toggle('scrolled', scrolled);
+      document.body.classList.toggle('scrolled', scrolled);
+    });
+
+    // INIT HEADER
+    (function initHeader() {
+      document.getElementById('avatarText').textContent = (user.nama || 'U')[0].toUpperCase();
+      document.getElementById('greetingName').textContent = user.nama || 'User';
+      const now = new Date();
+      document.getElementById('masehiDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+      document.getElementById('hijriDate').textContent = getHijri(now);
+    })();
+
+    function getHijri(d) {
+      try {
+        const f = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric'
+        });
+        const parts = f.formatToParts(d);
+        const get = t => parts.find(p => p.type === t)?.value;
+        const day = get('day');
+        const month = parseInt(get('month'));
+        const year = get('year');
+        const names = [
+          'Muharram','Safar','Rabiul Awal','Rabiul Akhir',
+          'Jumadil Awal','Jumadil Akhir','Rajab','Syaban',
+          'Ramadhan','Syawal','Dzulqaidah','Dzulhijjah'
+        ];
+        return day + ' ' + names[month - 1] + ' ' + year + ' H';
+      } catch(e) {
+        return '1 Muharram 1448 H';
+      }
+    }
+
+    // RINGKASAN
+    (async function renderQuickStats() {
+      const container = document.getElementById('quickStats');
+      try {
+        const [mhsSnap, usersSnap, halaqohSnap] = await Promise.all([
+          db.collection('mahasiswa').get(), db.collection('users').get(), db.collection('halaqoh').get()
+        ]);
+        let dosen = 0, musyrif = 0;
+        usersSnap.forEach(d => {
+          if (d.data().role === 'dosen' || d.data().role === 'dosen-musyrif') dosen++;
+          if (d.data().role === 'musyrif' || d.data().role === 'dosen-musyrif') musyrif++;
+        });
+        container.innerHTML = `
+          <div class="stat-mini"><div class="value">${mhsSnap.size}</div><div class="label">Mahasiswa</div></div>
+          <div class="stat-mini"><div class="value">${dosen}</div><div class="label">Dosen</div></div>
+          <div class="stat-mini"><div class="value">${musyrif}</div><div class="label">Musyrif</div></div>
+          <div class="stat-mini"><div class="value">${halaqohSnap.size}</div><div class="label">Halaqoh</div></div>`;
+      } catch(e) { container.innerHTML = '<p style="text-align:center;font-size:12px;">Gagal memuat</p>'; }
+    })();
+
+    // REKAP SHOLAT
+    async function renderSholatCard() {
+      const container = document.getElementById('sholatProgressContainer');
+      try {
+        const now = new Date(); const today = now.toISOString().split('T')[0];
+        const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 6); const weekAgoStr = weekAgo.toISOString().split('T')[0];
+
+        const snap = await db.collection('absensiSholat').where('userId', '==', user.uid).get();
+        if (snap.empty) {
+          container.innerHTML = '<p style="text-align:center;color:var(--gray-600);font-size:12px;">Belum ada data sholat. <a href="absensi.html" style="color:var(--green);">Isi Sekarang</a></p>';
+          return;
+        }
+        const docs = snap.docs.map(d => d.data());
+        const todayCount = docs.filter(d => d.tanggal === today).length;
+        const weekCount = docs.filter(d => d.tanggal >= weekAgoStr && d.tanggal <= today).length;
+        const targetHarian = 5, targetPekanan = 35;
+        const persenHarian = Math.round((todayCount / targetHarian) * 100);
+        const persenPekanan = Math.round((weekCount / targetPekanan) * 100);
+        const getColor = (p) => p >= 80 ? 'high' : p >= 50 ? 'mid' : 'low';
+
+        container.innerHTML = `
+          <div class="sholat-progress">
+            <div class="progress-label"><span>📅 Hari Ini</span><span>${todayCount}/${targetHarian}</span></div>
+            <div class="progress-bar"><div class="progress-fill ${getColor(persenHarian)}" style="width:${persenHarian}%;"></div></div>
+            <div class="progress-sub">${persenHarian}% berjamaah</div>
+          </div>
+          <div class="sholat-progress">
+            <div class="progress-label"><span>🗓️ Pekan Ini</span><span>${weekCount}/${targetPekanan}</span></div>
+            <div class="progress-bar"><div class="progress-fill ${getColor(persenPekanan)}" style="width:${persenPekanan}%;"></div></div>
+            <div class="progress-sub">${persenPekanan}% berjamaah</div>
+          </div>`;
+      } catch(e) { container.innerHTML = '<p style="color:red;font-size:12px;">Gagal memuat</p>'; }
+    }
+    renderSholatCard();
+
+    // JADWAL
+    (async function loadJadwal() {
+      const list = document.getElementById('jadwalList');
+      try {
+        const today = new Date();
+        const hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
+        if (hari === 'Jumat' || hari === 'Minggu') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal (libur)</p>'; return; }
+        if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal mengajar</p>'; return; }
+        const snap = await db.collection('jadwal').where('dosenId','==',user.uid).where('hari','==',hari).get();
+        if (snap.empty) { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal hari ini</p>'; return; }
+        list.innerHTML = snap.docs.map(d => {
+          const j = d.data();
+          return `<div class="jadwal-item">
+            <div class="jadwal-time">${j.waktu}</div>
+            <div class="jadwal-info">
+              <div class="jadwal-mk">${j.mkNama}</div>
+              <div class="jadwal-kls">${j.kelasNama}</div>
+            </div>
+            <a href="absensi-kelas.html?jadwalId=${d.id}&kelasId=${j.kelasId}&mapelId=${j.mkId}" class="btn-absensi">Absensi</a>
+          </div>`;
+        }).join('');
+      } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; }
+    })();
+
+    // MOTIVASI
+    (async function loadMotivasi() {
+      try {
+        const doc = await db.collection('pengaturan').doc('app').get();
+        if (doc.exists && doc.data().artikelMotivasi?.length) {
+          document.getElementById('motivationScroll').innerHTML = doc.data().artikelMotivasi.map(m =>
+            `<div class="motivation-card"><div class="quote">"${m}"</div></div>`
+          ).join('');
+        }
+      } catch(e) {}
+    })();
+
+    // ===== TAMBAHAN: SHOLAT MINI, BADGE QURAN & DZIKIR =====
+    // (Fungsi baru, tidak mengubah fungsi yang sudah ada di atas)
+
+    const PRAYER_NAMES_MINI = {
+      Fajr: 'Subuh', Sunrise: 'Terbit', Dhuhr: 'Dzuhur',
+      Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya'
+    };
+    const ORDER_MINI = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+    function parseTimeTodayMini(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      const d = new Date();
+      d.setHours(h, m, 0, 0);
+      return d;
+    }
+
+    async function loadSholatMini() {
+      const nameEl = document.getElementById('sholatMiniName');
+      const timeEl = document.getElementById('sholatMiniTime');
+      const countdownEl = document.getElementById('sholatMiniCountdown');
+      try {
+        if (!navigator.geolocation) { nameEl.textContent = 'Lihat Jadwal Sholat'; return; }
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          try {
+            const lat = pos.coords.latitude, lon = pos.coords.longitude;
+            const today = new Date();
+            const dateStr = `${String(today.getDate()).padStart(2,'0')}-${String(today.getMonth()+1).padStart(2,'0')}-${today.getFullYear()}`;
+            const cacheKey = `jadwalSholat_${lat.toFixed(2)}_${lon.toFixed(2)}_${dateStr}`;
+
+            let timings;
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+              timings = JSON.parse(cached);
+            } else {
+              const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=20`);
+              const data = await res.json();
+              timings = data.data.timings;
+              try { localStorage.setItem(cacheKey, JSON.stringify(timings)); } catch(e) {}
+            }
+
+            const now = new Date();
+            const schedule = ORDER_MINI.map(key => ({ key, name: PRAYER_NAMES_MINI[key], time: timings[key], dateObj: parseTimeTodayMini(timings[key]) }));
+            let activeIdx = schedule.findIndex(s => s.dateObj > now);
+            if (activeIdx === -1) activeIdx = 0;
+            const active = schedule[activeIdx];
+
+            const diffMs = active.dateObj < now ? (active.dateObj.getTime() + 86400000) - now.getTime() : active.dateObj.getTime() - now.getTime();
+            const diffH = Math.floor(diffMs / 3600000);
+            const diffM = Math.floor((diffMs % 3600000) / 60000);
+
+            nameEl.textContent = active.name;
+            timeEl.textContent = active.time;
+            countdownEl.textContent = `${diffH}j ${diffM}m`;
+          } catch(e) { nameEl.textContent = 'Lihat Jadwal Sholat'; }
+        }, () => { nameEl.textContent = 'Lihat Jadwal Sholat'; }, { timeout: 8000 });
+      } catch(e) { nameEl.textContent = 'Lihat Jadwal Sholat'; }
+    }
+    loadSholatMini();
+
+    // BADGE TILAWAH
+    function loadTilawahBadge() {
+      try {
+        const saved = localStorage.getItem(`tilawahProgress_${user.uid}`);
+        const progress = saved ? JSON.parse(saved) : { halamanDibaca: {} };
+        const todayKey = new Date().toISOString().split('T')[0];
+        const todayHalaman = progress.halamanDibaca?.[todayKey] || [];
+        document.getElementById('tilawahBadge').textContent = `Tilawahku: ${todayHalaman.length} hlm`;
+      } catch(e) {}
+    }
+    loadTilawahBadge();
+
+    // BADGE & ICON DZIKIR (otomatis pagi/petang sesuai jam)
+    function loadDzikirBadge() {
+      try {
+        const hour = new Date().getHours();
+        const isPetang = hour >= 12 && hour < 19;
+        const waktu = isPetang ? 'petang' : 'pagi';
+
+        document.getElementById('dzikirTitle').textContent = isPetang ? 'Dzikir Petang' : 'Dzikir Pagi';
+        const iconEl = document.getElementById('dzikirIcon');
+        iconEl.innerHTML = isPetang ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+
+        const todayKey = new Date().toISOString().split('T')[0];
+        const storageKey = `dzikirProgress_${user.uid}_${todayKey}`;
+        const saved = localStorage.getItem(storageKey);
+        const progressState = saved ? JSON.parse(saved) : {};
+
+        const totalDoneCount = Object.keys(progressState).filter(k => k.startsWith(waktu) && progressState[k]?.done).length;
+        document.getElementById('dzikirBadge').textContent = `${totalDoneCount} selesai`;
+      } catch(e) {}
+    }
+    loadDzikirBadge();
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Profil - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --gold-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
+      --red: #e53935; --red-light: #fce4ec;
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+      --bottom-nav-height: 64px; --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
+
+    /* HEADER */
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; }
+    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 6px 0; }
+    .bottom-nav .nav-item i { font-size: 20px; }
+    .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
+
+    .content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); }
+
+    .profile-top { text-align: center; }
+    .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--gold); display: inline-flex; align-items: center; justify-content: center; font-size: 32px; color: var(--green-dark); font-weight: 700; margin-bottom: 8px; object-fit: cover; }
+    .profile-top h4 { font-size: 16px; margin-bottom: 2px; }
+    .profile-top span { font-size: 12px; color: var(--gray-600); }
+
+    .info-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
+    .info-row i { width: 24px; font-size: 16px; color: var(--green); margin-right: 12px; }
+    .info-row span { flex: 1; font-size: 13px; }
+    .info-row .arrow { color: var(--gray-400); }
+
+    .form-group { margin-bottom: 12px; display: none; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; resize: vertical; }
+    .form-group textarea { min-height: 80px; }
+    .btn-primary { width: 100%; padding: 12px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 8px; }
+    .btn-danger { width: 100%; padding: 12px; background: var(--red-light); color: var(--red); border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 8px; }
+
+    .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; }
+    .alert-error { background: var(--red-light); color: #b71c1c; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>Profil Saya</h3>
+  </header>
+
+  <div class="content">
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <!-- Profile Card -->
+    <div class="card profile-top">
+      <div class="profile-avatar" id="profileAvatar">U</div>
+      <h4 id="profileName">Nama User</h4>
+      <span id="profileRole">Role</span>
+      <p style="font-size:11px;color:var(--gray-600);margin-top:4px;" id="profileEmail">email@ipim.ac.id</p>
+    </div>
+
+    <!-- Menu -->
+    <div class="card">
+      <div class="info-row" onclick="toggleForm('editNama')"><i class="fa-solid fa-pen"></i><span>Ubah Nama</span><i class="fa-solid fa-chevron-right arrow"></i></div>
+      <div id="editNama" class="form-group">
+        <label>Nama Baru</label>
+        <input type="text" id="inputNama" placeholder="Masukkan nama baru">
+        <button class="btn-primary" onclick="updateNama()">Simpan Nama</button>
+      </div>
+
+      <div class="info-row" onclick="toggleForm('editPassword')"><i class="fa-solid fa-lock"></i><span>Ubah Password</span><i class="fa-solid fa-chevron-right arrow"></i></div>
+      <div id="editPassword" class="form-group">
+        <label>Password Baru (min. 6 karakter)</label>
+        <input type="password" id="inputPassword" placeholder="Masukkan password baru" minlength="6">
+        <button class="btn-primary" onclick="updatePassword()">Simpan Password</button>
+      </div>
+
+      <div class="info-row" onclick="toggleForm('laporBahasa')"><i class="fa-solid fa-language"></i><span>Lapor Bahasa</span><i class="fa-solid fa-chevron-right arrow"></i></div>
+<div id="laporBahasa" class="form-group">
+  <label>Nama Mahasiswa</label>
+  <input type="text" id="namaMahasiswaBahasa" placeholder="Masukkan nama mahasiswa">
+  <label style="margin-top:8px;">Jenis Pelanggaran</label>
+  <input type="text" id="jenisBahasa" placeholder="Contoh: Kosakata, Grammar, Campur">
+  <label style="margin-top:8px;">Deskripsi</label>
+  <textarea id="deskripsiBahasa" placeholder="Tulis laporan..."></textarea>
+  <button class="btn-primary" onclick="kirimLapor('bahasa')">Kirim Laporan</button>
+</div>
+
+<div class="info-row" onclick="toggleForm('laporPengasuhan')"><i class="fa-solid fa-shield-halved"></i><span>Lapor Pengasuhan</span><i class="fa-solid fa-chevron-right arrow"></i></div>
+<div id="laporPengasuhan" class="form-group">
+  <label>Nama Mahasiswa</label>
+  <input type="text" id="namaMahasiswaPengasuhan" placeholder="Masukkan nama mahasiswa">
+  <label style="margin-top:8px;">Jenis Pelanggaran</label>
+  <input type="text" id="jenisPengasuhan" placeholder="Contoh: Akhlak, Kebersihan, Kedisiplinan">
+  <label style="margin-top:8px;">Deskripsi</label>
+  <textarea id="deskripsiPengasuhan" placeholder="Tulis laporan..."></textarea>
+  <button class="btn-primary" onclick="kirimLapor('pengasuhan')">Kirim Laporan</button>
+</div>
+    </div>
+
+    <!-- Logout -->
+    <button class="btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+    if (!user) window.location.href = '../../index.html';
+
+    window.goTo = page => window.location.href = page;
+
+    // Init profil
+    document.getElementById('profileName').textContent = user.nama || 'User';
+    document.getElementById('profileRole').textContent = user.role || '-';
+    document.getElementById('profileEmail').textContent = user.email || '-';
+    document.getElementById('profileAvatar').textContent = (user.nama || 'U')[0].toUpperCase();
+
+    // Toggle form
+    window.toggleForm = function(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    };
+
+    // Update nama
+    window.updateNama = async function() {
+      const namaBaru = document.getElementById('inputNama').value.trim();
+      if (!namaBaru) return showAlert('error', 'Nama tidak boleh kosong!');
+      try {
+        // Update di Firestore
+        await db.collection('users').doc(user.uid).update({ nama: namaBaru });
+        // Update di localStorage
+        user.nama = namaBaru;
+        localStorage.setItem('user', JSON.stringify(user));
+        // Update tampilan
+        document.getElementById('profileName').textContent = namaBaru;
+        document.getElementById('profileAvatar').textContent = namaBaru[0].toUpperCase();
+        showAlert('success', 'Nama berhasil diubah!');
+      } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
+    };
+
+    // Update password
+    window.updatePassword = async function() {
+      const pass = document.getElementById('inputPassword').value.trim();
+      if (pass.length < 6) return showAlert('error', 'Password minimal 6 karakter!');
+      try {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await currentUser.updatePassword(pass);
+          showAlert('success', 'Password berhasil diubah!');
+          document.getElementById('inputPassword').value = '';
+        }
+      } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
+    };
+
+    // Kirim lapor
+    // Kirim lapor
+window.kirimLapor = async function(jenis) {
+  const namaMhs = document.getElementById(`namaMahasiswa${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
+  const jenisPelanggaran = document.getElementById(`jenis${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
+  const deskripsi = document.getElementById(`deskripsi${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
+
+  if (!namaMhs) return showAlert('error', 'Nama mahasiswa wajib diisi!');
+  if (!jenisPelanggaran) return showAlert('error', 'Jenis pelanggaran wajib diisi!');
+  if (!deskripsi) return showAlert('error', 'Deskripsi wajib diisi!');
+
+  const koleksi = jenis === 'bahasa' ? 'laporBahasa' : 'laporPengasuhan';
+  try {
+    await db.collection(koleksi).add({
+      pelaporId: user.uid,
+      namaPelapor: user.nama,
+      namaMahasiswa: namaMhs,           // <-- field baru
+      tanggal: new Date().toISOString().split('T')[0],
+      jenis: jenisPelanggaran,
+      deskripsi: deskripsi,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showAlert('success', 'Laporan berhasil dikirim!');
+    // Reset form
+    document.getElementById(`namaMahasiswa${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
+    document.getElementById(`jenis${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
+    document.getElementById(`deskripsi${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
+  } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
+};
+    function showAlert(type, text) {
+      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
+      el.textContent = text; el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 4000);
+    }
+
+    window.logout = function() {
+      if (confirm('Apakah Anda yakin ingin keluar?')) {
+        auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; });
+      }
+    };
+  </script>
+</body>
+</html>

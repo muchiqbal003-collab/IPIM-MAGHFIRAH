@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekap Sholat - Pusat Data IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --gold-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
+      --gray-800: #333333; --red: #e53935; --blue: #1e88e5;
+      --sidebar-width: 260px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
+    .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .nav-section { margin-bottom: 8px; }
+    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
+    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    /* MAIN */
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
+    .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn-success { background: var(--green); color: white; } .btn-success:hover { background: #008c4a; }
+    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; overflow: hidden; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .card-header h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px; }
+
+    .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
+    .form-group select, .form-group input { padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; }
+
+    .chart-container { display: flex; align-items: end; gap: 12px; height: 200px; padding-top: 20px; }
+    .chart-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .chart-bar { width: 100%; max-width: 50px; border-radius: 6px 6px 0 0; transition: height 0.5s ease; min-height: 4px; background: var(--green); }
+    .chart-label { font-size: 10px; color: var(--gray-600); text-align: center; }
+    .chart-value { font-size: 11px; font-weight: 700; color: var(--gray-800); }
+
+    .avg-box { background: var(--green-light); border-radius: var(--radius-sm); padding: 16px; text-align: center; margin-bottom: 16px; }
+    .avg-box .big-number { font-size: 36px; font-weight: 700; color: var(--green-dark); }
+    .avg-box .desc { font-size: 13px; color: var(--gray-600); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: var(--gray-100); padding: 10px 8px; text-align: center; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
+    tbody td { padding: 8px; text-align: center; border-bottom: 1px solid var(--gray-100); }
+    tbody tr:hover { background: var(--gray-50); }
+    .text-left { text-align: left; }
+    .badge { padding: 2px 8px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+    .badge-green { background: var(--green-light); color: #1b5e20; }
+    .badge-yellow { background: var(--gold-light); color: #8d6e00; }
+    .badge-red { background: #fce4ec; color: #b71c1c; }
+
+    @media (max-width: 1024px) { .chart-container { height: 150px; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Pusat Data</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section"><div class="nav-section-title">Utama</div>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Dashboard</a>
+        <a href="users.html" class="nav-item"><i class="fa-solid fa-users-gear"></i> Manajemen User</a>
+        <a href="pengaturan.html" class="nav-item"><i class="fa-solid fa-gear"></i> Pengaturan</a>
+      </div>
+      <div class="nav-section"><div class="nav-section-title">Monitoring</div>
+        <a href="rekap-akademik.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Akademik</a>
+        <a href="rekap-halaqoh.html" class="nav-item"><i class="fa-solid fa-book-quran"></i> Rekap Halaqoh</a>
+        <a href="rekap-bahasa.html" class="nav-item"><i class="fa-solid fa-language"></i> Rekap Bahasa</a>
+        <a href="rekap-pengasuhan.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i> Rekap Pengasuhan</a>
+        <a href="rekap-sholat.html" class="nav-item active"><i class="fa-solid fa-mosque"></i> Rekap Sholat</a>
+        <a href="rekap-kinerja.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i> Rekap Kinerja</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="avatarLetter">A</div>
+      <div class="user-info-sidebar"><div class="name" id="sidebarName">Admin</div><div class="role">Pusat Data</div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="page-title"><h1>🕌 Rekap Sholat</h1><p>Pantau kehadiran sholat berjamaah seluruh user</p></div>
+      <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </div>
+
+    <!-- FILTER -->
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label>User</label>
+            <select id="filterUser" onchange="loadData()">
+              <option value="">Semua User</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Dari Tanggal</label>
+            <input type="date" id="filterDari" onchange="loadData()">
+          </div>
+          <div class="form-group">
+            <label>Sampai Tanggal</label>
+            <input type="date" id="filterSampai" onchange="loadData()">
+          </div>
+          <button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAFIK -->
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-chart-bar"></i> Rata-rata Jamaah Pekan Ini</h3></div>
+      <div class="card-body">
+        <div class="avg-box">
+          <div class="big-number" id="avgPekan">0%</div>
+          <div class="desc">Rata-rata jamaah 7 hari terakhir</div>
+        </div>
+        <div class="chart-container" id="chartContainer"></div>
+      </div>
+    </div>
+
+    <!-- TABEL PER USER -->
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-table"></i> Rekap Per User</h3></div>
+      <div class="card-body" style="overflow-x:auto;">
+        <table id="tableRekap">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th class="text-left">User</th>
+              <th>Subuh</th>
+              <th>Dzuhur</th>
+              <th>Ashar</th>
+              <th>Maghrib</th>
+              <th>Isya</th>
+              <th>Total</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr><td colspan="9" style="text-align:center;">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+    document.getElementById('sidebarName').textContent = user.nama || 'Admin';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+
+    let allData = [];
+    let userMap = {};
+
+    // Load daftar user untuk filter
+    async function loadUsers() {
+      try {
+        const snap = await db.collection('users').get();
+        const sel = document.getElementById('filterUser');
+        snap.forEach(d => {
+          const u = d.data();
+          userMap[d.id] = u.nama || u.email || d.id;
+          const o = document.createElement('option');
+          o.value = d.id;
+          o.textContent = u.nama || u.email || d.id;
+          sel.appendChild(o);
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    async function loadData() {
+      try {
+        // Query dasar
+        let query = db.collection('absensiSholat');
+        
+        const filterUser = document.getElementById('filterUser').value;
+        const filterDari = document.getElementById('filterDari').value;
+        const filterSampai = document.getElementById('filterSampai').value;
+
+        if (filterUser) {
+          query = query.where('userId', '==', filterUser);
+        }
+
+        const snap = await query.get();
+        allData = snap.docs.map(d => d.data());
+
+        // Filter tanggal di JavaScript (karena Firestore tidak support 2 where pada field berbeda)
+        if (filterDari) {
+          allData = allData.filter(d => d.tanggal >= filterDari);
+        }
+        if (filterSampai) {
+          allData = allData.filter(d => d.tanggal <= filterSampai);
+        }
+
+        renderChart();
+        renderTable();
+      } catch(e) {
+        console.error(e);
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="9" style="color:red;">Error: ${e.message}</td></tr>`;
+      }
+    }
+
+    function renderChart() {
+      const container = document.getElementById('chartContainer');
+      const today = new Date();
+      const days = [];
+      
+      // Buat array 7 hari terakhir
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        days.push({
+          label: ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()],
+          date: d.toISOString().split('T')[0]
+        });
+      }
+
+      // Hitung jumlah user yang sholat per hari
+      const dayCounts = days.map(day => {
+        const users = new Set(allData.filter(d => d.tanggal === day.date).map(d => d.userId));
+        return users.size;
+      });
+
+      const maxVal = Math.max(...dayCounts, 1);
+
+      let html = '';
+      days.forEach((day, i) => {
+        const height = (dayCounts[i] / maxVal) * 150;
+        html += `
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:${height}px;" title="${day.date}: ${dayCounts[i]} user"></div>
+            <span class="chart-label">${day.label}</span>
+            <span class="chart-value">${dayCounts[i]}</span>
+          </div>`;
+      });
+      container.innerHTML = html;
+
+      // Hitung rata-rata pekan
+      const totalUsers = new Set(allData.map(d => d.userId)).size || 1;
+      const avg = Math.round((dayCounts.reduce((a,b) => a+b, 0) / (7 * totalUsers)) * 100);
+      document.getElementById('avgPekan').textContent = avg + '%';
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      
+      // Kelompokkan per user
+      const rekap = {};
+      allData.forEach(d => {
+        const uid = d.userId;
+        if (!uid) return;
+        if (!rekap[uid]) {
+          rekap[uid] = { subuh: 0, dzuhur: 0, ashar: 0, maghrib: 0, isya: 0, total: 0 };
+        }
+        if (d.waktu && rekap[uid][d.waktu] !== undefined) {
+          rekap[uid][d.waktu]++;
+          rekap[uid].total++;
+        }
+      });
+
+      const arr = Object.entries(rekap).map(([uid, r]) => ({
+        uid,
+        nama: userMap[uid] || uid,
+        ...r
+      })).sort((a,b) => a.nama.localeCompare(b.nama));
+
+      if (arr.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Tidak ada data</td></tr>';
+        return;
+      }
+
+      // Hitung total hari dalam range
+      const dari = document.getElementById('filterDari').value;
+      const sampai = document.getElementById('filterSampai').value;
+      let totalHari = 7; // default
+      if (dari && sampai) {
+        const d1 = new Date(dari);
+        const d2 = new Date(sampai);
+        totalHari = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)) + 1;
+      }
+      const maxSholat = totalHari * 5;
+
+      let html = '';
+      arr.forEach((r, i) => {
+        const persen = maxSholat > 0 ? Math.round((r.total / maxSholat) * 100) : 0;
+        const badge = persen >= 80 ? 'badge-green' : persen >= 50 ? 'badge-yellow' : 'badge-red';
+        html += `<tr>
+          <td>${i+1}</td>
+          <td class="text-left">${r.nama}</td>
+          <td>${r.subuh}</td>
+          <td>${r.dzuhur}</td>
+          <td>${r.ashar}</td>
+          <td>${r.maghrib}</td>
+          <td>${r.isya}</td>
+          <td><strong>${r.total}</strong></td>
+          <td><span class="badge ${badge}">${persen}%</span></td>
+        </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    window.exportCSV = function() {
+      if (allData.length === 0) { alert('Tidak ada data!'); return; }
+      const rekap = {};
+      allData.forEach(d => {
+        const uid = d.userId;
+        if (!uid) return;
+        if (!rekap[uid]) rekap[uid] = { subuh: 0, dzuhur: 0, ashar: 0, maghrib: 0, isya: 0, total: 0 };
+        if (d.waktu && rekap[uid][d.waktu] !== undefined) {
+          rekap[uid][d.waktu]++;
+          rekap[uid].total++;
+        }
+      });
+      let csv = 'User,Subuh,Dzuhur,Ashar,Maghrib,Isya,Total\n';
+      Object.entries(rekap).forEach(([uid, r]) => {
+        csv += `"${userMap[uid] || uid}",${r.subuh},${r.dzuhur},${r.ashar},${r.maghrib},${r.isya},${r.total}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'rekap-sholat.csv'; a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    window.logout = function() {
+      if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); }
+    };
+
+    // Init
+    loadUsers();
+    loadData();
+  </script>
+</body>
+</html>

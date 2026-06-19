@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Menu Cepat - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease; --bottom-nav-height: 64px; --header-height: 56px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; }
+    .bottom-nav .nav-item i { font-size: 20px; }
+    .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
+    .content { padding: 16px; }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--gray-600); margin: 16px 0 8px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .menu-card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; text-align: center; border: 1px solid var(--gray-200); cursor: pointer; transition: var(--transition); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .menu-card:active { background: var(--green-light); transform: scale(0.95); }
+    .menu-card i { font-size: 28px; color: var(--green-dark); margin-bottom: 8px; display: block; }
+    .menu-card span { font-size: 12px; font-weight: 600; display: block; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>Menu Cepat</h3>
+  </header>
+
+  <div class="content">
+    <!-- Menu Umum -->
+    <div class="section-title">🔹 Menu Umum</div>
+    <div class="menu-grid" id="menuUmum"></div>
+
+    <!-- Menu Akademik -->
+    <div id="sectionAkademik" style="display:none;">
+      <div class="section-title">📚 Akademik</div>
+      <div class="menu-grid" id="menuAkademik"></div>
+    </div>
+
+    <!-- Menu Halaqoh -->
+    <div id="sectionHalaqoh" style="display:none;">
+      <div class="section-title">🕌 Halaqoh & Tahfidz</div>
+      <div class="menu-grid" id="menuHalaqoh"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    // Menu Umum
+    const menuUmum = [
+      { icon: 'fa-mosque', label: 'Absensi Sholat', page: 'absensi.html' },
+      { icon: 'fa-chart-line', label: 'Kinerjaku', page: 'kinerja.html' },
+      { icon: 'fa-clipboard-list', label: 'Lapor', page: 'profil.html' }
+    ];
+    document.getElementById('menuUmum').innerHTML = menuUmum.map(i => `<div class="menu-card" onclick="goTo('${i.page}')"><i class="fa-solid ${i.icon}"></i><span>${i.label}</span></div>`).join('');
+
+    // Menu Akademik (Dosen)
+    if (user.role === 'dosen' || user.role === 'dosen-musyrif') {
+      document.getElementById('sectionAkademik').style.display = 'block';
+      const menuAkademik = [
+        { icon: 'fa-file-alt', label: 'Silabus', page: 'silabus.html' },
+        { icon: 'fa-pen', label: 'Catatan', page: 'catatan.html' },
+        { icon: 'fa-calendar-alt', label: 'Jadwal Saya', page: 'jadwal-saya.html' },
+        { icon: 'fa-chart-line', label: 'Input Nilai', page: 'nilai.html' }
+        
+      ];
+      document.getElementById('menuAkademik').innerHTML = menuAkademik.map(i => `<div class="menu-card" onclick="goTo('${i.page}')"><i class="fa-solid ${i.icon}"></i><span>${i.label}</span></div>`).join('');
+    }
+
+    // Menu Halaqoh (Musyrif)
+    if (user.role === 'musyrif' || user.role === 'dosen-musyrif') {
+      document.getElementById('sectionHalaqoh').style.display = 'block';
+      const menuHalaqoh = [
+        { icon: 'fa-users', label: 'Anggota Halaqoh', page: 'anggota-halaqohku.html' },
+        { icon: 'fa-clipboard-check', label: 'Abs. Halaqoh', page: 'absensi-halaqoh.html' },
+        { icon: 'fa-book-open', label: 'Hafalan', page: 'hafalan.html' },
+        { icon: 'fa-quran', label: 'Ujian Quran', page: 'ujian-quran.html' }
+      ];
+      document.getElementById('menuHalaqoh').innerHTML = menuHalaqoh.map(i => `<div class="menu-card" onclick="goTo('${i.page}')"><i class="fa-solid ${i.icon}"></i><span>${i.label}</span></div>`).join('');
+    }
+  </script>
+</body>
+</html>

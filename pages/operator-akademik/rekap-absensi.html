@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekap Absensi - Operator Akademik IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --gold-light: #fdf6e3; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --red-light: #fce4ec; --sidebar-width: 260px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
+
+    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; } .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .nav-section { margin-bottom: 8px; } .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; } .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; } .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); } .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
+    .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
+    .btn-success { background: var(--green); color: white; } .btn-success:hover { background: #008c4a; }
+    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); } .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 20px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .card-header h3 { font-size: 14px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px; overflow-x: auto; }
+
+    .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
+    .form-group select { padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; min-width: 200px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: var(--gray-100); padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
+    tbody td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--gray-100); }
+    tbody tr:hover { background: var(--gray-50); }
+    .text-left { text-align: left; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+    .badge-green { background: var(--green-light); color: #1b5e20; }
+    .badge-red { background: var(--red-light); color: #b71c1c; }
+    .badge-yellow { background: var(--gold-light); color: #8d6e00; }
+
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 16px 12px; } }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section"><div class="nav-section-title">Utama</div><a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a></div>
+      <div class="nav-section"><div class="nav-section-title">Master Data</div>
+        <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
+        <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
+        <a href="prodi.html" class="nav-item"><i class="fa-solid fa-building-columns"></i> Data Prodi</a>
+        <a href="matakuliah.html" class="nav-item"><i class="fa-solid fa-book"></i> Data Matakuliah</a>
+        <a href="kelas.html" class="nav-item"><i class="fa-solid fa-school"></i> Data Kelas</a>
+        <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
+      </div>
+      <div class="nav-section"><div class="nav-section-title">Akademik</div>
+        <a href="rekap-absensi.html" class="nav-item active"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
+        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
+        <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar"><div class="page-title"><h1>📋 Rekap Absensi Semua Matakuliah</h1><p>Pantau kehadiran seluruh mahasiswa</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group"><label>Matakuliah</label><select id="filterMatkul" onchange="loadRekap()"><option value="">Pilih Matakuliah...</option></select></div>
+          <div class="form-group"><label>Kelas</label><select id="filterKelas" onchange="loadRekap()"><option value="">Pilih Kelas...</option></select></div>
+          <button class="btn btn-danger btn-sm" onclick="hapusData()"><i class="fa-solid fa-trash"></i> Hapus Data</button>
+          <button class="btn btn-success btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Download Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-table"></i> Hasil Rekap (<span id="totalData">0</span>)</h3></div>
+      <div class="card-body" id="tableContainer"><p style="text-align:center;color:var(--gray-400);">Pilih filter</p></div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['operator-akademik', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+    document.getElementById('sidebarName').textContent = user.nama || 'Operator';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+
+    let allRekap = [];
+
+    async function loadFilter() {
+      const [mkSnap, kelasSnap] = await Promise.all([
+        db.collection('matakuliah').orderBy('nama').get(),
+        db.collection('kelas').get()
+      ]);
+      const mkSel = document.getElementById('filterMatkul');
+      mkSnap.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; mkSel.appendChild(o); });
+      const kelasSel = document.getElementById('filterKelas');
+      const kelasDocs = kelasSnap.docs.sort((a,b) => { const o = {idad:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8}; return (o[a.data().semester]??99) - (o[b.data().semester]??99) || (a.data().nama||'').localeCompare(b.data().nama||''); });
+      kelasDocs.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; kelasSel.appendChild(o); });
+    }
+
+    window.loadRekap = async function() {
+      const mkId = document.getElementById('filterMatkul').value;
+      const kelasId = document.getElementById('filterKelas').value;
+      const container = document.getElementById('tableContainer');
+
+      if (!mkId && !kelasId) {
+        container.innerHTML = '<p style="text-align:center;color:var(--gray-400);">Silakan pilih Matakuliah dan/atau Kelas</p>';
+        return;
+      }
+
+      try {
+        // 1. Ambil total pertemuan dari jadwal
+        let jadwalQuery = db.collection('jadwal');
+        if (mkId) jadwalQuery = jadwalQuery.where('mkId', '==', mkId);
+        if (kelasId) jadwalQuery = jadwalQuery.where('kelasId', '==', kelasId);
+        const jadwalSnap = await jadwalQuery.get();
+        let totalPertemuan = 16; // default
+        if (!jadwalSnap.empty) {
+          totalPertemuan = jadwalSnap.docs[0].data().totalPertemuan || 16;
+        }
+
+        // 2. Ambil data absensi
+        let absensiQuery = db.collection('absensi');
+        if (mkId) absensiQuery = absensiQuery.where('mapelId', '==', mkId);
+        const absensiSnap = await absensiQuery.get();
+        let docs = absensiSnap.docs.map(d => d.data());
+        if (kelasId) docs = docs.filter(d => d.kelasId === kelasId);
+
+        // 3. Hitung rekap per mahasiswa
+        const rekap = {};
+        docs.forEach(d => {
+          const mhsId = d.mahasiswaId || d.santriId;
+          if (!mhsId) return;
+          if (!rekap[mhsId]) rekap[mhsId] = { sakit:0, izin:0, alfa:0, jaga:0 };
+          if (d.status !== 'hadir') {
+            rekap[mhsId][d.status] = (rekap[mhsId][d.status] || 0) + 1;
+          }
+        });
+
+        // 4. Ambil data mahasiswa dan hitung persentase
+        const arr = [];
+        for (const [id, val] of Object.entries(rekap)) {
+          const mhsDoc = await db.collection('mahasiswa').doc(id).get();
+          const nama = mhsDoc.exists ? mhsDoc.data().nama : id;
+          const totalTidakHadir = val.sakit + val.izin + val.alfa + val.jaga;
+          const hadir = totalPertemuan - totalTidakHadir;
+          const persentase = totalPertemuan > 0 ? Math.round((hadir / totalPertemuan) * 100) : 0;
+          arr.push({ nama, hadir, ...val, totalTidakHadir, totalPertemuan, persentase });
+        }
+        arr.sort((a,b) => a.nama.localeCompare(b.nama));
+        allRekap = arr;
+
+        document.getElementById('totalData').textContent = arr.length;
+        let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th><th>Total Tidak Hadir</th><th>Total Pertemuan</th><th>Persentase</th></tr></thead><tbody>';
+        if (arr.length === 0) html += '<tr><td colspan="10">Tidak ada data</td></tr>';
+        else arr.forEach((r, i) => {
+          const badge = r.persentase >= 75 ? 'badge-green' : r.persentase >= 50 ? 'badge-yellow' : 'badge-red';
+          html += `<tr><td>${i+1}</td><td class="text-left">${r.nama}</td><td>${r.hadir}</td><td>${r.sakit}</td><td>${r.izin}</td><td>${r.alfa}</td><td>${r.jaga||0}</td><td>${r.totalTidakHadir}</td><td>${r.totalPertemuan}</td><td><span class="badge ${badge}">${r.persentase}%</span></td></tr>`;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch(e) { container.innerHTML = '<p style="color:red;">Gagal memuat data: ' + e.message + '</p>'; }
+    };
+
+    window.hapusData = async function() {
+      const mkId = document.getElementById('filterMatkul').value;
+      const kelasId = document.getElementById('filterKelas').value;
+      if (!mkId && !kelasId) {
+        alert('Silakan pilih Matakuliah dan/atau Kelas terlebih dahulu.');
+        return;
+      }
+      if (!confirm('Hapus data absensi untuk filter yang dipilih?')) return;
+      try {
+        let query = db.collection('absensi');
+        if (mkId) query = query.where('mapelId', '==', mkId);
+        const snap = await query.get();
+        let docs = snap.docs.map(d => ({ ref: d.ref, data: d.data() }));
+        if (kelasId) docs = docs.filter(d => d.data.kelasId === kelasId);
+        const batch = db.batch();
+        docs.forEach(d => batch.delete(d.ref));
+        await batch.commit();
+        alert('Data berhasil dihapus!');
+        loadRekap();
+      } catch(e) { alert('Gagal: ' + e.message); }
+    };
+
+    window.exportExcel = function() {
+      if (allRekap.length === 0) { alert('Tidak ada data!'); return; }
+      let csv = '\uFEFFNo;Nama;Hadir;Sakit;Izin;Alfa;Jaga;Total Tidak Hadir;Total Pertemuan;Persentase\n';
+      allRekap.forEach((r, i) => {
+        csv += `${i+1};"${r.nama}";${r.hadir};${r.sakit};${r.izin};${r.alfa};${r.jaga||0};${r.totalTidakHadir};${r.totalPertemuan};${r.persentase}%\n`;
+      });
+      const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'rekap-absensi.xls';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    };
+
+    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    loadFilter();
+  </script>
+</body>
+</html>
