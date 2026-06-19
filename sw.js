@@ -1,13 +1,12 @@
 // sw.js - Service Worker IPIM Maghfirah (Versi Network First)
 
-const CACHE_NAME = 'ipim-v3';
+const CACHE_NAME = 'ipim-v4';
 
 // Daftar file yang BOLEH di-cache (hanya aset statis)
 const STATIC_ASSETS = [
-  '/css/style.css',
-  '/assets/img/logo-ipim.png',
-  '/assets/icons/icon-192x192.png',
-  '/assets/icons/icon-512x512.png'
+  '/IPIM-MAGHFIRAH/css/style.css',
+  '/IPIM-MAGHFIRAH/assets/icons/icon-192x192.png',
+  '/IPIM-MAGHFIRAH/assets/icons/icon-512x512.png'
 ];
 
 // Install - Cache aset statis saja
