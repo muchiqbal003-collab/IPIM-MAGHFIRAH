@@ -1,17 +1,21 @@
-// sw.js - Service Worker IPIM Maghfirah (Versi Network First)
+// sw.js - Service Worker IPIM Maghfirah (Stabil & PWA)
 
 const CACHE_NAME = 'ipim-v4';
-
-// Daftar file yang BOLEH di-cache (hanya aset statis)
 const STATIC_ASSETS = [
-  '/IPIM-MAGHFIRAH/css/style.css',
-  '/IPIM-MAGHFIRAH/assets/icons/icon-192.png',
-  '/IPIM-MAGHFIRAH/assets/icons/icon-512.png'
+  '/',
+  '/index.html',
+  '/css/style.css',
+  '/js/firebase-config.js',
+  '/js/auth.js',
+  '/js/app.js',
+  '/assets/icons/icon-192.png',
+  '/assets/icons/icon-512.png',
+  '/manifest.json'
 ];
 
-// Install - Cache aset statis saja
+// Install - Cache aset statis penting
 self.addEventListener('install', (event) => {
-  console.log('✅ SW Installed (v3)');
+  console.log('✅ SW Installed (v4)');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS).catch((err) => {
@@ -24,7 +28,7 @@ self.addEventListener('install', (event) => {
 
 // Activate - Hapus cache lama
 self.addEventListener('activate', (event) => {
-  console.log('✅ SW Activated (v3)');
+  console.log('✅ SW Activated (v4)');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -35,7 +39,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch - NETWORK FIRST, jangan cache HTML/JS
+// Fetch - NETWORK FIRST
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
@@ -43,9 +47,10 @@ self.addEventListener('fetch', (event) => {
   if (
     url.hostname.includes('firestore') ||
     url.hostname.includes('googleapis') ||
-    url.hostname.includes('identitytoolkit')
+    url.hostname.includes('identitytoolkit') ||
+    url.hostname.includes('firebaseauth')
   ) {
-    return; // Biarkan fetch normal
+    return; // Biarkan fetch normal (tidak di-cache)
   }
 
   // JANGAN cache halaman HTML dan JavaScript (selalu ambil dari network)
@@ -55,17 +60,21 @@ self.addEventListener('fetch', (event) => {
     url.pathname === '/' ||
     url.pathname.includes('/pages/')
   ) {
-    // Network only — jangan cache
-    event.respondWith(fetch(event.request));
+    event.respondWith(
+      fetch(event.request)
+        .then(response => response)
+        .catch(() => {
+          // Jika gagal fetch (offline), tampilkan halaman offline atau fallback
+          return caches.match('/index.html');
+        })
+    );
     return;
   }
 
-  // Untuk aset statis (CSS, gambar, font): Cache First
+  // Untuk aset statis: Cache First
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request).then((response) => {
+      const fetchPromise = fetch(event.request).then((response) => {
         if (response && response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -73,12 +82,9 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return response;
-      }).catch(() => {
-        // Fallback untuk gambar jika offline
-        if (url.pathname.includes('/assets/')) {
-          return caches.match('/assets/icons/icon-192.png');
-        }
-      });
+      }).catch(() => cached);
+      
+      return cached || fetchPromise;
     })
   );
 });
