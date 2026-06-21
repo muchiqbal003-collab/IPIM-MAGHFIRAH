@@ -51,7 +51,6 @@
     <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box" id="modalContent"></div>
   </div>
@@ -65,12 +64,11 @@
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
 
-    // Helper
     function showModal(html) { document.getElementById('modalContent').innerHTML = html; document.getElementById('modalOverlay').classList.add('show'); }
     function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
     function showAlert(text) { const el = document.getElementById('alertSuccess'); if(el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 2000); } }
 
-    // Load halaman utama
+    // ✅ Load halaman utama — hanya 1 card per matakuliah
     async function loadPage() {
       const container = document.getElementById('mainContent');
       try {
@@ -80,16 +78,34 @@
           return;
         }
 
+        // ✅ Gunakan Map untuk menyimpan satu entri per mkId
+        const mkMap = new Map();
+        jadwalSnap.forEach(doc => {
+          const j = doc.data();
+          if (!mkMap.has(j.mkId)) {
+            mkMap.set(j.mkId, {
+              mkNama: j.mkNama,
+              kelasNama: j.kelasNama,
+              kelasId: j.kelasId,
+              jadwalIds: [doc.id]
+            });
+          } else {
+            mkMap.get(j.mkId).jadwalIds.push(doc.id);
+          }
+        });
+
         let html = '<div id="alertSuccess" class="alert alert-success"></div>';
-        for (const jDoc of jadwalSnap.docs) {
-          const j = jDoc.data();
-          // Ambil komponen
-          const kompSnap = await db.collection('komponenNilai').where('jadwalId', '==', jDoc.id).get();
+
+        // Loop per matakuliah (bukan per JP)
+        for (const [mkId, mkData] of mkMap) {
+          // Ambil komponen dari semua jadwal yang terkait dengan mkId ini
+          const kompSnap = await db.collection('komponenNilai').where('jadwalId', 'in', mkData.jadwalIds).get();
+
           html += `<div class="card jadwal-card">
-            <h3><span>${j.mkNama} - Kelas ${j.kelasNama}</span>
+            <h3><span>${mkData.mkNama} - Kelas ${mkData.kelasNama}</span>
             <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm" onclick="lihatRekap('${jDoc.id}')"><i class="fa-solid fa-chart-bar"></i> Rekap</button>
-              <button class="btn btn-primary btn-sm" onclick="tambahKomponen('${jDoc.id}')"><i class="fa-solid fa-plus"></i> Komponen</button>
+              <button class="btn btn-outline btn-sm" onclick="lihatRekap('${mkId}','${mkData.kelasId}','${mkData.mkNama.replace(/'/g,"\\'")}','${mkData.kelasNama.replace(/'/g,"\\'")}')"><i class="fa-solid fa-chart-bar"></i> Rekap</button>
+              <button class="btn btn-primary btn-sm" onclick="tambahKomponen('${mkId}','${mkData.jadwalIds[0]}')"><i class="fa-solid fa-plus"></i> Komponen</button>
             </div></h3>`;
 
           if (kompSnap.empty) {
@@ -100,20 +116,21 @@
               const k = kDoc.data();
               html += `<span class="komponen-tag">
                 <strong>${k.namaKomponen}</strong> (${k.bobot}%)
-                <button class="btn btn-sm btn-primary" onclick="inputNilai('${kDoc.id}','${k.namaKomponen.replace(/'/g,"\\'")}','${jDoc.id}')">✏️</button>
-                <button class="btn btn-sm btn-danger" onclick="hapusKomponen('${kDoc.id}','${jDoc.id}')">🗑</button>
+                <button class="btn btn-sm btn-primary" onclick="inputNilai('${kDoc.id}','${k.namaKomponen.replace(/'/g,"\\'")}','${mkId}','${mkData.kelasId}')">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="hapusKomponen('${kDoc.id}','${mkId}')">🗑</button>
               </span>`;
             });
             html += '</div>';
           }
           html += '</div>';
         }
+
         container.innerHTML = html;
       } catch(e) { console.error(e); }
     }
 
-    // Tambah Komponen
-    window.tambahKomponen = function(jadwalId) {
+    // ✅ Tambah Komponen — sekarang disimpan per mkId, bukan jadwalId
+    window.tambahKomponen = function(mkId, jadwalId) {
       showModal(`
         <h3>Tambah Komponen Penilaian</h3>
         <div class="form-group"><label>Nama Komponen</label><input type="text" id="fnama" placeholder="Contoh: UTS, Tugas 1"></div>
@@ -127,25 +144,21 @@
         const nama = document.getElementById('fnama').value.trim();
         const bobot = parseInt(document.getElementById('fbobot').value) || 0;
         if (!nama) return alert('Nama komponen wajib!');
-        await db.collection('komponenNilai').add({ jadwalId, namaKomponen: nama, bobot, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await db.collection('komponenNilai').add({ mkId, jadwalId, namaKomponen: nama, bobot, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         closeModal();
         loadPage();
       };
     };
 
-    // Hapus Komponen
-    window.hapusKomponen = async function(id, jadwalId) {
+    window.hapusKomponen = async function(id, mkId) {
       if (!confirm('Hapus komponen ini?')) return;
       await db.collection('komponenNilai').doc(id).delete();
       loadPage();
     };
 
-    // Input Nilai
-    window.inputNilai = async function(komponenId, namaKomponen, jadwalId) {
-      const jDoc = await db.collection('jadwal').doc(jadwalId).get();
-      if (!jDoc.exists) return;
-      const j = jDoc.data();
-      const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', j.kelasId).get();
+    // ✅ Input Nilai — menerima mkId dan kelasId
+    window.inputNilai = async function(komponenId, namaKomponen, mkId, kelasId) {
+      const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
       const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
       
       const nilaiSnap = await db.collection('nilaiMahasiswa').where('komponenId', '==', komponenId).get();
@@ -174,27 +187,23 @@
       };
     };
 
-    // Lihat Rekap
-    window.lihatRekap = async function(jadwalId) {
-      const jDoc = await db.collection('jadwal').doc(jadwalId).get();
-      if (!jDoc.exists) return;
-      const j = jDoc.data();
-      const kompSnap = await db.collection('komponenNilai').where('jadwalId', '==', jadwalId).get();
+    // ✅ Lihat Rekap — menerima mkId dan kelasId
+    window.lihatRekap = async function(mkId, kelasId, mkNama, kelasNama) {
+      const kompSnap = await db.collection('komponenNilai').where('mkId', '==', mkId).get();
       if (kompSnap.empty) { alert('Belum ada komponen!'); return; }
 
-      const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', j.kelasId).get();
+      const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
       const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
       const komponenList = kompSnap.docs.map(d => ({ id: d.id, ...d.data() }));
       const totalBobot = komponenList.reduce((s, k) => s + k.bobot, 0);
 
-      // Ambil semua nilai
       const komponenIds = komponenList.map(k => k.id);
       const nilaiSnap = await db.collection('nilaiMahasiswa').where('komponenId', 'in', komponenIds).get();
       const nilaiMap = {};
       nilaiSnap.forEach(d => { const n = d.data(); if (!nilaiMap[n.mahasiswaId]) nilaiMap[n.mahasiswaId] = {}; nilaiMap[n.mahasiswaId][n.komponenId] = n.nilai; });
 
-      let html = `<h3>Rekap Nilai: ${j.mkNama} - Kelas ${j.kelasNama}</h3><div style="max-height:500px;overflow-y:auto;"><table><thead><tr><th>NIM</th><th>Nama</th>`;
+      let html = `<h3>Rekap Nilai: ${mkNama} - Kelas ${kelasNama}</h3><div style="max-height:500px;overflow-y:auto;"><table><thead><tr><th>NIM</th><th>Nama</th>`;
       komponenList.forEach(k => { html += `<th>${k.namaKomponen}<br><small>(${k.bobot}%)</small></th>`; });
       html += '<th>Nilai Akhir</th><th>Grade</th></tr></thead><tbody>';
 
@@ -219,7 +228,6 @@
       showModal(html);
     };
 
-    // Init
     loadPage();
   </script>
 </body>
