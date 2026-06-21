@@ -21,6 +21,16 @@
 <body>
 
   <div class="login-wrapper">
+    <!-- Pop-up Install Aplikasi -->
+<div class="install-prompt" id="installPrompt" style="display: none;">
+  <div class="icon">📲</div>
+  <div class="text">
+    <strong>Install Aplikasi IPIM</strong>
+    <span>Akses lebih cepat tanpa buka browser</span>
+  </div>
+  <button class="btn-install" id="btnInstall">Install</button>
+  <button class="btn-close" id="btnCloseInstall">&times;</button>
+</div>
     <div class="login-card">
       <div class="login-header">
         <div class="login-logo-placeholder"><i class="fa-solid fa-graduation-cap"></i></div>
@@ -67,6 +77,32 @@
           .catch(e => console.warn('❌ SW failed:', e));
       });
     }
+    // ========== PWA INSTALL PROMPT ==========
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Cegah browser menampilkan prompt bawaan
+  e.preventDefault();
+  // Simpan event
+  deferredPrompt = e;
+  // Tampilkan pop-up kita
+  document.getElementById('installPrompt').style.display = 'flex';
+});
+
+document.getElementById('btnInstall').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  // Tampilkan dialog instalasi bawaan browser
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`User response: ${outcome}`);
+  // Reset
+  deferredPrompt = null;
+  document.getElementById('installPrompt').style.display = 'none';
+});
+
+document.getElementById('btnCloseInstall').addEventListener('click', () => {
+  document.getElementById('installPrompt').style.display = 'none';
+});
   </script>
 </body>
 </html>
