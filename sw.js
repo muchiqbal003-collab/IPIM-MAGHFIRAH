@@ -5,8 +5,8 @@ const CACHE_NAME = 'ipim-v4';
 // Daftar file yang BOLEH di-cache (hanya aset statis)
 const STATIC_ASSETS = [
   '/IPIM-MAGHFIRAH/css/style.css',
-  '/IPIM-MAGHFIRAH/assets/icons/icon-192x192.png',
-  '/IPIM-MAGHFIRAH/assets/icons/icon-512x512.png'
+  '/IPIM-MAGHFIRAH/assets/icons/icon-192.png',
+  '/IPIM-MAGHFIRAH/assets/icons/icon-512.png'
 ];
 
 // Install - Cache aset statis saja
@@ -76,7 +76,7 @@ self.addEventListener('fetch', (event) => {
       }).catch(() => {
         // Fallback untuk gambar jika offline
         if (url.pathname.includes('/assets/')) {
-          return caches.match('/assets/icons/icon-192x192.png');
+          return caches.match('/assets/icons/icon-192.png');
         }
       });
     })
