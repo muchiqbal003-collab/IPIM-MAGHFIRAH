@@ -48,6 +48,7 @@
         .event-item .desc { font-size: 11px; color: var(--gray-600); }
 
         .btn { padding: 8px 12px; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; background: var(--gray-100); }
+        .btn-primary { background: var(--green-dark); color: white; }
     </style>
 </head>
 <body>
@@ -55,6 +56,7 @@
     <header class="app-header">
         <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
         <h3>Kalender Akademik</h3>
+        <button class="btn btn-sm" onclick="shareKalender()"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
     </header>
 
     <div class="content">
@@ -79,8 +81,7 @@
         <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
         <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
         <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
-      </nav>
-    
+    </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -146,6 +147,50 @@
             const [y, m, d] = dateStr.split('-');
             const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
             return `${d} ${months[parseInt(m)-1]} ${y}`;
+        }
+
+        // ========== FITUR BAGIKAN ==========
+        async function shareKalender() {
+            if (events.length === 0) {
+                alert('Belum ada event untuk dibagikan.');
+                return;
+            }
+
+            // Urutkan event berdasarkan tanggal
+            const sorted = [...events].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || ''));
+
+            // Buat teks yang rapi
+            let text = '📅 *KALENDER AKADEMIK IPIM*\n';
+            text += '━━━━━━━━━━━━━━━━\n\n';
+
+            sorted.forEach(event => {
+                const tanggal = formatDate(event.tanggal);
+                text += `📌 *${tanggal}*\n`;
+                text += `   📖 ${event.judul}\n`;
+                if (event.deskripsi) {
+                    text += `   📝 ${event.deskripsi}\n`;
+                }
+                text += '\n';
+            });
+
+            text += '━━━━━━━━━━━━━━━━\n';
+            text += '© IPIM Maghfirah';
+
+            // Coba gunakan Web Share API jika di HP
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Kalender Akademik IPIM',
+                        text: text,
+                    });
+                } catch (err) {
+                    console.log('Share dibatalkan atau gagal:', err);
+                }
+            } else {
+                // Fallback: buka WhatsApp Web dengan teks
+                const encodedText = encodeURIComponent(text);
+                window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+            }
         }
 
         loadEvents();
