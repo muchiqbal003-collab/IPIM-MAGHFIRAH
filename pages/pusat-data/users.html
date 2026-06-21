@@ -62,11 +62,12 @@
     .form-group input, .form-group select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; color: var(--gray-800); outline: none; transition: var(--transition); background: white; }
     .form-group input:focus, .form-group select:focus { border-color: var(--green); }
 
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    thead th { background: var(--gray-100); padding: 12px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
-    tbody td { padding: 12px 14px; border-bottom: 1px solid var(--gray-100); }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: var(--gray-100); padding: 10px 8px; text-align: center; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
+    tbody td { padding: 8px; text-align: center; border-bottom: 1px solid var(--gray-100); }
     tbody tr:hover { background: var(--gray-50); }
-    .badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+    .text-left { text-align: left; }
+    .badge { padding: 3px 8px; border-radius: 20px; font-size: 9px; font-weight: 600; white-space: nowrap; }
     .badge-pusat { background: #fdf6e3; color: #8d6e00; }
     .badge-operator { background: #e8f5e9; color: #1b5e20; }
     .badge-dosen { background: #e3f2fd; color: #0d47a1; }
@@ -78,11 +79,7 @@
     .alert-success { background: var(--green-light); color: #1b5e20; }
     .alert-error { background: var(--red-light); color: #b71c1c; }
 
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-content { margin-left: 0; }
-      .form-grid { grid-template-columns: 1fr 1fr; }
-    }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .form-grid { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
@@ -108,7 +105,7 @@
   </aside>
 
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>👥 Manajemen User</h1><p>Kelola semua pengguna sistem IPIM (Langsung jadi akun)</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar"><div class="page-title"><h1>👥 Manajemen User</h1><p>Kelola semua pengguna sistem IPIM</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
 
     <div id="alertSuccess" class="alert alert-success"></div>
     <div id="alertError" class="alert alert-error"></div>
@@ -143,7 +140,10 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><h3><i class="fa-solid fa-list"></i> Daftar User</h3></div>
+      <div class="card-header">
+        <h3><i class="fa-solid fa-list"></i> Daftar User</h3>
+        <button class="btn btn-outline btn-sm" onclick="exportExcel()"><i class="fa-solid fa-download"></i> Download Excel</button>
+      </div>
       <div class="card-body" id="tableContainer"><p style="text-align:center;color:var(--gray-400);">Memuat data...</p></div>
     </div>
   </main>
@@ -160,6 +160,7 @@
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
     let isAdding = false;
+    let allUsers = [];
 
     function showAlert(type, text) {
       const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
@@ -168,35 +169,32 @@
     }
 
     function getBadgeClass(role) {
-      const map = {
-        'pusat-data': 'badge-pusat', 'operator-akademik': 'badge-operator', 'operator-halaqoh': 'badge-operator',
-        'operator-bahasa': 'badge-operator', 'operator-pengasuhan': 'badge-operator',
-        'dosen': 'badge-dosen', 'dosen-musyrif': 'badge-dosen',
-        'musyrif': 'badge-musyrif', 'mahasiswa': 'badge-mahasiswa', 'umum': 'badge-umum'
-      };
+      const map = { 'pusat-data': 'badge-pusat', 'operator-akademik': 'badge-operator', 'operator-halaqoh': 'badge-operator', 'operator-bahasa': 'badge-operator', 'operator-pengasuhan': 'badge-operator', 'dosen': 'badge-dosen', 'dosen-musyrif': 'badge-dosen', 'musyrif': 'badge-musyrif', 'mahasiswa': 'badge-mahasiswa', 'umum': 'badge-umum' };
       return map[role] || 'badge-umum';
     }
 
     function getRoleLabel(role) {
-      const map = {
-        'pusat-data': 'Pusat Data', 'operator-akademik': 'Op. Akademik', 'operator-halaqoh': 'Op. Halaqoh',
-        'operator-bahasa': 'Op. Bahasa', 'operator-pengasuhan': 'Op. Pengasuhan',
-        'dosen': 'Dosen', 'musyrif': 'Musyrif', 'dosen-musyrif': 'Dosen-Musyrif',
-        'mahasiswa': 'Mahasiswa', 'umum': 'Umum'
-      };
+      const map = { 'pusat-data': 'Pusat Data', 'operator-akademik': 'Op. Akademik', 'operator-halaqoh': 'Op. Halaqoh', 'operator-bahasa': 'Op. Bahasa', 'operator-pengasuhan': 'Op. Pengasuhan', 'dosen': 'Dosen', 'musyrif': 'Musyrif', 'dosen-musyrif': 'Dosen-Musyrif', 'mahasiswa': 'Mahasiswa', 'umum': 'Umum' };
       return map[role] || role;
     }
 
     async function loadUsers() {
       try {
         const snap = await db.collection('users').orderBy('nama').get();
-        let html = '<table><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th></tr></thead><tbody>';
-        if (snap.empty) {
-          html += '<tr><td colspan="4">Belum ada user</td></tr>';
+        allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Email</th><th>Password</th><th>Role</th><th>Aksi</th></tr></thead><tbody>';
+        if (allUsers.length === 0) {
+          html += '<tr><td colspan="6">Belum ada user</td></tr>';
         } else {
-          snap.forEach(doc => {
-            const d = doc.data();
-            html += `<tr><td><strong>${d.nama || '-'}</strong></td><td>${d.email || '-'}</td><td><span class="badge ${getBadgeClass(d.role)}">${getRoleLabel(d.role)}</span></td><td><button class="btn btn-danger btn-sm" onclick="hapusUser('${doc.id}','${d.email}')"><i class="fa-solid fa-trash"></i> Hapus</button></td></tr>`;
+          allUsers.forEach((d, i) => {
+            html += `<tr>
+              <td>${i+1}</td>
+              <td class="text-left"><strong>${d.nama || '-'}</strong></td>
+              <td>${d.email || '-'}</td>
+              <td style="font-family:monospace;font-size:11px;">${d.password || '***'}</td>
+              <td><span class="badge ${getBadgeClass(d.role)}">${getRoleLabel(d.role)}</span></td>
+              <td><button class="btn btn-danger btn-sm" onclick="hapusUser('${d.id}','${d.email}')"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
           });
         }
         html += '</tbody></table>';
@@ -213,11 +211,7 @@
       const password = document.getElementById('password').value;
       const role = document.getElementById('role').value;
 
-      if (!nama || !email || !password || !role) {
-        showAlert('error', 'Semua field wajib diisi!');
-        isAdding = false;
-        return;
-      }
+      if (!nama || !email || !password || !role) { showAlert('error', 'Semua field wajib!'); isAdding = false; return; }
 
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true;
@@ -226,12 +220,10 @@
       try {
         const apiKey = firebaseConfig.apiKey;
         const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, returnSecureToken: true })
         });
         const data = await res.json();
-
         if (data.error) {
           let msg = data.error.message;
           if (msg.includes('EMAIL_EXISTS')) msg = 'Email sudah terdaftar!';
@@ -239,24 +231,16 @@
           else if (msg.includes('INVALID_EMAIL')) msg = 'Format email tidak valid!';
           throw new Error(msg);
         }
-
         const uid = data.localId;
-
         await db.collection('users').doc(uid).set({
-          uid, nama, email, role,
+          uid, nama, email, password, role,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-
         showAlert('success', `✅ ${nama} berhasil dibuat!`);
         document.getElementById('addUserForm').reset();
         loadUsers();
-      } catch(e) {
-        showAlert('error', '❌ ' + e.message);
-      } finally {
-        isAdding = false;
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan';
-      }
+      } catch(e) { showAlert('error', '❌ ' + e.message); }
+      finally { isAdding = false; btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan'; }
     };
 
     window.hapusUser = async function(id, email) {
@@ -266,10 +250,19 @@
       loadUsers();
     };
 
-    window.logout = function() {
-      if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); }
-    };
+    function exportExcel() {
+      if (allUsers.length === 0) { alert('Tidak ada data!'); return; }
+      let csv = '\uFEFFNo;Nama;Email;Password;Role\n';
+      allUsers.forEach((d, i) => {
+        csv += `${i+1};"${d.nama||'-'}";"${d.email||'-'}";"${d.password||'***'}";"${getRoleLabel(d.role)}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'data-user-ipim.xls';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
 
+    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
     loadUsers();
   </script>
 </body>
