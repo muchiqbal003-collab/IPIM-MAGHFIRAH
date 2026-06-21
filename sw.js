@@ -1,32 +1,14 @@
-// sw.js - Service Worker IPIM Maghfirah (Stabil & PWA)
+// sw.js - Service Worker IPIM Maghfirah (Stabil v4)
 
 const CACHE_NAME = 'ipim-v4';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/firebase-config.js',
-  '/js/auth.js',
-  '/js/app.js',
-  '/assets/icons/icon-192.png',
-  '/assets/icons/icon-512.png',
-  '/manifest.json'
-];
 
-// Install - Cache aset statis penting
+// Install - Jangan cache apapun dulu (biar tidak bentrok)
 self.addEventListener('install', (event) => {
   console.log('✅ SW Installed (v4)');
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('⚠️ Beberapa aset gagal di-cache:', err);
-      });
-    })
-  );
   self.skipWaiting();
 });
 
-// Activate - Hapus cache lama
+// Activate - Hapus semua cache lama
 self.addEventListener('activate', (event) => {
   console.log('✅ SW Activated (v4)');
   event.waitUntil(
@@ -39,52 +21,20 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch - NETWORK FIRST
+// Fetch - NETWORK ONLY (TIDAK ADA CACHE)
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // JANGAN cache request ke Firebase
+  // SEMUA request ke Firebase: biarkan lolos (jangan cache)
   if (
     url.hostname.includes('firestore') ||
     url.hostname.includes('googleapis') ||
     url.hostname.includes('identitytoolkit') ||
     url.hostname.includes('firebaseauth')
   ) {
-    return; // Biarkan fetch normal (tidak di-cache)
+    return; // Tidak di-intercept
   }
 
-  // JANGAN cache halaman HTML dan JavaScript (selalu ambil dari network)
-  if (
-    url.pathname.endsWith('.html') ||
-    url.pathname.endsWith('.js') ||
-    url.pathname === '/' ||
-    url.pathname.includes('/pages/')
-  ) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => response)
-        .catch(() => {
-          // Jika gagal fetch (offline), tampilkan halaman offline atau fallback
-          return caches.match('/index.html');
-        })
-    );
-    return;
-  }
-
-  // Untuk aset statis: Cache First
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const fetchPromise = fetch(event.request).then((response) => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clone);
-          });
-        }
-        return response;
-      }).catch(() => cached);
-      
-      return cached || fetchPromise;
-    })
-  );
+  // Untuk SEMUA request lainnya: network only, jangan cache
+  event.respondWith(fetch(event.request));
 });
