@@ -1,14 +1,10 @@
-// sw.js - Service Worker IPIM Maghfirah (Stabil v4)
+const CACHE_NAME = 'ipim-v5';
 
-const CACHE_NAME = 'ipim-v4';
-
-// Install - Jangan cache apapun dulu (biar tidak bentrok)
 self.addEventListener('install', (event) => {
   console.log('✅ SW Installed (v4)');
   self.skipWaiting();
 });
 
-// Activate - Hapus semua cache lama
 self.addEventListener('activate', (event) => {
   console.log('✅ SW Activated (v4)');
   event.waitUntil(
@@ -21,20 +17,25 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch - NETWORK ONLY (TIDAK ADA CACHE)
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // SEMUA request ke Firebase: biarkan lolos (jangan cache)
+  // Biarkan semua Firebase lolos tanpa intercept
   if (
     url.hostname.includes('firestore') ||
     url.hostname.includes('googleapis') ||
     url.hostname.includes('identitytoolkit') ||
-    url.hostname.includes('firebaseauth')
+    url.hostname.includes('firebaseauth') ||
+    url.hostname.includes('firebasestorage')
   ) {
-    return; // Tidak di-intercept
+    return;
   }
 
-  // Untuk SEMUA request lainnya: network only, jangan cache
+  // Hanya intercept request di dalam scope repo ini
+  if (!url.pathname.startsWith('/IPIM-MAGHFIRAH/')) {
+    return;
+  }
+
+  // Network only untuk semua request lainnya
   event.respondWith(fetch(event.request));
 });
