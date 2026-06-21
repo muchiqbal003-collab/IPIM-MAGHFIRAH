@@ -6,223 +6,521 @@
   <title>Profil - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
-      --gold: #d4a843; --gold-light: #fdf6e3;
-      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
-      --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
-      --red: #e53935; --red-light: #fce4ec;
-      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --green-dark: #003d33; --green-mid: #006644; --green: #00a859;
+      --green-light: #e8f5e9; --green-pale: #f0faf5;
+      --gold: #f5c842; --gold-light: #fffbee;
+      --white: #ffffff; --gray-50: #f9f9f9; --gray-100: #f0f0f0;
+      --gray-200: #d1ead8; --gray-400: #aaaaaa; --gray-600: #666666;
+      --gray-800: #222222; --red: #e53935; --red-light: #fce4ec;
+      --radius-sm: 10px; --radius: 14px; --radius-lg: 18px;
       --transition: all 0.25s ease;
-      --bottom-nav-height: 64px; --header-height: 56px;
+      --bottom-nav-height: 68px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--green-pale); color: var(--gray-800);
+      padding-bottom: var(--bottom-nav-height);
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* HEADER */
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-    .app-header h3 { font-size: 16px; font-weight: 600; }
+    /* ── HERO HEADER ── */
+    .hero {
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      padding: 50px 20px 70px; text-align: center; position: relative;
+    }
+    .hero-back {
+      position: absolute; top: 14px; left: 16px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: white; font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
 
-    /* BOTTOM NAV */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; }
-    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 6px 0; }
-    .bottom-nav .nav-item i { font-size: 20px; }
-    .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
+    /* ── AVATAR ── */
+    .avatar-wrap {
+      position: relative; display: inline-block; margin-bottom: 12px;
+    }
+    .avatar {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: var(--gold); color: var(--green-dark);
+      font-size: 34px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      border: 3px solid rgba(255,255,255,0.4);
+      object-fit: cover; overflow: hidden;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .avatar-edit {
+      position: absolute; bottom: 0; right: 0;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--gold); color: var(--green-dark);
+      font-size: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px solid white;
+    }
+    #fotoInput { display: none; }
 
-    .content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-    .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); }
+    .hero-name { font-size: 18px; font-weight: 800; color: white; }
+    .hero-role {
+      display: inline-block; margin-top: 5px;
+      background: rgba(245,200,66,0.2); border: 1px solid rgba(245,200,66,0.4);
+      border-radius: 20px; padding: 3px 12px; font-size: 11px; color: #fde992; font-weight: 600;
+    }
+    .hero-email { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; }
 
-    .profile-top { text-align: center; }
-    .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--gold); display: inline-flex; align-items: center; justify-content: center; font-size: 32px; color: var(--green-dark); font-weight: 700; margin-bottom: 8px; object-fit: cover; }
-    .profile-top h4 { font-size: 16px; margin-bottom: 2px; }
-    .profile-top span { font-size: 12px; color: var(--gray-600); }
+    /* Upload progress */
+    .upload-progress {
+      margin-top: 10px; display: none;
+    }
+    .upload-bar {
+      width: 120px; height: 4px; background: rgba(255,255,255,0.2);
+      border-radius: 4px; overflow: hidden; margin: 0 auto;
+    }
+    .upload-bar-fill {
+      height: 100%; background: var(--gold); border-radius: 4px;
+      width: 0%; transition: width 0.3s ease;
+    }
+    .upload-label { font-size: 10px; color: rgba(255,255,255,0.75); margin-top: 4px; }
 
-    .info-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-100); cursor: pointer; }
-    .info-row i { width: 24px; font-size: 16px; color: var(--green); margin-right: 12px; }
-    .info-row span { flex: 1; font-size: 13px; }
-    .info-row .arrow { color: var(--gray-400); }
+    /* ── CONTENT ── */
+    .content {
+      margin-top: -24px; padding: 0 16px 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
 
-    .form-group { margin-bottom: 12px; display: none; }
-    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; resize: vertical; }
+    /* ── CARD ── */
+    .card {
+      background: var(--white); border-radius: var(--radius-lg);
+      border: 0.5px solid var(--gray-200);
+      overflow: hidden;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--gray-400);
+      padding: 14px 16px 6px;
+    }
+
+    /* ── MENU ROW ── */
+    .menu-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px; cursor: pointer; transition: var(--transition);
+      border-bottom: 0.5px solid var(--gray-100);
+    }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row:active { background: var(--green-pale); }
+    .menu-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--green-light); color: var(--green-mid);
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      flex-shrink: 0;
+    }
+    .menu-icon.red { background: var(--red-light); color: var(--red); }
+    .menu-icon.gold { background: var(--gold-light); color: #a08000; }
+    .menu-text { flex: 1; }
+    .menu-text span { font-size: 13px; font-weight: 600; color: var(--gray-800); display: block; }
+    .menu-text small { font-size: 11px; color: var(--gray-400); }
+    .menu-arrow { font-size: 12px; color: var(--gray-400); }
+    .menu-row.active-row .menu-arrow { transform: rotate(90deg); }
+
+    /* ── FORM PANEL ── */
+    .form-panel {
+      display: none; padding: 0 16px 14px;
+      background: var(--green-pale); border-top: 0.5px solid var(--gray-200);
+    }
+    .form-panel.open { display: block; }
+    .form-group { margin-bottom: 10px; margin-top: 12px; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--gray-600); display: block; margin-bottom: 5px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+      font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;
+      outline: none; background: white; resize: vertical; transition: var(--transition);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--green); }
     .form-group textarea { min-height: 80px; }
-    .btn-primary { width: 100%; padding: 12px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 8px; }
-    .btn-danger { width: 100%; padding: 12px; background: var(--red-light); color: var(--red); border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 8px; }
+    .btn-submit {
+      width: 100%; padding: 11px; border: none; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--green-mid), var(--green));
+      color: white; font-size: 13px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-submit:active { opacity: 0.88; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; }
-    .alert-error { background: var(--red-light); color: #b71c1c; }
+    /* ── LOGOUT ── */
+    .btn-logout {
+      width: 100%; padding: 13px; border: none; border-radius: var(--radius-lg);
+      background: var(--white); color: var(--red);
+      font-size: 13px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      border: 0.5px solid #fecaca;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: var(--gray-800); color: white; border-radius: 20px;
+      padding: 10px 20px; font-size: 13px; font-weight: 600;
+      z-index: 200; opacity: 0; transition: opacity 0.3s ease;
+      white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #065f46; }
+    .toast.error { background: #991b1b; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: var(--bottom-nav-height); background: var(--white);
+      border-top: 0.5px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      font-size: 10px; color: var(--gray-600); cursor: pointer;
+      text-decoration: none; padding: 8px 0; flex: 1; transition: var(--transition);
+    }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-mid); font-weight: 700; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="app-header">
-    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>Profil Saya</h3>
-  </header>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></div>
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatarEl"><span id="avatarLetter">U</span></div>
+      <div class="avatar-edit" onclick="document.getElementById('fotoInput').click()">
+        <i class="fa-solid fa-camera"></i>
+      </div>
+      <input type="file" id="fotoInput" accept="image/*">
+    </div>
+    <div class="upload-progress" id="uploadProgress">
+      <div class="upload-bar"><div class="upload-bar-fill" id="uploadBarFill"></div></div>
+      <div class="upload-label" id="uploadLabel">Mengunggah foto...</div>
+    </div>
+    <div class="hero-name" id="heroName">Nama User</div>
+    <div class="hero-role" id="heroRole">Role</div>
+    <div class="hero-email" id="heroEmail">email@ipim.ac.id</div>
+  </div>
 
+  <!-- CONTENT -->
   <div class="content">
-    <div id="alertSuccess" class="alert alert-success"></div>
-    <div id="alertError" class="alert alert-error"></div>
 
-    <!-- Profile Card -->
-    <div class="card profile-top">
-      <div class="profile-avatar" id="profileAvatar">U</div>
-      <h4 id="profileName">Nama User</h4>
-      <span id="profileRole">Role</span>
-      <p style="font-size:11px;color:var(--gray-600);margin-top:4px;" id="profileEmail">email@ipim.ac.id</p>
+    <!-- Akun -->
+    <div class="card">
+      <div class="card-title">Akun</div>
+
+      <div class="menu-row" id="rowNama" onclick="togglePanel('panelNama', this)">
+        <div class="menu-icon"><i class="fa-solid fa-pen"></i></div>
+        <div class="menu-text"><span>Ubah Nama</span><small>Perbarui nama tampilan</small></div>
+        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="form-panel" id="panelNama">
+        <div class="form-group">
+          <label>Nama Baru</label>
+          <input type="text" id="inputNama" placeholder="Masukkan nama baru">
+        </div>
+        <button class="btn-submit" id="btnNama" onclick="updateNama()">
+          <i class="fa-solid fa-check"></i> Simpan Nama
+        </button>
+      </div>
+
+      <div class="menu-row" id="rowPassword" onclick="togglePanel('panelPassword', this)">
+        <div class="menu-icon"><i class="fa-solid fa-lock"></i></div>
+        <div class="menu-text"><span>Ubah Password</span><small>Ganti kata sandi akun</small></div>
+        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="form-panel" id="panelPassword">
+        <div class="form-group">
+          <label>Password Baru (min. 6 karakter)</label>
+          <input type="password" id="inputPassword" placeholder="Masukkan password baru">
+        </div>
+        <button class="btn-submit" id="btnPassword" onclick="updatePassword()">
+          <i class="fa-solid fa-check"></i> Simpan Password
+        </button>
+      </div>
     </div>
 
-    <!-- Menu -->
+    <!-- Laporan -->
     <div class="card">
-      <div class="info-row" onclick="toggleForm('editNama')"><i class="fa-solid fa-pen"></i><span>Ubah Nama</span><i class="fa-solid fa-chevron-right arrow"></i></div>
-      <div id="editNama" class="form-group">
-        <label>Nama Baru</label>
-        <input type="text" id="inputNama" placeholder="Masukkan nama baru">
-        <button class="btn-primary" onclick="updateNama()">Simpan Nama</button>
+      <div class="card-title">Laporan</div>
+
+      <div class="menu-row" id="rowBahasa" onclick="togglePanel('panelBahasa', this)">
+        <div class="menu-icon gold"><i class="fa-solid fa-language"></i></div>
+        <div class="menu-text"><span>Lapor Bahasa</span><small>Laporkan pelanggaran bahasa</small></div>
+        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="form-panel" id="panelBahasa">
+        <div class="form-group">
+          <label>Nama Mahasiswa</label>
+          <input type="text" id="namaMahasiswaBahasa" placeholder="Nama mahasiswa">
+        </div>
+        <div class="form-group">
+          <label>Jenis Pelanggaran</label>
+          <input type="text" id="jenisBahasa" placeholder="Contoh: Kosakata, Grammar, Campur">
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <textarea id="deskripsiBahasa" placeholder="Tulis laporan..."></textarea>
+        </div>
+        <button class="btn-submit" id="btnBahasa" onclick="kirimLapor('bahasa')">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Laporan
+        </button>
       </div>
 
-      <div class="info-row" onclick="toggleForm('editPassword')"><i class="fa-solid fa-lock"></i><span>Ubah Password</span><i class="fa-solid fa-chevron-right arrow"></i></div>
-      <div id="editPassword" class="form-group">
-        <label>Password Baru (min. 6 karakter)</label>
-        <input type="password" id="inputPassword" placeholder="Masukkan password baru" minlength="6">
-        <button class="btn-primary" onclick="updatePassword()">Simpan Password</button>
+      <div class="menu-row" id="rowPengasuhan" onclick="togglePanel('panelPengasuhan', this)">
+        <div class="menu-icon gold"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="menu-text"><span>Lapor Pengasuhan</span><small>Laporkan pelanggaran pengasuhan</small></div>
+        <i class="fa-solid fa-chevron-right menu-arrow"></i>
       </div>
-
-      <div class="info-row" onclick="toggleForm('laporBahasa')"><i class="fa-solid fa-language"></i><span>Lapor Bahasa</span><i class="fa-solid fa-chevron-right arrow"></i></div>
-<div id="laporBahasa" class="form-group">
-  <label>Nama Mahasiswa</label>
-  <input type="text" id="namaMahasiswaBahasa" placeholder="Masukkan nama mahasiswa">
-  <label style="margin-top:8px;">Jenis Pelanggaran</label>
-  <input type="text" id="jenisBahasa" placeholder="Contoh: Kosakata, Grammar, Campur">
-  <label style="margin-top:8px;">Deskripsi</label>
-  <textarea id="deskripsiBahasa" placeholder="Tulis laporan..."></textarea>
-  <button class="btn-primary" onclick="kirimLapor('bahasa')">Kirim Laporan</button>
-</div>
-
-<div class="info-row" onclick="toggleForm('laporPengasuhan')"><i class="fa-solid fa-shield-halved"></i><span>Lapor Pengasuhan</span><i class="fa-solid fa-chevron-right arrow"></i></div>
-<div id="laporPengasuhan" class="form-group">
-  <label>Nama Mahasiswa</label>
-  <input type="text" id="namaMahasiswaPengasuhan" placeholder="Masukkan nama mahasiswa">
-  <label style="margin-top:8px;">Jenis Pelanggaran</label>
-  <input type="text" id="jenisPengasuhan" placeholder="Contoh: Akhlak, Kebersihan, Kedisiplinan">
-  <label style="margin-top:8px;">Deskripsi</label>
-  <textarea id="deskripsiPengasuhan" placeholder="Tulis laporan..."></textarea>
-  <button class="btn-primary" onclick="kirimLapor('pengasuhan')">Kirim Laporan</button>
-</div>
+      <div class="form-panel" id="panelPengasuhan">
+        <div class="form-group">
+          <label>Nama Mahasiswa</label>
+          <input type="text" id="namaMahasiswaPengasuhan" placeholder="Nama mahasiswa">
+        </div>
+        <div class="form-group">
+          <label>Jenis Pelanggaran</label>
+          <input type="text" id="jenisPengasuhan" placeholder="Contoh: Akhlak, Kebersihan, Kedisiplinan">
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <textarea id="deskripsiPengasuhan" placeholder="Tulis laporan..."></textarea>
+        </div>
+        <button class="btn-submit" id="btnPengasuhan" onclick="kirimLapor('pengasuhan')">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Laporan
+        </button>
+      </div>
     </div>
 
     <!-- Logout -->
-    <button class="btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    <button class="btn-logout" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i> Keluar dari Akun
+    </button>
+
   </div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
     <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
     <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+    <div class="nav-item active" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
   </nav>
 
+  <div class="toast" id="toast"></div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script>
     const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
     if (!user) window.location.href = '../../index.html';
-
     window.goTo = page => window.location.href = page;
 
-    // Init profil
-    document.getElementById('profileName').textContent = user.nama || 'User';
-    document.getElementById('profileRole').textContent = user.role || '-';
-    document.getElementById('profileEmail').textContent = user.email || '-';
-    document.getElementById('profileAvatar').textContent = (user.nama || 'U')[0].toUpperCase();
+    // ── INIT TAMPILAN ──
+    function getRoleLabel(role) {
+      const map = {
+        'dosen': 'Dosen', 'musyrif': 'Musyrif',
+        'dosen-musyrif': 'Dosen & Musyrif', 'umum': 'Umum',
+        'pusat-data': 'Pusat Data'
+      };
+      return map[role] || role;
+    }
 
-    // Toggle form
-    window.toggleForm = function(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    document.getElementById('heroName').textContent   = user.nama  || 'Nama User';
+    document.getElementById('heroRole').textContent   = getRoleLabel(user.role);
+    document.getElementById('heroEmail').textContent  = user.email || '-';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'U')[0].toUpperCase();
+
+    // Load foto profil kalau sudah pernah upload
+    if (user.fotoUrl) {
+      const avatarEl = document.getElementById('avatarEl');
+      avatarEl.innerHTML = `<img src="${user.fotoUrl}" alt="Foto Profil">`;
+    }
+
+    // ── TOAST ──
+    function showToast(msg, type = '') {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.className = `toast ${type} show`;
+      setTimeout(() => { el.className = 'toast'; }, 3000);
+    }
+
+    // ── TOGGLE PANEL ──
+    window.togglePanel = function(panelId, rowEl) {
+      const panel  = document.getElementById(panelId);
+      const isOpen = panel.classList.contains('open');
+      // Tutup semua panel dulu
+      document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.menu-row').forEach(r => r.classList.remove('active-row'));
+      // Buka yang diklik kalau sebelumnya tertutup
+      if (!isOpen) {
+        panel.classList.add('open');
+        rowEl.classList.add('active-row');
+      }
     };
 
-    // Update nama
+    // ── UPLOAD FOTO ──
+    document.getElementById('fotoInput').addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validasi ukuran maks 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Ukuran foto maks 2MB', 'error');
+        return;
+      }
+
+      const progressWrap = document.getElementById('uploadProgress');
+      const barFill      = document.getElementById('uploadBarFill');
+      const uploadLabel  = document.getElementById('uploadLabel');
+      progressWrap.style.display = 'block';
+
+      try {
+        const storage  = firebase.storage();
+        const fileExt  = file.name.split('.').pop();
+        const ref      = storage.ref(`profil/${user.uid}/foto.${fileExt}`);
+        const task     = ref.put(file);
+
+        task.on('state_changed',
+          (snapshot) => {
+            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            barFill.style.width      = pct + '%';
+            uploadLabel.textContent  = `Mengunggah... ${pct}%`;
+          },
+          (err) => {
+            progressWrap.style.display = 'none';
+            showToast('Gagal upload: ' + err.message, 'error');
+          },
+          async () => {
+            const url = await task.snapshot.ref.getDownloadURL();
+            // Simpan URL ke Firestore
+            await db.collection('users').doc(user.uid).update({ fotoUrl: url });
+            // Update localStorage
+            user.fotoUrl = url;
+            localStorage.setItem('user', JSON.stringify(user));
+            // Tampilkan foto
+            document.getElementById('avatarEl').innerHTML = `<img src="${url}" alt="Foto Profil">`;
+            progressWrap.style.display = 'none';
+            showToast('✅ Foto profil berhasil diperbarui!', 'success');
+          }
+        );
+      } catch(e) {
+        progressWrap.style.display = 'none';
+        showToast('Gagal: ' + e.message, 'error');
+      }
+    });
+
+    // ── UPDATE NAMA ──
     window.updateNama = async function() {
       const namaBaru = document.getElementById('inputNama').value.trim();
-      if (!namaBaru) return showAlert('error', 'Nama tidak boleh kosong!');
+      if (!namaBaru) { showToast('Nama tidak boleh kosong!', 'error'); return; }
+      const btn = document.getElementById('btnNama');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
       try {
-        // Update di Firestore
         await db.collection('users').doc(user.uid).update({ nama: namaBaru });
-        // Update di localStorage
         user.nama = namaBaru;
         localStorage.setItem('user', JSON.stringify(user));
-        // Update tampilan
-        document.getElementById('profileName').textContent = namaBaru;
-        document.getElementById('profileAvatar').textContent = namaBaru[0].toUpperCase();
-        showAlert('success', 'Nama berhasil diubah!');
-      } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
+        document.getElementById('heroName').textContent     = namaBaru;
+        document.getElementById('avatarLetter').textContent = namaBaru[0].toUpperCase();
+        document.getElementById('inputNama').value          = '';
+        showToast('✅ Nama berhasil diubah!', 'success');
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Nama';
+      }
     };
 
-    // Update password
+    // ── UPDATE PASSWORD ──
     window.updatePassword = async function() {
-      const pass = document.getElementById('inputPassword').value.trim();
-      if (pass.length < 6) return showAlert('error', 'Password minimal 6 karakter!');
+      const pass = document.getElementById('inputPassword').value;
+      if (pass.length < 6) { showToast('Password minimal 6 karakter!', 'error'); return; }
+      const btn = document.getElementById('btnPassword');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
       try {
         const currentUser = auth.currentUser;
         if (currentUser) {
           await currentUser.updatePassword(pass);
-          showAlert('success', 'Password berhasil diubah!');
           document.getElementById('inputPassword').value = '';
+          showToast('✅ Password berhasil diubah!', 'success');
         }
-      } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
+      } catch(e) {
+        if (e.code === 'auth/requires-recent-login') {
+          showToast('Sesi terlalu lama, silakan login ulang dulu', 'error');
+        } else {
+          showToast('Gagal: ' + e.message, 'error');
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Password';
+      }
     };
 
-    // Kirim lapor
-    // Kirim lapor
-window.kirimLapor = async function(jenis) {
-  const namaMhs = document.getElementById(`namaMahasiswa${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
-  const jenisPelanggaran = document.getElementById(`jenis${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
-  const deskripsi = document.getElementById(`deskripsi${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value.trim();
+    // ── KIRIM LAPORAN ──
+    window.kirimLapor = async function(jenis) {
+      const suffix    = jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan';
+      const namaMhs   = document.getElementById(`namaMahasiswa${suffix}`).value.trim();
+      const jenisVal  = document.getElementById(`jenis${suffix}`).value.trim();
+      const deskripsi = document.getElementById(`deskripsi${suffix}`).value.trim();
 
-  if (!namaMhs) return showAlert('error', 'Nama mahasiswa wajib diisi!');
-  if (!jenisPelanggaran) return showAlert('error', 'Jenis pelanggaran wajib diisi!');
-  if (!deskripsi) return showAlert('error', 'Deskripsi wajib diisi!');
+      if (!namaMhs)   { showToast('Nama mahasiswa wajib diisi!', 'error'); return; }
+      if (!jenisVal)  { showToast('Jenis pelanggaran wajib diisi!', 'error'); return; }
+      if (!deskripsi) { showToast('Deskripsi wajib diisi!', 'error'); return; }
 
-  const koleksi = jenis === 'bahasa' ? 'laporBahasa' : 'laporPengasuhan';
-  try {
-    await db.collection(koleksi).add({
-      pelaporId: user.uid,
-      namaPelapor: user.nama,
-      namaMahasiswa: namaMhs,           // <-- field baru
-      tanggal: new Date().toISOString().split('T')[0],
-      jenis: jenisPelanggaran,
-      deskripsi: deskripsi,
-      status: 'pending',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    showAlert('success', 'Laporan berhasil dikirim!');
-    // Reset form
-    document.getElementById(`namaMahasiswa${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
-    document.getElementById(`jenis${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
-    document.getElementById(`deskripsi${jenis === 'bahasa' ? 'Bahasa' : 'Pengasuhan'}`).value = '';
-  } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
-};
-    function showAlert(type, text) {
-      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
-      el.textContent = text; el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 4000);
-    }
+      const btnId  = `btn${suffix}`;
+      const btn    = document.getElementById(btnId);
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
 
+      const koleksi = jenis === 'bahasa' ? 'laporBahasa' : 'laporPengasuhan';
+      try {
+        await db.collection(koleksi).add({
+          pelaporId    : user.uid,
+          namaPelapor  : user.nama,
+          namaMahasiswa: namaMhs,
+          tanggal      : new Date().toISOString().split('T')[0],
+          jenis        : jenisVal,
+          deskripsi    : deskripsi,
+          status       : 'pending',
+          createdAt    : firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('✅ Laporan berhasil dikirim!', 'success');
+        document.getElementById(`namaMahasiswa${suffix}`).value = '';
+        document.getElementById(`jenis${suffix}`).value         = '';
+        document.getElementById(`deskripsi${suffix}`).value     = '';
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Laporan';
+      }
+    };
+
+    // ── LOGOUT ──
     window.logout = function() {
       if (confirm('Apakah Anda yakin ingin keluar?')) {
-        auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; });
+        auth.signOut().then(() => {
+          localStorage.removeItem('user');
+          window.location.href = '../../index.html';
+        });
       }
     };
   </script>
