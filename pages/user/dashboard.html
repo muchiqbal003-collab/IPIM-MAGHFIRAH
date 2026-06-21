@@ -480,31 +480,68 @@
       } catch(e) { container.innerHTML = '<p style="color:red;font-size:12px;">Gagal memuat</p>'; }
     }
     renderSholatCard();
+    loadJadwalHariIni(); 
 
     // JADWAL
-    (async function loadJadwal() {
-      const list = document.getElementById('jadwalList');
-      try {
+    // ========== JADWAL HARI INI ==========
+    async function loadJadwalHariIni() {
+    const list = document.getElementById('jadwalList');
+    try {
         const today = new Date();
-        const hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
-        if (hari === 'Jumat' || hari === 'Minggu') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal (libur)</p>'; return; }
-        if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal mengajar</p>'; return; }
-        const snap = await db.collection('jadwal').where('dosenId','==',user.uid).where('hari','==',hari).get();
-        if (snap.empty) { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Tidak ada jadwal hari ini</p>'; return; }
-        list.innerHTML = snap.docs.map(d => {
-          const j = d.data();
-          return `<div class="jadwal-item">
-            <div class="jadwal-time">${j.waktu}</div>
-            <div class="jadwal-info">
-              <div class="jadwal-mk">${j.mkNama}</div>
-              <div class="jadwal-kls">${j.kelasNama}</div>
-            </div>
-            <a href="absensi-kelas.html?jadwalId=${d.id}&kelasId=${j.kelasId}&mapelId=${j.mkId}" class="btn-absensi">Absensi</a>
-          </div>`;
-        }).join('');
-      } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; }
-    })();
+        const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
 
+        // Cek role
+        if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') {
+            list.innerHTML = '<p style="color:var(--gray-600);">Tidak ada jadwal mengajar</p>';
+            return;
+        }
+
+        // AMBIL SEMUA JADWAL (tanpa filter hari) — persis seperti di Jadwal Saya
+        const snap = await db.collection('jadwal')
+            .where('dosenId', '==', user.uid)
+            .get();
+
+        if (snap.empty) {
+            list.innerHTML = '<p style="color:var(--gray-600);">Belum ada jadwal mengajar</p>';
+            return;
+        }
+
+        // Filter hari di JavaScript
+        const jadwalHariIni = [];
+        snap.forEach(doc => {
+            const j = doc.data();
+            if (j.hari === hari) {
+                jadwalHariIni.push({ id: doc.id, ...j });
+            }
+        });
+
+        // Urutkan
+        jadwalHariIni.sort((a, b) => (a.jamKe || 0) - (b.jamKe || 0));
+
+        if (jadwalHariIni.length === 0) {
+            list.innerHTML = `<p style="color:var(--gray-600);">Tidak ada jadwal hari ${hari}</p>`;
+            return;
+        }
+
+        // Render
+        let html = '';
+        jadwalHariIni.forEach(j => {
+            html += `<div class="jadwal-item">
+                <div class="jadwal-time">${j.waktu}</div>
+                <div class="jadwal-info">
+                    <div class="jadwal-mk">${j.mkNama}</div>
+                    <div class="jadwal-kls">${j.kelasNama}</div>
+                </div>
+                <a href="absensi-kelas.html?jadwalId=${j.id}&kelasId=${j.kelasId}&mapelId=${j.mkId}" class="btn-absensi">Isi Absensi</a>
+            </div>`;
+        });
+        list.innerHTML = html;
+
+    } catch(e) {
+        console.error(e);
+        list.innerHTML = '<p style="color:red;">Gagal memuat jadwal</p>';
+    }
+}
     // MOTIVASI
     (async function loadMotivasi() {
       try {
