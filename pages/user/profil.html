@@ -42,8 +42,12 @@
     }
 
     /* ── AVATAR ── */
+    .avatar-section {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 12px;
+    }
     .avatar-wrap {
-      position: relative; display: inline-block; margin-bottom: 12px;
+      position: relative; display: inline-block; margin-bottom: 10px;
     }
     .avatar {
       width: 90px; height: 90px; border-radius: 50%;
@@ -51,7 +55,7 @@
       font-size: 34px; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       border: 3px solid rgba(255,255,255,0.4);
-      object-fit: cover; overflow: hidden;
+      overflow: hidden;
     }
     .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .avatar-edit {
@@ -61,6 +65,21 @@
       font-size: 12px; display: flex; align-items: center; justify-content: center;
       cursor: pointer; border: 2px solid white;
     }
+    .foto-action-row {
+      display: flex; gap: 6px; justify-content: center; align-items: center;
+    }
+    .btn-foto-action {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85); border-radius: 20px;
+      padding: 5px 12px; font-size: 10px; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-foto-action:active { background: rgba(255,255,255,0.22); }
+    .btn-foto-action.hapus { color: #fca5a5; border-color: rgba(252,165,165,0.3); }
+    .btn-foto-action.hapus { display: none; }
+    .btn-foto-action.hapus.visible { display: inline-flex; }
     #fotoInput { display: none; }
 
     .hero-name { font-size: 18px; font-weight: 800; color: white; }
@@ -71,19 +90,7 @@
     }
     .hero-email { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; }
 
-    /* Upload progress */
-    .upload-progress {
-      margin-top: 10px; display: none;
-    }
-    .upload-bar {
-      width: 120px; height: 4px; background: rgba(255,255,255,0.2);
-      border-radius: 4px; overflow: hidden; margin: 0 auto;
-    }
-    .upload-bar-fill {
-      height: 100%; background: var(--gold); border-radius: 4px;
-      width: 0%; transition: width 0.3s ease;
-    }
-    .upload-label { font-size: 10px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
 
     /* ── CONTENT ── */
     .content {
@@ -199,16 +206,22 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></div>
-    <div class="avatar-wrap">
-      <div class="avatar" id="avatarEl"><span id="avatarLetter">U</span></div>
-      <div class="avatar-edit" onclick="document.getElementById('fotoInput').click()">
-        <i class="fa-solid fa-camera"></i>
+    <div class="avatar-section">
+      <div class="avatar-wrap">
+        <div class="avatar" id="avatarEl"><span id="avatarLetter">U</span></div>
+        <div class="avatar-edit" onclick="document.getElementById('fotoInput').click()">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        <input type="file" id="fotoInput" accept="image/*">
       </div>
-      <input type="file" id="fotoInput" accept="image/*">
-    </div>
-    <div class="upload-progress" id="uploadProgress">
-      <div class="upload-bar"><div class="upload-bar-fill" id="uploadBarFill"></div></div>
-      <div class="upload-label" id="uploadLabel">Mengunggah foto...</div>
+      <div class="foto-action-row">
+        <button class="btn-foto-action" onclick="document.getElementById('fotoInput').click()">
+          <i class="fa-solid fa-camera"></i> Ganti Foto
+        </button>
+        <button class="btn-foto-action hapus" id="btnHapusFoto" onclick="hapusFoto()">
+          <i class="fa-solid fa-trash"></i> Hapus
+        </button>
+      </div>
     </div>
     <div class="hero-name" id="heroName">Nama User</div>
     <div class="hero-role" id="heroRole">Role</div>
@@ -326,7 +339,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script>
@@ -349,10 +361,11 @@
     document.getElementById('heroEmail').textContent  = user.email || '-';
     document.getElementById('avatarLetter').textContent = (user.nama || 'U')[0].toUpperCase();
 
-    // Load foto profil kalau sudah pernah upload
-    if (user.fotoUrl) {
-      const avatarEl = document.getElementById('avatarEl');
-      avatarEl.innerHTML = `<img src="${user.fotoUrl}" alt="Foto Profil">`;
+    // Load foto profil dari localStorage
+    const savedFoto = localStorage.getItem(`fotoProfil_${user.uid}`);
+    if (savedFoto) {
+      document.getElementById('avatarEl').innerHTML = `<img src="${savedFoto}" alt="Foto Profil">`;
+      document.getElementById('btnHapusFoto').classList.add('visible');
     }
 
     // ── TOAST ──
@@ -376,56 +389,38 @@
       }
     };
 
-    // ── UPLOAD FOTO ──
-    document.getElementById('fotoInput').addEventListener('change', async function(e) {
+    // ── UPLOAD FOTO (disimpan di localStorage HP masing-masing) ──
+    document.getElementById('fotoInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      // Validasi ukuran maks 2MB
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('Ukuran foto maks 2MB', 'error');
-        return;
-      }
-
-      const progressWrap = document.getElementById('uploadProgress');
-      const barFill      = document.getElementById('uploadBarFill');
-      const uploadLabel  = document.getElementById('uploadLabel');
-      progressWrap.style.display = 'block';
-
-      try {
-        const storage  = firebase.storage();
-        const fileExt  = file.name.split('.').pop();
-        const ref      = storage.ref(`profil/${user.uid}/foto.${fileExt}`);
-        const task     = ref.put(file);
-
-        task.on('state_changed',
-          (snapshot) => {
-            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            barFill.style.width      = pct + '%';
-            uploadLabel.textContent  = `Mengunggah... ${pct}%`;
-          },
-          (err) => {
-            progressWrap.style.display = 'none';
-            showToast('Gagal upload: ' + err.message, 'error');
-          },
-          async () => {
-            const url = await task.snapshot.ref.getDownloadURL();
-            // Simpan URL ke Firestore
-            await db.collection('users').doc(user.uid).update({ fotoUrl: url });
-            // Update localStorage
-            user.fotoUrl = url;
-            localStorage.setItem('user', JSON.stringify(user));
-            // Tampilkan foto
-            document.getElementById('avatarEl').innerHTML = `<img src="${url}" alt="Foto Profil">`;
-            progressWrap.style.display = 'none';
-            showToast('✅ Foto profil berhasil diperbarui!', 'success');
-          }
-        );
-      } catch(e) {
-        progressWrap.style.display = 'none';
-        showToast('Gagal: ' + e.message, 'error');
-      }
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const base64 = event.target.result;
+        try {
+          localStorage.setItem(`fotoProfil_${user.uid}`, base64);
+          document.getElementById('avatarEl').innerHTML = `<img src="${base64}" alt="Foto Profil">`;
+          document.getElementById('btnHapusFoto').classList.add('visible');
+          showToast('✅ Foto profil berhasil disimpan!', 'success');
+        } catch(err) {
+          showToast('Foto terlalu besar, coba foto yang lebih kecil', 'error');
+        }
+      };
+      reader.onerror = function() {
+        showToast('Gagal membaca file foto', 'error');
+      };
+      reader.readAsDataURL(file);
     });
+
+    // ── HAPUS FOTO ──
+    window.hapusFoto = function() {
+      if (!confirm('Hapus foto profil?')) return;
+      localStorage.removeItem(`fotoProfil_${user.uid}`);
+      const huruf = (user.nama || 'U')[0].toUpperCase();
+      document.getElementById('avatarEl').innerHTML = `<span id="avatarLetter">${huruf}</span>`;
+      document.getElementById('btnHapusFoto').classList.remove('visible');
+      showToast('Foto profil dihapus', 'success');
+    };
 
     // ── UPDATE NAMA ──
     window.updateNama = async function() {
