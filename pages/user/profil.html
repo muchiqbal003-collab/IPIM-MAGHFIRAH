@@ -381,9 +381,9 @@
       const file = e.target.files[0];
       if (!file) return;
 
-      // Validasi ukuran maks 2MB
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('Ukuran foto maks 2MB', 'error');
+      // Validasi ukuran maks 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Ukuran foto maks 5MB', 'error');
         return;
       }
 
