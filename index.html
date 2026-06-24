@@ -5,104 +5,172 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPIM - Institute Pendidikan Islam Maghfirah</title>
 
+  <!-- Meta Tags PWA -->
   <meta name="theme-color" content="#004d40">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="IPIM">
-<link rel="manifest" href="/IPIM-MAGHFIRAH/manifest.json">
-<link rel="apple-touch-icon" href="/IPIM-MAGHFIRAH/assets/icons/icon-192x192.png">
+  
+  <!-- Manifest (sesuai file Anda) -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
 
+  <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+  <!-- Decorative Elements -->
+  <div class="decor-top"></div>
+  <div class="decor-bottom"></div>
+  <div class="pattern-dots"></div>
+
   <div class="login-wrapper">
     <!-- Pop-up Install Aplikasi -->
-<div class="install-prompt" id="installPrompt" style="display: none;">
-  <div class="icon">📲</div>
-  <div class="text">
-    <strong>Install Aplikasi IPIM</strong>
-    <span>Akses lebih cepat tanpa buka browser</span>
-  </div>
-  <button class="btn-install" id="btnInstall">Install</button>
-  <button class="btn-close" id="btnCloseInstall">&times;</button>
-</div>
+    <div class="install-prompt" id="installPrompt" style="display: none;">
+      <div class="prompt-icon">
+        <img src="assets/icons/icon-logo.png" alt="IPIM" class="prompt-logo">
+      </div>
+      <div class="prompt-text">
+        <strong>Install Aplikasi IPIM</strong>
+        <span>Akses lebih cepat tanpa buka browser</span>
+      </div>
+      <button class="btn-install" id="btnInstall">
+        <i class="fa-solid fa-download"></i> Install
+      </button>
+      <button class="btn-close-prompt" id="btnCloseInstall">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
     <div class="login-card">
-      <div class="login-header">
-        <div class="login-logo-placeholder"><i class="fa-solid fa-graduation-cap"></i></div>
-        <h1>IPIM</h1>
-        <p>Institute Pendidikan Islam Maghfirah</p>
+      <!-- Logo Section with Circle Frame -->
+      <div class="logo-section">
+        <div class="logo-circle-frame">
+          <div class="circle-outer"></div>
+          <div class="circle-middle"></div>
+          <div class="circle-dots"></div>
+          <div class="logo-image-wrapper">
+            <img src="assets/icons/icon-logo.png" alt="IPIM Logo" class="logo-image">
+            <div class="logo-glow"></div>
+          </div>
+        </div>
+        
+        <div class="brand-text">
+          <h1 class="brand-name">IPIM</h1>
+          <p class="brand-fullname">Institute Pendidikan Islam Maghfirah</p>
+          <div class="brand-tag">
+            <span class="tag-dot"></span>
+            <span>Sistem Informasi Terpadu</span>
+            <span class="tag-dot"></span>
+          </div>
+        </div>
       </div>
 
-      <form id="loginForm">
+      <!-- Login Form -->
+      <form id="loginForm" class="login-form">
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email">
+            <i class="fa-solid fa-envelope"></i> Email
+          </label>
           <div class="input-wrapper">
-            <i class="fa-solid fa-envelope input-icon"></i>
             <input type="email" id="email" placeholder="nama@ipim.ac.id" required autocomplete="email">
+            <div class="input-border"></div>
           </div>
         </div>
+
         <div class="form-group">
-          <label for="password">Kata Sandi</label>
+          <label for="password">
+            <i class="fa-solid fa-lock"></i> Kata Sandi
+          </label>
           <div class="input-wrapper">
-            <i class="fa-solid fa-lock input-icon"></i>
             <input type="password" id="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
+            <div class="input-border"></div>
           </div>
         </div>
+
         <button type="submit" class="btn-login" id="loginBtn">
-          <span class="spinner"></span><span class="btn-text">Masuk</span>
+          <span class="btn-content">
+            <span class="btn-text">Masuk ke Sistem</span>
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </span>
+          <span class="btn-loader">
+            <span class="spinner"></span>
+            <span>Memproses...</span>
+          </span>
         </button>
       </form>
 
       <div class="message-box" id="messageBox"></div>
-      <div class="login-footer"><p>&copy; 2026 IPIM Maghfirah • Sistem Informasi Terpadu</p></div>
+
+      <div class="login-footer">
+        <div class="footer-line"></div>
+        <p>&copy; 2026 IPIM Maghfirah. All rights reserved.</p>
+      </div>
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Custom Scripts -->
   <script src="js/firebase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+  
   <script>
+    // Service Worker - Menggunakan sw.js Anda
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/IPIM-MAGHFIRAH/sw.js')
-          .then(r => console.log('✅ SW registered'))
-          .catch(e => console.warn('❌ SW failed:', e));
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('✅ Service Worker registered:', registration.scope);
+          })
+          .catch(error => {
+            console.warn('❌ Service Worker failed:', error.message);
+          });
       });
     }
-    // ========== PWA INSTALL PROMPT ==========
-let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Cegah browser menampilkan prompt bawaan
-  e.preventDefault();
-  // Simpan event
-  deferredPrompt = e;
-  // Tampilkan pop-up kita
-  document.getElementById('installPrompt').style.display = 'flex';
-});
+    // PWA Install Prompt
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      const installPrompt = document.getElementById('installPrompt');
+      if (installPrompt) {
+        installPrompt.style.display = 'flex';
+      }
+    });
 
-document.getElementById('btnInstall').addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  // Tampilkan dialog instalasi bawaan browser
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`User response: ${outcome}`);
-  // Reset
-  deferredPrompt = null;
-  document.getElementById('installPrompt').style.display = 'none';
-});
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User install response: ${outcome}`);
+      
+      deferredPrompt = null;
+      document.getElementById('installPrompt').style.display = 'none';
+    });
 
-document.getElementById('btnCloseInstall').addEventListener('click', () => {
-  document.getElementById('installPrompt').style.display = 'none';
-});
+    document.getElementById('btnCloseInstall').addEventListener('click', () => {
+      document.getElementById('installPrompt').style.display = 'none';
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('✅ PWA installed');
+      deferredPrompt = null;
+    });
   </script>
 </body>
 </html>
