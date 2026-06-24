@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rekap Laporan - Operator Akademik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
+      --red: #e53935; --orange: #e65100; --pink: #880e4f;
+      --radius-sm: 8px; --radius: 12px; --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif; background: var(--gray-50);
+      color: var(--gray-800); padding-top: var(--header-height);
+    }
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--green-dark); color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; flex: 1; }
+    .content { padding: 16px; max-width: 1100px; margin: 0 auto; }
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px;
+    }
+    .form-row {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: end;
+    }
+    .form-group { flex: 1; min-width: 180px; }
+    .form-group label {
+      font-size: 11px; font-weight: 600; color: var(--gray-600);
+      display: block; margin-bottom: 4px;
+    }
+    .form-group select {
+      width: 100%; padding: 8px 12px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 12px;
+      font-family: 'Poppins', sans-serif; outline: none; background: white;
+    }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600;
+    }
+    .badge-tercapai { background: #e8f5e9; color: #1b5e20; }
+    .badge-belum { background: #fff3e0; color: #e65100; }
+    .badge-tertunda { background: #fce4ec; color: #880e4f; }
+    .info-chip {
+      background: var(--green-light); color: var(--green-dark);
+      padding: 4px 10px; border-radius: 20px; font-size: 11px;
+      font-weight: 600; display: inline-block; margin: 2px 4px;
+    }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;
+    }
+    th {
+      background: var(--gray-100); padding: 8px 6px; text-align: center;
+      font-size: 10px; font-weight: 700; color: var(--gray-600);
+      border-bottom: 2px solid var(--gray-200); position: sticky; top: 0;
+    }
+    td {
+      padding: 6px; text-align: center; border-bottom: 1px solid var(--gray-100);
+    }
+    td.left { text-align: left; }
+    .table-wrapper {
+      max-height: 500px; overflow-y: auto; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+    }
+    .summary-row {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .summary-card {
+      flex: 1; min-width: 120px; background: var(--gray-100);
+      border-radius: var(--radius-sm); padding: 12px; text-align: center;
+    }
+    .summary-card .angka { font-size: 26px; font-weight: 700; color: var(--green-dark); }
+    .summary-card .label { font-size: 10px; color: var(--gray-600); }
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: var(--gray-600);
+    }
+    .empty-state i { font-size: 40px; margin-bottom: 12px; color: var(--gray-400); }
+    .tabs {
+      display: flex; gap: 0; margin-bottom: 14px; border-radius: var(--radius-sm);
+      overflow: hidden; border: 1px solid var(--gray-200);
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 10px; font-size: 13px;
+      font-weight: 600; cursor: pointer; background: white; color: var(--gray-600);
+      transition: all 0.2s;
+    }
+    .tab.active { background: var(--green-dark); color: white; }
+    .tab:hover:not(.active) { background: var(--gray-100); }
+    .btn-export {
+      padding: 6px 12px; border: 1.5px solid var(--green-dark); border-radius: 20px;
+      font-size: 11px; font-weight: 600; cursor: pointer; background: white;
+      color: var(--green-dark); display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-export:hover { background: var(--green-light); }
+    .section-title {
+      font-size: 14px; font-weight: 700; color: var(--green-dark);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { flex-direction: column; }
+      .summary-row { flex-direction: column; }
+      table { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📋 Rekap Laporan</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const user = checkRole(['operator-akademik', 'admin']);
+    if (!user) window.location.href = '../../index.html';
+
+    let allDosen = [];
+    let allPencapaian = [];
+    let allSilabus = [];
+    let currentTab = 'pencapaian';
+    let selectedDosenId = 'semua';
+
+    async function loadPage() {
+      const container = document.getElementById('mainContent');
+      try {
+        // Ambil semua users (tanpa composite index)
+        const allUsersSnap = await db.collection('users').get();
+        allDosen = [];
+        allUsersSnap.forEach(doc => {
+          const data = doc.data();
+          if (data.role === 'dosen' || data.role === 'dosen-musyrif') {
+            allDosen.push({ uid: doc.id, nama: data.nama || 'Tanpa Nama' });
+          }
+        });
+        allDosen.sort((a, b) => a.nama.localeCompare(b.nama));
+
+        // Ambil semua pencapaian (ambil semua, sort di JS)
+        const pencapaianSnap = await db.collection('pencapaian').get();
+        allPencapaian = [];
+        pencapaianSnap.forEach(doc => {
+          allPencapaian.push({ id: doc.id, ...doc.data() });
+        });
+        // Sort: mkNama asc, pekan asc
+        allPencapaian.sort((a, b) => {
+          const mkCompare = (a.mkNama || '').localeCompare(b.mkNama || '');
+          if (mkCompare !== 0) return mkCompare;
+          return (a.pekan || 0) - (b.pekan || 0);
+        });
+
+        // Ambil semua silabus (ambil semua, sort di JS)
+        const silabusSnap = await db.collection('silabus').get();
+        allSilabus = [];
+        silabusSnap.forEach(doc => {
+          allSilabus.push({ id: doc.id, ...doc.data() });
+        });
+        allSilabus.sort((a, b) => {
+          const mkCompare = (a.mkNama || '').localeCompare(b.mkNama || '');
+          if (mkCompare !== 0) return mkCompare;
+          return (a.pekan || 0) - (b.pekan || 0);
+        });
+
+        renderUI(container);
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = `<div class="card empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Gagal memuat data: ${e.message}</p></div>`;
+      }
+    }
+
+    function renderUI(container) {
+      let html = '';
+
+      // Card filter
+      html += '<div class="card">';
+      html += '<div class="form-row">';
+      html += '<div class="form-group" style="flex:2; min-width:250px;">';
+      html += '<label><i class="fa-solid fa-filter"></i> Filter Dosen</label>';
+      html += '<select id="dosenFilter" onchange="onFilterChange()">';
+      html += '<option value="semua">📊 Semua Dosen</option>';
+      allDosen.forEach(d => {
+        html += `<option value="${d.uid}">👤 ${d.nama}</option>`;
+      });
+      html += '</select></div>';
+
+      html += '<div class="form-group" style="flex:1; min-width:140px;">';
+      html += '<label>Mode Lihat</label>';
+      html += '<select id="tabSelect" onchange="switchTab(this.value)">';
+      html += '<option value="pencapaian">Rekap Pencapaian</option>';
+      html += '<option value="silabus">Rekap Silabus</option>';
+      html += '</select></div>';
+      html += '</div></div>';
+
+      html += '<div id="tableContainer"></div>';
+      container.innerHTML = html;
+      document.getElementById('dosenFilter').value = selectedDosenId;
+      document.getElementById('tabSelect').value = currentTab;
+      renderTable();
+    }
+
+    function onFilterChange() {
+      selectedDosenId = document.getElementById('dosenFilter').value;
+      renderTable();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      renderTable();
+    }
+
+    function getFilteredData(sourceArray) {
+      if (selectedDosenId === 'semua') return sourceArray;
+      return sourceArray.filter(p => p.dosenId === selectedDosenId);
+    }
+
+    function renderTable() {
+      const container = document.getElementById('tableContainer');
+      if (!container) return;
+
+      if (currentTab === 'pencapaian') {
+        renderPencapaian(container, getFilteredData(allPencapaian));
+      } else {
+        renderSilabus(container, getFilteredData(allSilabus));
+      }
+    }
+
+    // ==================== REKAP PENCAPAIAN ====================
+    function renderPencapaian(container, data) {
+      if (data.length === 0) {
+        container.innerHTML = '<div class="card empty-state"><i class="fa-solid fa-clipboard-list"></i><p>Belum ada data pencapaian</p></div>';
+        return;
+      }
+
+      const grouped = groupByDosenMK(data);
+
+      // Summary
+      const totalEntries = data.length;
+      const tercapai = data.filter(p => p.realisasi === 'Tercapai').length;
+      const belum = data.filter(p => p.realisasi === 'Belum Tercapai').length;
+      const tertunda = data.filter(p => p.realisasi === 'Tertunda').length;
+      const persen = totalEntries > 0 ? Math.round((tercapai / totalEntries) * 100) : 0;
+
+      let html = '';
+      html += '<div class="card">';
+      html += '<div class="section-title">📊 Ringkasan Pencapaian</div>';
+      html += '<div class="summary-row">';
+      html += `<div class="summary-card"><div class="angka">${totalEntries}</div><div class="label">Total Entri</div></div>`;
+      html += `<div class="summary-card"><div class="angka" style="color:green;">${tercapai}</div><div class="label">Tercapai</div></div>`;
+      html += `<div class="summary-card"><div class="angka" style="color:var(--orange);">${belum}</div><div class="label">Belum Tercapai</div></div>`;
+      html += `<div class="summary-card"><div class="angka" style="color:var(--pink);">${tertunda}</div><div class="label">Tertunda</div></div>`;
+      html += `<div class="summary-card"><div class="angka">${persen}%</div><div class="label">Persentase Tercapai</div></div>`;
+      html += '</div></div>';
+
+      // Per dosen
+      grouped.forEach((mkMap, dosenNama) => {
+        html += '<div class="card">';
+        html += `<div class="section-title"><i class="fa-solid fa-user-graduate"></i> ${dosenNama}</div>`;
+
+        mkMap.forEach((kelasMap, mkNama) => {
+          kelasMap.forEach((dataArr, kelasNama) => {
+            html += `<div style="margin-bottom:14px;">`;
+            html += `<span class="info-chip"><i class="fa-solid fa-book"></i> ${mkNama}</span>`;
+            html += `<span class="info-chip"><i class="fa-solid fa-users"></i> ${kelasNama}</span>`;
+            html += `<span class="info-chip"><i class="fa-solid fa-list-ol"></i> ${dataArr.length} entri</span>`;
+
+            html += '<div class="table-wrapper"><table>';
+            html += '<thead><tr><th>Pert</th><th>Materi</th><th>Realisasi</th><th>Keterangan</th></tr></thead><tbody>';
+
+            dataArr.sort((a, b) => a.pekan - b.pekan).forEach(p => {
+              let badgeClass = '';
+              if (p.realisasi === 'Tercapai') badgeClass = 'badge-tercapai';
+              else if (p.realisasi === 'Belum Tercapai') badgeClass = 'badge-belum';
+              else badgeClass = 'badge-tertunda';
+
+              html += `<tr>
+                <td>${p.pekan}</td>
+                <td class="left">${p.materi || '-'}</td>
+                <td><span class="badge ${badgeClass}">${p.realisasi || '-'}</span></td>
+                <td class="left">${p.keterangan || '-'}</td>
+              </tr>`;
+            });
+
+            html += '</tbody></table></div></div>';
+          });
+        });
+        html += '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ==================== REKAP SILABUS ====================
+    function renderSilabus(container, data) {
+      if (data.length === 0) {
+        container.innerHTML = '<div class="card empty-state"><i class="fa-solid fa-book"></i><p>Belum ada data silabus</p></div>';
+        return;
+      }
+
+      const grouped = groupByDosenMK(data);
+
+      let html = '';
+      grouped.forEach((mkMap, dosenNama) => {
+        html += '<div class="card">';
+        html += `<div class="section-title"><i class="fa-solid fa-user-graduate"></i> ${dosenNama}</div>`;
+
+        mkMap.forEach((kelasMap, mkNama) => {
+          kelasMap.forEach((dataArr, kelasNama) => {
+            // Ambil data unik per pekan
+            const materiMap = new Map();
+            dataArr.forEach(p => {
+              if (!materiMap.has(p.pekan)) {
+                materiMap.set(p.pekan, p);
+              } else {
+                const existing = materiMap.get(p.pekan);
+                const pTime = p.updatedAt?.toMillis?.() || 0;
+                const eTime = existing.updatedAt?.toMillis?.() || 0;
+                if (pTime > eTime) materiMap.set(p.pekan, p);
+              }
+            });
+
+            const silabusArr = Array.from(materiMap.values()).filter(p => p.materi || p.subCapaian);
+            silabusArr.sort((a, b) => a.pekan - b.pekan);
+
+            if (silabusArr.length === 0) return;
+
+            html += `<div style="margin-bottom:14px;">`;
+            html += `<span class="info-chip"><i class="fa-solid fa-book"></i> ${mkNama}</span>`;
+            html += `<span class="info-chip"><i class="fa-solid fa-users"></i> ${kelasNama}</span>`;
+            if (silabusArr[0]?.prodiNama) {
+              html += `<span class="info-chip"><i class="fa-solid fa-building-columns"></i> ${silabusArr[0].prodiNama}</span>`;
+            }
+
+            html += '<div class="table-wrapper"><table>';
+            html += '<thead><tr><th>Pert</th><th>Tanggal</th><th>Materi</th><th>Sub-Capaian</th></tr></thead><tbody>';
+
+            silabusArr.forEach(p => {
+              html += `<tr>
+                <td>${p.pekan}</td>
+                <td>${p.tanggal || '-'}</td>
+                <td class="left">${p.materi || '-'}</td>
+                <td class="left">${p.subCapaian || '-'}</td>
+              </tr>`;
+            });
+
+            html += '</tbody></table></div></div>';
+          });
+        });
+        html += '</div>';
+      });
+
+      if (!html) {
+        html = '<div class="card empty-state"><i class="fa-solid fa-book"></i><p>Belum ada materi diinput</p></div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ==================== HELPER ====================
+    function groupByDosenMK(data) {
+      const grouped = new Map();
+      data.forEach(p => {
+        const dosen = p.dosenNama || 'Tanpa Nama';
+        const mk = p.mkNama || 'Tanpa MK';
+        const kelas = p.kelasNama || 'Tanpa Kelas';
+
+        if (!grouped.has(dosen)) grouped.set(dosen, new Map());
+        const mkMap = grouped.get(dosen);
+        if (!mkMap.has(mk)) mkMap.set(mk, new Map());
+        const kelasMap = mkMap.get(mk);
+        if (!kelasMap.has(kelas)) kelasMap.set(kelas, []);
+        kelasMap.get(kelas).push(p);
+      });
+      return grouped;
+    }
+
+    loadPage();
+  </script>
+</body>
+</html>

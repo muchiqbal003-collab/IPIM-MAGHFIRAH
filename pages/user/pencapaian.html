@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Input Pencapaian - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-300: #bdbdbd; --gray-600: #616161;
+      --gray-800: #333333; --red: #e53935; --orange: #e65100; --pink: #880e4f;
+      --radius-sm: 8px; --radius: 12px; --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; }
+    .content { padding: 16px; max-width: 600px; margin: 0 auto; }
+    .card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px; }
+    .info-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .info-chip {
+      background: var(--green-light); color: var(--green-dark);
+      padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 5px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif;
+      outline: none; background: white; resize: vertical; transition: border 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--green); }
+    .form-group textarea { min-height: 60px; }
+    .btn {
+      padding: 10px 18px; border: none; border-radius: 24px; font-size: 13px;
+      font-weight: 600; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 6px; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--green-dark); color: white; width: 100%; justify-content: center; }
+    .btn-primary:hover { background: #003d33; }
+    .btn-outline { background: white; border: 1.5px solid var(--green-dark); color: var(--green-dark); }
+    .btn-danger { background: #fce4ec; color: var(--red); padding: 6px 12px; font-size: 11px; }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+    .alert {
+      padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px;
+      margin-bottom: 12px; display: none; background: var(--green-light);
+      color: #1b5e20; font-weight: 500;
+    }
+    .pekan-selector {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+    }
+    .pekan-chip {
+      width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--gray-200);
+      background: white; font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; color: var(--gray-600);
+    }
+    .pekan-chip:hover { border-color: var(--green); color: var(--green-dark); }
+    .pekan-chip.active { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+    .pekan-chip.done { background: var(--green-light); color: var(--green-dark); border-color: var(--green); }
+    .pekan-chip.current { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.2); }
+    .status-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; margin-bottom: 12px;
+    }
+    .status-tercapai { background: #e8f5e9; color: #1b5e20; }
+    .status-belum { background: #fff3e0; color: #e65100; }
+    .status-tertunda { background: #fce4ec; color: #880e4f; }
+    .step-indicator {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+      font-size: 12px; color: var(--gray-600);
+    }
+    .step-number {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--green-dark);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+    }
+    .divider { border-top: 1px solid var(--gray-200); margin: 16px 0; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>Input Pencapaian</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+
+    let currentMkId = '';
+    let currentTotalPertemuan = 16;
+    let currentMkNama = '';
+    let currentKelasNama = '';
+    let selectedPekan = 1;
+    let existingData = {};
+
+    function showAlert(text) {
+      const el = document.getElementById('alertSuccess');
+      if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 2500); }
+    }
+
+    async function loadPage() {
+      const container = document.getElementById('mainContent');
+      try {
+        const jadwalSnap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
+        if (jadwalSnap.empty) {
+          container.innerHTML = '<div class="card" style="text-align:center;padding:40px;"><i class="fa-solid fa-calendar-xmark" style="font-size:36px;color:var(--gray-300);margin-bottom:10px;"></i><p style="color:var(--gray-600);">Belum ada jadwal mengajar</p></div>';
+          return;
+        }
+
+        const mkMap = new Map();
+        jadwalSnap.forEach(doc => {
+          const j = doc.data();
+          if (!mkMap.has(j.mkId)) {
+            mkMap.set(j.mkId, {
+              mkNama: j.mkNama,
+              kelasNama: j.kelasNama,
+              totalPertemuan: j.totalPertemuan || 16
+            });
+          }
+        });
+
+        let html = '<div id="alertSuccess" class="alert"></div>';
+        html += '<div class="card"><div class="form-group"><label><i class="fa-solid fa-book"></i> Pilih Matakuliah</label><select id="mkSelect" onchange="loadPencapaian()"><option value="">— Pilih Matakuliah —</option>';
+
+        mkMap.forEach((val, mkId) => {
+          html += `<option value="${mkId}" data-pertemuan="${val.totalPertemuan}" data-mk="${val.mkNama}" data-kelas="${val.kelasNama}">${val.mkNama} - ${val.kelasNama}</option>`;
+        });
+        html += '</select></div></div>';
+        html += '<div id="pencapaianContainer"></div>';
+        container.innerHTML = html;
+      } catch(e) { console.error(e); }
+    }
+
+    window.loadPencapaian = async function() {
+      const sel = document.getElementById('mkSelect');
+      if (!sel || !sel.value) {
+        document.getElementById('pencapaianContainer').innerHTML = '';
+        return;
+      }
+
+      const opt = sel.options[sel.selectedIndex];
+      currentMkId = sel.value;
+      currentTotalPertemuan = parseInt(opt.getAttribute('data-pertemuan')) || 16;
+      currentMkNama = opt.getAttribute('data-mk');
+      currentKelasNama = opt.getAttribute('data-kelas');
+      selectedPekan = 1;
+
+      // Load existing data
+      const existingSnap = await db.collection('pencapaian')
+        .where('mkId', '==', currentMkId)
+        .where('dosenId', '==', user.uid)
+        .get();
+      existingData = {};
+      existingSnap.forEach(doc => {
+        const d = doc.data();
+        existingData[d.pekan] = { id: doc.id, ...d };
+      });
+
+      renderForm();
+    };
+
+    function renderForm() {
+      const container = document.getElementById('pencapaianContainer');
+      const current = existingData[selectedPekan];
+
+      let html = '<div class="card">';
+
+      // Info MK
+      html += '<div class="info-row">';
+      html += `<span class="info-chip"><i class="fa-solid fa-book"></i> ${currentMkNama}</span>`;
+      html += `<span class="info-chip"><i class="fa-solid fa-users"></i> ${currentKelasNama}</span>`;
+      html += `<span class="info-chip"><i class="fa-solid fa-calendar-check"></i> ${currentTotalPertemuan} Pert</span>`;
+      html += '</div>';
+
+      // Step indicator
+      html += '<div class="step-indicator">';
+      html += `<span class="step-number">${selectedPekan}</span>`;
+      html += `<span>Pertemuan ke-${selectedPekan} dari ${currentTotalPertemuan}</span>`;
+      if (current) {
+        const badgeClass = current.realisasi === 'Tercapai' ? 'status-tercapai' : current.realisasi === 'Belum Tercapai' ? 'status-belum' : 'status-tertunda';
+        html += `<span class="status-badge ${badgeClass}">${current.realisasi || 'Belum dinilai'}</span>`;
+      }
+      html += '</div>';
+
+      // Pekan selector chips
+      html += '<div class="pekan-selector">';
+      for (let i = 1; i <= currentTotalPertemuan; i++) {
+        let chipClass = 'pekan-chip';
+        if (i === selectedPekan) chipClass += ' active current';
+        else if (existingData[i]) chipClass += ' done';
+        html += `<div class="${chipClass}" onclick="pilihPekan(${i})">${i}</div>`;
+      }
+      html += '</div>';
+
+      // Legend
+      html += '<div style="display:flex;gap:12px;font-size:10px;color:var(--gray-600);margin-bottom:12px;flex-wrap:wrap;">';
+      html += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green-dark);margin-right:4px;"></span> Dipilih</span>';
+      html += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green-light);border:2px solid var(--green);margin-right:4px;"></span> Sudah diisi</span>';
+      html += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--gray-200);margin-right:4px;"></span> Kosong</span>';
+      html += '</div>';
+
+      html += '<div class="divider"></div>';
+
+      // Form
+      html += '<div class="form-group">';
+      html += '<label><i class="fa-solid fa-file-lines"></i> Materi Pembahasan</label>';
+      html += `<textarea id="materiInput" placeholder="Tulis materi yang dibahas pada pertemuan ini...">${current?.materi || ''}</textarea>`;
+      html += '</div>';
+
+      html += '<div class="form-group">';
+      html += '<label><i class="fa-solid fa-circle-check"></i> Realisasi Pencapaian</label>';
+      html += '<select id="realisasiInput">';
+      html += `<option value="">— Pilih Status —</option>`;
+      html += `<option value="Tercapai" ${current?.realisasi === 'Tercapai' ? 'selected' : ''}>✅ Tercapai</option>`;
+      html += `<option value="Belum Tercapai" ${current?.realisasi === 'Belum Tercapai' ? 'selected' : ''}>⏳ Belum Tercapai</option>`;
+      html += `<option value="Tertunda" ${current?.realisasi === 'Tertunda' ? 'selected' : ''}>⚠️ Tertunda</option>`;
+      html += '</select>';
+      html += '</div>';
+
+      html += '<div class="form-group">';
+      html += '<label><i class="fa-solid fa-note-sticky"></i> Keterangan</label>';
+      html += `<textarea id="keteranganInput" placeholder="Keterangan tambahan (opsional)...">${current?.keterangan || ''}</textarea>`;
+      html += '</div>';
+
+      // Buttons
+      html += '<div style="display:flex;gap:8px;">';
+      html += `<button class="btn btn-primary" onclick="simpanPekanIni()"><i class="fa-solid fa-save"></i> Simpan Pertemuan ${selectedPekan}</button>`;
+      if (current?.id) {
+        html += `<button class="btn btn-danger btn-sm" onclick="hapusPekanIni('${current.id}')"><i class="fa-solid fa-trash"></i></button>`;
+      }
+      html += '</div>';
+
+      // Navigasi
+      html += '<div style="display:flex;gap:8px;margin-top:10px;">';
+      html += `<button class="btn btn-outline btn-sm" onclick="pilihPekan(${selectedPekan - 1})" ${selectedPekan <= 1 ? 'disabled style="opacity:0.4;"' : ''}><i class="fa-solid fa-chevron-left"></i> Sebelumnya</button>`;
+      html += `<button class="btn btn-outline btn-sm" onclick="pilihPekan(${selectedPekan + 1})" ${selectedPekan >= currentTotalPertemuan ? 'disabled style="opacity:0.4;"' : ''}>Selanjutnya <i class="fa-solid fa-chevron-right"></i></button>`;
+      html += '</div>';
+
+      html += '</div>';
+
+      // Ringkasan semua pertemuan yang sudah diisi
+      const filledCount = Object.keys(existingData).length;
+      if (filledCount > 0) {
+        html += '<div class="card">';
+        html += `<h4 style="font-size:13px;margin-bottom:10px;"><i class="fa-solid fa-list-check"></i> Ringkasan (${filledCount}/${currentTotalPertemuan} terisi)</h4>`;
+        html += '<table style="width:100%;font-size:11px;">';
+        html += '<thead><tr><th>Pert</th><th>Materi</th><th>Status</th></tr></thead><tbody>';
+        for (let i = 1; i <= currentTotalPertemuan; i++) {
+          if (existingData[i]) {
+            const d = existingData[i];
+            const badge = d.realisasi === 'Tercapai' ? '✅' : d.realisasi === 'Belum Tercapai' ? '⏳' : '⚠️';
+            html += `<tr style="cursor:pointer;" onclick="pilihPekan(${i})">
+              <td><strong>${i}</strong></td>
+              <td style="text-align:left;">${d.materi?.substring(0, 40) || '-'}${d.materi?.length > 40 ? '...' : ''}</td>
+              <td>${badge} ${d.realisasi || '-'}</td>
+            </tr>`;
+          }
+        }
+        html += '</tbody></table></div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    window.pilihPekan = function(pekan) {
+      if (pekan < 1 || pekan > currentTotalPertemuan) return;
+      selectedPekan = pekan;
+      renderForm();
+      // Scroll to top of form
+      document.getElementById('pencapaianContainer').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.simpanPekanIni = async function() {
+      const materi = document.getElementById('materiInput')?.value.trim() || '';
+      const realisasi = document.getElementById('realisasiInput')?.value || '';
+      const keterangan = document.getElementById('keteranganInput')?.value.trim() || '';
+
+      const data = {
+        mkId: currentMkId,
+        mkNama: currentMkNama,
+        kelasNama: currentKelasNama,
+        dosenId: user.uid,
+        dosenNama: user.nama,
+        pekan: selectedPekan,
+        materi,
+        realisasi,
+        keterangan,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      const existingSnap = await db.collection('pencapaian')
+        .where('mkId', '==', currentMkId)
+        .where('dosenId', '==', user.uid)
+        .where('pekan', '==', selectedPekan)
+        .get();
+
+      if (!existingSnap.empty) {
+        await existingSnap.docs[0].ref.update(data);
+      } else {
+        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('pencapaian').add(data);
+      }
+
+      // Update local cache
+      existingData[selectedPekan] = {
+        id: existingSnap.empty ? null : existingSnap.docs[0].id,
+        ...data
+      };
+
+      showAlert(`✅ Pencapaian pertemuan ${selectedPekan} berhasil disimpan!`);
+      renderForm();
+
+      // Auto-advance ke pertemuan berikutnya (opsional)
+      // if (selectedPekan < currentTotalPertemuan) {
+      //   setTimeout(() => pilihPekan(selectedPekan + 1), 800);
+      // }
+    };
+
+    window.hapusPekanIni = async function(id) {
+      if (!confirm(`Hapus data pencapaian pertemuan ${selectedPekan}?`)) return;
+      await db.collection('pencapaian').doc(id).delete();
+      delete existingData[selectedPekan];
+      showAlert('🗑️ Data dihapus!');
+      renderForm();
+    };
+
+    loadPage();
+  </script>
+</body>
+</html>

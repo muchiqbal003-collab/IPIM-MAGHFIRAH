@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rekap - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+      --bottom-nav-height: 64px; --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; }
+    .bottom-nav .nav-item i { font-size: 20px; }
+    .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
+
+    .content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); cursor: pointer; transition: var(--transition); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .card-icon { width: 44px; height: 44px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .icon-green { background: var(--green-light); color: var(--green-dark); }
+    .icon-gold { background: var(--gold-light); color: #8d6e00; }
+    .card-info h4 { font-size: 14px; font-weight: 600; }
+    .card-info p { font-size: 11px; color: var(--gray-600); }
+    .stat-row { display: flex; gap: 12px; margin-top: 8px; }
+    .stat-item { font-size: 11px; color: var(--gray-600); }
+    .stat-item strong { color: var(--gray-800); }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+  <h3>Rekap</h3>
+</header>
+
+<div class="content" id="rekapCards">
+  <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+  <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+  <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
+  <div class="nav-item active" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
+  <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+</nav>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase-config.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+  if (!user) window.location.href = '../../index.html';
+  window.goTo = page => window.location.href = page;
+
+  async function loadCards() {
+    const container = document.getElementById('rekapCards');
+    let html = '';
+
+    // Card 1: Rekap Absensi Kelas (Dosen)
+    if (user.role === 'dosen' || user.role === 'dosen-musyrif') {
+      try {
+        const absenSnap = await db.collection('absensi').where('dosenId','==',user.uid).get();
+        const mhsSet = new Set(absenSnap.docs.map(d => d.data().mahasiswaId || d.data().santriId));
+        const totalAbsensi = absenSnap.size;
+        const totalMhs = mhsSet.size;
+        html += `
+          <div class="card" onclick="goTo('rekap-absensi-kelas.html')">
+            <div class="card-header">
+              <div class="card-icon icon-green"><i class="fa-solid fa-clipboard-check"></i></div>
+              <div class="card-info"><h4>Rekap Absensi Kelas</h4><p>Lihat rekap absensi per matakuliah</p></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-item"><strong>${totalMhs}</strong> mahasiswa</div>
+              <div class="stat-item"><strong>${totalAbsensi}</strong> catatan absensi</div>
+            </div>
+          </div>`;
+      } catch(e) {}
+    }
+
+    // Card 2: Rekap Nilai Matakuliah (Dosen)
+    if (user.role === 'dosen' || user.role === 'dosen-musyrif') {
+      try {
+        const nilaiSnap = await db.collection('nilai').where('dosenId','==',user.uid).get();
+        const mhsSet = new Set(nilaiSnap.docs.map(d => d.data().mahasiswaId || d.data().santriId));
+        const totalNilai = nilaiSnap.size;
+        const totalMhs = mhsSet.size;
+        html += `
+          <div class="card" onclick="goTo('rekap-nilai-matkul.html')">
+            <div class="card-header">
+              <div class="card-icon icon-gold"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="card-info"><h4>Rekap Nilai Matakuliah</h4><p>Lihat rekap nilai per matakuliah</p></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-item"><strong>${totalMhs}</strong> mahasiswa</div>
+              <div class="stat-item"><strong>${totalNilai}</strong> data nilai</div>
+            </div>
+          </div>`;
+      } catch(e) {}
+    }
+
+    // Card 3: Rekap Absensi Halaqoh (Musyrif)
+    if (user.role === 'musyrif' || user.role === 'dosen-musyrif') {
+      try {
+        const hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
+        if (!hSnap.empty) {
+          const halaqohId = hSnap.docs[0].id;
+          const absenSnap = await db.collection('absensiHalaqoh').where('musyrifId','==',user.uid).get();
+          const totalAbsensi = absenSnap.size;
+          html += `
+            <div class="card" onclick="goTo('rekap-absensi-halaqoh.html')">
+              <div class="card-header">
+                <div class="card-icon icon-green"><i class="fa-solid fa-clipboard-check"></i></div>
+                <div class="card-info"><h4>Rekap Absensi Halaqoh</h4><p>Lihat rekap absensi halaqoh</p></div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-item"><strong>${totalAbsensi}</strong> catatan absensi</div>
+              </div>
+            </div>`;
+        }
+      } catch(e) {}
+    }
+
+    // Card 4: Rekap Nilai Ujian Al-Quran (Musyrif)
+    if (user.role === 'musyrif' || user.role === 'dosen-musyrif') {
+      try {
+        const ujianSnap = await db.collection('ujianQuran').where('musyrifId','==',user.uid).get();
+        const mhsSet = new Set(ujianSnap.docs.map(d => d.data().mahasiswaId));
+        const totalUjian = ujianSnap.size;
+        const totalMhs = mhsSet.size;
+        html += `
+          <div class="card" onclick="goTo('rekap-nilai-quran.html')">
+            <div class="card-header">
+              <div class="card-icon icon-gold"><i class="fa-solid fa-quran"></i></div>
+              <div class="card-info"><h4>Rekap Nilai Ujian Al-Quran</h4><p>Lihat rekap nilai ujian Al-Quran</p></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-item"><strong>${totalMhs}</strong> mahasiswa</div>
+              <div class="stat-item"><strong>${totalUjian}</strong> data ujian</div>
+            </div>
+          </div>`;
+      } catch(e) {}
+    }
+
+    container.innerHTML = html || '<p style="text-align:center;color:var(--gray-600);">Tidak ada rekap tersedia untuk role Anda.</p>';
+  }
+
+  loadCards();
+</script>
+</body>
+</html>

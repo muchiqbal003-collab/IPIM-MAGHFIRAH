@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>Rekap Halaqoh - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --gold-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-300: #bdbdbd; --gray-400: #9e9e9e;
+      --gray-500: #757575; --gray-600: #616161; --gray-700: #424242;
+      --gray-800: #333333;
+      --red: #e53935; --red-light: #fce4ec;
+      --blue: #1e88e5; --blue-light: #e3f2fd;
+      --orange: #f57c00; --orange-light: #fff3e0;
+      --purple: #7b1fa2; --purple-light: #f3e5f5;
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+      --header-height: 56px;
+      --bottom-nav-height: 68px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      padding-top: var(--header-height);
+      padding-bottom: calc(var(--bottom-nav-height) + 16px);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ─── HEADER ─── */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, #004d40 0%, #00695c 100%);
+      color: white; padding: 12px 20px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .app-header .btn-back {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .app-header .btn-back:active { background: rgba(255,255,255,0.25); transform: scale(0.9); }
+    .app-header h3 { font-size: 17px; font-weight: 700; flex: 1; letter-spacing: -0.3px; }
+
+    /* ─── CONTENT ─── */
+    .content { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 16px; margin-bottom: 16px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+      transition: var(--transition);
+    }
+
+    /* ─── HALAQOH INFO ─── */
+    .halaqoh-info {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px; background: linear-gradient(135deg, var(--green-light), #c8e6c9);
+      border-radius: var(--radius-lg); margin-bottom: 16px;
+      border: 1px solid #a5d6a7;
+    }
+    .halaqoh-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #b8860b);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; flex-shrink: 0;
+    }
+    .halaqoh-detail h4 { font-size: 15px; font-weight: 700; color: var(--gray-800); }
+    .halaqoh-detail p { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+
+    /* ─── SETTING INFO ─── */
+    .setting-info {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .setting-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      background: var(--blue-light); color: #0d47a1;
+    }
+    .setting-chip i { font-size: 12px; }
+
+    /* ─── STATS ROW ─── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 16px; text-align: center; box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100); transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .stat-card.green::after { background: var(--green); }
+    .stat-card.blue::after { background: var(--blue); }
+    .stat-card.orange::after { background: var(--orange); }
+    .stat-card.purple::after { background: var(--purple); }
+    .stat-card.gold::after { background: var(--gold); }
+    .stat-card .stat-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+    .stat-card .stat-value { font-size: 24px; font-weight: 700; color: var(--gray-800); }
+    .stat-card .stat-label { font-size: 10px; color: var(--gray-500); font-weight: 500; margin-top: 2px; }
+
+    /* ─── TABS ─── */
+    .tabs {
+      display: flex; gap: 0; margin-bottom: 14px; border-radius: var(--radius-sm);
+      overflow: hidden; border: 1px solid var(--gray-200); background: var(--gray-100);
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 10px 12px; font-size: 11px;
+      font-weight: 600; cursor: pointer; color: var(--gray-600);
+      transition: var(--transition); border: none; background: transparent;
+      font-family: 'Poppins', sans-serif; white-space: nowrap;
+    }
+    .tab.active { background: var(--green-dark); color: white; }
+
+    /* ─── ANGGOTA LIST ─── */
+    .anggota-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      border-radius: var(--radius-sm); transition: var(--transition);
+      border: 1px solid transparent; margin-bottom: 4px;
+    }
+    .anggota-item:hover { background: var(--gray-50); border-color: var(--gray-200); }
+    .anggota-rank {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--gray-600); flex-shrink: 0;
+    }
+    .anggota-rank.top1 { background: #ffd700; color: #5d4037; }
+    .anggota-rank.top2 { background: #c0c0c0; color: #37474f; }
+    .anggota-rank.top3 { background: #cd7f32; color: #fff; }
+    .anggota-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--green-light);
+      color: var(--green-dark); display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0;
+    }
+    .anggota-info { flex: 1; min-width: 0; }
+    .anggota-info .nama { font-size: 13px; font-weight: 600; }
+    .anggota-info .detail { font-size: 10px; color: var(--gray-500); display: flex; gap: 8px; margin-top: 2px; }
+    .anggota-progress { flex-shrink: 0; text-align: right; }
+    .anggota-progress .juz { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+    .anggota-progress .label { font-size: 9px; color: var(--gray-400); }
+
+    /* ─── PROGRESS BAR ─── */
+    .progress-bar {
+      height: 5px; background: var(--gray-200); border-radius: 3px;
+      overflow: hidden; margin-top: 6px;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 3px; transition: width 0.6s ease;
+      background: linear-gradient(90deg, var(--green), #00c853);
+    }
+
+    /* ─── TABLE ─── */
+    table {
+      width: 100%; border-collapse: collapse; font-size: 11px;
+    }
+    th {
+      background: var(--gray-100); padding: 8px 10px; text-align: left;
+      font-size: 10px; font-weight: 700; color: var(--gray-600);
+      text-transform: uppercase; border-bottom: 2px solid var(--gray-200);
+    }
+    td { padding: 8px 10px; border-bottom: 1px solid var(--gray-100); }
+    tr:hover td { background: var(--gray-50); }
+    .text-center { text-align: center; }
+    .fw-600 { font-weight: 600; }
+    .text-green { color: #1b5e20; }
+    .text-red { color: #b71c1c; }
+    .text-orange { color: #e65100; }
+    .text-gray { color: var(--gray-500); }
+
+    /* ─── BADGE ─── */
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 12px;
+      font-size: 9px; font-weight: 600;
+    }
+    .badge-hadir { background: var(--green-light); color: #1b5e20; }
+    .badge-sakit { background: #fff3e0; color: #e65100; }
+    .badge-izin { background: #e3f2fd; color: #0d47a1; }
+    .badge-alfa { background: var(--red-light); color: #b71c1c; }
+    .badge-jaga { background: #f3e5f5; color: #6a1b9a; }
+    .badge-success { background: var(--green-light); color: #1b5e20; }
+    .badge-danger { background: var(--red-light); color: #b71c1c; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center; padding: 50px 20px; color: var(--gray-400);
+    }
+    .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.5; display: block; }
+    .empty-state h4 { font-size: 15px; color: var(--gray-600); margin-bottom: 4px; }
+    .empty-state p { font-size: 12px; }
+
+    /* ─── BOTTOM NAV ─── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height);
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; padding: 0 8px;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+    }
+    .bottom-nav .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      font-size: 10px; color: var(--gray-400); cursor: pointer;
+      text-decoration: none; padding: 6px 12px; border-radius: 16px;
+      transition: var(--transition); gap: 3px;
+    }
+    .bottom-nav .nav-item i { font-size: 20px; }
+    .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
+
+    /* ─── SPINNER ─── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .fa-spin { animation: spin 1s linear infinite; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 360px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .stat-card { padding: 12px 10px; }
+      .stat-card .stat-value { font-size: 20px; }
+      .tab { font-size: 10px; padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()" aria-label="Kembali">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <h3>📊 Rekap Halaqoh</h3>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent">
+    <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;"></i>
+      <p style="margin-top:8px;font-size:13px;">Memuat data...</p>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('absensi.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
+    <div class="nav-item" onclick="goTo('hafalan.html')"><i class="fa-solid fa-book-open"></i><span>Hafalan</span></div>
+    <div class="nav-item active"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['musyrif', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+
+    window.goTo = page => window.location.href = page;
+
+    let halaqohData = null;
+    let anggotaList = [];
+    let absensiList = [];
+    let hafalanList = [];
+    let currentTab = 'ringkasan';
+    let settingPertemuan = 0;
+    let settingPersentase = 75;
+
+    // ─── LOAD SETTING OPERATOR ───
+    async function loadSetting() {
+      try {
+        const doc = await db.collection('settings').doc('absensi').get();
+        if (doc.exists) {
+          const data = doc.data();
+          settingPertemuan = data.jumlahPertemuan || 0;
+          settingPersentase = data.persentaseMinimal || 75;
+        }
+      } catch(e) { console.error('Gagal load setting:', e); }
+    }
+
+    // ─── LOAD ALL DATA ───
+    async function loadData() {
+      const container = document.getElementById('mainContent');
+      container.innerHTML = `
+        <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;"></i>
+          <p style="margin-top:8px;font-size:13px;">Memuat data halaqoh...</p>
+        </div>`;
+
+      try {
+        // 1. Cari halaqoh musyrif
+        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+        if (hSnap.empty) {
+          hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
+        }
+        if (hSnap.empty) {
+          hSnap = await db.collection('halaqoh').where('uid', '==', user.uid).get();
+        }
+
+        if (hSnap.empty) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-mosque"></i>
+              <h4>Belum memiliki Halaqoh</h4>
+              <p>Hubungi Operator Halaqoh untuk mendaftarkan Anda</p>
+            </div>`;
+          return;
+        }
+
+        halaqohData = { id: hSnap.docs[0].id, ...hSnap.docs[0].data() };
+
+        // 2. Ambil anggota halaqoh
+        const anggotaSnap = await db.collection('pembagianHalaqoh')
+          .where('halaqohId', '==', halaqohData.id)
+          .get();
+
+        const mhsIds = anggotaSnap.docs.map(d => d.data().mahasiswaId).filter(Boolean);
+        anggotaList = [];
+        for (const id of mhsIds) {
+          const doc = await db.collection('mahasiswa').doc(id).get();
+          if (doc.exists) anggotaList.push({ id: doc.id, ...doc.data() });
+        }
+        anggotaList.sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+        // 3. Ambil absensi halaqoh
+        const absensiSnap = await db.collection('absensiHalaqoh')
+          .where('halaqohId', '==', halaqohData.id)
+          .get();
+        absensiList = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // 4. Ambil setoran hafalan (jika ada field halaqohId)
+        let hafalanSnap;
+        try {
+          hafalanSnap = await db.collection('hafalan')
+            .where('halaqohId', '==', halaqohData.id)
+            .get();
+        } catch(e) {
+          // Fallback: ambil semua hafalan untuk mahasiswa di halaqoh ini
+          const allSnap = await db.collection('hafalan').get();
+          hafalanSnap = {
+            docs: allSnap.docs.filter(d => mhsIds.includes(d.data().mahasiswaId))
+          };
+        }
+        hafalanList = hafalanSnap.docs ? hafalanSnap.docs.map(d => ({ id: d.id, ...d.data() })) : [];
+
+        // 5. Load mahasiswa names untuk absensi & hafalan (jika belum ada)
+        for (const a of absensiList) {
+          if (a.mahasiswaId && !anggotaList.find(ang => ang.id === a.mahasiswaId)) {
+            const mhs = mahasiswaMap_cache[a.mahasiswaId];
+            if (mhs) a.mahasiswaNama = mhs.nama;
+          }
+        }
+
+        render(container);
+      } catch(e) {
+        console.error(e);
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h4>Gagal memuat data</h4>
+            <p>${e.message}</p>
+          </div>`;
+      }
+    }
+
+    // Cache mahasiswa
+    const mahasiswaMap_cache = {};
+
+    function getMhsName(id) {
+      if (mahasiswaMap_cache[id]) return mahasiswaMap_cache[id].nama;
+      const found = anggotaList.find(a => a.id === id);
+      if (found) {
+        mahasiswaMap_cache[id] = found;
+        return found.nama;
+      }
+      return '-';
+    }
+
+    // ─── RENDER ───
+    function render(container) {
+      let html = '';
+
+      // Info halaqoh
+      html += `
+        <div class="halaqoh-info">
+          <div class="halaqoh-avatar">${(halaqohData.nama || 'H')[0].toUpperCase()}</div>
+          <div class="halaqoh-detail">
+            <h4>${halaqohData.nama || 'Halaqoh'}</h4>
+            <p>${anggotaList.length} anggota · Musyrif: ${user.nama || 'Anda'}</p>
+          </div>
+        </div>`;
+
+      // Setting info dari operator
+      if (settingPertemuan > 0) {
+        html += `
+          <div class="setting-info">
+            <div class="setting-chip"><i class="fa-solid fa-calendar-check"></i> ${settingPertemuan} Pertemuan</div>
+            <div class="setting-chip"><i class="fa-solid fa-percent"></i> Min. ${settingPersentase}% Kehadiran</div>
+          </div>`;
+      }
+
+      // Tabs
+      html += `
+        <div class="tabs">
+          <button class="tab ${currentTab === 'ringkasan' ? 'active' : ''}" onclick="switchTab('ringkasan')">📊 Ringkasan</button>
+          <button class="tab ${currentTab === 'absensi' ? 'active' : ''}" onclick="switchTab('absensi')">📋 Absensi</button>
+          <button class="tab ${currentTab === 'hafalan' ? 'active' : ''}" onclick="switchTab('hafalan')">📖 Hafalan</button>
+        </div>
+        <div id="tabContent"></div>`;
+
+      container.innerHTML = html;
+      renderTabContent();
+    }
+
+    window.switchTab = function(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      const tabIndex = tab === 'ringkasan' ? 0 : tab === 'absensi' ? 1 : 2;
+      document.querySelectorAll('.tab')[tabIndex].classList.add('active');
+      renderTabContent();
+    };
+
+    function renderTabContent() {
+      const el = document.getElementById('tabContent');
+      if (!el) return;
+
+      if (currentTab === 'ringkasan') renderRingkasan(el);
+      else if (currentTab === 'absensi') renderAbsensi(el);
+      else renderHafalan(el);
+    }
+
+    // ============== RINGKASAN ==============
+    function renderRingkasan(el) {
+      // Hitung statistik
+      const totalHari = new Set(absensiList.map(a => a.tanggal)).size;
+      const totalHadir = absensiList.filter(a => a.status === 'hadir').length;
+      const totalJaga = absensiList.filter(a => a.status === 'jaga').length;
+      const totalSakit = absensiList.filter(a => a.status === 'sakit').length;
+      const totalIzin = absensiList.filter(a => a.status === 'izin').length;
+      const totalAlfa = absensiList.filter(a => a.status === 'alfa').length;
+      const totalAbsensi = absensiList.length;
+
+      // Hafalan
+      const totalSetoran = hafalanList.length;
+      const juzValues = hafalanList.map(h => parseFloat(h.juz) || 0).filter(j => j > 0);
+      const rataJuz = anggotaList.length > 0 && juzValues.length > 0
+        ? (juzValues.reduce((a, b) => a + b, 0) / anggotaList.length).toFixed(1)
+        : '0';
+
+      let html = '';
+
+      // Stat cards
+      html += '<div class="stats-row">';
+      html += `<div class="stat-card green"><span class="stat-icon">👥</span><div class="stat-value">${anggotaList.length}</div><div class="stat-label">Anggota</div></div>`;
+      html += `<div class="stat-card blue"><span class="stat-icon">📅</span><div class="stat-value">${totalHari}</div><div class="stat-label">Hari Aktif</div></div>`;
+      html += `<div class="stat-card orange"><span class="stat-icon">✅</span><div class="stat-value">${totalHadir + totalJaga}</div><div class="stat-label">Total Hadir+Jaga</div></div>`;
+      html += `<div class="stat-card purple"><span class="stat-icon">📖</span><div class="stat-value">${rataJuz}</div><div class="stat-label">Rata² Juz</div></div>`;
+      html += '</div>';
+
+      // Kehadiran overview (jika ada setting pertemuan)
+      if (settingPertemuan > 0 && anggotaList.length > 0) {
+        html += '<div class="card"><h4 style="font-size:13px;font-weight:700;margin-bottom:12px;">📊 Kehadiran per Anggota</h4>';
+
+        anggotaList.forEach(mhs => {
+          const absMhs = absensiList.filter(a => a.mahasiswaId === mhs.id);
+          const jaga = absMhs.filter(a => a.status === 'jaga').length;
+          const sakit = absMhs.filter(a => a.status === 'sakit').length;
+          const izin = absMhs.filter(a => a.status === 'izin').length;
+          const alfa = absMhs.filter(a => a.status === 'alfa').length;
+          const tidakHadir = jaga + sakit + izin + alfa;
+          const hadir = Math.max(0, settingPertemuan - tidakHadir);
+          const persentase = settingPertemuan > 0 ? Math.round((hadir / settingPertemuan) * 100) : 0;
+          const memenuhi = persentase >= settingPersentase;
+
+          html += `
+            <div class="anggota-item">
+              <div class="anggota-avatar">${(mhs.nama || '?')[0].toUpperCase()}</div>
+              <div class="anggota-info">
+                <div class="nama">${mhs.nama || '-'}</div>
+                <div class="detail">
+                  <span>✅ ${hadir} hadir</span>
+                  <span>❌ ${tidakHadir} tidak hadir</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${persentase}%; background:${memenuhi ? 'linear-gradient(90deg, var(--green), #00c853)' : 'linear-gradient(90deg, var(--orange), var(--red))'}"></div>
+                </div>
+              </div>
+              <div class="anggota-progress">
+                <div class="juz" style="color:${memenuhi ? 'var(--green-dark)' : 'var(--red)'}">${persentase}%</div>
+                <div class="label">${memenuhi ? 'Memenuhi' : 'Tidak Memenuhi'}</div>
+              </div>
+            </div>`;
+        });
+
+        html += '</div>';
+      }
+
+      // Progress hafalan per anggota
+      html += '<div class="card"><h4 style="font-size:13px;font-weight:700;margin-bottom:12px;">🏆 Progress Hafalan</h4>';
+
+      const progressData = anggotaList.map(mhs => {
+        const setoranMhs = hafalanList.filter(h => h.mahasiswaId === mhs.id);
+        const juzTertinggi = setoranMhs.length > 0
+          ? Math.max(...setoranMhs.map(h => parseFloat(h.juz) || 0))
+          : 0;
+        const totalSetoran = setoranMhs.length;
+        return { ...mhs, juzTertinggi, totalSetoran };
+      }).sort((a, b) => b.juzTertinggi - a.juzTertinggi);
+
+      if (progressData.length === 0 || progressData.every(p => p.juzTertinggi === 0)) {
+        html += '<div class="empty-state"><i class="fa-solid fa-book-open"></i><h4>Belum ada setoran hafalan</h4></div>';
+      } else {
+        progressData.forEach((mhs, i) => {
+          const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+          const persentase = Math.min((mhs.juzTertinggi / 30) * 100, 100);
+
+          html += `
+            <div class="anggota-item">
+              <div class="anggota-rank ${rankClass}">${i + 1}</div>
+              <div class="anggota-avatar">${(mhs.nama || '?')[0].toUpperCase()}</div>
+              <div class="anggota-info">
+                <div class="nama">${mhs.nama || '-'}</div>
+                <div class="detail">
+                  <span>📖 ${mhs.totalSetoran}x setoran</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${persentase}%"></div>
+                </div>
+              </div>
+              <div class="anggota-progress">
+                <div class="juz">${mhs.juzTertinggi} Juz</div>
+                <div class="label">tertinggi</div>
+              </div>
+            </div>`;
+        });
+      }
+      html += '</div>';
+
+      el.innerHTML = html;
+    }
+
+    // ============== ABSENSI ==============
+    function renderAbsensi(el) {
+      if (absensiList.length === 0) {
+        el.innerHTML = '<div class="empty-state"><i class="fa-solid fa-clipboard-list"></i><h4>Belum ada data absensi</h4><p>Mulai catat kehadiran halaqoh</p></div>';
+        return;
+      }
+
+      // Group by tanggal
+      const grouped = {};
+      absensiList.forEach(a => {
+        const key = a.tanggal || 'Tanpa Tanggal';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(a);
+      });
+
+      let html = '';
+      Object.entries(grouped)
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .forEach(([tanggal, data]) => {
+          const hadirCount = data.filter(d => d.status === 'hadir').length;
+          const total = data.length;
+
+          html += '<div class="card">';
+          html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="font-size:12px;">📅 ${tanggal}</strong>
+            <span style="font-size:10px;color:var(--gray-500);">${hadirCount}/${total} hadir</span>
+          </div>`;
+          html += '<table><thead><tr><th>Nama</th><th class="text-center">Status</th></tr></thead><tbody>';
+
+          data.forEach(d => {
+            const status = d.status || 'hadir';
+            const badgeClass = status === 'hadir' ? 'badge-hadir' : 
+                               status === 'sakit' ? 'badge-sakit' : 
+                               status === 'izin' ? 'badge-izin' : 
+                               status === 'jaga' ? 'badge-jaga' : 'badge-alfa';
+            const statusLabel = status === 'hadir' ? 'Hadir' : 
+                                status === 'sakit' ? 'Sakit' : 
+                                status === 'izin' ? 'Izin' : 
+                                status === 'jaga' ? 'Jaga' : 'Alfa';
+            html += `<tr>
+              <td>${getMhsName(d.mahasiswaId)}</td>
+              <td class="text-center"><span class="badge ${badgeClass}">${statusLabel}</span></td>
+            </tr>`;
+          });
+
+          html += '</tbody></table></div>';
+        });
+
+      el.innerHTML = html;
+    }
+
+    // ============== HAFALAN ==============
+    function renderHafalan(el) {
+      if (hafalanList.length === 0) {
+        el.innerHTML = '<div class="empty-state"><i class="fa-solid fa-book-open"></i><h4>Belum ada setoran hafalan</h4><p>Mulai catat setoran hafalan anggota</p></div>';
+        return;
+      }
+
+      // Group per mahasiswa
+      const grouped = {};
+      hafalanList.forEach(h => {
+        const key = h.mahasiswaId;
+        if (!grouped[key]) grouped[key] = { nama: getMhsName(key), data: [] };
+        grouped[key].data.push(h);
+      });
+
+      let html = '';
+      Object.values(grouped).forEach(({ nama, data }) => {
+        const totalJuz = data.reduce((sum, d) => sum + (parseFloat(d.juz) || 0), 0);
+        const avgJuz = data.length > 0 ? (totalJuz / data.length).toFixed(1) : '0';
+
+        html += '<div class="card">';
+        html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h4 style="font-size:13px;font-weight:700;">📖 ${nama}</h4>
+          <span style="font-size:11px;color:var(--gray-500);">${data.length}x setoran</span>
+        </div>`;
+        html += `<p style="font-size:10px;color:var(--gray-500);margin-bottom:10px;">Total: ${totalJuz} Juz · Rata²: ${avgJuz} Juz</p>`;
+        html += '<table><thead><tr><th>Tgl</th><th>Juz</th><th>Surah</th><th>Ayat</th><th class="text-center">Nilai</th></tr></thead><tbody>';
+
+        data.sort((a, b) => {
+          const dateA = a.createdAt?.toDate?.() || new Date(a.tanggal || 0);
+          const dateB = b.createdAt?.toDate?.() || new Date(b.tanggal || 0);
+          return dateB - dateA;
+        }).forEach(d => {
+          const tgl = d.createdAt?.toDate?.() || new Date(d.tanggal || '');
+          const tglStr = tgl.toLocaleDateString ? tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : (d.tanggal || '-');
+          html += `<tr>
+            <td>${tglStr}</td>
+            <td class="fw-600 text-green">Juz ${d.juz || '-'}</td>
+            <td>${d.surah || '-'}</td>
+            <td>${d.ayat || '-'}</td>
+            <td class="text-center">${d.nilai || '-'}</td>
+          </tr>`;
+        });
+
+        html += '</tbody></table></div>';
+      });
+
+      el.innerHTML = html;
+    }
+
+    // ─── INIT ───
+    async function init() {
+      await loadSetting();
+      await loadData();
+    }
+    init();
+  </script>
+</body>
+</html>

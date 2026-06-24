@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Rekap Hafalan - Operator Halaqoh IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --gold-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-300: #bdbdbd; --gray-400: #9e9e9e;
+      --gray-500: #757575; --gray-600: #616161; --gray-700: #424242;
+      --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
+      --blue: #1e88e5; --blue-light: #e3f2fd;
+      --purple: #7b1fa2; --purple-light: #f3e5f5;
+      --sidebar-width: 260px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── MOBILE MENU TOGGLE ─── */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 16px; left: 16px;
+      z-index: 101;
+      background: var(--green-dark);
+      color: white;
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: var(--shadow-sm);
+      align-items: center; justify-content: center;
+    }
+
+    /* ─── SIDEBAR OVERLAY ─── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(51,51,51,0.5);
+      z-index: 99;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--green-dark);
+      color: white;
+      height: 100vh;
+      position: fixed; left: 0; top: 0;
+      display: flex; flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sidebar-logo {
+      width: 40px; height: 40px;
+      background: var(--gold);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-size: 18px; flex-shrink: 0;
+    }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
+    .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    .nav-section { margin-bottom: 8px; }
+    .nav-section-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: rgba(255,255,255,0.4);
+      padding: 12px 12px 8px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.7); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      transition: var(--transition); margin-bottom: 2px; cursor: pointer;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .user-avatar {
+      width: 36px; height: 36px;
+      background: var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
+    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    /* ─── MAIN CONTENT ─── */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 28px;
+      max-width: calc(100vw - var(--sidebar-width));
+      min-height: 100vh;
+      transition: margin-left 0.3s ease, max-width 0.3s ease;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+    }
+    .page-title h1 {
+      font-size: 22px; font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .page-title h1 .icon-badge {
+      width: 40px; height: 40px;
+      background: var(--purple-light);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--purple); font-size: 18px;
+    }
+    .page-title p {
+      font-size: 13px; color: var(--gray-600);
+      margin-top: 4px; padding-left: 50px;
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      padding: 9px 16px; border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: var(--transition); white-space: nowrap; text-decoration: none;
+    }
+    .btn-sm { padding: 7px 12px; font-size: 12px; }
+    .btn-xs { padding: 5px 10px; font-size: 11px; gap: 4px; border-radius: 6px; }
+    .btn-primary { background: var(--green-dark); color: white; }
+    .btn-primary:hover { background: #00695c; }
+    .btn-success { background: var(--green); color: white; }
+    .btn-success:hover { background: #008c4a; }
+    .btn-danger { background: var(--red-light); color: var(--red); }
+    .btn-danger:hover { background: #f8bbd0; }
+    .btn-danger-solid { background: var(--red); color: white; }
+    .btn-danger-solid:hover { background: #b71c1c; }
+    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-outline:hover { border-color: var(--gray-300); background: var(--gray-50); }
+
+    /* ─── STATS GRID ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--gray-200);
+      transition: var(--transition);
+    }
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .stat-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .stat-card-header span {
+      font-size: 11px; font-weight: 600; color: var(--gray-600);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .stat-icon.green { background: var(--green-light); color: var(--green-dark); }
+    .stat-icon.gold { background: var(--gold-light); color: var(--gold); }
+    .stat-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .stat-icon.purple { background: var(--purple-light); color: var(--purple); }
+    .stat-value {
+      font-size: 28px; font-weight: 700; color: var(--gray-800);
+      letter-spacing: -0.5px; margin-bottom: 4px;
+    }
+    .stat-label { font-size: 11px; color: var(--gray-400); }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 20px;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .card-header h3 {
+      font-size: 14px; font-weight: 600; color: var(--gray-800);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-header h3 i { color: var(--purple); }
+    .card-body { padding: 20px; }
+
+    /* ─── FILTER ─── */
+    .filter-row {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+    }
+    .filter-row .form-group { min-width: 150px; flex: 1; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .form-group select {
+      padding: 10px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      color: var(--gray-800);
+      outline: none;
+      transition: var(--transition);
+      background: white;
+      width: 100%;
+    }
+    .form-group select:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(123,31,162,0.1);
+    }
+
+    /* ─── ACTION BAR ─── */
+    .action-bar {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      margin-bottom: 20px;
+    }
+    .action-bar .divider {
+      width: 1px; height: 24px; background: var(--gray-200); margin: 0 4px;
+    }
+
+    /* ─── TABLE ─── */
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+    thead th {
+      background: var(--gray-100); padding: 12px 10px;
+      text-align: center; font-size: 10px; font-weight: 700;
+      color: var(--gray-600); text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 2px solid var(--gray-200); white-space: nowrap;
+    }
+    tbody td {
+      padding: 10px 10px; text-align: center;
+      border-bottom: 1px solid var(--gray-100); color: var(--gray-700);
+    }
+    tbody tr { transition: var(--transition); }
+    tbody tr:hover { background: var(--gray-50); }
+    .text-left { text-align: left; }
+    .fw-600 { font-weight: 600; }
+    .text-purple { color: var(--purple); }
+    .text-gray { color: var(--gray-500); }
+
+    /* ─── BADGE ─── */
+    .badge {
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .badge-purple { background: var(--purple-light); color: #4a148c; }
+
+    /* ─── ALERT ─── */
+    .alert {
+      padding: 12px 18px; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 500; margin-bottom: 16px;
+      display: none; align-items: center; gap: 10px;
+      border-left: 4px solid;
+    }
+    .alert i { font-size: 16px; }
+    .alert-success { background: var(--green-light); color: #1b5e20; border-color: var(--green); }
+    .alert-error { background: var(--red-light); color: #b71c1c; border-color: var(--red); }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(51,51,51,0.6);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 20px;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: white; border-radius: var(--radius-lg);
+      padding: 32px; max-width: 440px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-icon {
+      width: 56px; height: 56px; border-radius: var(--radius);
+      background: var(--red-light); color: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 20px;
+    }
+    .modal-box h3 { font-size: 18px; font-weight: 700; color: var(--gray-800); margin-bottom: 10px; }
+    .modal-box p { font-size: 13px; color: var(--gray-600); line-height: 1.6; margin-bottom: 20px; }
+    .modal-confirm-wrap { margin-bottom: 24px; }
+    .modal-confirm-wrap label { font-size: 12px; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 8px; }
+    .modal-confirm-wrap input {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+      font-size: 13px; font-family: 'Poppins', sans-serif; outline: none;
+      transition: var(--transition);
+    }
+    .modal-confirm-wrap input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(229,57,53,0.1); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal-warning {
+      background: #fff3e0; border: 1px solid #ffe0b2;
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      font-size: 12px; color: #e65100; margin-bottom: 20px;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state { text-align: center; padding: 60px 20px; }
+    .empty-state i { font-size: 48px; color: var(--gray-300); margin-bottom: 16px; display: block; }
+    .empty-state p { color: var(--gray-400); font-size: 14px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1200px) { .main-content { padding: 24px 20px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1024px) {
+      .filter-row .form-group { min-width: 120px; }
+      .stat-value { font-size: 24px; }
+    }
+    @media (max-width: 768px) {
+      .mobile-menu-toggle { display: flex; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.active { display: block; }
+      .main-content { margin-left: 0 !important; padding: 20px 14px; max-width: 100vw; }
+      .page-title h1 { font-size: 18px; }
+      .page-title h1 .icon-badge { width: 34px; height: 34px; font-size: 15px; }
+      .page-title p { padding-left: 44px; font-size: 12px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 14px; }
+      .stat-value { font-size: 22px; }
+      .filter-row { flex-direction: column; }
+      .filter-row .form-group { min-width: 100%; }
+      .action-bar { flex-direction: column; }
+      .action-bar .btn { width: 100%; justify-content: center; }
+      .action-bar .divider { display: none; }
+      .card-header { padding: 14px 16px; }
+      .card-body { padding: 14px; }
+      .modal-box { padding: 24px; }
+      .modal-actions { flex-direction: column; }
+      .modal-actions .btn { width: 100%; justify-content: center; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE MENU TOGGLE -->
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Halaqoh</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Utama</div>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Master Data</div>
+        <a href="musyrif.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> Data Musyrif</a>
+        <a href="halaqoh.html" class="nav-item"><i class="fa-solid fa-mosque"></i> Data Halaqoh</a>
+        <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
+        <a href="pembagian.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Halaqoh</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Halaqoh</div>
+        <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
+        <a href="rekap-hafalan.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i> Rekap Hafalan</a>
+        <a href="rekap-ujian.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Ujian Bulanan</a>
+        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-note-sticky"></i> Rekap Laporan Musyrif</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="avatarLetter">A</div>
+      <div class="user-info-sidebar">
+        <div class="name" id="sidebarName">Operator</div>
+        <div class="role">Halaqoh</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="page-title">
+        <h1><span class="icon-badge"><i class="fa-solid fa-chart-line"></i></span> Rekap Hafalan</h1>
+        <p>Pantau pencapaian hafalan seluruh mahasiswa</p>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </div>
+
+    <!-- ALERT -->
+    <div id="alertSuccess" class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <span id="alertSuccessMsg"></span></div>
+    <div id="alertError" class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <span id="alertErrorMsg"></span></div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Total Hafalan</span><div class="stat-icon purple"><i class="fa-solid fa-book-open"></i></div></div>
+        <div class="stat-value" id="statTotal">0</div><div class="stat-label">Total setoran hafalan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Mahasiswa</span><div class="stat-icon green"><i class="fa-solid fa-user-graduate"></i></div></div>
+        <div class="stat-value" id="statMhs">0</div><div class="stat-label">Mahasiswa sudah setor</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Rata Juz</span><div class="stat-icon gold"><i class="fa-solid fa-layer-group"></i></div></div>
+        <div class="stat-value" id="statAvgJuz">0</div><div class="stat-label">Rata-rata juz</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Surah Terbanyak</span><div class="stat-icon blue"><i class="fa-solid fa-star"></i></div></div>
+        <div class="stat-value" id="statTopSurah" style="font-size:16px;">-</div><div class="stat-label">Surah paling sering disetor</div>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label>Halaqoh</label>
+            <select id="filterHalaqoh" onchange="renderTable()"><option value="">Semua Halaqoh</option></select>
+          </div>
+          <div class="form-group">
+            <label>Musyrif</label>
+            <select id="filterMusyrif" onchange="renderTable()"><option value="">Semua Musyrif</option></select>
+          </div>
+          <div class="form-group">
+            <label>Juz</label>
+            <select id="filterJuz" onchange="renderTable()">
+              <option value="">Semua Juz</option>
+              <option value="1">Juz 1</option><option value="2">Juz 2</option><option value="3">Juz 3</option>
+              <option value="4">Juz 4</option><option value="5">Juz 5</option><option value="6">Juz 6</option>
+              <option value="7">Juz 7</option><option value="8">Juz 8</option><option value="9">Juz 9</option>
+              <option value="10">Juz 10</option><option value="11">Juz 11</option><option value="12">Juz 12</option>
+              <option value="13">Juz 13</option><option value="14">Juz 14</option><option value="15">Juz 15</option>
+              <option value="16">Juz 16</option><option value="17">Juz 17</option><option value="18">Juz 18</option>
+              <option value="19">Juz 19</option><option value="20">Juz 20</option><option value="21">Juz 21</option>
+              <option value="22">Juz 22</option><option value="23">Juz 23</option><option value="24">Juz 24</option>
+              <option value="25">Juz 25</option><option value="26">Juz 26</option><option value="27">Juz 27</option>
+              <option value="28">Juz 28</option><option value="29">Juz 29</option><option value="30">Juz 30</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input type="date" id="filterTanggal" onchange="renderTable()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="action-bar">
+      <button class="btn btn-success btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Download Excel</button>
+      <div class="divider"></div>
+      <button class="btn btn-danger btn-sm" onclick="confirmHapusPerHalaqoh()"><i class="fa-solid fa-trash-can"></i> Hapus Data per Halaqoh</button>
+    </div>
+
+    <!-- TABEL -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-table"></i> Pencapaian Hafalan</h3>
+        <span style="font-size:12px;color:var(--gray-400);">Menampilkan <strong id="totalData" style="color:var(--gray-800);">0</strong> data</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" id="tableContainer">
+          <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat data...</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL HAPUS PER HALAQOH -->
+  <div class="modal-overlay" id="modalHapusHalaqoh">
+    <div class="modal-box">
+      <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h3>Hapus Data Hafalan per Halaqoh</h3>
+      <p>Pilih halaqoh yang ingin dihapus seluruh data hafalannya. Tindakan ini <strong>tidak dapat dibatalkan</strong>.</p>
+      <div class="modal-warning">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>Pastikan sudah melakukan backup (Download Excel) sebelum menghapus data.</span>
+      </div>
+      <div class="form-group" style="margin-bottom:20px;">
+        <label>Pilih Halaqoh</label>
+        <select id="modalHalaqohSelect" style="width:100%;">
+          <option value="">-- Pilih Halaqoh --</option>
+        </select>
+      </div>
+      <div class="modal-confirm-wrap">
+        <label>Ketik <strong>HAPUS</strong> untuk konfirmasi</label>
+        <input type="text" id="konfirmasiHapus" placeholder="HAPUS" oninput="cekKonfirmasiHapus()">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModalHapus()">Batal</button>
+        <button class="btn btn-danger-solid" id="btnHapusHalaqoh" onclick="hapusPerHalaqoh()" disabled>
+          <i class="fa-solid fa-trash-can"></i> Hapus Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // ─── SIDEBAR TOGGLE ───
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+    document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+      item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+    });
+
+    const user = checkRole(['operator-halaqoh', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+    document.getElementById('sidebarName').textContent = user.nama || 'Operator';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+
+    let allHafalan = [];
+    let mahasiswaMap = {}, halaqohMap = {}, musyrifMap = {};
+    let rekapData = [];
+
+    // ─── ALERT ───
+    function showAlert(type, text) {
+      const el = document.getElementById('alert' + (type === 'success' ? 'Success' : 'Error'));
+      const msg = document.getElementById('alert' + (type === 'success' ? 'Success' : 'Error') + 'Msg');
+      msg.textContent = text;
+      el.style.display = 'flex';
+      clearTimeout(el._timeout);
+      el._timeout = setTimeout(() => el.style.display = 'none', 5000);
+    }
+
+    // ─── LOAD FILTERS ───
+    async function loadFilters() {
+      try {
+        const [halaqohSnap, musyrifSnap] = await Promise.all([
+          db.collection('halaqoh').get(),
+          db.collection('musyrif').get()
+        ]);
+        const hSel = document.getElementById('filterHalaqoh');
+        const mHalaqoh = document.getElementById('modalHalaqohSelect');
+        halaqohSnap.forEach(d => {
+          const data = d.data();
+          halaqohMap[d.id] = data;
+          const o1 = document.createElement('option'); o1.value = d.id; o1.textContent = data.nama; hSel.appendChild(o1);
+          const o2 = document.createElement('option'); o2.value = d.id; o2.textContent = data.nama; mHalaqoh.appendChild(o2);
+        });
+        const mSel = document.getElementById('filterMusyrif');
+        musyrifSnap.forEach(d => {
+          const data = d.data();
+          musyrifMap[d.id] = data;
+          const o = document.createElement('option'); o.value = d.id; o.textContent = data.nama; mSel.appendChild(o);
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    // ─── LOAD DATA ───
+    async function loadData() {
+      try {
+        const snap = await db.collection('hafalan').orderBy('createdAt', 'desc').get();
+        allHafalan = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Load mahasiswa
+        const mhsIds = [...new Set(allHafalan.map(h => h.mahasiswaId).filter(Boolean))];
+        for (const id of mhsIds) {
+          if (!mahasiswaMap[id]) {
+            const doc = await db.collection('mahasiswa').doc(id).get();
+            if (doc.exists) mahasiswaMap[id] = doc.data();
+          }
+        }
+
+        updateStats();
+        renderTable();
+      } catch(e) {
+        console.error(e);
+        showAlert('error', 'Gagal memuat data: ' + e.message);
+      }
+    }
+
+    // ─── UPDATE STATS ───
+    function updateStats() {
+      const mhsSet = new Set(allHafalan.map(h => h.mahasiswaId));
+      const juzList = allHafalan.map(h => parseInt(h.juz) || 0).filter(j => j > 0);
+      const avgJuz = juzList.length > 0 ? (juzList.reduce((a,b) => a + b, 0) / mhsSet.size).toFixed(1) : 0;
+
+      // Surah terbanyak
+      const surahCount = {};
+      allHafalan.forEach(h => {
+        if (h.surah) {
+          surahCount[h.surah] = (surahCount[h.surah] || 0) + 1;
+        }
+      });
+      let topSurah = '-';
+      let maxCount = 0;
+      Object.entries(surahCount).forEach(([surah, count]) => {
+        if (count > maxCount) { maxCount = count; topSurah = surah; }
+      });
+
+      document.getElementById('statTotal').textContent = allHafalan.length;
+      document.getElementById('statMhs').textContent = mhsSet.size;
+      document.getElementById('statAvgJuz').textContent = avgJuz;
+      document.getElementById('statTopSurah').textContent = topSurah.length > 15 ? topSurah.substring(0, 15) + '...' : topSurah;
+    }
+
+    // ─── RENDER TABLE ───
+    function renderTable() {
+      const halaqohFilter = document.getElementById('filterHalaqoh').value;
+      const musyrifFilter = document.getElementById('filterMusyrif').value;
+      const juzFilter = document.getElementById('filterJuz').value;
+      const tanggalFilter = document.getElementById('filterTanggal').value;
+
+      let filtered = [...allHafalan];
+
+      // Filter by halaqoh (cari mahasiswa yg ada di halaqoh tersebut via pembagianHalaqoh)
+      if (halaqohFilter) {
+        // Ambil data terbaru per mahasiswa untuk filter halaqoh
+        const mhsIdsInHalaqoh = new Set();
+        // Periksa dari data hafalan langsung (jika ada field halaqohId)
+        filtered = filtered.filter(h => {
+          if (h.halaqohId === halaqohFilter) return true;
+          // Fallback: cek dari mahasiswaMap
+          return false;
+        });
+        // Jika tidak ada field halaqohId di hafalan, filter by mahasiswa yg ada di pembagianHalaqoh
+        if (filtered.length === 0 && allHafalan.length > 0 && !allHafalan[0].halaqohId) {
+          // Load pembagian halaqoh dulu (async issue, sebaiknya di-preload)
+          // Untuk sekarang, skip filter halaqoh jika tidak ada field
+          filtered = [...allHafalan];
+        }
+      }
+
+      if (musyrifFilter) {
+        filtered = filtered.filter(h => h.musyrifId === musyrifFilter);
+      }
+      if (juzFilter) {
+        filtered = filtered.filter(h => String(h.juz) === juzFilter);
+      }
+      if (tanggalFilter) {
+        filtered = filtered.filter(h => {
+          const d = h.createdAt?.toDate?.() || new Date(h.createdAt);
+          return d.toISOString().split('T')[0] === tanggalFilter;
+        });
+      }
+
+      // Ambil hafalan terbaru per mahasiswa dari hasil filter
+      const latestMap = {};
+      filtered.forEach(h => {
+        const mhsId = h.mahasiswaId;
+        if (!mhsId) return;
+        const time = h.createdAt?.toMillis?.() || new Date(h.createdAt).getTime() || 0;
+        if (!latestMap[mhsId] || time > (latestMap[mhsId].createdAt?.toMillis?.() || 0)) {
+          latestMap[mhsId] = h;
+        }
+      });
+
+      rekapData = Object.values(latestMap).map(h => {
+        const mhs = mahasiswaMap[h.mahasiswaId] || {};
+        const halaqohNama = halaqohMap[h.halaqohId]?.nama || '-';
+        const musyrifNama = musyrifMap[h.musyrifId]?.nama || '-';
+        const tanggal = h.createdAt?.toDate?.() || new Date(h.createdAt);
+        return {
+          ...h, mhs, halaqohNama, musyrifNama,
+          tanggalFormatted: tanggal.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+        };
+      }).sort((a, b) => (a.mhs.nama || '').localeCompare(b.mhs.nama || ''));
+
+      document.getElementById('totalData').textContent = rekapData.length;
+
+      // Render
+      if (allHafalan.length === 0) {
+        document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><i class="fa-solid fa-book-open"></i><p>Belum ada data hafalan</p></div>';
+        return;
+      }
+      if (rekapData.length === 0) {
+        document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><i class="fa-solid fa-filter-circle-xmark"></i><p>Tidak ada data yang sesuai filter</p></div>';
+        return;
+      }
+
+      let html = `<table>
+        <thead><tr>
+          <th>No</th><th>NIM</th><th>Nama</th><th>Halaqoh</th><th>Musyrif</th>
+          <th>Surah</th><th>Ayat</th><th>Juz</th><th>Halaman</th><th>Nilai</th><th>Tanggal</th>
+        </tr></thead><tbody>`;
+
+      rekapData.forEach((h, i) => {
+        html += `<tr>
+          <td>${i + 1}</td>
+          <td class="fw-600">${h.mhs.nim || '-'}</td>
+          <td class="text-left fw-600">${h.mhs.nama || '-'}</td>
+          <td>${h.halaqohNama}</td>
+          <td>${h.musyrifNama}</td>
+          <td class="text-purple fw-600">${h.surah || '-'}</td>
+          <td>${h.ayat || '-'}</td>
+          <td><span class="badge badge-purple">Juz ${h.juz || '-'}</span></td>
+          <td>${h.halaman || '-'}</td>
+          <td>${h.nilai || '-'}</td>
+          <td class="text-gray">${h.tanggalFormatted}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('tableContainer').innerHTML = html;
+    }
+
+    // ─── EXPORT EXCEL ───
+    function exportExcel() {
+      if (rekapData.length === 0) {
+        showAlert('error', 'Tidak ada data untuk diexport!');
+        return;
+      }
+
+      let csv = '\uFEFFNo;NIM;Nama;Halaqoh;Musyrif;Surah;Ayat;Juz;Halaman;Nilai;Tanggal\n';
+      rekapData.forEach((h, i) => {
+        csv += `${i + 1};"${h.mhs.nim || ''}";"${h.mhs.nama || ''}";"${h.halaqohNama}";"${h.musyrifNama}";"${h.surah || ''}";"${h.ayat || ''}";${h.juz || ''};"${h.halaman || ''}";"${h.nilai || ''}";"${h.tanggalFormatted}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'rekap-hafalan.xls';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showAlert('success', 'Data berhasil didownload sebagai Excel!');
+    }
+
+    // ─── MODAL HAPUS PER HALAQOH ───
+    function confirmHapusPerHalaqoh() {
+      if (allHafalan.length === 0) {
+        showAlert('error', 'Tidak ada data hafalan untuk dihapus.');
+        return;
+      }
+      document.getElementById('konfirmasiHapus').value = '';
+      document.getElementById('btnHapusHalaqoh').disabled = true;
+      document.getElementById('modalHapusHalaqoh').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModalHapus() {
+      document.getElementById('modalHapusHalaqoh').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function cekKonfirmasiHapus() {
+      document.getElementById('btnHapusHalaqoh').disabled = document.getElementById('konfirmasiHapus').value !== 'HAPUS';
+    }
+
+    async function hapusPerHalaqoh() {
+      const halaqohId = document.getElementById('modalHalaqohSelect').value;
+      if (!halaqohId) {
+        showAlert('error', 'Pilih halaqoh terlebih dahulu!');
+        return;
+      }
+      const btn = document.getElementById('btnHapusHalaqoh');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...';
+
+      try {
+        // Cek apakah field halaqohId ada
+        const hasField = allHafalan.length > 0 && allHafalan[0].halaqohId !== undefined;
+        let docs = [];
+
+        if (hasField) {
+          const snap = await db.collection('hafalan').where('halaqohId', '==', halaqohId).get();
+          docs = snap.docs;
+        } else {
+          // Fallback: cari mahasiswa di halaqoh, lalu hapus hafalan mereka
+          const anggotaSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
+          const mhsIds = anggotaSnap.docs.map(d => d.data().mahasiswaId).filter(Boolean);
+          if (mhsIds.length === 0) {
+            showAlert('error', 'Tidak ada mahasiswa di halaqoh ini.');
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            return;
+          }
+          // Get all hafalan for these mahasiswa
+          const allSnap = await db.collection('hafalan').get();
+          docs = allSnap.docs.filter(d => mhsIds.includes(d.data().mahasiswaId));
+        }
+
+        if (docs.length === 0) {
+          showAlert('error', 'Tidak ada data hafalan untuk halaqoh ini.');
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+          return;
+        }
+
+        const batchSize = 400;
+        for (let i = 0; i < docs.length; i += batchSize) {
+          const batch = db.batch();
+          docs.slice(i, i + batchSize).forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+        }
+
+        closeModalHapus();
+        showAlert('success', `${docs.length} data hafalan berhasil dihapus dari halaqoh ${halaqohMap[halaqohId]?.nama || ''}.`);
+        loadData();
+      } catch(e) {
+        console.error(e);
+        showAlert('error', 'Gagal menghapus: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
+    }
+
+    document.getElementById('modalHapusHalaqoh').addEventListener('click', function(e) {
+      if (e.target === this) closeModalHapus();
+    });
+
+    // ─── LOGOUT ───
+    window.logout = function() {
+      if (confirm('Yakin ingin keluar?')) {
+        auth.signOut().then(() => {
+          localStorage.removeItem('user');
+          window.location.href = '../../index.html';
+        });
+      }
+    };
+
+    // ─── INIT ───
+    loadFilters();
+    loadData();
+  </script>
+</body>
+</html>

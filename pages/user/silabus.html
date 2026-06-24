@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Silabus - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; --header-height: 56px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; }
+    .content { padding: 16px; }
+    .card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px; }
+    .info-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .info-chip { background: var(--green-light); color: var(--green-dark); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 3px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; outline: none; background: white; resize: vertical; }
+    .form-group textarea { min-height: 50px; }
+    .form-row { display: grid; grid-template-columns: 1fr 2fr 2fr; gap: 8px; align-items: end; margin-bottom: 8px; }
+    .btn { padding: 8px 14px; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+    .btn-primary { background: var(--green-dark); color: white; }
+    .btn-danger { background: #fce4ec; color: var(--red); }
+    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 4px 10px; font-size: 11px; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 10px; font-weight: 700; color: var(--gray-600); border-bottom: 2px solid var(--gray-200); }
+    td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
+    .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; background: var(--green-light); color: #1b5e20; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>Silabus</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+
+    let currentMkId = '';
+    let currentKelasId = '';
+    let currentTotalPertemuan = 16;
+    let currentMkNama = '';
+    let currentKelasNama = '';
+    let currentProdiNama = '';
+
+    function showAlert(text) {
+      const el = document.getElementById('alertSuccess');
+      if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 2000); }
+    }
+
+    async function loadPage() {
+      const container = document.getElementById('mainContent');
+      try {
+        const jadwalSnap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
+        if (jadwalSnap.empty) {
+          container.innerHTML = '<div class="card"><p style="text-align:center;padding:30px;">Belum ada jadwal mengajar</p></div>';
+          return;
+        }
+
+        // Ambil MK unik
+        const mkMap = new Map();
+        jadwalSnap.forEach(doc => {
+          const j = doc.data();
+          if (!mkMap.has(j.mkId)) {
+            mkMap.set(j.mkId, {
+              mkNama: j.mkNama,
+              kelasNama: j.kelasNama,
+              kelasId: j.kelasId,
+              totalPertemuan: j.totalPertemuan || 16,
+              prodiNama: j.prodiNama || '-'
+            });
+          }
+        });
+
+        let html = '<div id="alertSuccess" class="alert alert-success"></div>';
+        html += '<div class="card"><div class="form-group"><label>Pilih Matakuliah</label><select id="mkSelect" onchange="loadSilabus()"><option value="">Pilih Matakuliah...</option>';
+
+        mkMap.forEach((val, mkId) => {
+          html += `<option value="${mkId}" data-kelas="${val.kelasId}" data-pertemuan="${val.totalPertemuan}" data-mk="${val.mkNama}" data-kelasnama="${val.kelasNama}" data-prodi="${val.prodiNama}">${val.mkNama} - ${val.kelasNama}</option>`;
+        });
+        html += '</select></div></div>';
+
+        html += '<div id="silabusContainer"></div>';
+        container.innerHTML = html;
+      } catch(e) { console.error(e); }
+    }
+
+    window.loadSilabus = async function() {
+      const sel = document.getElementById('mkSelect');
+      if (!sel || !sel.value) {
+        document.getElementById('silabusContainer').innerHTML = '';
+        return;
+      }
+
+      const opt = sel.options[sel.selectedIndex];
+      currentMkId = sel.value;
+      currentKelasId = opt.getAttribute('data-kelas');
+      currentTotalPertemuan = parseInt(opt.getAttribute('data-pertemuan')) || 16;
+      currentMkNama = opt.getAttribute('data-mk');
+      currentKelasNama = opt.getAttribute('data-kelasnama');
+      currentProdiNama = opt.getAttribute('data-prodi');
+
+      const container = document.getElementById('silabusContainer');
+
+      // Load existing silabus
+      const existingSnap = await db.collection('silabus').where('mkId', '==', currentMkId).where('dosenId', '==', user.uid).get();
+      const existingData = {};
+      existingSnap.forEach(doc => {
+        const d = doc.data();
+        existingData[d.pekan] = { id: doc.id, ...d };
+      });
+
+      let html = '<div class="card">';
+      html += `<div class="info-row">
+        <div class="info-chip"><i class="fa-solid fa-book"></i> ${currentMkNama}</div>
+        <div class="info-chip"><i class="fa-solid fa-users"></i> ${currentKelasNama}</div>
+        <div class="info-chip"><i class="fa-solid fa-calendar-check"></i> ${currentTotalPertemuan} Pertemuan</div>
+        <div class="info-chip"><i class="fa-solid fa-building-columns"></i> ${currentProdiNama}</div>
+      </div>`;
+
+      html += '<table><thead><tr><th>Pekan</th><th>Tanggal</th><th>Materi</th><th>Sub-Capaian Pembelajaran</th><th>Aksi</th></tr></thead><tbody>';
+
+      for (let i = 1; i <= currentTotalPertemuan; i++) {
+        const existing = existingData[i];
+        const materi = existing?.materi || '';
+        const subCapaian = existing?.subCapaian || '';
+        const tanggal = existing?.tanggal || '';
+
+        html += `<tr>
+          <td><strong>${i}</strong></td>
+          <td><input type="date" id="tgl_${i}" value="${tanggal}" style="width:100%;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:11px;"></td>
+          <td><input type="text" id="materi_${i}" value="${materi.replace(/"/g, '&quot;')}" placeholder="Materi pekan ${i}" style="width:100%;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:11px;"></td>
+          <td><input type="text" id="subcapaian_${i}" value="${subCapaian.replace(/"/g, '&quot;')}" placeholder="Sub-capaian" style="width:100%;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:11px;"></td>
+          <td>${existing ? `<button class="btn btn-danger btn-sm" onclick="hapusSilabus('${existing.id}')"><i class="fa-solid fa-trash"></i></button>` : '-'}</td>
+        </tr>`;
+      }
+
+      html += '</tbody></table>';
+      html += '<button class="btn btn-primary" style="margin-top:12px;width:100%;" onclick="simpanSilabus()"><i class="fa-solid fa-save"></i> Simpan Silabus</button>';
+      html += '</div>';
+
+      container.innerHTML = html;
+    };
+
+    window.simpanSilabus = async function() {
+      const batch = db.batch();
+      let count = 0;
+
+      for (let i = 1; i <= currentTotalPertemuan; i++) {
+        const tanggal = document.getElementById(`tgl_${i}`)?.value || '';
+        const materi = document.getElementById(`materi_${i}`)?.value.trim() || '';
+        const subCapaian = document.getElementById(`subcapaian_${i}`)?.value.trim() || '';
+
+        if (!materi && !subCapaian && !tanggal) continue;
+
+        // Cari existing
+        const existingSnap = await db.collection('silabus')
+          .where('mkId', '==', currentMkId)
+          .where('dosenId', '==', user.uid)
+          .where('pekan', '==', i)
+          .get();
+
+        const data = {
+          mkId: currentMkId,
+          mkNama: currentMkNama,
+          kelasId: currentKelasId,
+          kelasNama: currentKelasNama,
+          prodiNama: currentProdiNama,
+          dosenId: user.uid,
+          dosenNama: user.nama,
+          pekan: i,
+          tanggal,
+          materi,
+          subCapaian,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (!existingSnap.empty) {
+          batch.update(existingSnap.docs[0].ref, data);
+        } else {
+          data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          const ref = db.collection('silabus').doc();
+          batch.set(ref, data);
+        }
+        count++;
+      }
+
+      if (count === 0) {
+        alert('Tidak ada data yang diisi!');
+        return;
+      }
+
+      await batch.commit();
+      showAlert(`✅ ${count} data silabus berhasil disimpan!`);
+      loadSilabus();
+    };
+
+    window.hapusSilabus = async function(id) {
+      if (!confirm('Hapus data silabus ini?')) return;
+      await db.collection('silabus').doc(id).delete();
+      showAlert('Data dihapus!');
+      loadSilabus();
+    };
+
+    loadPage();
+  </script>
+</body>
+</html>

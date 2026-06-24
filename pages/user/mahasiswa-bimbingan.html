@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mahasiswa Bimbingan - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-300: #bdbdbd; --gray-600: #616161;
+      --gray-800: #333333; --red: #e53935; --radius-sm: 8px; --radius: 12px;
+      --header-height: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif; background: var(--gray-50);
+      color: var(--gray-800); padding-top: var(--header-height);
+    }
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--green-dark); color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    .app-header h3 { font-size: 16px; font-weight: 600; flex: 1; }
+    .content { padding: 16px; max-width: 700px; margin: 0 auto; }
+
+    /* Summary */
+    .summary-card {
+      background: var(--white); border-radius: var(--radius); padding: 16px;
+      border: 1px solid var(--gray-200); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .summary-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--green-dark); color: white; display: flex;
+      align-items: center; justify-content: center; font-size: 22px;
+      font-weight: 700; flex-shrink: 0;
+    }
+    .summary-info h3 { font-size: 16px; font-weight: 700; }
+    .summary-info p { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+    .summary-stats {
+      margin-left: auto; text-align: center; display: flex; gap: 20px;
+    }
+    .summary-stats .stat-value { font-size: 24px; font-weight: 700; color: var(--green-dark); }
+    .summary-stats .stat-label { font-size: 10px; color: var(--gray-600); }
+
+    /* Mahasiswa card */
+    .mhs-card {
+      background: var(--white); border-radius: var(--radius); padding: 14px 16px;
+      border: 1px solid var(--gray-200); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 14px; transition: all 0.2s;
+      cursor: pointer;
+    }
+    .mhs-card:hover { border-color: var(--green); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .mhs-card:active { background: var(--gray-50); }
+    .mhs-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--green-light); color: var(--green-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px; flex-shrink: 0;
+    }
+    .mhs-info { flex: 1; min-width: 0; }
+    .mhs-info .nama { font-size: 14px; font-weight: 600; }
+    .mhs-info .detail { font-size: 11px; color: var(--gray-600); margin-top: 2px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .mhs-info .detail span { display: flex; align-items: center; gap: 4px; }
+    .mhs-arrow { color: var(--gray-400); font-size: 14px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 50px 20px; color: var(--gray-600);
+    }
+    .empty-state i { font-size: 56px; display: block; margin-bottom: 16px; opacity: 0.4; }
+    .empty-state h4 { font-size: 16px; margin-bottom: 6px; }
+    .empty-state p { font-size: 12px; }
+
+    /* Loading */
+    .loading {
+      text-align: center; padding: 40px; color: var(--gray-600);
+    }
+    .loading i { font-size: 28px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Search */
+    .search-box {
+      background: var(--white); border: 1.5px solid var(--gray-200);
+      border-radius: 24px; padding: 10px 16px; display: flex; align-items: center;
+      gap: 10px; margin-bottom: 16px;
+    }
+    .search-box input {
+      border: none; outline: none; flex: 1; font-size: 13px;
+      font-family: 'Poppins', sans-serif; background: transparent;
+    }
+    .search-box i { color: var(--gray-400); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--green-dark); color: white; padding: 10px 24px;
+      border-radius: 24px; font-size: 13px; font-weight: 500; z-index: 999;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 480px) {
+      .summary-stats { gap: 12px; }
+      .summary-stats .stat-value { font-size: 20px; }
+      .mhs-info .detail { flex-direction: column; gap: 2px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>👨‍🎓 Mahasiswa Bimbingan</h3>
+    <button style="background:none;border:none;color:white;font-size:16px;cursor:pointer;" onclick="loadData()" title="Refresh">
+      <i class="fa-solid fa-rotate"></i>
+    </button>
+  </header>
+
+  <div class="content" id="mainContent">
+    <div class="loading"><i class="fa-solid fa-spinner"></i><p style="margin-top:10px;">Memuat data...</p></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    // Hanya dosen dan dosen-musyrif yang bisa akses
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+
+    let allMahasiswa = [];
+    let filteredMahasiswa = [];
+
+    function showToast(text) {
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    async function loadData() {
+      const container = document.getElementById('mainContent');
+      container.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner"></i><p style="margin-top:10px;">Memuat data...</p></div>';
+
+      try {
+        console.log('🔍 Loading mahasiswa bimbingan untuk:', user.nama, 'UID:', user.uid);
+
+        // Cari mahasiswa yang paId === user.uid
+        const mhsSnap = await db.collection('mahasiswa')
+          .where('paId', '==', user.uid)
+          .get();
+
+        console.log('📊 Jumlah mahasiswa ditemukan:', mhsSnap.size);
+
+        allMahasiswa = [];
+        mhsSnap.forEach(doc => {
+          allMahasiswa.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Sort by nama
+        allMahasiswa.sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+        filteredMahasiswa = [...allMahasiswa];
+
+        renderUI(container);
+      } catch (e) {
+        console.error('❌ Error:', e);
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h4>Gagal memuat data</h4>
+            <p>${e.message}</p>
+            <button class="btn-refresh" onclick="loadData()" style="margin-top:12px;padding:8px 16px;background:var(--green-dark);color:white;border:none;border-radius:20px;font-family:'Poppins',sans-serif;cursor:pointer;">
+              <i class="fa-solid fa-rotate"></i> Coba Lagi
+            </button>
+          </div>`;
+      }
+    }
+
+    function renderUI(container) {
+      let html = '';
+
+      // Summary
+      html += '<div class="summary-card">';
+      html += `<div class="summary-avatar">${(user.nama || 'D')[0].toUpperCase()}</div>`;
+      html += '<div class="summary-info">';
+      html += `<h3>${user.nama || 'Dosen'}</h3>`;
+      html += '<p>Pembimbing Akademik</p>';
+      html += '</div>';
+      html += '<div class="summary-stats">';
+      html += `<div><div class="stat-value">${allMahasiswa.length}</div><div class="stat-label">Mahasiswa</div></div>`;
+      html += '</div>';
+      html += '</div>';
+
+      // Search
+      html += '<div class="search-box">';
+      html += '<i class="fa-solid fa-magnifying-glass"></i>';
+      html += '<input type="text" id="searchInput" placeholder="Cari mahasiswa..." oninput="filterMahasiswa()">';
+      html += '</div>';
+
+      // List mahasiswa
+      html += '<div id="mhsList">';
+      html += renderMhsList(filteredMahasiswa);
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function renderMhsList(data) {
+      if (data.length === 0) {
+        return `
+          <div class="empty-state">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h4>${allMahasiswa.length === 0 ? 'Belum ada mahasiswa bimbingan' : 'Tidak ditemukan'}</h4>
+            <p>${allMahasiswa.length === 0 ? 'Operator akan menugaskan mahasiswa ke Anda sebagai PA' : 'Coba kata kunci lain'}</p>
+          </div>`;
+      }
+
+      let html = '';
+      data.forEach((mhs, i) => {
+        const initial = (mhs.nama || '?')[0].toUpperCase();
+        const prodiColor = getProdiColor(i);
+        html += `
+          <div class="mhs-card" onclick="lihatDetail('${mhs.id}')">
+            <div class="mhs-avatar" style="background:${prodiColor.bg};color:${prodiColor.text};">${initial}</div>
+            <div class="mhs-info">
+              <div class="nama">${mhs.nama || '-'}</div>
+              <div class="detail">
+                <span><i class="fa-solid fa-id-card"></i> ${mhs.nim || '-'}</span>
+                ${mhs.prodiNama ? `<span><i class="fa-solid fa-building-columns"></i> ${mhs.prodiNama}</span>` : ''}
+                ${mhs.angkatan ? `<span><i class="fa-solid fa-calendar"></i> ${mhs.angkatan}</span>` : ''}
+              </div>
+            </div>
+            <div class="mhs-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+          </div>`;
+      });
+      return html;
+    }
+
+    function getProdiColor(index) {
+      const colors = [
+        { bg: '#e8f5e9', text: '#1b5e20' },
+        { bg: '#e3f2fd', text: '#0d47a1' },
+        { bg: '#fff3e0', text: '#e65100' },
+        { bg: '#fce4ec', text: '#880e4f' },
+        { bg: '#f3e5f5', text: '#4a148c' },
+        { bg: '#e0f7fa', text: '#004d40' },
+        { bg: '#fff8e1', text: '#f57f17' },
+        { bg: '#ede7f6', text: '#311b92' },
+      ];
+      return colors[index % colors.length];
+    }
+
+    window.filterMahasiswa = function() {
+      const keyword = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
+      if (!keyword) {
+        filteredMahasiswa = [...allMahasiswa];
+      } else {
+        filteredMahasiswa = allMahasiswa.filter(mhs =>
+          (mhs.nama || '').toLowerCase().includes(keyword) ||
+          (mhs.nim || '').toLowerCase().includes(keyword) ||
+          (mhs.prodiNama || '').toLowerCase().includes(keyword)
+        );
+      }
+      document.getElementById('mhsList').innerHTML = renderMhsList(filteredMahasiswa);
+    };
+
+    window.lihatDetail = function(mhsId) {
+      // Bisa diarahkan ke halaman detail mahasiswa kalau ada
+      // window.location.href = `detail-mahasiswa.html?id=${mhsId}`;
+      // Atau tampilkan toast untuk sekarang
+      const mhs = allMahasiswa.find(m => m.id === mhsId);
+      if (mhs) {
+        showToast(`📋 ${mhs.nama} - ${mhs.nim || 'NIM belum diisi'}`);
+      }
+    };
+
+    // Inisialisasi
+    loadData();
+  </script>
+</body>
+</html>

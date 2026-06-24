@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>IPIM - Dzikir Pagi & Petang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark: #003d33; --green-mid: #006644; --green: #00a859;
+      --green-light: #e8f5e9; --green-pale: #f0faf5;
+      --gold: #f5c842; --gold-light: #fffbee;
+      --white: #ffffff; --gray-100: #f0f0f0; --gray-200: #d1ead8;
+      --gray-600: #666666; --gray-800: #222222;
+      --radius-sm: 10px; --radius: 14px; --radius-lg: 18px;
+      --transition: all 0.3s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--green-pale); color: var(--gray-800);
+      padding-bottom: 30px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      color: white; padding: 14px 16px 18px;
+      position: sticky; top: 0; z-index: 50;
+      box-shadow: 0 4px 16px rgba(0,61,51,0.25);
+    }
+    .topbar-row { display: flex; align-items: center; gap: 12px; }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: white; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; flex-shrink: 0;
+    }
+    .topbar-title { font-size: 16px; font-weight: 700; }
+    .topbar-sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
+
+    .toggle-wrap { padding: 14px 16px 0; }
+    .toggle { display: flex; background: var(--white); border-radius: var(--radius-sm); padding: 4px; border: 0.5px solid var(--gray-200); }
+    .toggle div {
+      flex: 1; text-align: center; padding: 9px; font-size: 12px; font-weight: 600;
+      color: var(--gray-600); border-radius: 8px; cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .toggle div.active { background: var(--green-pale); color: var(--green-mid); }
+    .toggle div i { font-size: 13px; }
+
+    .progress-section { padding: 14px 16px 0; }
+    .progress-card { background: var(--white); border-radius: var(--radius-lg); padding: 14px; border: 0.5px solid var(--gray-200); }
+    .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--gray-600); }
+    .progress-top b { color: var(--green-mid); font-size: 13px; }
+    .progress-track { height: 8px; background: var(--green-light); border-radius: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #00a859, #00d46a); border-radius: 8px; transition: width 0.5s ease; }
+
+    .dzikir-list { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .dzikir-card { background: var(--white); border-radius: var(--radius-lg); padding: 14px; border: 0.5px solid var(--gray-200); transition: var(--transition); }
+    .dzikir-card.completed { background: var(--green-light); border-color: #b8e0c4; }
+
+    .dzikir-head { display: flex; align-items: flex-start; gap: 10px; }
+    .dzikir-check {
+      width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+      font-size: 12px; color: white; transition: var(--transition); margin-top: 2px;
+    }
+    .dzikir-check.done { background: var(--green); border-color: var(--green); }
+    .dzikir-meta { flex: 1; }
+    .dzikir-judul { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+    .dzikir-catatan { font-size: 10.5px; color: var(--gray-600); margin-top: 2px; line-height: 1.4; }
+    .dzikir-arab {
+      font-family: 'Amiri', serif; font-size: 19px; line-height: 2.1;
+      text-align: right; direction: rtl; color: var(--green-dark);
+      margin: 12px 0; padding: 12px; background: var(--green-pale); border-radius: var(--radius-sm);
+    }
+    .dzikir-latin { font-size: 12px; color: var(--green-mid); font-style: italic; line-height: 1.6; margin-bottom: 8px; }
+    .dzikir-arti { font-size: 12px; color: var(--gray-600); line-height: 1.6; }
+
+    .dzikir-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--gray-100); }
+    .counter-wrap { display: flex; align-items: center; gap: 10px; }
+    .counter-btn {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: var(--green-light); color: var(--green-mid); font-size: 14px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .counter-btn:active { background: var(--green); color: white; }
+    .counter-val { font-size: 14px; font-weight: 700; color: var(--green-dark); min-width: 50px; text-align: center; }
+    .toggle-detail { font-size: 11px; color: var(--green); font-weight: 600; cursor: pointer; }
+
+    .detail-hidden { display: none; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-600); font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="back-btn" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></div>
+      <div>
+        <div class="topbar-title"><i class="fa-solid fa-hands-praying"></i> Dzikir Pagi & Petang</div>
+        <div class="topbar-sub" id="waktuInfo">Memuat waktu...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toggle-wrap">
+    <div class="toggle">
+      <div id="tabPagi"><i class="fa-solid fa-sun"></i> Dzikir Pagi</div>
+      <div id="tabPetang"><i class="fa-solid fa-moon"></i> Dzikir Petang</div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-card">
+      <div class="progress-top"><span>Progres hari ini</span><span><b id="progCount">0/0</b> selesai</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%;"></div></div>
+    </div>
+  </div>
+
+  <div class="dzikir-list" id="dzikirList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/data-dzikir.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    let currentTab = 'pagi';
+    let progressState = {};
+    const todayKey = new Date().toISOString().split('T')[0];
+    const storageKey = `dzikirProgress_${user.uid}_${todayKey}`;
+
+    function detectDefaultTab() {
+      const h = new Date().getHours();
+      return (h >= 12 && h < 19) ? 'petang' : 'pagi';
+    }
+
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        progressState = saved ? JSON.parse(saved) : {};
+      } catch(e) { progressState = {}; }
+    }
+
+    function saveProgress() {
+      try { localStorage.setItem(storageKey, JSON.stringify(progressState)); } catch(e) {}
+      syncToFirestore();
+    }
+
+    let syncTimeout = null;
+    function syncToFirestore() {
+      clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(async () => {
+        try {
+          const doneCount = Object.values(progressState).filter(v => v.done).length;
+          await db.collection('dzikirLog').doc(`${user.uid}_${todayKey}`).set({
+            userId: user.uid,
+            tanggal: todayKey,
+            progress: progressState,
+            totalSelesai: doneCount,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch(e) { console.error('Gagal sync dzikir', e); }
+      }, 1500);
+    }
+
+    function getItemKey(waktu, id) { return `${waktu}_${id}`; }
+
+    function renderTabs() {
+      document.getElementById('tabPagi').className = currentTab === 'pagi' ? 'active' : '';
+      document.getElementById('tabPetang').className = currentTab === 'petang' ? 'active' : '';
+      const now = new Date();
+      document.getElementById('waktuInfo').textContent = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long' });
+    }
+
+    function renderList() {
+      const items = DZIKIR_DATA[currentTab] || [];
+      const list = document.getElementById('dzikirList');
+
+      if (!items.length) {
+        list.innerHTML = '<div class="empty-state">Tidak ada data dzikir</div>';
+        return;
+      }
+
+      list.innerHTML = items.map(item => {
+        const key = getItemKey(currentTab, item.id);
+        const state = progressState[key] || { done: false, count: 0 };
+        const isDone = state.done;
+        const count = state.count || 0;
+        const target = item.ulang;
+
+        return `
+        <div class="dzikir-card ${isDone ? 'completed' : ''}" id="card_${key}">
+          <div class="dzikir-head">
+            <div class="dzikir-check ${isDone ? 'done' : ''}" onclick="toggleDone('${key}', ${target})">
+              ${isDone ? '<i class="fa-solid fa-check"></i>' : ''}
+            </div>
+            <div class="dzikir-meta">
+              <div class="dzikir-judul">${item.judul}</div>
+              ${item.catatan ? `<div class="dzikir-catatan"><i class="fa-solid fa-circle-info"></i> ${item.catatan}</div>` : ''}
+            </div>
+          </div>
+
+          <div id="detail_${key}" class="${isDone ? 'detail-hidden' : ''}">
+            <div class="dzikir-arab">${item.arab}</div>
+            <div class="dzikir-latin">${item.latin}</div>
+            <div class="dzikir-arti">${item.arti}</div>
+          </div>
+
+          <div class="dzikir-footer">
+            <div class="counter-wrap">
+              ${target > 1 ? `
+                <button class="counter-btn" onclick="changeCount('${key}', ${target}, -1)"><i class="fa-solid fa-minus"></i></button>
+                <span class="counter-val" id="count_${key}">${count}/${target}x</span>
+                <button class="counter-btn" onclick="changeCount('${key}', ${target}, 1)"><i class="fa-solid fa-plus"></i></button>
+              ` : `<span class="counter-val">1x dibaca</span>`}
+            </div>
+            <div class="toggle-detail" onclick="toggleDetail('${key}')">${isDone ? 'Lihat teks' : 'Sembunyikan'}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      updateProgressBar();
+    }
+
+    function toggleDetail(key) {
+      const el = document.getElementById(`detail_${key}`);
+      el.classList.toggle('detail-hidden');
+    }
+
+    function toggleDone(key, target) {
+      const state = progressState[key] || { done: false, count: 0 };
+      state.done = !state.done;
+      if (state.done) state.count = target;
+      else state.count = 0;
+      progressState[key] = state;
+      saveProgress();
+      renderList();
+    }
+
+    function changeCount(key, target, delta) {
+      const state = progressState[key] || { done: false, count: 0 };
+      state.count = Math.max(0, Math.min(target, (state.count || 0) + delta));
+      state.done = state.count >= target;
+      progressState[key] = state;
+      saveProgress();
+      renderList();
+    }
+
+    function updateProgressBar() {
+      const items = DZIKIR_DATA[currentTab] || [];
+      const doneCount = items.filter(item => {
+        const key = getItemKey(currentTab, item.id);
+        return progressState[key]?.done;
+      }).length;
+      const total = items.length;
+      const pct = total ? Math.round((doneCount / total) * 100) : 0;
+      document.getElementById('progCount').textContent = `${doneCount}/${total}`;
+      document.getElementById('progFill').style.width = `${pct}%`;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      renderTabs();
+      renderList();
+    }
+
+    document.getElementById('tabPagi').addEventListener('click', () => switchTab('pagi'));
+    document.getElementById('tabPetang').addEventListener('click', () => switchTab('petang'));
+
+    (function init() {
+      loadProgress();
+      currentTab = detectDefaultTab();
+      renderTabs();
+      renderList();
+    })();
+  </script>
+</body>
+</html>
