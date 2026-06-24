@@ -52,40 +52,20 @@
     }
     .app-header .btn-back:active { background: rgba(255,255,255,0.25); transform: scale(0.9); }
     .app-header h3 { font-size: 17px; font-weight: 700; flex: 1; letter-spacing: -0.3px; }
-    .header-avatar {
-      width: 34px; height: 34px; border-radius: 50%; background: var(--gold);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--green-dark); font-weight: 700; font-size: 14px;
-      border: 2px solid rgba(255,255,255,0.4);
-    }
+    /* Header avatar dihapus, tidak ada di CSS */
 
     /* ── Content ── */
     .content { padding: 16px 16px 8px; max-width: 500px; margin: 0 auto; }
 
-    /* ── Welcome Card ── */
-    .welcome-card {
-      background: linear-gradient(135deg, #004d40 0%, #00695c 100%);
-      border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 20px;
-      color: white; box-shadow: var(--shadow-lg);
-      animation: fadeInUp 0.5s ease;
-    }
+    /* ── Section ── */
+    .section-wrapper { margin-bottom: 20px; animation: fadeInUp 0.5s ease both; }
+    .section-wrapper:nth-child(1) { animation-delay: 0s; }
+    .section-wrapper:nth-child(2) { animation-delay: 0.05s; }
+    .section-wrapper:nth-child(3) { animation-delay: 0.1s; }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .welcome-greeting { font-size: 12px; opacity: 0.8; font-weight: 500; }
-    .welcome-name { font-size: 18px; font-weight: 700; margin-top: 2px; }
-    .welcome-role {
-      display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 12px;
-      border-radius: 20px; font-size: 11px; font-weight: 600; margin-top: 6px;
-      backdrop-filter: blur(4px);
-    }
-
-    /* ── Section ── */
-    .section-wrapper { margin-bottom: 20px; animation: fadeInUp 0.5s ease both; }
-    .section-wrapper:nth-child(2) { animation-delay: 0.05s; }
-    .section-wrapper:nth-child(3) { animation-delay: 0.1s; }
-    .section-wrapper:nth-child(4) { animation-delay: 0.15s; }
     .section-header {
       display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
     }
@@ -146,7 +126,7 @@
       font-size: 11px; font-weight: 600; color: var(--gray-800);
       line-height: 1.3; display: -webkit-box;
       -webkit-line-clamp: 2;
-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
     .menu-card .menu-sub {
       font-size: 10px; color: var(--gray-400); margin-top: 2px;
@@ -209,13 +189,13 @@ line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 </head>
 <body>
 
-  <!-- ── Header ── -->
+  <!-- ── Header (tanpa avatar profil) ── -->
   <header class="app-header">
     <button class="btn-back ripple" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
     <h3>Menu Cepat</h3>
-    <div class="header-avatar" id="headerAvatar">D</div>
+    <!-- Tidak ada avatar di pojok kanan -->
   </header>
 
   <!-- ── Content ── -->
@@ -250,8 +230,7 @@ line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 
     window.goTo = page => window.location.href = page;
 
-    // Header avatar
-    document.getElementById('headerAvatar').textContent = (user.nama || 'D')[0].toUpperCase();
+    // Header avatar tidak diperlukan lagi
 
     // ── Toast ──
     let toastTimer;
@@ -350,22 +329,8 @@ line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         return item;
       });
 
-      // Welcome card
-      const hour = new Date().getHours();
-      let greeting = 'Selamat Pagi';
-      if (hour >= 12 && hour < 15) greeting = 'Selamat Siang';
-      else if (hour >= 15 && hour < 18) greeting = 'Selamat Sore';
-      else if (hour >= 18) greeting = 'Selamat Malam';
-
-      const roleBadge = role === 'dosen' ? 'Dosen' : role === 'musyrif' ? 'Musyrif' : role === 'dosen-musyrif' ? 'Dosen & Musyrif' : 'Umum';
-      const roleIcon = role === 'dosen' ? '👨‍🏫' : role === 'musyrif' ? '📿' : role === 'dosen-musyrif' ? '👨‍🏫📿' : '👤';
-
-      let html = `
-        <div class="welcome-card">
-          <div class="welcome-greeting">${greeting} ☀️</div>
-          <div class="welcome-name">${user.nama || 'Pengguna'}</div>
-          <div class="welcome-role">${roleIcon} ${roleBadge}</div>
-        </div>`;
+      // Tanpa welcome card, langsung section menu
+      let html = '';
 
       // Section: Umum (semua role)
       html += buildSection('fa-grip', 'umum', 'Menu Umum', menuUmumItems, 'sec-umum');
@@ -382,7 +347,7 @@ line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 
       container.innerHTML = html;
 
-      // Animasi stagger
+      // Animasi stagger pada kartu menu
       const cards = container.querySelectorAll('.menu-card');
       cards.forEach((card, i) => {
         card.style.opacity = '0';
