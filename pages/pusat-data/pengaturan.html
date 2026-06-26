@@ -3,157 +3,230 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengaturan - Pusat Data IPIM</title>
+  <title>Pengaturan Konten - IPIM Panel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --green-dark: #004d40; --green-mid: #006644; --green: #00a859;
+      --green-light: #e8f5e9; --green-pale: #f0faf5;
       --gold: #d4a843; --gold-light: #fdf6e3;
       --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
       --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
       --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
       --sidebar-width: 260px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
       --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
       --transition: all 0.25s ease;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
 
-    /* SIDEBAR */
+    /* ── SIDEBAR ── */
     .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
     .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
     .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
     .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
     .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
-    .nav-section { margin-bottom: 8px; }
     .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; }
     .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
     .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
     .nav-item i { width: 20px; text-align: center; font-size: 14px; }
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
-    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
-    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; }
+    .user-info .name { font-size: 13px; font-weight: 600; color: white; }
+    .user-info .role { font-size: 10px; color: rgba(255,255,255,0.5); }
 
-    /* MAIN */
+    /* ── MAIN ── */
     .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
-    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; }
     .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
-    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }
-    .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
-    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-    .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; }
-    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); }
-    .card-header h3 { font-size: 14px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 4px; background: var(--white); border-radius: var(--radius); padding: 4px; border: 1px solid var(--gray-200); margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 9px; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; background: none; color: var(--gray-600); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .tab-btn.active { background: var(--green-dark); color: white; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 16px; overflow: hidden; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+    .card-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .card-body { padding: 20px; }
 
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; color: var(--gray-800); outline: none; transition: var(--transition); background: white; resize: vertical; }
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--gray-600); display: block; margin-bottom: 5px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none;
+      background: white; transition: var(--transition); resize: vertical;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--green); }
     .form-group textarea { min-height: 80px; }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
-    .form-group .hint { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
 
-    .preview-img { max-width: 200px; max-height: 120px; border-radius: var(--radius-sm); margin-top: 8px; border: 1px solid var(--gray-200); object-fit: cover; }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }
+    .btn-primary { background: var(--green-dark); color: white; }
+    .btn-primary:hover { background: var(--green-mid); }
+    .btn-danger { background: var(--red-light); color: var(--red); }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
+    /* ── LIST ITEM ── */
+    .item-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .item-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px; background: var(--gray-50); border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-200);
+    }
+    .item-row-content { flex: 1; min-width: 0; }
+    .item-row-title { font-size: 13px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+    .item-row-sub { font-size: 12px; color: var(--gray-600); line-height: 1.5; }
+    .item-row-sumber { font-size: 11px; color: var(--green-mid); font-weight: 600; margin-top: 3px; }
+    .item-row-actions { display: flex; gap: 5px; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── MISI FORM ── */
+    .misi-form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+
+    /* ── YT THUMB ── */
+    .yt-preview { width: 90px; height: 56px; border-radius: 8px; object-fit: cover; background: var(--gray-200); flex-shrink: 0; }
+
+    /* ── ALERT ── */
     .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; }
-    .alert-error { background: var(--red-light); color: #b71c1c; }
+    .alert-success { background: var(--green-light); color: #1b5e20; display: block; }
+    .alert-error { background: var(--red-light); color: #b71c1c; display: block; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s ease; white-space: nowrap; pointer-events: none; }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #065f46; }
+    .toast.error { background: #991b1b; }
+
+    .divider { height: 1px; background: var(--gray-200); margin: 16px 0; }
 
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .main-content { margin-left: 0; padding: 20px 14px; }
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .misi-form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
       <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Pusat Data</span></div>
     </div>
     <nav class="sidebar-nav">
-      <div class="nav-section">
-        <div class="nav-section-title">Utama</div>
-        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Dashboard</a>
-        <a href="users.html" class="nav-item"><i class="fa-solid fa-users-gear"></i> Manajemen User</a>
-        <a href="pengaturan.html" class="nav-item active"><i class="fa-solid fa-gear"></i> Pengaturan</a>
-      </div>
-      <div class="nav-section">
-        <div class="nav-section-title">Operator</div>
-        <a href="rekap-akademik.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Akademik</a>
-        <a href="rekap-halaqoh.html" class="nav-item"><i class="fa-solid fa-book-quran"></i> Rekap Halaqoh</a>
-        <a href="rekap-bahasa.html" class="nav-item"><i class="fa-solid fa-language"></i> Rekap Bahasa</a>
-        <a href="rekap-pengasuhan.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i> Rekap Pengasuhan</a>
-      </div>
-      <div class="nav-section">
-        <div class="nav-section-title">Laporan</div>
-        <a href="rekap-sholat.html" class="nav-item"><i class="fa-solid fa-mosque"></i> Rekap Sholat</a>
-        <a href="rekap-kinerja.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i> Rekap Kinerja</a>
-      </div>
+      <div class="nav-section-title">Utama</div>
+      <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Dashboard</a>
+      <a href="users.html" class="nav-item"><i class="fa-solid fa-users-gear"></i> Manajemen User</a>
+      <a href="pengaturan-konten.html" class="nav-item active"><i class="fa-solid fa-pen-to-square"></i> Pengaturan Konten</a>
+      <a href="pengaturan.html" class="nav-item"><i class="fa-solid fa-gear"></i> Pengaturan</a>
+      <div class="nav-section-title">Monitoring</div>
+      <a href="rekap-akademik.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Akademik</a>
+      <a href="rekap-halaqoh.html" class="nav-item"><i class="fa-solid fa-book-quran"></i> Rekap Halaqoh</a>
+      <a href="rekap-bahasa.html" class="nav-item"><i class="fa-solid fa-language"></i> Rekap Bahasa</a>
+      <a href="rekap-pengasuhan.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i> Rekap Pengasuhan</a>
+      <a href="rekap-sholat.html" class="nav-item"><i class="fa-solid fa-mosque"></i> Rekap Sholat</a>
+      <a href="rekap-kinerja.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i> Rekap Kinerja</a>
     </nav>
     <div class="sidebar-footer">
       <div class="user-avatar" id="avatarLetter">A</div>
-      <div class="user-info-sidebar"><div class="name" id="sidebarName">Admin</div><div class="role">Pusat Data</div></div>
+      <div class="user-info"><div class="name" id="sidebarName">Admin</div><div class="role">Pusat Data</div></div>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content">
     <div class="topbar">
-      <div class="page-title"><h1>⚙️ Pengaturan</h1><p>Atur logo, background, dan konten aplikasi</p></div>
-      <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <div class="page-title">
+        <h1>✏️ Pengaturan Konten</h1>
+        <p>Kelola motivasi, visi misi, dan video YouTube yang tampil di dashboard</p>
+      </div>
     </div>
 
-    <div id="alertSuccess" class="alert alert-success"></div>
-    <div id="alertError" class="alert alert-error"></div>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('motivasi')"><i class="fa-solid fa-star-and-crescent"></i> Motivasi</button>
+      <button class="tab-btn" onclick="switchTab('visimisi')"><i class="fa-solid fa-bullseye"></i> Visi & Misi</button>
+      <button class="tab-btn" onclick="switchTab('youtube')"><i class="fa-brands fa-youtube"></i> YouTube</button>
+    </div>
 
-    <!-- Form Pengaturan -->
-    <div class="card">
-      <div class="card-header"><h3><i class="fa-solid fa-image"></i> Identitas & Tampilan</h3></div>
-      <div class="card-body">
-        <form id="pengaturanForm">
-          <!-- Logo -->
-          <div class="form-group">
-            <label>Logo IPIM (URL Gambar)</label>
-            <input type="url" id="logoUrl" placeholder="https://example.com/logo.png">
-            <span class="hint">Masukkan URL gambar logo. Akan muncul di halaman login.</span>
-            <img id="logoPreview" class="preview-img" style="display:none;">
+    <!-- ── TAB MOTIVASI ── -->
+    <div class="tab-panel active" id="tab-motivasi">
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-plus"></i> Tambah Motivasi</h3></div>
+        <div class="card-body">
+          <div class="form-group"><label>Teks Motivasi</label><textarea id="motivTeks" placeholder='Contoh: Ilmu tanpa amal bagaikan pohon tanpa buah.'></textarea></div>
+          <div class="form-group"><label>Sumber <span style="font-weight:400;color:var(--gray-400);">(opsional)</span></label><input type="text" id="motivSumber" placeholder="Contoh: HR. Bukhari / Pepatah Ulama"></div>
+          <button class="btn btn-primary" id="btnTambahMotiv" onclick="tambahMotivasi()"><i class="fa-solid fa-plus"></i> Tambah</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-list"></i> Daftar Motivasi</h3></div>
+        <div class="card-body">
+          <div class="item-list" id="motivasiList"><p style="color:var(--gray-400);font-size:13px;">Memuat...</p></div>
+          <button class="btn btn-primary" id="btnSimpanMotiv" onclick="simpanMotivasi()" style="width:100%;justify-content:center;"><i class="fa-solid fa-save"></i> Simpan Semua Perubahan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB VISI MISI ── -->
+    <div class="tab-panel" id="tab-visimisi">
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-eye"></i> Visi</h3></div>
+        <div class="card-body">
+          <div class="form-group"><textarea id="visiTeks" rows="4" placeholder="Tulis visi institusi..."></textarea></div>
+          <button class="btn btn-primary" id="btnSimpanVisi" onclick="simpanVisi()" style="width:100%;justify-content:center;"><i class="fa-solid fa-save"></i> Simpan Visi</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-list-check"></i> Misi</h3></div>
+        <div class="card-body">
+          <div class="item-list" id="misiList"><p style="color:var(--gray-400);font-size:13px;">Memuat...</p></div>
+          <div class="divider"></div>
+          <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:10px;">Tambah Misi Baru</p>
+          <div class="misi-form-row">
+            <div class="form-group" style="margin-bottom:0;"><label>Judul Singkat</label><input type="text" id="misiJudul" placeholder="Contoh: Unggul Akademik"></div>
+            <div class="form-group" style="margin-bottom:0;"><label>Deskripsi</label><input type="text" id="misiTeks" placeholder="Deskripsi misi..."></div>
           </div>
+          <button class="btn btn-primary" id="btnTambahMisi" onclick="tambahMisi()" style="margin-top:10px;width:100%;justify-content:center;"><i class="fa-solid fa-plus"></i> Tambah Misi</button>
+          <div class="divider"></div>
+          <button class="btn btn-primary" id="btnSimpanMisi" onclick="simpanMisi()" style="width:100%;justify-content:center;"><i class="fa-solid fa-save"></i> Simpan Semua Misi</button>
+        </div>
+      </div>
+    </div>
 
-          <!-- Background Header User -->
-          <div class="form-group">
-            <label>Background Header User (URL Gambar)</label>
-            <input type="url" id="bgHeaderUrl" placeholder="https://example.com/bg-header.jpg">
-            <span class="hint">Gambar background header untuk halaman user mobile. Rekomendasi: Masjid atau Ka'bah.</span>
-            <img id="bgHeaderPreview" class="preview-img" style="display:none;">
-          </div>
-
-          <!-- Artikel Motivasi -->
-          <div class="form-group">
-            <label>Kata Motivasi / Artikel (max 3, pisahkan dengan | )</label>
-            <textarea id="artikelMotivasi" placeholder="Motivasi 1 | Motivasi 2 | Motivasi 3"></textarea>
-            <span class="hint">Pisahkan setiap artikel dengan tanda | (pipe).</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Simpan Pengaturan</button>
-        </form>
+    <!-- ── TAB YOUTUBE ── -->
+    <div class="tab-panel" id="tab-youtube">
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-plus"></i> Tambah Video</h3></div>
+        <div class="card-body">
+          <div class="form-group"><label>Link Video YouTube</label><input type="url" id="ytUrl" placeholder="https://www.youtube.com/watch?v=..."></div>
+          <div class="form-group"><label>Judul Video</label><input type="text" id="ytJudul" placeholder="Judul video yang ditampilkan"></div>
+          <button class="btn btn-primary" id="btnTambahYt" onclick="tambahYoutube()"><i class="fa-solid fa-plus"></i> Tambah Video</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-brands fa-youtube"></i> Daftar Video</h3></div>
+        <div class="card-body">
+          <div class="item-list" id="youtubeList"><p style="color:var(--gray-400);font-size:13px;">Memuat...</p></div>
+          <button class="btn btn-primary" id="btnSimpanYt" onclick="simpanYoutube()" style="width:100%;justify-content:center;"><i class="fa-solid fa-save"></i> Simpan Semua Perubahan</button>
+        </div>
       </div>
     </div>
 
   </main>
+
+  <div class="toast" id="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -161,91 +234,263 @@
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script>
-    // Auth check
     const user = checkRole(['pusat-data']);
     if (!user) window.location.href = '../../index.html';
+    document.getElementById('sidebarName').textContent  = user.nama || 'Admin';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A')[0].toUpperCase();
 
-    document.getElementById('sidebarName').textContent = user.nama || 'Admin';
-    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+    // State lokal — semua edit di sini dulu, simpan ke Firestore saat klik Simpan
+    let motivasiData = [];
+    let misiData     = [];
+    let youtubeData  = [];
 
-    function showAlert(type, text) {
-      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
-      el.textContent = text; el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 4000);
+    // ── TOAST ──
+    function showToast(msg, type = '') {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.className = `toast ${type} show`;
+      setTimeout(() => { el.className = 'toast'; }, 3000);
     }
 
-    // Load pengaturan
-    async function loadPengaturan() {
+    // ── TABS ──
+    window.switchTab = function(tab) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        const tabs = ['motivasi','visimisi','youtube'];
+        b.classList.toggle('active', tabs[i] === tab);
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+    };
+
+    // ── LOAD DATA ──
+    async function loadData() {
       try {
         const doc = await db.collection('pengaturan').doc('app').get();
-        if (doc.exists) {
-          const data = doc.data();
-          document.getElementById('logoUrl').value = data.logoUrl || '';
-          document.getElementById('bgHeaderUrl').value = data.bgHeaderUrl || '';
-          document.getElementById('artikelMotivasi').value = (data.artikelMotivasi || []).join(' | ');
-          
-          if (data.logoUrl) {
-            document.getElementById('logoPreview').src = data.logoUrl;
-            document.getElementById('logoPreview').style.display = 'block';
-          }
-          if (data.bgHeaderUrl) {
-            document.getElementById('bgHeaderPreview').src = data.bgHeaderUrl;
-            document.getElementById('bgHeaderPreview').style.display = 'block';
-          }
+        const data = doc.exists ? doc.data() : {};
+
+        // Motivasi
+        if (data.motivasi?.length) {
+          motivasiData = data.motivasi;
+        } else if (data.artikelMotivasi?.length) {
+          // Konversi format lama
+          motivasiData = data.artikelMotivasi.map(m => ({ teks: m, sumber: '' }));
+        } else {
+          motivasiData = [];
         }
-      } catch(e) { console.error('Load pengaturan:', e); }
+
+        // Visi
+        if (data.visi) document.getElementById('visiTeks').value = data.visi;
+
+        // Misi
+        misiData = data.misi || [];
+
+        // YouTube
+        youtubeData = data.youtube || [];
+
+        renderMotivasi();
+        renderMisi();
+        renderYoutube();
+      } catch(e) {
+        showToast('Gagal memuat data: ' + e.message, 'error');
+      }
     }
 
-    // Preview gambar saat URL diisi
-    document.getElementById('logoUrl').addEventListener('input', function() {
-      const url = this.value.trim();
-      const preview = document.getElementById('logoPreview');
-      if (url) { preview.src = url; preview.style.display = 'block'; }
-      else { preview.style.display = 'none'; }
-    });
-
-    document.getElementById('bgHeaderUrl').addEventListener('input', function() {
-      const url = this.value.trim();
-      const preview = document.getElementById('bgHeaderPreview');
-      if (url) { preview.src = url; preview.style.display = 'block'; }
-      else { preview.style.display = 'none'; }
-    });
-
-    // Simpan pengaturan
-    document.getElementById('pengaturanForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const logoUrl = document.getElementById('logoUrl').value.trim();
-      const bgHeaderUrl = document.getElementById('bgHeaderUrl').value.trim();
-      const artikelRaw = document.getElementById('artikelMotivasi').value.trim();
-      const artikelMotivasi = artikelRaw ? artikelRaw.split('|').map(s => s.trim()).filter(s => s) : [];
-
-      const btn = this.querySelector('button[type="submit"]');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-
-      try {
-        await db.collection('pengaturan').doc('app').set({
-          logoUrl,
-          bgHeaderUrl,
-          artikelMotivasi,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-        showAlert('success', '✅ Pengaturan berhasil disimpan!');
-      } catch(e) {
-        showAlert('error', '❌ Gagal menyimpan: ' + e.message);
-      } finally {
-        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Pengaturan';
+    // ── MOTIVASI ──
+    function renderMotivasi() {
+      const list = document.getElementById('motivasiList');
+      if (!motivasiData.length) {
+        list.innerHTML = '<p style="color:var(--gray-400);font-size:13px;">Belum ada motivasi. Tambahkan di atas.</p>';
+        return;
       }
-    });
+      list.innerHTML = motivasiData.map((m, i) => `
+        <div class="item-row">
+          <div class="item-row-content">
+            <div class="item-row-sub">"${m.teks}"</div>
+            ${m.sumber ? `<div class="item-row-sumber">— ${m.sumber}</div>` : ''}
+          </div>
+          <div class="item-row-actions">
+            <button class="btn btn-danger btn-sm" onclick="hapusMotivasi(${i})"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`).join('');
+    }
 
-    // Logout
-    window.logout = function() {
-      if (confirm('Apakah Anda yakin ingin keluar?')) {
-        auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; });
+    window.tambahMotivasi = function() {
+      const teks   = document.getElementById('motivTeks').value.trim();
+      const sumber = document.getElementById('motivSumber').value.trim();
+      if (!teks) { showToast('Teks motivasi tidak boleh kosong', 'error'); return; }
+      motivasiData.push({ teks, sumber });
+      document.getElementById('motivTeks').value   = '';
+      document.getElementById('motivSumber').value = '';
+      renderMotivasi();
+      showToast('Motivasi ditambahkan — klik Simpan untuk menyimpan', '');
+    };
+
+    window.hapusMotivasi = function(i) {
+      motivasiData.splice(i, 1);
+      renderMotivasi();
+    };
+
+    window.simpanMotivasi = async function() {
+      const btn = document.getElementById('btnSimpanMotiv');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      try {
+        await db.collection('pengaturan').doc('app').set({ motivasi: motivasiData }, { merge: true });
+        showToast('✅ Motivasi berhasil disimpan!', 'success');
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Semua Perubahan';
       }
     };
 
-    loadPengaturan();
+    // ── VISI ──
+    window.simpanVisi = async function() {
+      const visi = document.getElementById('visiTeks').value.trim();
+      if (!visi) { showToast('Visi tidak boleh kosong', 'error'); return; }
+      const btn = document.getElementById('btnSimpanVisi');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      try {
+        await db.collection('pengaturan').doc('app').set({ visi }, { merge: true });
+        showToast('✅ Visi berhasil disimpan!', 'success');
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Visi';
+      }
+    };
+
+    // ── MISI ──
+    function renderMisi() {
+      const list = document.getElementById('misiList');
+      if (!misiData.length) {
+        list.innerHTML = '<p style="color:var(--gray-400);font-size:13px;">Belum ada misi. Tambahkan di bawah.</p>';
+        return;
+      }
+      list.innerHTML = misiData.map((m, i) => `
+        <div class="item-row">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--green);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${i+1}</div>
+          <div class="item-row-content">
+            ${m.judul ? `<div class="item-row-title">${m.judul}</div>` : ''}
+            <div class="item-row-sub">${m.teks}</div>
+          </div>
+          <div class="item-row-actions">
+            ${i > 0 ? `<button class="btn btn-sm" style="background:var(--gray-100);" onclick="moveMisi(${i},-1)"><i class="fa-solid fa-arrow-up"></i></button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="hapusMisi(${i})"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`).join('');
+    }
+
+    window.tambahMisi = function() {
+      const judul = document.getElementById('misiJudul').value.trim();
+      const teks  = document.getElementById('misiTeks').value.trim();
+      if (!teks) { showToast('Deskripsi misi tidak boleh kosong', 'error'); return; }
+      misiData.push({ judul, teks });
+      document.getElementById('misiJudul').value = '';
+      document.getElementById('misiTeks').value  = '';
+      renderMisi();
+      showToast('Misi ditambahkan — klik Simpan untuk menyimpan', '');
+    };
+
+    window.hapusMisi = function(i) { misiData.splice(i, 1); renderMisi(); };
+
+    window.moveMisi = function(i, dir) {
+      const tmp = misiData[i]; misiData[i] = misiData[i+dir]; misiData[i+dir] = tmp;
+      renderMisi();
+    };
+
+    window.simpanMisi = async function() {
+      const btn = document.getElementById('btnSimpanMisi');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      try {
+        await db.collection('pengaturan').doc('app').set({ misi: misiData }, { merge: true });
+        showToast('✅ Misi berhasil disimpan!', 'success');
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Semua Misi';
+      }
+    };
+
+    // ── YOUTUBE ──
+    function extractYoutubeId(url) {
+      try {
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+        return match ? match[1] : null;
+      } catch(e) { return null; }
+    }
+
+    function renderYoutube() {
+      const list = document.getElementById('youtubeList');
+      if (!youtubeData.length) {
+        list.innerHTML = '<p style="color:var(--gray-400);font-size:13px;">Belum ada video. Tambahkan di atas.</p>';
+        return;
+      }
+      list.innerHTML = youtubeData.map((v, i) => {
+        const vid   = extractYoutubeId(v.url || '');
+        const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+        return `<div class="item-row">
+          ${thumb ? `<img class="yt-preview" src="${thumb}" alt="${v.judul}">` : '<div class="yt-preview"></div>'}
+          <div class="item-row-content">
+            <div class="item-row-title">${v.judul || 'Tanpa judul'}</div>
+            <div class="item-row-sub" style="font-size:11px;">${v.url}</div>
+          </div>
+          <div class="item-row-actions">
+            <button class="btn btn-danger btn-sm" onclick="hapusYoutube(${i})"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.tambahYoutube = function() {
+      const url   = document.getElementById('ytUrl').value.trim();
+      const judul = document.getElementById('ytJudul').value.trim();
+      if (!url)   { showToast('Link video tidak boleh kosong', 'error'); return; }
+      if (!judul) { showToast('Judul video tidak boleh kosong', 'error'); return; }
+      if (!extractYoutubeId(url)) { showToast('Link YouTube tidak valid', 'error'); return; }
+      youtubeData.push({ url, judul });
+      document.getElementById('ytUrl').value   = '';
+      document.getElementById('ytJudul').value = '';
+      renderYoutube();
+      showToast('Video ditambahkan — klik Simpan untuk menyimpan', '');
+    };
+
+    window.hapusYoutube = function(i) { youtubeData.splice(i, 1); renderYoutube(); };
+
+    window.simpanYoutube = async function() {
+      const btn = document.getElementById('btnSimpanYt');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      try {
+        await db.collection('pengaturan').doc('app').set({ youtube: youtubeData }, { merge: true });
+        showToast('✅ Video YouTube berhasil disimpan!', 'success');
+      } catch(e) {
+        showToast('Gagal: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Semua Perubahan';
+      }
+    };
+
+    // Isi data default visi misi pertama kali kalau Firestore kosong
+    async function initDefaultVisiMisi() {
+      try {
+        const doc = await db.collection('pengaturan').doc('app').get();
+        if (doc.exists && (doc.data().visi || doc.data().misi)) return; // sudah ada, skip
+
+        const defaultVisi = 'Menjadi kawasan percontohan dan rujukan pendidikan Islam terpadu yang mencetak generasi rabbani, berakhlak mulia, berwawasan luas, dan siap menjadi pemimpin peradaban.';
+        const defaultMisi = [
+          { judul: 'Pendidikan Holistik', teks: 'Menyelenggarakan pendidikan Islam dari usia anak-anak hingga lanjut usia menggunakan pendekatan hati (keteladanan) ala Rasulullah.' },
+          { judul: 'Unggul Akademik & Agama', teks: 'Memadukan kurikulum internasional, nasional, dan kepesantrenan untuk melahirkan generasi yang cerdas akalnya dan kuat agamanya.' },
+          { judul: 'Penguasaan Bahasa', teks: 'Membiasakan penggunaan Bahasa Arab dan Bahasa Inggris secara aktif dalam komunikasi dan public speaking.' },
+          { judul: 'Berjiwa Qur\'ani & Bersanad', teks: 'Mencetak penghafal Al-Qur\'an (hafizh) dengan sanad keilmuan yang jelas.' },
+          { judul: 'Kemandirian', teks: 'Menumbuhkan kepribadian yang mandiri serta penerapan sunah Rasulullah dalam kehidupan sehari-hari di lingkungan asrama yang asri dan kondusif.' }
+        ];
+
+        await db.collection('pengaturan').doc('app').set({ visi: defaultVisi, misi: defaultMisi }, { merge: true });
+        document.getElementById('visiTeks').value = defaultVisi;
+        misiData = defaultMisi;
+        renderMisi();
+      } catch(e) {}
+    }
+
+    loadData().then(() => initDefaultVisiMisi());
   </script>
 </body>
 </html>
