@@ -3,134 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalender Akademik - Operator Akademik IPIM</title>
+  <title>Cetak KRS & KHS - Operator Akademik IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --green-dark:#004d40;--green:#00a859;--green-light:#e8f5e9;
-      --gold:#d4a843;--gold-light:#fdf6e3;
-      --white:#ffffff;--gray-50:#fafafa;--gray-100:#f5f5f5;
-      --gray-200:#e0e0e0;--gray-400:#9e9e9e;--gray-600:#616161;
-      --gray-800:#333333;--red:#e53935;--red-light:#fce4ec;
-      --sidebar-width:260px;
-      --radius-sm:8px;--radius:12px;--radius-lg:16px;
-      --transition:all 0.25s ease;
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
+      --gray-800: #333333; --sidebar-width: 260px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Poppins',sans-serif;background:var(--gray-50);color:var(--gray-800);display:flex;min-height:100vh;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
 
-    /* SIDEBAR */
-    .sidebar{width:var(--sidebar-width);background:var(--green-dark);color:white;height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;z-index:100;}
-    .sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:12px;}
-    .sidebar-logo{width:40px;height:40px;background:var(--gold);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--green-dark);font-size:18px;flex-shrink:0;}
-    .sidebar-brand h2{font-size:16px;font-weight:700;color:white;}
-    .sidebar-brand span{font-size:10px;color:rgba(255,255,255,0.6);}
-    .sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px;}
-    .nav-section{margin-bottom:8px;}
-    .nav-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);padding:12px 12px 8px;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);color:rgba(255,255,255,0.7);text-decoration:none;font-size:13px;font-weight:500;transition:var(--transition);margin-bottom:2px;cursor:pointer;}
-    .nav-item:hover{background:rgba(255,255,255,0.1);color:white;}
-    .nav-item.active{background:rgba(255,255,255,0.15);color:var(--gold);font-weight:600;}
-    .nav-item i{width:20px;text-align:center;font-size:14px;}
-    .sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;}
-    .user-avatar{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-dark);font-weight:700;font-size:14px;flex-shrink:0;}
-    .user-info-sidebar .name{font-size:13px;font-weight:600;color:white;}
-    .user-info-sidebar .role{font-size:10px;color:rgba(255,255,255,0.5);}
+    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
+    .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .nav-section { margin-bottom: 8px; }
+    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
+    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
 
-    /* MAIN */
-    .main-content{margin-left:var(--sidebar-width);flex:1;padding:28px;}
-    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-    .page-title h1{font-size:22px;font-weight:700;color:var(--gray-800);}
-    .page-title p{font-size:13px;color:var(--gray-600);margin-top:2px;}
-    .topbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
-    .btn{padding:9px 16px;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
-    .btn-primary{background:var(--green-dark);color:white;} .btn-primary:hover{background:#00695c;}
-    .btn-danger{background:var(--red-light);color:var(--red);} .btn-danger:hover{background:#f8bbd0;}
-    .btn-outline{background:var(--white);border:1.5px solid var(--gray-200);color:var(--gray-600);}
-    .btn-pdf{background:#dc2626;color:white;} .btn-pdf:hover{background:#b91c1c;}
-    .btn-sm{padding:6px 12px;font-size:11px;}
-    .btn:disabled{opacity:0.6;cursor:not-allowed;}
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
+    .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
+    .btn-success { background: var(--green); color: white; } .btn-success:hover { background: #008c4a; }
+    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    /* KALENDER */
-    .calendar-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:20px;margin-bottom:20px;}
-    .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-    .calendar-header h2{font-size:18px;font-weight:700;}
-    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
-    .day-name{font-size:11px;font-weight:700;color:var(--gray-600);padding:10px 0;}
-    .day{padding:8px 4px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;transition:var(--transition);position:relative;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;}
-    .day:hover{background:var(--green-light);}
-    .day-num{font-weight:600;line-height:1.2;}
-    .day.today .day-num{background:var(--green-dark);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
-    .day.selected{background:var(--green-light);border:1.5px solid var(--green);}
-    .day.other-month{color:var(--gray-400);}
-    .day-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
-    .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .card-header h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px; }
 
-    /* LEGEND WARNA */
-    .color-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-100);}
-    .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray-600);}
-    .legend-dot{width:10px;height:10px;border-radius:50%;}
+    .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
+    .form-group select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; min-width: 220px; }
+    .form-group select:focus { border-color: var(--green); }
 
-    /* CARD */
-    .card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);margin-bottom:20px;}
-    .card-header{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-    .card-header h3{font-size:15px;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:8px;}
-    .card-body{padding:20px;}
-
-    /* FORM */
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-    .form-group{display:flex;flex-direction:column;gap:6px;}
-    .form-group label{font-size:12px;font-weight:600;color:var(--gray-600);}
-    .form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:13px;font-family:'Poppins',sans-serif;color:var(--gray-800);outline:none;transition:var(--transition);background:white;width:100%;}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green);}
-    .form-full{grid-column:1/-1;}
-
-    /* PILIH WARNA */
-    .color-picker-row{display:flex;gap:8px;flex-wrap:wrap;}
-    .color-opt{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:var(--transition);}
-    .color-opt.selected{border-color:var(--gray-800);transform:scale(1.15);}
-
-    /* EVENT LIST */
-    .event-list{display:flex;flex-direction:column;gap:8px;}
-    .event-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--gray-50);border-radius:var(--radius-sm);border-left:4px solid #ccc;}
-    .event-item .date-badge{font-size:11px;font-weight:600;color:white;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-    .event-item .info{flex:1;}
-    .event-item .info .title{font-weight:700;font-size:13px;}
-    .event-item .info .meta{font-size:11px;color:var(--gray-600);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap;}
-    .event-item .info .meta span{display:flex;align-items:center;gap:4px;}
-    .event-item .actions{display:flex;gap:5px;flex-shrink:0;}
-
-    /* FILTER */
-    .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
-    .filter-row input,.filter-row select{padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;font-family:'Poppins',sans-serif;outline:none;}
-    .filter-row input:focus,.filter-row select:focus{border-color:var(--green);}
-
-    .alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;margin-bottom:16px;display:none;}
-    .alert-success{background:var(--green-light);color:#1b5e20;}
-    .alert-error{background:var(--red-light);color:#b71c1c;}
-
-    @media(max-width:768px){
-      .sidebar{transform:translateX(-100%);}
-      .main-content{margin-left:0;padding:16px 12px;}
-      .form-grid,.form-grid-3{grid-template-columns:1fr;}
+    /* AREA CETAK */
+    #printArea {
+      background: white;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      display: none;
     }
+    #printArea .header-krs {
+      text-align: center;
+      border-bottom: 3px double #004d40;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    #printArea .header-krs h2 { font-size: 20px; color: #004d40; margin-bottom: 4px; }
+    #printArea .header-krs p { font-size: 12px; color: #666; }
+    #printArea .info-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; }
+    #printArea table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
+    #printArea table th { background: #004d40; color: white; padding: 10px 8px; text-align: center; font-size: 11px; border: 1px solid #003d33; }
+    #printArea table td { padding: 8px; text-align: center; border: 1px solid #ddd; }
+    #printArea table .text-left { text-align: left; }
+    #printArea .footer-krs { text-align: right; font-size: 12px; margin-top: 30px; }
+
+    /* Print CSS */
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; border: none; box-shadow: none; }
+      .sidebar, .topbar, .card, .filter-row, .btn { display: none !important; }
+      .main-content { margin: 0 !important; padding: 0 !important; }
+    }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div>
-    </div>
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
     <nav class="sidebar-nav">
-      <div class="nav-section"><div class="nav-section-title">Utama</div>
-        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a>
-      </div>
+      <div class="nav-section"><div class="nav-section-title">Utama</div><a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a></div>
       <div class="nav-section"><div class="nav-section-title">Master Data</div>
         <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
         <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
@@ -140,113 +107,43 @@
         <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
         <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
         <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
+        <a href="pembagian-pa.html" class="nav-item"><i class="fa-solid fa-user-tie"></i> Pembagian PA</a>
       </div>
       <div class="nav-section"><div class="nav-section-title">Akademik</div>
         <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
         <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
-        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
-        <a href="kalender.html" class="nav-item active"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
+        <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
+        <a href="krs-khs.html" class="nav-item active"><i class="fa-solid fa-file-invoice"></i> Cetak KRS/KHS</a>
       </div>
     </nav>
-    <div class="sidebar-footer">
-      <div class="user-avatar" id="avatarLetter">A</div>
-      <div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div>
-    </div>
+    <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
   </aside>
 
   <main class="main-content">
-    <div class="topbar">
-      <div class="page-title"><h1>📆 Kalender Akademik</h1><p>Kelola event dan jadwal akademik IPIM</p></div>
-      <div class="topbar-actions">
-        <button class="btn btn-pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
-        <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
-      </div>
-    </div>
+    <div class="topbar"><div class="page-title"><h1>🖨️ Cetak KRS & KHS</h1><p>Cetak dan download Kartu Rencana Studi & Kartu Hasil Studi</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
 
-    <div id="alertSuccess" class="alert alert-success"></div>
-    <div id="alertError" class="alert alert-error"></div>
-
-    <!-- KALENDER -->
-    <div class="calendar-card" id="calendarSection">
-      <div class="calendar-header">
-        <button class="btn btn-outline btn-sm" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-        <h2 id="monthLabel">Januari 2026</h2>
-        <button class="btn btn-outline btn-sm" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
-      </div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-      <div class="color-legend" id="colorLegend"></div>
-    </div>
-
-    <!-- FORM -->
+    <!-- Filter -->
     <div class="card">
-      <div class="card-header">
-        <h3 id="formTitle"><i class="fa-solid fa-plus-circle"></i> Tambah Event</h3>
-        <button class="btn btn-outline btn-sm" id="btnBatal" style="display:none;" onclick="resetForm()">
-          <i class="fa-solid fa-xmark"></i> Batal Edit
-        </button>
-      </div>
-      <div class="card-body">
-        <div class="form-grid" style="margin-bottom:14px;">
-          <div class="form-group">
-            <label>Tanggal Mulai <span style="color:red;">*</span></label>
-            <input type="date" id="tanggalMulai" required>
-          </div>
-          <div class="form-group">
-            <label>Tanggal Selesai <span style="color:var(--gray-400);font-weight:400;">(kosongkan jika 1 hari)</span></label>
-            <input type="date" id="tanggalSelesai">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom:14px;">
-          <label>Judul Event <span style="color:red;">*</span></label>
-          <input type="text" id="judulEvent" placeholder="Contoh: Ujian Tengah Semester">
-        </div>
-
-        <div class="form-grid" style="margin-bottom:14px;">
-          <div class="form-group">
-            <label>Tempat / Lokasi</label>
-            <input type="text" id="tempatEvent" placeholder="Contoh: Aula Utama, Kelas A1">
-          </div>
-          <div class="form-group">
-            <label>Deskripsi</label>
-            <input type="text" id="deskripsiEvent" placeholder="Keterangan tambahan">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom:18px;">
-          <label>Warna Event</label>
-          <div class="color-picker-row" id="colorPicker"></div>
-        </div>
-
-        <input type="hidden" id="editEventId">
-        <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanEvent()">
-          <i class="fa-solid fa-save"></i> Simpan Event
-        </button>
-      </div>
-    </div>
-
-    <!-- DAFTAR EVENT -->
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fa-solid fa-list"></i> Daftar Event (<span id="totalEvent">0</span>)</h3>
-      </div>
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Pilih Mahasiswa & Semester</h3></div>
       <div class="card-body">
         <div class="filter-row">
-          <input type="text" id="filterCari" placeholder="🔍 Cari event..." oninput="renderEventList()" style="flex:1;min-width:160px;">
-          <select id="filterWarna" onchange="renderEventList()">
-            <option value="">Semua Warna</option>
-          </select>
-          <input type="month" id="filterBulan" onchange="renderEventList()">
-        </div>
-        <div class="event-list" id="eventList">
-          <p style="text-align:center;color:var(--gray-400);">Memuat data...</p>
+          <div class="form-group"><label>Mahasiswa</label><select id="filterMahasiswa" onchange="loadData()"><option value="">Pilih Mahasiswa...</option></select></div>
+          <div class="form-group"><label>Semester</label><select id="filterSemester" onchange="loadData()"><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option><option value="4">Semester 4</option><option value="5">Semester 5</option><option value="6">Semester 6</option><option value="7">Semester 7</option><option value="8">Semester 8</option></select></div>
+          <div class="form-group"><label>Tipe</label><select id="filterTipe" onchange="loadData()"><option value="KRS">KRS (Kartu Rencana Studi)</option><option value="KHS">KHS (Kartu Hasil Studi)</option></select></div>
         </div>
       </div>
     </div>
+
+    <!-- Tombol Cetak -->
+    <div style="margin-bottom:16px;display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="cetak()"><i class="fa-solid fa-print"></i> Cetak</button>
+      <button class="btn btn-success" onclick="downloadPDF()"><i class="fa-solid fa-download"></i> Download PDF</button>
+    </div>
+
+    <!-- Area Cetak -->
+    <div id="printArea"></div>
   </main>
 
-  <!-- jsPDF untuk download PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -255,407 +152,154 @@
   <script>
     const user = checkRole(['operator-akademik', 'pusat-data']);
     if (!user) window.location.href = '../../index.html';
-    document.getElementById('sidebarName').textContent  = user.nama || 'Operator';
-    document.getElementById('avatarLetter').textContent = (user.nama || 'A')[0].toUpperCase();
+    document.getElementById('sidebarName').textContent = user.nama || 'Operator';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
-    // ── WARNA ──
-    const COLORS = [
-      { id: 'green',   hex: '#00a859', label: 'Akademik' },
-      { id: 'blue',    hex: '#1e88e5', label: 'Ujian' },
-      { id: 'red',     hex: '#e53935', label: 'Libur' },
-      { id: 'orange',  hex: '#f57c00', label: 'Kegiatan' },
-      { id: 'purple',  hex: '#8e24aa', label: 'Wisuda' },
-      { id: 'teal',    hex: '#00897b', label: 'Rapat' },
-      { id: 'gold',    hex: '#d4a843', label: 'Spesial' },
-      { id: 'gray',    hex: '#757575', label: 'Lainnya' },
-    ];
-    let selectedColor = 'green';
+    let currentMhs = null;
 
-    function buildColorPicker() {
-      document.getElementById('colorPicker').innerHTML = COLORS.map(c => `
-        <div class="color-opt ${c.id === selectedColor ? 'selected' : ''}"
-          style="background:${c.hex};" title="${c.label}"
-          onclick="selectColor('${c.id}')"></div>`).join('');
-
-      // Isi filter warna
-      const sel = document.getElementById('filterWarna');
-      sel.innerHTML = '<option value="">Semua Warna</option>' +
-        COLORS.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+    async function loadMahasiswa() {
+      const snap = await db.collection('mahasiswa').orderBy('nama').get();
+      const sel = document.getElementById('filterMahasiswa');
+      snap.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = `${d.data().nim} - ${d.data().nama}`; sel.appendChild(o); });
     }
 
-    window.selectColor = function(id) {
-      selectedColor = id;
-      buildColorPicker();
-    };
+    async function loadData() {
+      const mhsId = document.getElementById('filterMahasiswa').value;
+      const semester = document.getElementById('filterSemester').value;
+      const tipe = document.getElementById('filterTipe').value;
+      if (!mhsId) { document.getElementById('printArea').style.display = 'none'; return; }
 
-    function getColor(id) { return COLORS.find(c => c.id === id) || COLORS[0]; }
+      const mhsDoc = await db.collection('mahasiswa').doc(mhsId).get();
+      if (!mhsDoc.exists) return;
+      const mhs = mhsDoc.data();
+      currentMhs = { id: mhsId, ...mhs };
 
-    // ── STATE ──
-    let currentDate   = new Date();
-    let events        = [];
-    let selectedDate  = new Date().toISOString().split('T')[0];
+      const printArea = document.getElementById('printArea');
+      printArea.style.display = 'block';
 
-    function showAlert(type, text) {
-      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
-      el.textContent = text; el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 4000);
+      if (tipe === 'KRS') {
+        renderKRS(mhs, semester);
+      } else {
+        renderKHS(mhs, semester);
+      }
     }
 
-    // ── LOAD ──
-    async function loadEvents() {
-      try {
-        const snap = await db.collection('kalenderAkademik').orderBy('tanggalMulai').get();
-        events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderCalendar();
-        renderEventList();
-      } catch(e) { console.error(e); }
-    }
+    async function renderKRS(mhs, semester) {
+      const printArea = document.getElementById('printArea');
+      
+      // Ambil jadwal untuk mahasiswa ini (berdasarkan kelas)
+      const jadwalSnap = await db.collection('jadwal').where('kelasId', '==', mhs.kelasId).where('semester', '==', semester).get();
+      const jadwalList = jadwalSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => { const hari = ['Senin','Selasa','Rabu','Kamis','Sabtu','Ahad']; return hari.indexOf(a.hari) - hari.indexOf(b.hari) || (a.jamKe||0) - (b.jamKe||0); });
 
-    // ── KALENDER ──
-    function renderCalendar() {
-      const year  = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-      document.getElementById('monthLabel').textContent = `${monthNames[month]} ${year}`;
+      const prodiDoc = mhs.prodiId ? await db.collection('prodi').doc(mhs.prodiId).get() : null;
+      const prodiNama = prodiDoc?.exists ? prodiDoc.data().nama : '-';
 
-      const firstDay     = new Date(year, month, 1).getDay();
-      const daysInMonth  = new Date(year, month + 1, 0).getDate();
-      const today        = new Date().toISOString().split('T')[0];
-      const dayNames     = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+      let totalSKS = jadwalList.length * 3; // asumsi 3 SKS per matkul
 
-      let html = dayNames.map(d => `<div class="day-name">${d}</div>`).join('');
-      for (let i = 0; i < firstDay; i++) html += '<div class="day other-month"></div>';
+      let html = `
+        <div class="header-krs">
+          <h2>KARTU RENCANA STUDI (KRS)</h2>
+          <p>INSTITUTE PENDIDIKAN ISLAM MAGHFIRAH</p>
+          <p>Semester ${semester} - Tahun Akademik 2026/2027</p>
+        </div>
+        <div class="info-row">
+          <div><strong>Nama:</strong> ${mhs.nama}<br><strong>NIM:</strong> ${mhs.nim}<br><strong>Prodi:</strong> ${prodiNama}</div>
+          <div><strong>Kelas:</strong> ${mhs.kelasNama || '-'}<br><strong>Angkatan:</strong> ${mhs.angkatan || '-'}<br><strong>Total SKS:</strong> ${totalSKS}</div>
+        </div>
+        <table>
+          <thead><tr><th>No</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Hari</th><th>Jam</th><th>Dosen</th></tr></thead>
+          <tbody>`;
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const isToday    = dateStr === today;
-        const isSelected = dateStr === selectedDate;
-
-        // Cari semua event yang mencakup tanggal ini
-        const dayEvents = events.filter(e => {
-          const start = e.tanggalMulai || e.tanggal;
-          const end   = e.tanggalSelesai || start;
-          return dateStr >= start && dateStr <= end;
+      if (jadwalList.length === 0) {
+        html += '<tr><td colspan="7" style="text-align:center;padding:20px;">Tidak ada jadwal untuk semester ini</td></tr>';
+      } else {
+        jadwalList.forEach((j, i) => {
+          html += `<tr>
+            <td>${i+1}</td><td>${j.mkId || '-'}</td><td class="text-left">${j.mkNama || '-'}</td><td>3</td>
+            <td>${j.hari}</td><td>${j.waktu}</td><td>${j.dosenNama || '-'}</td>
+          </tr>`;
         });
+      }
 
-        const dots = dayEvents.map(e => {
-          const col = getColor(e.warna || 'green');
-          return `<div class="dot" style="background:${col.hex};" title="${e.judul}"></div>`;
-        }).join('');
-
-        html += `<div class="day ${isToday?'today':''} ${isSelected?'selected':''}" onclick="selectDate('${dateStr}')">
-          <div class="day-num">${d}</div>
-          ${dots ? `<div class="day-dots">${dots}</div>` : ''}
+      html += `</tbody></table>
+        <div class="footer-krs">
+          <p>Disetujui,</p>
+          <p style="margin-top:40px;"><strong>Dosen PA</strong></p>
+          <p>${mhs.paNama || '................................'}</p>
         </div>`;
-      }
-
-      document.getElementById('calendarGrid').innerHTML = html;
-
-      // Legend warna dari event bulan ini
-      const usedColors = new Set();
-      events.forEach(e => {
-        const start = e.tanggalMulai || e.tanggal;
-        const ym = start ? start.substring(0,7) : '';
-        if (ym === `${year}-${String(month+1).padStart(2,'0')}`) usedColors.add(e.warna || 'green');
-      });
-      document.getElementById('colorLegend').innerHTML = [...usedColors].map(id => {
-        const col = getColor(id);
-        return `<div class="legend-item"><div class="legend-dot" style="background:${col.hex};"></div>${col.label}</div>`;
-      }).join('');
+      printArea.innerHTML = html;
     }
 
-    window.changeMonth = function(delta) {
-      currentDate.setMonth(currentDate.getMonth() + delta);
-      renderCalendar();
-    };
+    async function renderKHS(mhs, semester) {
+      const printArea = document.getElementById('printArea');
+      
+      // Ambil komponen nilai untuk matakuliah yang diikuti mahasiswa ini
+      const nilaiSnap = await db.collection('nilai').where('mahasiswaId', '==', mhs.id).get();
+      const nilaiList = nilaiSnap.docs.map(d => d.data());
 
-    window.selectDate = function(dateStr) {
-      selectedDate = dateStr;
-      document.getElementById('tanggalMulai').value = dateStr;
-      renderCalendar();
-    };
+      const prodiDoc = mhs.prodiId ? await db.collection('prodi').doc(mhs.prodiId).get() : null;
+      const prodiNama = prodiDoc?.exists ? prodiDoc.data().nama : '-';
 
-    // ── RENDER LIST ──
-    function renderEventList() {
-      const list       = document.getElementById('eventList');
-      const cari       = document.getElementById('filterCari').value.toLowerCase();
-      const warna      = document.getElementById('filterWarna').value;
-      const bulan      = document.getElementById('filterBulan').value;
-
-      let filtered = events.filter(e => {
-        const start  = e.tanggalMulai || e.tanggal || '';
-        const judul  = (e.judul || '').toLowerCase();
-        const tempat = (e.tempat || '').toLowerCase();
-        const matchCari  = !cari  || judul.includes(cari) || tempat.includes(cari);
-        const matchWarna = !warna || (e.warna || 'green') === warna;
-        const matchBulan = !bulan || start.startsWith(bulan);
-        return matchCari && matchWarna && matchBulan;
-      });
-
-      document.getElementById('totalEvent').textContent = filtered.length;
-
-      if (!filtered.length) {
-        list.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:20px;">Tidak ada event ditemukan</p>';
-        return;
+      let totalSKS = nilaiList.length * 3;
+      let ips = 0;
+      if (nilaiList.length > 0) {
+        ips = nilaiList.reduce((sum, n) => sum + (n.rata || 0), 0) / nilaiList.length;
+        ips = Math.round(ips * 100) / 100;
       }
 
-      list.innerHTML = filtered.map(e => {
-        const col   = getColor(e.warna || 'green');
-        const start = e.tanggalMulai || e.tanggal;
-        const end   = e.tanggalSelesai;
-        const range = end && end !== start
-          ? `${formatTgl(start)} – ${formatTgl(end)}`
-          : formatTgl(start);
+      let html = `
+        <div class="header-krs">
+          <h2>KARTU HASIL STUDI (KHS)</h2>
+          <p>INSTITUTE PENDIDIKAN ISLAM MAGHFIRAH</p>
+          <p>Semester ${semester} - Tahun Akademik 2026/2027</p>
+        </div>
+        <div class="info-row">
+          <div><strong>Nama:</strong> ${mhs.nama}<br><strong>NIM:</strong> ${mhs.nim}<br><strong>Prodi:</strong> ${prodiNama}</div>
+          <div><strong>Kelas:</strong> ${mhs.kelasNama || '-'}<br><strong>Angkatan:</strong> ${mhs.angkatan || '-'}<br><strong>IPS:</strong> ${ips}</div>
+        </div>
+        <table>
+          <thead><tr><th>No</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai</th><th>Grade</th></tr></thead>
+          <tbody>`;
 
-        return `<div class="event-item" style="border-left-color:${col.hex};">
-          <span class="date-badge" style="background:${col.hex};">${range}</span>
-          <div class="info">
-            <div class="title">${e.judul || '-'}</div>
-            <div class="meta">
-              ${e.tempat ? `<span><i class="fa-solid fa-location-dot"></i> ${e.tempat}</span>` : ''}
-              ${e.deskripsi ? `<span><i class="fa-solid fa-align-left"></i> ${e.deskripsi}</span>` : ''}
-              <span><i class="fa-solid fa-circle" style="color:${col.hex};font-size:8px;"></i> ${col.label}</span>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn btn-primary btn-sm" onclick="editEvent('${e.id}')"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-danger btn-sm" onclick="hapusEvent('${e.id}')"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    function formatTgl(dateStr) {
-      if (!dateStr) return '-';
-      const [y, m, d] = dateStr.split('-');
-      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-      return `${d} ${months[parseInt(m)-1]} ${y}`;
-    }
-
-    // ── SIMPAN ──
-    window.simpanEvent = async function() {
-      const tanggalMulai   = document.getElementById('tanggalMulai').value;
-      const tanggalSelesai = document.getElementById('tanggalSelesai').value;
-      const judul          = document.getElementById('judulEvent').value.trim();
-      const tempat         = document.getElementById('tempatEvent').value.trim();
-      const deskripsi      = document.getElementById('deskripsiEvent').value.trim();
-      const editId         = document.getElementById('editEventId').value;
-
-      if (!tanggalMulai) { showAlert('error', 'Tanggal mulai wajib diisi!'); return; }
-      if (!judul)         { showAlert('error', 'Judul event wajib diisi!'); return; }
-      if (tanggalSelesai && tanggalSelesai < tanggalMulai) {
-        showAlert('error', 'Tanggal selesai tidak boleh sebelum tanggal mulai!'); return;
-      }
-
-      const btn = document.getElementById('btnSimpan');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-
-      try {
-        const data = {
-          tanggalMulai,
-          tanggalSelesai: tanggalSelesai || tanggalMulai,
-          tanggal: tanggalMulai, // backward compat
-          judul, tempat, deskripsi,
-          warna: selectedColor,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        if (editId) {
-          await db.collection('kalenderAkademik').doc(editId).update(data);
-          showAlert('success', '✅ Event diperbarui!');
-        } else {
-          data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          await db.collection('kalenderAkademik').add(data);
-          showAlert('success', '✅ Event ditambahkan!');
-        }
-        resetForm();
-        loadEvents();
-      } catch(e) { showAlert('error', '❌ ' + e.message); }
-      finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Event'; }
-    };
-
-    // ── EDIT ──
-    window.editEvent = async function(id) {
-      try {
-        const doc = await db.collection('kalenderAkademik').doc(id).get();
-        if (!doc.exists) return;
-        const d = doc.data();
-        document.getElementById('tanggalMulai').value   = d.tanggalMulai || d.tanggal || '';
-        document.getElementById('tanggalSelesai').value = d.tanggalSelesai || '';
-        document.getElementById('judulEvent').value     = d.judul || '';
-        document.getElementById('tempatEvent').value    = d.tempat || '';
-        document.getElementById('deskripsiEvent').value = d.deskripsi || '';
-        document.getElementById('editEventId').value    = id;
-        selectedColor = d.warna || 'green';
-        buildColorPicker();
-        document.getElementById('formTitle').innerHTML  = '<i class="fa-solid fa-pen-to-square"></i> Edit Event';
-        document.getElementById('btnBatal').style.display = 'inline-flex';
-        document.getElementById('eventForm')?.scrollIntoView({ behavior:'smooth' });
-        document.querySelector('.card').scrollIntoView({ behavior:'smooth' });
-      } catch(e) { showAlert('error', e.message); }
-    };
-
-    // ── HAPUS ──
-    window.hapusEvent = async function(id) {
-      if (!confirm('Hapus event ini?')) return;
-      try {
-        await db.collection('kalenderAkademik').doc(id).delete();
-        showAlert('success', 'Event dihapus!');
-        loadEvents();
-      } catch(e) { showAlert('error', e.message); }
-    };
-
-    // ── RESET FORM ──
-    function resetForm() {
-      document.getElementById('tanggalMulai').value   = selectedDate;
-      document.getElementById('tanggalSelesai').value = '';
-      document.getElementById('judulEvent').value     = '';
-      document.getElementById('tempatEvent').value    = '';
-      document.getElementById('deskripsiEvent').value = '';
-      document.getElementById('editEventId').value    = '';
-      selectedColor = 'green';
-      buildColorPicker();
-      document.getElementById('formTitle').innerHTML     = '<i class="fa-solid fa-plus-circle"></i> Tambah Event';
-      document.getElementById('btnBatal').style.display  = 'none';
-    }
-
-    // ── DOWNLOAD PDF ──
-    window.downloadPDF = function() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pageW = doc.internal.pageSize.getWidth();
-      const margin = 15;
-      let y = 20;
-
-      // Header
-      doc.setFillColor(0, 77, 64);
-      doc.rect(0, 0, pageW, 28, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(16); doc.setFont('helvetica', 'bold');
-      doc.text('KALENDER AKADEMIK', pageW / 2, 12, { align: 'center' });
-      doc.setFontSize(10); doc.setFont('helvetica', 'normal');
-      doc.text('Institut Pendidikan Islam Maghfirah', pageW / 2, 19, { align: 'center' });
-      doc.setFontSize(8);
-      doc.text('Dicetak: ' + new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }), pageW / 2, 25, { align: 'center' });
-
-      y = 38;
-      doc.setTextColor(0, 0, 0);
-
-      // Urutkan event berdasarkan tanggal
-      const sorted = [...events].sort((a, b) => (a.tanggalMulai || a.tanggal || '').localeCompare(b.tanggalMulai || b.tanggal || ''));
-
-      if (!sorted.length) {
-        doc.setFontSize(12);
-        doc.text('Tidak ada event.', pageW / 2, y, { align: 'center' });
-        doc.save('kalender-akademik-ipim.pdf');
-        return;
-      }
-
-      // Group by bulan
-      const byMonth = {};
-      sorted.forEach(e => {
-        const start = e.tanggalMulai || e.tanggal || '';
-        const ym    = start.substring(0, 7);
-        if (!byMonth[ym]) byMonth[ym] = [];
-        byMonth[ym].push(e);
-      });
-
-      const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-
-      Object.entries(byMonth).forEach(([ym, evs]) => {
-        const [yr, mn] = ym.split('-');
-        const bulanLabel = `${monthNames[parseInt(mn)-1]} ${yr}`;
-
-        // Cek apakah butuh halaman baru
-        if (y > 250) { doc.addPage(); y = 20; }
-
-        // Header bulan
-        doc.setFillColor(0, 102, 68);
-        doc.rect(margin, y, pageW - margin*2, 8, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10); doc.setFont('helvetica', 'bold');
-        doc.text(bulanLabel.toUpperCase(), margin + 3, y + 5.5);
-        y += 12;
-
-        evs.forEach(e => {
-          if (y > 268) { doc.addPage(); y = 20; }
-
-          const col    = getColor(e.warna || 'green');
-          const start  = e.tanggalMulai || e.tanggal;
-          const end    = e.tanggalSelesai;
-          const range  = end && end !== start ? `${formatTgl(start)} - ${formatTgl(end)}` : formatTgl(start);
-
-          // Garis warna kiri
-          const rgb = hexToRgb(col.hex);
-          doc.setFillColor(rgb.r, rgb.g, rgb.b);
-          doc.rect(margin, y, 3, 14, 'F');
-
-          // Background item
-          doc.setFillColor(248, 248, 248);
-          doc.rect(margin + 3, y, pageW - margin*2 - 3, 14, 'F');
-          doc.setDrawColor(220, 220, 220);
-          doc.rect(margin + 3, y, pageW - margin*2 - 3, 14, 'S');
-
-          // Teks judul
-          doc.setTextColor(0, 0, 0);
-          doc.setFontSize(10); doc.setFont('helvetica', 'bold');
-          doc.text(e.judul || '-', margin + 7, y + 5);
-
-          // Teks tanggal
-          doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-          doc.setTextColor(80, 80, 80);
-          doc.text(range, margin + 7, y + 10.5);
-
-          // Tempat & deskripsi di sebelah kanan
-          let rightText = '';
-          if (e.tempat)    rightText += `📍 ${e.tempat}`;
-          if (e.deskripsi) rightText += (rightText ? '  |  ' : '') + e.deskripsi;
-          if (rightText) {
-            doc.setFontSize(8);
-            doc.text(rightText, pageW - margin - 3, y + 10.5, { align: 'right', maxWidth: 80 });
-          }
-
-          // Label warna
-          doc.setFillColor(rgb.r, rgb.g, rgb.b);
-          const labelX = pageW - margin - 3;
-          doc.setTextColor(rgb.r, rgb.g, rgb.b);
-          doc.setFontSize(7.5);
-          doc.text(col.label, labelX, y + 4, { align: 'right' });
-
-          y += 17;
+      if (nilaiList.length === 0) {
+        html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Belum ada nilai untuk semester ini</td></tr>';
+      } else {
+        nilaiList.forEach((n, i) => {
+          let grade = '-';
+          if (n.rata >= 85) grade = 'A';
+          else if (n.rata >= 75) grade = 'B';
+          else if (n.rata >= 65) grade = 'C';
+          else if (n.rata >= 50) grade = 'D';
+          else if (n.rata > 0) grade = 'E';
+          html += `<tr>
+            <td>${i+1}</td><td>${n.mapelId || '-'}</td><td class="text-left">${n.mkNama || '-'}</td><td>3</td>
+            <td><strong>${n.rata || 0}</strong></td><td>${grade}</td>
+          </tr>`;
         });
-
-        y += 4;
-      });
-
-      // Footer
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(8); doc.setTextColor(150, 150, 150);
-        doc.text(`Halaman ${i} dari ${totalPages}`, pageW / 2, 292, { align: 'center' });
-        doc.text('IPIM Maghfirah — Kalender Akademik', margin, 292);
       }
 
-      doc.save('kalender-akademik-ipim.pdf');
-    };
-
-    function hexToRgb(hex) {
-      const r = parseInt(hex.slice(1,3),16);
-      const g = parseInt(hex.slice(3,5),16);
-      const b = parseInt(hex.slice(5,7),16);
-      return {r,g,b};
+      html += `</tbody></table>
+        <div style="margin-top:20px;font-size:12px;">
+          <strong>Total SKS:</strong> ${totalSKS} &nbsp;&nbsp; <strong>IPS:</strong> ${ips}
+        </div>
+        <div class="footer-krs">
+          <p>Mengetahui,</p>
+          <p style="margin-top:40px;"><strong>Dosen PA</strong></p>
+          <p>${mhs.paNama || '................................'}</p>
+        </div>`;
+      printArea.innerHTML = html;
     }
 
-    // ── LOGOUT ──
-    window.logout = function() {
-      if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); }
-    };
+    function cetak() {
+      window.print();
+    }
 
-    // ── INIT ──
-    document.getElementById('tanggalMulai').value = selectedDate;
-    buildColorPicker();
-    loadEvents();
+    function downloadPDF() {
+      window.print();
+    }
+
+    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    loadMahasiswa();
   </script>
 </body>
 </html>
