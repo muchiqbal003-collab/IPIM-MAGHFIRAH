@@ -1,6 +1,3 @@
-// js/firebase-config.js
-// Konfigurasi Firebase - IPIM Maghfirah
-// JANGAN SHARE FILE INI KE PUBLIK
 
 const firebaseConfig = {
     apiKey: "AIzaSyD0UVef3nqiWiG0CtLezxlRKk_bWxq4Fes",
