@@ -360,7 +360,7 @@
       try {
         const today = new Date();
         const hari  = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
-        if (hari === 'Jumat' || hari === 'Ahad') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('libur') + '</p>'; return; }
+        if (hari === 'Jumat') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('libur') + '</p>'; return; }
         if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('tidakAdaJadwal') + '</p>'; return; }
         const snap = await db.collection('jadwal').where('dosenId','==',user.uid).get();
         const jadwalHariIni = snap.docs.map(d => ({id:d.id,...d.data()})).filter(j => j.hari === hari);
