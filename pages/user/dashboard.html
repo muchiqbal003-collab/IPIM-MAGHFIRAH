@@ -84,11 +84,6 @@
     .progress-sub{font-size:10px;color:var(--gray-600);margin-top:3px;}
     .absensi-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:13px;padding:11px;background:linear-gradient(135deg,var(--green-mid),var(--green));color:white;border-radius:var(--radius-sm);text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 3px 10px rgba(0,166,89,0.3);}
 
-    .quick-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-    .stat-mini{background:var(--green-pale);border:0.5px solid #c8e6d4;border-radius:var(--radius-sm);padding:13px;text-align:center;}
-    .stat-mini .value{font-size:22px;font-weight:800;color:var(--green-dark);}
-    .stat-mini .label{font-size:10px;color:var(--gray-600);margin-top:3px;}
-
     .jadwal-list{display:flex;flex-direction:column;}
     .jadwal-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--gray-100);}
     .jadwal-item:last-child{border-bottom:none;padding-bottom:0;}
@@ -97,6 +92,20 @@
     .jadwal-mk{font-size:12px;font-weight:700;color:#222;}
     .jadwal-kls{font-size:10px;color:var(--gray-600);margin-top:1px;}
     .btn-absensi{background:var(--green-mid);color:white;border:none;padding:6px 11px;border-radius:20px;font-size:10px;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;}
+        .tdk-hadir-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--gray-100);}
+    .tdk-hadir-item:last-child{border-bottom:none;}
+    .tdk-hadir-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;}
+    .tdk-hadir-status.sakit{background:#fff3e0;color:#e65100;}
+    .tdk-hadir-status.izin{background:#e3f2fd;color:#0d47a1;}
+    .tdk-hadir-status.jaga{background:#fce4ec;color:#880e4f;}
+    .tdk-hadir-status.alfa{background:#ffebee;color:#b71c1c;}
+    .tdk-hadir-info{flex:1;min-width:0;}
+    .tdk-hadir-nama{font-size:12px;font-weight:600;color:var(--gray-800);}
+    .tdk-hadir-mk{font-size:10px;color:var(--gray-600);}
+    .tdk-hadir-pa{font-size:10px;color:var(--gray-600);margin-top:6px;padding:6px 10px;background:var(--green-pale);border-radius:8px;}
+        .tdk-hadir-status.hadir{background:#d1fae5;color:#065f46;}
+    .tdk-hadir-status.belum{background:var(--gray-100);color:var(--gray-400);}
+    .santri-num{width:26px;height:26px;border-radius:50%;background:var(--green-light);color:var(--green-mid);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
     .card-motivasi{background:linear-gradient(135deg,#003d33,#005a47);border:none;}
     .card-motivasi .card-title{color:rgba(255,255,255,0.85);}
@@ -142,7 +151,7 @@
     .yt-channel-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px;border-radius:var(--radius-sm);background:#ff0000;color:white;text-decoration:none;font-size:12px;font-weight:700;}
 
     .pengumuman-box{border-radius:var(--radius-sm);padding:14px;}
-    @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}.quick-stats{grid-template-columns:repeat(4,1fr);}}
+        @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}}
   </style>
 </head>
 <body>
@@ -202,14 +211,22 @@
       <a href="absensi.html" class="absensi-btn"><i class="fa-solid fa-check-circle"></i> <span id="lblIsiAbsensi">Isi Absensi Sholat Hari Ini</span></a>
     </div>
 
-    <div class="card">
-      <div class="card-title"><i class="fa-solid fa-chart-pie"></i> <span id="lblRingkasan">Ringkasan</span></div>
-      <div class="quick-stats" id="quickStats"><p style="text-align:center;font-size:12px;color:var(--gray-600);">...</p></div>
-    </div>
-
+    
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-calendar-day"></i> <span id="lblJadwal">Jadwalku Hari Ini</span></div>
       <div class="jadwal-list" id="jadwalList"><p style="font-size:12px;color:var(--gray-600);">...</p></div>
+    </div>
+
+        <!-- Mahasiswa Tidak Hadir - Akademik -->
+    <div class="card" id="cardTidakHadirAkademik" style="display:none;">
+      <div class="card-title"><i class="fa-solid fa-user-xmark" style="color:var(--red);"></i> <span id="lblTidakHadir">Mahasiswa Tidak Hadir Hari Ini</span></div>
+      <div id="tidakHadirAkademikContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
+    </div>
+
+        <!-- Mahasiswa Tidak Hadir - Halaqoh -->
+    <div class="card" id="cardTidakHadirHalaqoh" style="display:none;">
+      <div class="card-title"><i class="fa-solid fa-mosque" style="color:var(--orange);"></i> <span id="lblTidakHadirHalaqoh">Tidak Hadir Halaqoh</span></div>
+      <div id="tidakHadirHalaqohContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
     </div>
 
     <div class="card card-motivasi">
@@ -306,23 +323,7 @@
       } catch(e) { return '1 Muharram 1448 H'; }
     }
 
-    (async function renderQuickStats() {
-      const container = document.getElementById('quickStats');
-      try {
-        const [mhsSnap,usersSnap,halaqohSnap] = await Promise.all([db.collection('mahasiswa').get(),db.collection('users').get(),db.collection('halaqoh').get()]);
-        let dosen = 0, musyrif = 0;
-        usersSnap.forEach(d => {
-          if (['dosen','dosen-musyrif'].includes(d.data().role)) dosen++;
-          if (['musyrif','dosen-musyrif'].includes(d.data().role)) musyrif++;
-        });
-        container.innerHTML =
-          '<div class="stat-mini"><div class="value">' + mhsSnap.size + '</div><div class="label">' + t('mahasiswa') + '</div></div>' +
-          '<div class="stat-mini"><div class="value">' + dosen + '</div><div class="label">' + t('dosen') + '</div></div>' +
-          '<div class="stat-mini"><div class="value">' + musyrif + '</div><div class="label">' + t('musyrif') + '</div></div>' +
-          '<div class="stat-mini"><div class="value">' + halaqohSnap.size + '</div><div class="label">' + t('halaqoh') + '</div></div>';
-      } catch(e) { container.innerHTML = '<p style="font-size:12px;text-align:center;">' + t('gagalMemuat') + '</p>'; }
-    })();
-
+    
     async function renderSholatCard() {
       const container = document.getElementById('sholatProgressContainer');
       try {
@@ -363,6 +364,252 @@
           '<div class="jadwal-item"><div class="jadwal-time">' + j.waktu + '</div><div class="jadwal-info"><div class="jadwal-mk">' + j.mkNama + '</div><div class="jadwal-kls">' + j.kelasNama + '</div></div><a href="absensi-kelas.html?jadwalId=' + j.id + '&kelasId=' + j.kelasId + '&mapelId=' + j.mkId + '" class="btn-absensi">' + t('absensi') + '</a></div>'
         ).join('');
       } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">' + t('gagalMemuat') + '</p>'; }
+    })();
+
+        // ── REKAP KETIDAKHADIRAN MAHASISWA HARI INI (SEMUA ASATIDZAH) ──
+    (async function loadRekapTidakHadirHariIni() {
+      // Hanya untuk dosen / dosen-musyrif
+      if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') return;
+
+      const container = document.getElementById('tidakHadirAkademikContent');
+      const card      = document.getElementById('cardTidakHadirAkademik');
+      
+      try {
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        // 1. Ambil SEMUA absensi hari ini dari collection absensi
+        const absensiSnap = await db.collection('absensi')
+          .where('tanggal', '==', todayStr)
+          .get();
+
+        if (absensiSnap.empty) {
+          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada data absensi hari ini</p>';
+          card.style.display = 'block';
+          document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
+          return;
+        }
+
+        // 2. Filter yang TIDAK HADIR (sakit, izin, alfa, jaga)
+        const semuaAbsensi = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const tidakHadir = semuaAbsensi.filter(a => {
+          const s = (a.status || '').toLowerCase();
+          return ['sakit', 'izin', 'alfa', 'jaga'].includes(s);
+        });
+
+        if (tidakHadir.length === 0) {
+          container.innerHTML = '<p style="font-size:12px;color:var(--green-dark);">✅ Semua mahasiswa hadir hari ini</p>';
+          card.style.display = 'block';
+          document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
+          return;
+        }
+
+        // 3. Ambil data mahasiswa (untuk nama & paNama)
+        const mhsIds = [...new Set(tidakHadir.map(a => a.mahasiswaId).filter(Boolean))];
+        const mhsMap = {};
+        
+        // Batch query (Firestore where-in maks 10)
+        for (let i = 0; i < mhsIds.length; i += 10) {
+          const batch = mhsIds.slice(i, i + 10);
+          const snap = await db.collection('mahasiswa')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
+            .get();
+          snap.forEach(doc => {
+            mhsMap[doc.id] = doc.data();
+          });
+        }
+
+        // 4. Ambil data jadwal (untuk nama MK & kelas)
+        const jadwalIds = [...new Set(tidakHadir.map(a => a.jadwalId).filter(Boolean))];
+        const jadwalMap = {};
+        for (let i = 0; i < jadwalIds.length; i += 10) {
+          const batch = jadwalIds.slice(i, i + 10);
+          const snap = await db.collection('jadwal')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
+            .get();
+          snap.forEach(doc => {
+            jadwalMap[doc.id] = doc.data();
+          });
+        }
+
+        // 5. Render
+        let html = '';
+
+        // Summary
+        const sakitCount = tidakHadir.filter(a => a.status?.toLowerCase() === 'sakit').length;
+        const izinCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'izin').length;
+        const alfaCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'alfa').length;
+        const jagaCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'jaga').length;
+
+        html += '<div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:11px;">';
+        html += '<span style="color:var(--gray-800);"><strong>' + tidakHadir.length + '</strong> Tidak Hadir</span>';
+        if (sakitCount) html += '<span style="color:#e65100;">🤒 Sakit: <strong>' + sakitCount + '</strong></span>';
+        if (izinCount)  html += '<span style="color:#0d47a1;">📝 Izin: <strong>' + izinCount + '</strong></span>';
+        if (alfaCount)  html += '<span style="color:#b71c1c;">❌ Alfa: <strong>' + alfaCount + '</strong></span>';
+        if (jagaCount)  html += '<span style="color:#6d28d9;">🛡️ Jaga: <strong>' + jagaCount + '</strong></span>';
+        html += '</div>';
+
+        // List mahasiswa tidak hadir
+        tidakHadir.sort((a, b) => {
+          const namaA = (mhsMap[a.mahasiswaId]?.nama || a.mahasiswaNama || '').toLowerCase();
+          const namaB = (mhsMap[b.mahasiswaId]?.nama || b.mahasiswaNama || '').toLowerCase();
+          return namaA.localeCompare(namaB);
+        });
+
+        tidakHadir.forEach((a, i) => {
+          const mhs    = mhsMap[a.mahasiswaId] || {};
+          const jadwal = jadwalMap[a.jadwalId] || {};
+
+          const statusLabel = a.status === 'sakit' ? 'Sakit'
+            : a.status === 'izin' ? 'Izin'
+            : a.status === 'alfa' ? 'Alfa'
+            : a.status === 'jaga' ? 'Jaga'
+            : a.status;
+          
+          const statusClass = (a.status || '').toLowerCase();
+          const namaMahasiswa = mhs.nama || a.mahasiswaNama || '-';
+          const initial = namaMahasiswa[0]?.toUpperCase() || '?';
+          const paNama = mhs.paNama || 'Belum ada PA';
+
+          html += '<div class="tdk-hadir-item">' +
+            '<div class="mhs-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">' + initial + '</div>' +
+            '<div class="tdk-hadir-info">' +
+              '<div class="tdk-hadir-nama">' + namaMahasiswa + '</div>' +
+              '<div class="tdk-hadir-mk">' +
+                (jadwal.mkNama || '') + (jadwal.kelasNama ? ' • ' + jadwal.kelasNama : '') +
+                (a.keterangan ? ' • ' + a.keterangan : '') +
+              '</div>' +
+              '<div class="tdk-hadir-pa"><i class="fa-solid fa-user-tie"></i> PA: ' + paNama + '</div>' +
+            '</div>' +
+            '<span class="tdk-hadir-status ' + statusClass + '">' + statusLabel + '</span>' +
+          '</div>';
+        });
+
+        container.innerHTML = html;
+        card.style.display = 'block';
+        document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
+
+      } catch(e) {
+        console.error('Gagal load rekap:', e);
+        container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>';
+        card.style.display = 'block';
+      }
+    })();
+
+        // ── MAHASISWA TIDAK HADIR HALAQOH ──
+    (async function loadTidakHadirHalaqoh() {
+      // Hanya untuk musyrif / dosen-musyrif
+      if (user.role !== 'musyrif' && user.role !== 'dosen-musyrif') return;
+
+      const container = document.getElementById('tidakHadirHalaqohContent');
+      const card      = document.getElementById('cardTidakHadirHalaqoh');
+      
+      try {
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        // 1. Cari halaqoh musyrif
+        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+        if (hSnap.empty) {
+          hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
+        }
+        if (hSnap.empty) {
+          hSnap = await db.collection('halaqoh').where('uid', '==', user.uid).get();
+        }
+        if (hSnap.empty) {
+          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Anda belum memiliki halaqoh</p>';
+          card.style.display = 'block';
+          document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
+          return;
+        }
+
+        const halaqohData = { id: hSnap.docs[0].id, ...hSnap.docs[0].data() };
+
+        // 2. Ambil absensi halaqoh hari ini
+        const absensiSnap = await db.collection('absensiHalaqoh')
+          .where('halaqohId', '==', halaqohData.id)
+          .where('tanggal', '==', todayStr)
+          .get();
+
+        if (absensiSnap.empty) {
+          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada absensi halaqoh hari ini</p>';
+          card.style.display = 'block';
+          document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
+          return;
+        }
+
+        const semuaAbsensi = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // 3. Ambil nama mahasiswa dari collection mahasiswa
+        const mhsIds = [...new Set(semuaAbsensi.map(a => a.mahasiswaId).filter(Boolean))];
+        const mhsMap = {};
+        
+        for (let i = 0; i < mhsIds.length; i += 10) {
+          const batch = mhsIds.slice(i, i + 10);
+          const snap = await db.collection('mahasiswa')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
+            .get();
+          snap.forEach(doc => {
+            mhsMap[doc.id] = doc.data();
+          });
+        }
+
+        // 4. Pisahkan: hadir vs tidak hadir
+        const hadir = semuaAbsensi.filter(a => {
+          const s = (a.status || '').toLowerCase();
+          return s === 'hadir' || !s;
+        });
+        const tidakHadir = semuaAbsensi.filter(a => {
+          const s = (a.status || '').toLowerCase();
+          return ['sakit', 'izin', 'alfa', 'jaga'].includes(s);
+        });
+
+        // 5. Render
+        let html = '';
+
+        // Info halaqoh
+        html += '<div style="margin-bottom:10px;font-size:11px;color:var(--gray-600);">' +
+          '<i class="fa-solid fa-mosque"></i> <strong>' + (halaqohData.nama || 'Halaqoh') + '</strong> · ' +
+          semuaAbsensi.length + ' anggota · ' + hadir.length + ' hadir' +
+          (tidakHadir.length > 0 ? ' · <span style="color:#e65100;">' + tidakHadir.length + ' tidak hadir</span>' : '') +
+          '</div>';
+
+        if (tidakHadir.length === 0) {
+          html += '<p style="font-size:12px;color:var(--green-dark);">✅ Semua anggota hadir hari ini</p>';
+        } else {
+          // Urutkan tidak hadir berdasarkan nama
+          tidakHadir.sort((a, b) => {
+            const namaA = (mhsMap[a.mahasiswaId]?.nama || '').toLowerCase();
+            const namaB = (mhsMap[b.mahasiswaId]?.nama || '').toLowerCase();
+            return namaA.localeCompare(namaB);
+          });
+
+          tidakHadir.forEach(a => {
+            const mhs = mhsMap[a.mahasiswaId] || {};
+            const namaMahasiswa = mhs.nama || '-';
+            const initial = namaMahasiswa[0]?.toUpperCase() || '?';
+
+            const statusLabel = (a.status || '').charAt(0).toUpperCase() + (a.status || '').slice(1);
+            const statusClass = (a.status || '').toLowerCase();
+
+            html += '<div class="tdk-hadir-item">' +
+              '<div class="mhs-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">' + initial + '</div>' +
+              '<div class="tdk-hadir-info">' +
+                '<div class="tdk-hadir-nama">' + namaMahasiswa + '</div>' +
+                '<div class="tdk-hadir-mk">' + (mhs.nim || '-') + (a.keterangan ? ' · ' + a.keterangan : '') + '</div>' +
+              '</div>' +
+              '<span class="tdk-hadir-status ' + statusClass + '">' + statusLabel + '</span>' +
+            '</div>';
+          });
+        }
+
+        container.innerHTML = html;
+        card.style.display = 'block';
+        document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
+
+      } catch (e) {
+        console.error('Gagal load halaqoh:', e);
+        container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>';
+        card.style.display = 'block';
+      }
     })();
 
     (async function loadMotivasi() {
