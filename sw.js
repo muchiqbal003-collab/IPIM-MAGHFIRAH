@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ipim-v8';
+const CACHE_NAME = 'ipim-v9';
 
 // Hanya cache halaman user + file inti
 const FILES_TO_CACHE = [
