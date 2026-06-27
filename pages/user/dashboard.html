@@ -15,8 +15,7 @@
       --gold:#f5c842;--gold-light:#fffbee;
       --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
       --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;
-      --orange:#e65100;
+      --red:#e53935;--orange:#f57c00;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;
       --bottom-nav-height:68px;--header-max-height:185px;--header-min-height:60px;
@@ -45,7 +44,6 @@
     .header-date{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
     .date-pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:4px 10px;font-size:10px;color:rgba(255,255,255,0.9);}
     .date-pill.hijri{background:rgba(245,200,66,0.18);border-color:rgba(245,200,66,0.35);color:#fde992;}
-
     .sholat-mini{display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:9px 12px;cursor:pointer;}
     .sholat-mini-left{display:flex;align-items:center;gap:8px;}
     .sholat-mini-icon{font-size:15px;color:var(--gold);}
@@ -93,20 +91,20 @@
     .jadwal-mk{font-size:12px;font-weight:700;color:#222;}
     .jadwal-kls{font-size:10px;color:var(--gray-600);margin-top:1px;}
     .btn-absensi{background:var(--green-mid);color:white;border:none;padding:6px 11px;border-radius:20px;font-size:10px;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;}
-        .tdk-hadir-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--gray-100);}
+
+    .tdk-hadir-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--gray-100);}
     .tdk-hadir-item:last-child{border-bottom:none;}
     .tdk-hadir-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;}
     .tdk-hadir-status.sakit{background:#fff3e0;color:#e65100;}
     .tdk-hadir-status.izin{background:#e3f2fd;color:#0d47a1;}
     .tdk-hadir-status.jaga{background:#fce4ec;color:#880e4f;}
     .tdk-hadir-status.alfa{background:#ffebee;color:#b71c1c;}
+    .tdk-hadir-status.hadir{background:#d1fae5;color:#065f46;}
     .tdk-hadir-info{flex:1;min-width:0;}
     .tdk-hadir-nama{font-size:12px;font-weight:600;color:var(--gray-800);}
     .tdk-hadir-mk{font-size:10px;color:var(--gray-600);}
     .tdk-hadir-pa{font-size:10px;color:var(--gray-600);margin-top:6px;padding:6px 10px;background:var(--green-pale);border-radius:8px;}
-        .tdk-hadir-status.hadir{background:#d1fae5;color:#065f46;}
-    .tdk-hadir-status.belum{background:var(--gray-100);color:var(--gray-400);}
-    .santri-num{width:26px;height:26px;border-radius:50%;background:var(--green-light);color:var(--green-mid);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .mhs-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
 
     .card-motivasi{background:linear-gradient(135deg,#003d33,#005a47);border:none;}
     .card-motivasi .card-title{color:rgba(255,255,255,0.85);}
@@ -150,9 +148,9 @@
     .yt-title{font-size:12px;font-weight:600;color:var(--gray-800);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
     .yt-sub{font-size:10px;color:var(--gray-600);margin-top:3px;}
     .yt-channel-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px;border-radius:var(--radius-sm);background:#ff0000;color:white;text-decoration:none;font-size:12px;font-weight:700;}
-
     .pengumuman-box{border-radius:var(--radius-sm);padding:14px;}
-        @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}}
+
+    @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}}
   </style>
 </head>
 <body>
@@ -189,6 +187,7 @@
   </header>
 
   <main class="main-content">
+
     <div class="shortcut-row">
       <div class="shortcut-item" onclick="goTo('quran.html')">
         <div class="shortcut-icon"><i class="fa-solid fa-book-quran"></i></div>
@@ -212,21 +211,18 @@
       <a href="absensi.html" class="absensi-btn"><i class="fa-solid fa-check-circle"></i> <span id="lblIsiAbsensi">Isi Absensi Sholat Hari Ini</span></a>
     </div>
 
-    
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-calendar-day"></i> <span id="lblJadwal">Jadwalku Hari Ini</span></div>
       <div class="jadwal-list" id="jadwalList"><p style="font-size:12px;color:var(--gray-600);">...</p></div>
     </div>
 
-        <!-- Mahasiswa Tidak Hadir - Akademik -->
     <div class="card" id="cardTidakHadirAkademik" style="display:none;">
-      <div class="card-title"><i class="fa-solid fa-user-xmark" style="color:var(--red);"></i> <span id="lblTidakHadir">Mahasiswa Tidak Hadir Hari Ini</span></div>
+      <div class="card-title"><i class="fa-solid fa-user-xmark" style="color:var(--red);"></i> <span id="lblTidakHadir">Rekap Ketidakhadiran Hari Ini</span></div>
       <div id="tidakHadirAkademikContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
     </div>
 
-        <!-- Mahasiswa Tidak Hadir - Halaqoh -->
     <div class="card" id="cardTidakHadirHalaqoh" style="display:none;">
-      <div class="card-title"><i class="fa-solid fa-mosque" style="color:var(--orange);"></i> <span id="lblTidakHadirHalaqoh">Tidak Hadir Halaqoh</span></div>
+      <div class="card-title"><i class="fa-solid fa-mosque" style="color:var(--orange);"></i> <span id="lblTidakHadirHalaqoh">Kehadiran Halaqoh Hari Ini</span></div>
       <div id="tidakHadirHalaqohContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
     </div>
 
@@ -251,6 +247,7 @@
     <div class="card" id="pengumumanCard" style="display:none;">
       <div id="pengumumanContent"></div>
     </div>
+
   </main>
 
   <nav class="bottom-nav">
@@ -278,30 +275,38 @@
       document.documentElement.lang = lang;
       document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
       document.body.classList.toggle('lang-ar', lang === 'ar');
-      document.getElementById('greetingText').childNodes[0].textContent = t('greeting') + ', ';
-      document.getElementById('greetingSub').textContent    = t('greetingSub');
-      document.getElementById('lblQuran').textContent       = t('quran');
-      document.getElementById('lblRekapSholat').textContent = t('rekapSholat');
-      document.getElementById('lblMemuatSholat').textContent= t('memuatSholat');
-      document.getElementById('lblIsiAbsensi').textContent  = t('isiAbsensi');
-      document.getElementById('lblJadwal').textContent      = t('jadwalHariIni');
-      document.getElementById('lblMotivasi').textContent    = t('motivasi');
-      document.getElementById('lblVisiMisi').textContent    = t('visiMisi');
-      document.getElementById('lblVideoInspirasi').textContent = t('videoInspirasi');
-      document.getElementById('navHome').textContent        = t('home');
-      document.getElementById('navKalender').textContent    = t('kalender');
-      document.getElementById('navMenu').textContent        = t('menu');
-      document.getElementById('navRekap').textContent       = t('rekap');
-      document.getElementById('navProfil').textContent      = t('profil');
+
+      // FIX: hanya set elemen yang BENAR-BENAR ADA di HTML
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      set('greetingSub',        t('greetingSub'));
+      set('lblQuran',           t('quran'));
+      set('lblRekapSholat',     t('rekapSholat'));
+      set('lblMemuatSholat',    t('memuatSholat'));
+      set('lblIsiAbsensi',      t('isiAbsensi'));
+      set('lblJadwal',          t('jadwalHariIni'));
+      set('lblMotivasi',        t('motivasi'));
+      set('lblVisiMisi',        t('visiMisi'));
+      set('lblVideoInspirasi',  t('videoInspirasi'));
+      set('navHome',            t('home'));
+      set('navKalender',        t('kalender'));
+      set('navMenu',            t('menu'));
+      set('navRekap',           t('rekap'));
+      set('navProfil',          t('profil'));
+
+      // Greeting pakai childNodes karena ada <span> di dalamnya
+      const grEl = document.getElementById('greetingText');
+      if (grEl) grEl.childNodes[0].textContent = t('greeting') + ', ';
     }
     applyLang();
 
+    // ── SCROLL ──
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY > 10;
       document.getElementById('appHeader').classList.toggle('scrolled', scrolled);
       document.body.classList.toggle('scrolled', scrolled);
     });
 
+    // ── INIT HEADER ──
     (function initHeader() {
       document.getElementById('greetingName').textContent = user.nama || 'User';
       const savedFoto = localStorage.getItem('fotoProfil_' + user.uid);
@@ -323,7 +328,7 @@
       } catch(e) { return '1 Muharram 1448 H'; }
     }
 
-    
+    // ── REKAP SHOLAT ──
     async function renderSholatCard() {
       const container = document.getElementById('sholatProgressContainer');
       try {
@@ -349,6 +354,7 @@
     }
     renderSholatCard();
 
+    // ── JADWAL HARI INI ──
     (async function loadJadwalHariIni() {
       const list = document.getElementById('jadwalList');
       try {
@@ -366,264 +372,138 @@
       } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">' + t('gagalMemuat') + '</p>'; }
     })();
 
-        // ── REKAP KETIDAKHADIRAN MAHASISWA HARI INI (SEMUA ASATIDZAH) ──
-    (async function loadRekapTidakHadirHariIni() {
-      // Hanya untuk dosen / dosen-musyrif
+    // ── REKAP TIDAK HADIR AKADEMIK (hanya dosen/dosen-musyrif) ──
+    (async function loadRekapTidakHadir() {
       if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') return;
-
       const container = document.getElementById('tidakHadirAkademikContent');
       const card      = document.getElementById('cardTidakHadirAkademik');
-      
       try {
         const todayStr = new Date().toISOString().split('T')[0];
-
-        // 1. Ambil SEMUA absensi hari ini dari collection absensi
-        const absensiSnap = await db.collection('absensi')
-          .where('tanggal', '==', todayStr)
-          .get();
-
+        const absensiSnap = await db.collection('absensi').where('tanggal','==',todayStr).get();
         if (absensiSnap.empty) {
           container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada data absensi hari ini</p>';
-          card.style.display = 'block';
-          document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
-          return;
+          card.style.display = 'block'; return;
         }
-
-        // 2. Filter yang TIDAK HADIR (sakit, izin, alfa, jaga)
-        const semuaAbsensi = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const tidakHadir = semuaAbsensi.filter(a => {
-          const s = (a.status || '').toLowerCase();
-          return ['sakit', 'izin', 'alfa', 'jaga'].includes(s);
-        });
-
-        if (tidakHadir.length === 0) {
+        const semuaAbsensi = absensiSnap.docs.map(d => ({id:d.id,...d.data()}));
+        const tidakHadir   = semuaAbsensi.filter(a => ['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
+        if (!tidakHadir.length) {
           container.innerHTML = '<p style="font-size:12px;color:var(--green-dark);">✅ Semua mahasiswa hadir hari ini</p>';
-          card.style.display = 'block';
-          document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
-          return;
+          card.style.display = 'block'; return;
         }
-
-        // 3. Ambil data mahasiswa (untuk nama & paNama)
+        // Batch ambil data mahasiswa
         const mhsIds = [...new Set(tidakHadir.map(a => a.mahasiswaId).filter(Boolean))];
         const mhsMap = {};
-        
-        // Batch query (Firestore where-in maks 10)
         for (let i = 0; i < mhsIds.length; i += 10) {
-          const batch = mhsIds.slice(i, i + 10);
-          const snap = await db.collection('mahasiswa')
-            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
-            .get();
-          snap.forEach(doc => {
-            mhsMap[doc.id] = doc.data();
-          });
+          const snap = await db.collection('mahasiswa').where(firebase.firestore.FieldPath.documentId(),'in',mhsIds.slice(i,i+10)).get();
+          snap.forEach(doc => { mhsMap[doc.id] = doc.data(); });
         }
-
-        // 4. Ambil data jadwal (untuk nama MK & kelas)
+        // Batch ambil data jadwal
         const jadwalIds = [...new Set(tidakHadir.map(a => a.jadwalId).filter(Boolean))];
         const jadwalMap = {};
         for (let i = 0; i < jadwalIds.length; i += 10) {
-          const batch = jadwalIds.slice(i, i + 10);
-          const snap = await db.collection('jadwal')
-            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
-            .get();
-          snap.forEach(doc => {
-            jadwalMap[doc.id] = doc.data();
-          });
+          const snap = await db.collection('jadwal').where(firebase.firestore.FieldPath.documentId(),'in',jadwalIds.slice(i,i+10)).get();
+          snap.forEach(doc => { jadwalMap[doc.id] = doc.data(); });
         }
-
-        // 5. Render
-        let html = '';
-
-        // Summary
-        const sakitCount = tidakHadir.filter(a => a.status?.toLowerCase() === 'sakit').length;
-        const izinCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'izin').length;
-        const alfaCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'alfa').length;
-        const jagaCount  = tidakHadir.filter(a => a.status?.toLowerCase() === 'jaga').length;
-
-        html += '<div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:11px;">';
+        const sakitC = tidakHadir.filter(a=>a.status==='sakit').length;
+        const izinC  = tidakHadir.filter(a=>a.status==='izin').length;
+        const alfaC  = tidakHadir.filter(a=>a.status==='alfa').length;
+        const jagaC  = tidakHadir.filter(a=>a.status==='jaga').length;
+        let html = '<div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:11px;">';
         html += '<span style="color:var(--gray-800);"><strong>' + tidakHadir.length + '</strong> Tidak Hadir</span>';
-        if (sakitCount) html += '<span style="color:#e65100;">🤒 Sakit: <strong>' + sakitCount + '</strong></span>';
-        if (izinCount)  html += '<span style="color:#0d47a1;">📝 Izin: <strong>' + izinCount + '</strong></span>';
-        if (alfaCount)  html += '<span style="color:#b71c1c;">❌ Alfa: <strong>' + alfaCount + '</strong></span>';
-        if (jagaCount)  html += '<span style="color:#6d28d9;">🛡️ Jaga: <strong>' + jagaCount + '</strong></span>';
+        if (sakitC) html += '<span style="color:#e65100;">🤒 Sakit: <strong>' + sakitC + '</strong></span>';
+        if (izinC)  html += '<span style="color:#0d47a1;">📝 Izin: <strong>' + izinC + '</strong></span>';
+        if (alfaC)  html += '<span style="color:#b71c1c;">❌ Alfa: <strong>' + alfaC + '</strong></span>';
+        if (jagaC)  html += '<span style="color:#6d28d9;">🛡️ Jaga: <strong>' + jagaC + '</strong></span>';
         html += '</div>';
-
-        // List mahasiswa tidak hadir
-        tidakHadir.sort((a, b) => {
-          const namaA = (mhsMap[a.mahasiswaId]?.nama || a.mahasiswaNama || '').toLowerCase();
-          const namaB = (mhsMap[b.mahasiswaId]?.nama || b.mahasiswaNama || '').toLowerCase();
-          return namaA.localeCompare(namaB);
-        });
-
-        tidakHadir.forEach((a, i) => {
+        tidakHadir.sort((a,b) => (mhsMap[a.mahasiswaId]?.nama||'').localeCompare(mhsMap[b.mahasiswaId]?.nama||''));
+        tidakHadir.forEach(a => {
           const mhs    = mhsMap[a.mahasiswaId] || {};
-          const jadwal = jadwalMap[a.jadwalId] || {};
-
-          const statusLabel = a.status === 'sakit' ? 'Sakit'
-            : a.status === 'izin' ? 'Izin'
-            : a.status === 'alfa' ? 'Alfa'
-            : a.status === 'jaga' ? 'Jaga'
-            : a.status;
-          
-          const statusClass = (a.status || '').toLowerCase();
-          const namaMahasiswa = mhs.nama || a.mahasiswaNama || '-';
-          const initial = namaMahasiswa[0]?.toUpperCase() || '?';
-          const paNama = mhs.paNama || 'Belum ada PA';
-
+          const jadwal = jadwalMap[a.jadwalId]  || {};
+          const nama   = mhs.nama || '-';
+          const sc     = (a.status||'').toLowerCase();
           html += '<div class="tdk-hadir-item">' +
-            '<div class="mhs-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">' + initial + '</div>' +
+            '<div class="mhs-avatar">' + (nama[0]||'?').toUpperCase() + '</div>' +
             '<div class="tdk-hadir-info">' +
-              '<div class="tdk-hadir-nama">' + namaMahasiswa + '</div>' +
-              '<div class="tdk-hadir-mk">' +
-                (jadwal.mkNama || '') + (jadwal.kelasNama ? ' • ' + jadwal.kelasNama : '') +
-                (a.keterangan ? ' • ' + a.keterangan : '') +
-              '</div>' +
-              '<div class="tdk-hadir-pa"><i class="fa-solid fa-user-tie"></i> PA: ' + paNama + '</div>' +
+              '<div class="tdk-hadir-nama">' + nama + '</div>' +
+              '<div class="tdk-hadir-mk">' + (jadwal.mkNama||'') + (jadwal.kelasNama?' · '+jadwal.kelasNama:'') + '</div>' +
+              '<div class="tdk-hadir-pa"><i class="fa-solid fa-user-tie"></i> PA: ' + (mhs.paNama||'Belum ada PA') + '</div>' +
             '</div>' +
-            '<span class="tdk-hadir-status ' + statusClass + '">' + statusLabel + '</span>' +
+            '<span class="tdk-hadir-status ' + sc + '">' + (sc.charAt(0).toUpperCase()+sc.slice(1)) + '</span>' +
           '</div>';
         });
-
         container.innerHTML = html;
         card.style.display = 'block';
-        document.getElementById('lblTidakHadir').textContent = 'Rekap Ketidakhadiran Hari Ini';
-
-      } catch(e) {
-        console.error('Gagal load rekap:', e);
-        container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>';
-        card.style.display = 'block';
-      }
+      } catch(e) { console.error(e); container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; card.style.display = 'block'; }
     })();
 
-        // ── MAHASISWA TIDAK HADIR HALAQOH ──
+    // ── TIDAK HADIR HALAQOH (hanya musyrif/dosen-musyrif) ──
     (async function loadTidakHadirHalaqoh() {
-      // Hanya untuk musyrif / dosen-musyrif
       if (user.role !== 'musyrif' && user.role !== 'dosen-musyrif') return;
-
       const container = document.getElementById('tidakHadirHalaqohContent');
       const card      = document.getElementById('cardTidakHadirHalaqoh');
-      
       try {
         const todayStr = new Date().toISOString().split('T')[0];
-
-        // 1. Cari halaqoh musyrif
-        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
-        if (hSnap.empty) {
-          hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
-        }
-        if (hSnap.empty) {
-          hSnap = await db.collection('halaqoh').where('uid', '==', user.uid).get();
-        }
+        // Cari halaqoh milik musyrif ini
+        let hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
+        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId','==',user.uid).get();
+        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('uid','==',user.uid).get();
         if (hSnap.empty) {
           container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Anda belum memiliki halaqoh</p>';
-          card.style.display = 'block';
-          document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
-          return;
+          card.style.display = 'block'; return;
         }
-
-        const halaqohData = { id: hSnap.docs[0].id, ...hSnap.docs[0].data() };
-
-        // 2. Ambil absensi halaqoh hari ini
-        const absensiSnap = await db.collection('absensiHalaqoh')
-          .where('halaqohId', '==', halaqohData.id)
-          .where('tanggal', '==', todayStr)
-          .get();
-
+        const halaqohData = {id:hSnap.docs[0].id,...hSnap.docs[0].data()};
+        const absensiSnap = await db.collection('absensiHalaqoh').where('halaqohId','==',halaqohData.id).where('tanggal','==',todayStr).get();
         if (absensiSnap.empty) {
           container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada absensi halaqoh hari ini</p>';
-          card.style.display = 'block';
-          document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
-          return;
+          card.style.display = 'block'; return;
         }
-
-        const semuaAbsensi = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        // 3. Ambil nama mahasiswa dari collection mahasiswa
+        const semuaAbsensi = absensiSnap.docs.map(d => ({id:d.id,...d.data()}));
         const mhsIds = [...new Set(semuaAbsensi.map(a => a.mahasiswaId).filter(Boolean))];
         const mhsMap = {};
-        
         for (let i = 0; i < mhsIds.length; i += 10) {
-          const batch = mhsIds.slice(i, i + 10);
-          const snap = await db.collection('mahasiswa')
-            .where(firebase.firestore.FieldPath.documentId(), 'in', batch)
-            .get();
-          snap.forEach(doc => {
-            mhsMap[doc.id] = doc.data();
-          });
+          const snap = await db.collection('mahasiswa').where(firebase.firestore.FieldPath.documentId(),'in',mhsIds.slice(i,i+10)).get();
+          snap.forEach(doc => { mhsMap[doc.id] = doc.data(); });
         }
-
-        // 4. Pisahkan: hadir vs tidak hadir
-        const hadir = semuaAbsensi.filter(a => {
-          const s = (a.status || '').toLowerCase();
-          return s === 'hadir' || !s;
-        });
-        const tidakHadir = semuaAbsensi.filter(a => {
-          const s = (a.status || '').toLowerCase();
-          return ['sakit', 'izin', 'alfa', 'jaga'].includes(s);
-        });
-
-        // 5. Render
-        let html = '';
-
-        // Info halaqoh
-        html += '<div style="margin-bottom:10px;font-size:11px;color:var(--gray-600);">' +
-          '<i class="fa-solid fa-mosque"></i> <strong>' + (halaqohData.nama || 'Halaqoh') + '</strong> · ' +
+        const hadir      = semuaAbsensi.filter(a => !['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
+        const tidakHadir = semuaAbsensi.filter(a => ['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
+        let html = '<div style="margin-bottom:10px;font-size:11px;color:var(--gray-600);">' +
+          '<i class="fa-solid fa-mosque"></i> <strong>' + (halaqohData.nama||'Halaqoh') + '</strong> · ' +
           semuaAbsensi.length + ' anggota · ' + hadir.length + ' hadir' +
-          (tidakHadir.length > 0 ? ' · <span style="color:#e65100;">' + tidakHadir.length + ' tidak hadir</span>' : '') +
-          '</div>';
-
-        if (tidakHadir.length === 0) {
+          (tidakHadir.length ? ' · <span style="color:#e65100;">' + tidakHadir.length + ' tidak hadir</span>' : '') + '</div>';
+        if (!tidakHadir.length) {
           html += '<p style="font-size:12px;color:var(--green-dark);">✅ Semua anggota hadir hari ini</p>';
         } else {
-          // Urutkan tidak hadir berdasarkan nama
-          tidakHadir.sort((a, b) => {
-            const namaA = (mhsMap[a.mahasiswaId]?.nama || '').toLowerCase();
-            const namaB = (mhsMap[b.mahasiswaId]?.nama || '').toLowerCase();
-            return namaA.localeCompare(namaB);
-          });
-
+          tidakHadir.sort((a,b) => (mhsMap[a.mahasiswaId]?.nama||'').localeCompare(mhsMap[b.mahasiswaId]?.nama||''));
           tidakHadir.forEach(a => {
-            const mhs = mhsMap[a.mahasiswaId] || {};
-            const namaMahasiswa = mhs.nama || '-';
-            const initial = namaMahasiswa[0]?.toUpperCase() || '?';
-
-            const statusLabel = (a.status || '').charAt(0).toUpperCase() + (a.status || '').slice(1);
-            const statusClass = (a.status || '').toLowerCase();
-
+            const mhs  = mhsMap[a.mahasiswaId] || {};
+            const nama = mhs.nama || '-';
+            const sc   = (a.status||'').toLowerCase();
             html += '<div class="tdk-hadir-item">' +
-              '<div class="mhs-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">' + initial + '</div>' +
-              '<div class="tdk-hadir-info">' +
-                '<div class="tdk-hadir-nama">' + namaMahasiswa + '</div>' +
-                '<div class="tdk-hadir-mk">' + (mhs.nim || '-') + (a.keterangan ? ' · ' + a.keterangan : '') + '</div>' +
-              '</div>' +
-              '<span class="tdk-hadir-status ' + statusClass + '">' + statusLabel + '</span>' +
+              '<div class="mhs-avatar">' + (nama[0]||'?').toUpperCase() + '</div>' +
+              '<div class="tdk-hadir-info"><div class="tdk-hadir-nama">' + nama + '</div><div class="tdk-hadir-mk">' + (mhs.nim||'-') + '</div></div>' +
+              '<span class="tdk-hadir-status ' + sc + '">' + (sc.charAt(0).toUpperCase()+sc.slice(1)) + '</span>' +
             '</div>';
           });
         }
-
         container.innerHTML = html;
         card.style.display = 'block';
-        document.getElementById('lblTidakHadirHalaqoh').textContent = 'Kehadiran Halaqoh Hari Ini';
-
-      } catch (e) {
-        console.error('Gagal load halaqoh:', e);
-        container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>';
-        card.style.display = 'block';
-      }
+      } catch(e) { console.error(e); container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; card.style.display = 'block'; }
     })();
 
+    // ── MOTIVASI — baca dari pengaturan.html field 'motivasi' ──
     (async function loadMotivasi() {
       const container = document.getElementById('motivationScroll');
       const dotsEl    = document.getElementById('motivDots');
-      const defaults  = [{teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},{teks:'Sebaik-baik kalian adalah yang belajar Al-Quran dan mengajarkannya.',sumber:'HR. Bukhari'}];
+      const defaults  = [{teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},{teks:"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.",sumber:'HR. Bukhari'}];
       try {
         const doc  = await db.collection('pengaturan').doc('app').get();
         const data = doc.exists ? doc.data() : {};
         let list = [];
-        if (data.motivasi?.length)          { list = data.motivasi; }
-        else if (data.motivasiList?.length) { list = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m); }
+        // Support field: motivasi (baru), motivasiList, artikelMotivasi (lama)
+        if (data.motivasi?.length)             { list = data.motivasi; }
+        else if (data.motivasiList?.length)    { list = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m); }
         else if (data.artikelMotivasi?.length) { list = data.artikelMotivasi.map(m => typeof m==='string'?{teks:m,sumber:''}:m); }
-        else { list = defaults; }
+        else                                   { list = defaults; }
 
         container.innerHTML = list.map((m,i) => {
           const theme = (i%6)+1;
@@ -631,8 +511,7 @@
           const src   = typeof m==='object' ? (m.sumber||'') : '';
           return '<div class="motivation-card theme-' + theme + '"><div class="motiv-icon"><i class="fa-solid fa-quote-left"></i></div><div class="quote-text">"' + teks + '"</div>' + (src?'<div class="quote-source">— '+src+'</div>':'') + '<div class="quote-number">'+(i+1)+'/'+list.length+'</div></div>';
         }).join('');
-
-        dotsEl.innerHTML = list.map((_,i) => '<div class="scroll-dot' + (i===0?' active':'') + '"></div>').join('');
+        dotsEl.innerHTML = list.map((_,i) => '<div class="scroll-dot'+(i===0?' active':'')+'"></div>').join('');
         container.addEventListener('scroll', () => {
           const cardW = container.querySelector('.motivation-card')?.offsetWidth || 230;
           const idx   = Math.round(container.scrollLeft/(cardW+10));
@@ -643,17 +522,18 @@
       }
     })();
 
+    // ── VISI MISI — baca dari pengaturan.html field 'visi' dan 'misi' ──
     (async function loadVisiMisi() {
       try {
-        const doc = await db.collection('pengaturan').doc('app').get();
+        const doc  = await db.collection('pengaturan').doc('app').get();
         if (!doc.exists) return;
         const data = doc.data();
         if (!data.visi && !data.misi?.length) return;
         document.getElementById('visiMisiCard').style.display = 'block';
         let html = '';
-        if (data.visi) html += '<div class="visi-box"><div class="visi-label"><i class="fa-solid fa-eye"></i> ' + t('visi') + '</div><div class="visi-text">' + data.visi + '</div></div>';
+        if (data.visi) html += '<div class="visi-box"><div class="visi-label"><i class="fa-solid fa-eye"></i> '+t('visi')+'</div><div class="visi-text">'+data.visi+'</div></div>';
         if (data.misi?.length) {
-          html += '<div class="visi-label" style="margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> ' + t('misi') + '</div><div class="misi-list">';
+          html += '<div class="visi-label" style="margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> '+t('misi')+'</div><div class="misi-list">';
           html += data.misi.map((m,i) => '<div class="misi-item"><div class="misi-num">'+(i+1)+'</div><div>'+(m.judul?'<div class="misi-judul">'+m.judul+'</div>':'')+'<div class="misi-teks">'+(m.teks||m)+'</div></div></div>').join('');
           html += '</div>';
         }
@@ -661,11 +541,13 @@
       } catch(e) {}
     })();
 
+    // ── YOUTUBE — baca dari pengaturan.html field 'youtube' (array) ──
     (async function loadYoutube() {
       try {
         const doc    = await db.collection('pengaturan').doc('app').get();
         if (!doc.exists) return;
-        const videos = doc.data().youtube || [];
+        const data   = doc.data();
+        const videos = data.youtube || [];
         if (!videos.length) return;
         document.getElementById('ytCard').style.display = 'block';
         const html = videos.map(v => {
@@ -673,32 +555,40 @@
           const thumb = vid ? 'https://img.youtube.com/vi/'+vid+'/mqdefault.jpg' : '';
           return '<a href="'+v.url+'" target="_blank" class="yt-item">'+(thumb?'<img class="yt-thumb" src="'+thumb+'" alt="'+v.judul+'">':'<div class="yt-thumb"></div>')+'<div class="yt-info"><div class="yt-title">'+(v.judul||'Video Kajian')+'</div><div class="yt-sub"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> Kampung Maghfirah</div></div><i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--gray-400);flex-shrink:0;"></i></a>';
         }).join('');
-        document.getElementById('ytContainer').innerHTML = html + '<a href="https://www.youtube.com/@KampungMaghfirah" target="_blank" class="yt-channel-btn"><i class="fa-brands fa-youtube"></i> ' + t('kunjungiChannel') + '</a>';
-      } catch(e) {}
+        document.getElementById('ytContainer').innerHTML = html + '<a href="https://www.youtube.com/@KampungMaghfirah" target="_blank" class="yt-channel-btn"><i class="fa-brands fa-youtube"></i> '+t('kunjungiChannel')+'</a>';
+      } catch(e) { console.error('YouTube error:', e); }
     })();
 
+    // ── PENGUMUMAN — baca dari pengaturan.html field pengumuman* ──
     (async function loadPengumuman() {
       try {
-        const doc = await db.collection('pengaturan').doc('app').get();
+        const doc  = await db.collection('pengaturan').doc('app').get();
         if (!doc.exists) return;
         const data = doc.data();
         if (!data.pengumumanJudul && !data.pengumumanIsi) return;
         if (data.pengumumanExpired && new Date() > new Date(data.pengumumanExpired)) return;
-        const warnaMap = {green:{bg:'#e8f5e9',border:'#00a859',text:'#1b5e20',icon:'fa-circle-info'},blue:{bg:'#e3f2fd',border:'#1e88e5',text:'#0d47a1',icon:'fa-circle-info'},orange:{bg:'#fff3e0',border:'#e65100',text:'#bf360c',icon:'fa-circle-exclamation'},red:{bg:'#fce4ec',border:'#e53935',text:'#b71c1c',icon:'fa-triangle-exclamation'},gold:{bg:'#fff8e1',border:'#f5c842',text:'#7a6000',icon:'fa-star'}};
+        const warnaMap = {
+          green:  {bg:'#e8f5e9',border:'#00a859',text:'#1b5e20',icon:'fa-circle-info'},
+          blue:   {bg:'#e3f2fd',border:'#1e88e5',text:'#0d47a1',icon:'fa-circle-info'},
+          orange: {bg:'#fff3e0',border:'#e65100',text:'#bf360c',icon:'fa-circle-exclamation'},
+          red:    {bg:'#fce4ec',border:'#e53935',text:'#b71c1c',icon:'fa-triangle-exclamation'},
+          gold:   {bg:'#fff8e1',border:'#f5c842',text:'#7a6000',icon:'fa-star'}
+        };
         const w = warnaMap[data.pengumumanWarna] || warnaMap.green;
         document.getElementById('pengumumanCard').style.display = 'block';
         document.getElementById('pengumumanContent').innerHTML = '<div class="pengumuman-box" style="background:'+w.bg+';border-inline-start:4px solid '+w.border+';"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fa-solid '+w.icon+'" style="color:'+w.text+';font-size:16px;"></i><strong style="color:'+w.text+';font-size:13px;">'+(data.pengumumanJudul||'Pengumuman')+'</strong></div><p style="color:'+w.text+';font-size:12px;line-height:1.5;opacity:0.85;">'+(data.pengumumanIsi||'')+'</p></div>';
       } catch(e) {}
     })();
 
+    // ── HELPER ──
     function extractYoutubeId(url) {
       const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
       return match ? match[1] : null;
     }
 
+    // ── SHOLAT MINI ──
     const ORDER_MINI = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
-    const PRAYER_NAMES_MINI = {Fajr:'Subuh',Sunrise:'Terbit',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
-
+    const PRAYER_NAMES = {Fajr:'Subuh',Sunrise:'Terbit',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
     async function loadSholatMini() {
       const nameEl = document.getElementById('sholatMiniName');
       const timeEl = document.getElementById('sholatMiniTime');
@@ -708,22 +598,22 @@
       navigator.geolocation.getCurrentPosition(async pos => {
         try {
           const lat = pos.coords.latitude, lon = pos.coords.longitude;
-          const today = new Date();
-          const dateStr = String(today.getDate()).padStart(2,'0') + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + today.getFullYear();
-          const cacheKey = 'jadwalSholat_' + lat.toFixed(2) + '_' + lon.toFixed(2) + '_' + dateStr;
+          const today  = new Date();
+          const dateStr= String(today.getDate()).padStart(2,'0')+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+today.getFullYear();
+          const cKey   = 'jadwalSholat_'+lat.toFixed(2)+'_'+lon.toFixed(2)+'_'+dateStr;
           let timings;
-          const cached = localStorage.getItem(cacheKey);
+          const cached = localStorage.getItem(cKey);
           if (cached) { timings = JSON.parse(cached); }
           else {
-            const res = await fetch('https://api.aladhan.com/v1/timings/' + dateStr + '?latitude=' + lat + '&longitude=' + lon + '&method=20');
+            const res = await fetch('https://api.aladhan.com/v1/timings/'+dateStr+'?latitude='+lat+'&longitude='+lon+'&method=20');
             const data = await res.json(); timings = data.data.timings;
-            try { localStorage.setItem(cacheKey, JSON.stringify(timings)); } catch(e) {}
+            try { localStorage.setItem(cKey, JSON.stringify(timings)); } catch(e) {}
           }
           const now = new Date();
           const schedule = ORDER_MINI.map(key => {
             const [h,m] = timings[key].split(':').map(Number);
             const d = new Date(); d.setHours(h,m,0,0);
-            return {name:PRAYER_NAMES_MINI[key],time:timings[key],dateObj:d};
+            return {name:PRAYER_NAMES[key],time:timings[key],dateObj:d};
           });
           let idx = schedule.findIndex(s => s.dateObj > now);
           if (idx === -1) idx = 0;
@@ -732,23 +622,25 @@
           const dH = Math.floor(diffMs/3600000), dM = Math.floor((diffMs%3600000)/60000);
           nameEl.textContent = active.name;
           timeEl.textContent = active.time;
-          cntEl.textContent  = dH + t('jam') + ' ' + dM + t('menit');
+          cntEl.textContent  = dH+t('jam')+' '+dM+t('menit');
         } catch(e) { nameEl.textContent = t('lihatJadwal'); }
       }, () => { nameEl.textContent = t('lihatJadwal'); }, {timeout:8000});
     }
     loadSholatMini();
 
+    // ── BADGE TILAWAH ──
     function loadTilawahBadge() {
       try {
-        const saved    = localStorage.getItem('tilawahProgress_' + user.uid);
+        const saved    = localStorage.getItem('tilawahProgress_'+user.uid);
         const progress = saved ? JSON.parse(saved) : {halamanDibaca:{}};
         const todayKey = new Date().toISOString().split('T')[0];
         const hlm      = (progress.halamanDibaca?.[todayKey]||[]).length;
-        document.getElementById('tilawahBadge').textContent = t('tilawahBadge') + ': ' + hlm + ' ' + t('hlm');
+        document.getElementById('tilawahBadge').textContent = t('tilawahBadge')+': '+hlm+' '+t('hlm');
       } catch(e) {}
     }
     loadTilawahBadge();
 
+    // ── BADGE DZIKIR ──
     function loadDzikirBadge() {
       try {
         const hour     = new Date().getHours();
@@ -757,10 +649,10 @@
         document.getElementById('dzikirTitle').textContent = isPetang ? t('dzikirPetang') : t('dzikirPagi');
         document.getElementById('dzikirIcon').innerHTML    = isPetang ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
         const todayKey  = new Date().toISOString().split('T')[0];
-        const saved     = localStorage.getItem('dzikirProgress_' + user.uid + '_' + todayKey);
+        const saved     = localStorage.getItem('dzikirProgress_'+user.uid+'_'+todayKey);
         const state     = saved ? JSON.parse(saved) : {};
         const doneCount = Object.keys(state).filter(k => k.startsWith(waktu) && state[k]?.done).length;
-        document.getElementById('dzikirBadge').textContent = doneCount + ' ' + t('selesai');
+        document.getElementById('dzikirBadge').textContent = doneCount+' '+t('selesai');
       } catch(e) {}
     }
     loadDzikirBadge();
