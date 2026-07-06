@@ -1,119 +1,133 @@
-const CACHE_NAME = 'ipim-v4';
+// =============================================
+// IPIM Maghfirah - Service Worker v7
+// Cache + Push Notification
+// =============================================
 
-// Hanya cache halaman user + file inti
+// ── IMPORT FIREBASE MESSAGING ──
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
+
+// ── INIT FIREBASE ──
+firebase.initializeApp({
+  apiKey: "AIzaSyD0UVef3nqiWiG0CtLezxlRKk_bWxq4Fes",
+  authDomain: "ipim-7b437.firebaseapp.com",
+  projectId: "ipim-7b437",
+  storageBucket: "ipim-7b437.firebasestorage.app",
+  messagingSenderId: "806725819640",
+  appId: "1:806725819640:web:1a9208d7fe8457d4852f0d"
+});
+
+const messaging = firebase.messaging();
+
+// ── HANDLE PUSH NOTIFICATION (BACKGROUND) ──
+messaging.onBackgroundMessage(function(payload) {
+  console.log('📩 Notifikasi background:', payload);
+
+  const title = payload.notification?.title || 'IPIM Maghfirah';
+  const options = {
+    body: payload.notification?.body || '',
+    icon: '/IPIM-MAGHFIRAH/assets/icons/icon-192.png',
+    badge: '/IPIM-MAGHFIRAH/assets/icons/icon-192.png',
+    tag: payload.data?.type || 'ipim',
+    data: payload.data || {},
+    requireInteraction: true,
+    vibrate: [200, 100, 200]
+  };
+
+  self.registration.showNotification(title, options);
+});
+
+// ── HANDLE KLIK NOTIFIKASI ──
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+
+  const data = event.notification.data || {};
+  let targetUrl = '/IPIM-MAGHFIRAH/pages/user/dashboard.html';
+
+  if (data.type && data.type.includes('jadwal')) {
+    targetUrl = '/IPIM-MAGHFIRAH/pages/user/jadwal-saya.html';
+  } else if (data.type === 'reminder_sholat') {
+    targetUrl = '/IPIM-MAGHFIRAH/pages/user/sholat.html';
+  }
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      for (const client of clientList) {
+        if (client.url.includes('/IPIM-MAGHFIRAH/') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
+});
+
+// =============================================
+// CACHE (sama seperti sebelumnya)
+// =============================================
+
+const CACHE_NAME = 'ipim-v7';
+
 const FILES_TO_CACHE = [
-  // Root
   '/IPIM-MAGHFIRAH/',
   '/IPIM-MAGHFIRAH/index.html',
   '/IPIM-MAGHFIRAH/manifest.json',
-
-  // Halaman user
   '/IPIM-MAGHFIRAH/pages/user/dashboard.html',
-  '/IPIM-MAGHFIRAH/pages/user/absensi-halaqoh.html',
-  '/IPIM-MAGHFIRAH/pages/user/absensi-kelas.html',
   '/IPIM-MAGHFIRAH/pages/user/absensi.html',
-  '/IPIM-MAGHFIRAH/pages/user/anggota-halaqohku.html',
-  '/IPIM-MAGHFIRAH/pages/user/dzikir.html',
-  '/IPIM-MAGHFIRAH/pages/user/hafalan.html',
   '/IPIM-MAGHFIRAH/pages/user/jadwal-saya.html',
-  '/IPIM-MAGHFIRAH/pages/user/kalender.html',
-  '/IPIM-MAGHFIRAH/pages/user/kinerja.html',
-  '/IPIM-MAGHFIRAH/pages/user/mahasiswa-bimbingan.html',
-  '/IPIM-MAGHFIRAH/pages/user/menu-cepat.html',
-  '/IPIM-MAGHFIRAH/pages/user/nilai.html',
-  '/IPIM-MAGHFIRAH/pages/user/notifikasi.html',
-  '/IPIM-MAGHFIRAH/pages/user/pencapaian.html',
-  '/IPIM-MAGHFIRAH/pages/user/profil.html',
-  '/IPIM-MAGHFIRAH/pages/user/quran.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap-absensi-halaqoh.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap-absensi-kelas.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap-halaqoh.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap-nilai-matkul.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap-nilai-quran.html',
-  '/IPIM-MAGHFIRAH/pages/user/rekap.html',
   '/IPIM-MAGHFIRAH/pages/user/sholat.html',
-  '/IPIM-MAGHFIRAH/pages/user/silabus.html',
-  '/IPIM-MAGHFIRAH/pages/user/ujian-quran.html',
+  '/IPIM-MAGHFIRAH/pages/user/profil.html',
+  '/IPIM-MAGHFIRAH/pages/user/notifikasi.html',
+  '/IPIM-MAGHFIRAH/pages/user/menu-cepat.html',
+  '/IPIM-MAGHFIRAH/pages/user/kalender.html',
+  '/IPIM-MAGHFIRAH/pages/user/kinerja.html'
 ];
 
-// =============================================
-// INSTALL - cache semua file saat SW dipasang
-// =============================================
-self.addEventListener('install', (event) => {
-  console.log('✅ SW Installed (v6)');
+self.addEventListener('install', function(event) {
+  console.log('✅ SW Installed v7');
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
   self.skipWaiting();
 });
 
-// =============================================
-// ACTIVATE - hapus cache lama
-// =============================================
-self.addEventListener('activate', (event) => {
-  console.log('✅ SW Activated (v6)');
+self.addEventListener('activate', function(event) {
+  console.log('✅ SW Activated v7');
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then(function(keys) {
       return Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => {
-            console.log('🗑️ Hapus cache lama:', key);
-            return caches.delete(key);
-          })
+        keys.filter(function(key) { return key !== CACHE_NAME; })
+            .map(function(key) { return caches.delete(key); })
       );
     })
   );
   self.clients.claim();
 });
 
-// =============================================
-// FETCH - strategi: cache dulu, fallback network
-// Firebase TIDAK disentuh sama sekali
-// =============================================
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', function(event) {
   const url = new URL(event.request.url);
 
-  // ✅ Bypass semua request Firebase - biarkan langsung ke network
-  if (
-    url.hostname.includes('firestore') ||
-    url.hostname.includes('googleapis') ||
-    url.hostname.includes('identitytoolkit') ||
-    url.hostname.includes('firebaseauth') ||
-    url.hostname.includes('firebasestorage') ||
-    url.hostname.includes('firebase') ||
-    url.hostname.includes('gstatic')
-  ) {
-    return; // tidak diintercept sama sekali
-  }
-
-  // ✅ Bypass API eksternal (sholat, quran, dll)
-  if (
-    url.hostname.includes('aladhan.com') ||
-    url.hostname.includes('equran.id') ||
-    url.hostname.includes('api.')
-  ) {
+  // Bypass Firebase
+  if (url.hostname.includes('firebase') || url.hostname.includes('googleapis') || url.hostname.includes('gstatic')) {
     return;
   }
 
-  // Hanya intercept request dalam scope repo ini
+  // Bypass API eksternal
+  if (url.hostname.includes('aladhan.com') || url.hostname.includes('equran.id')) {
+    return;
+  }
+
   if (!url.pathname.startsWith('/IPIM-MAGHFIRAH/')) {
     return;
   }
 
-  // Strategi: Cache First → fallback ke Network
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached; // ada di cache, langsung pakai
-      }
-      // Tidak ada di cache, ambil dari network
-      return fetch(event.request).catch(() => {
-        // Kalau network juga gagal (offline & tidak di cache)
-        console.warn('⚠️ Offline & tidak ada cache untuk:', url.pathname);
-      });
+    caches.match(event.request).then(function(cached) {
+      return cached || fetch(event.request);
     })
   );
 });
