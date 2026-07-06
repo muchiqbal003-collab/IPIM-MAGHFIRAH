@@ -9,38 +9,195 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease; --header-height: 56px; --bottom-nav-height: 64px; }
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa;
+      --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+      --gray-600: #616161; --gray-800: #333333; --red: #e53935;
+      --red-light: #fce4ec; --blue: #1e88e5; --blue-light: #e3f2fd;
+      --orange: #e65100; --orange-light: #fff3e0;
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+      --header-height: 56px; --bottom-nav-height: 64px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-    .app-header h3 { font-size: 16px; font-weight: 600; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; }
+    body {
+      font-family: 'Poppins', sans-serif; background: var(--gray-50);
+      color: var(--gray-800); padding-top: var(--header-height);
+      padding-bottom: var(--bottom-nav-height);
+    }
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--green-dark); color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .app-header .btn-back {
+      background: none; border: none; color: white; font-size: 18px;
+      cursor: pointer; width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .app-header .btn-back:active { background: rgba(255,255,255,0.15); }
+    .app-header h3 { font-size: 16px; font-weight: 600; flex: 1; }
+    .header-badge {
+      background: var(--red); color: white; font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 12px; margin-right: 4px;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: var(--bottom-nav-height); background: var(--white);
+      border-top: 1px solid var(--gray-200); display: flex;
+      align-items: center; justify-content: space-around; z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+    }
+    .bottom-nav .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      font-size: 10px; color: var(--gray-600); cursor: pointer;
+      text-decoration: none; padding: 6px 12px; border-radius: 12px;
+      transition: var(--transition);
+    }
     .bottom-nav .nav-item i { font-size: 20px; }
     .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
-    .content { padding: 16px; }
-    .notification-list { display: flex; flex-direction: column; gap: 12px; }
-    .notif-card { background: var(--white); border-radius: var(--radius-lg); padding: 14px; border: 1px solid var(--gray-200); transition: var(--transition); cursor: pointer; position: relative; }
-    .notif-card.unread { border-left: 4px solid var(--green); }
-    .notif-card .notif-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-    .notif-card .notif-body { font-size: 12px; color: var(--gray-600); margin-bottom: 6px; }
-    .notif-card .notif-time { font-size: 10px; color: var(--gray-600); }
-    .mark-read-btn { background: none; border: none; color: var(--green); font-size: 12px; font-weight: 600; cursor: pointer; position: absolute; right: 12px; top: 12px; }
-    .empty-state { text-align: center; padding: 40px; color: var(--gray-600); }
-    .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
+
+    .content { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 16px;
+      background: var(--gray-100); border-radius: var(--radius);
+      padding: 4px;
+    }
+    .tab-btn {
+      flex: 1; padding: 8px 12px; border: none; border-radius: 10px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      font-family: 'Poppins', sans-serif; transition: var(--transition);
+      background: transparent; color: var(--gray-600);
+    }
+    .tab-btn.active { background: var(--white); color: var(--green-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    /* Notification list */
+    .notification-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .notif-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 14px 16px; border: 1px solid var(--gray-200);
+      transition: var(--transition); cursor: pointer; position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .notif-card:active { background: var(--gray-50); }
+    .notif-card.unread {
+      border-left: 4px solid var(--green);
+      background: var(--green-light);
+    }
+    .notif-card .notif-icon {
+      position: absolute; left: 16px; top: 16px;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .notif-card.has-icon { padding-left: 64px; }
+    .notif-icon.info { background: var(--blue-light); color: var(--blue); }
+    .notif-icon.warning { background: var(--orange-light); color: var(--orange); }
+    .notif-icon.success { background: var(--green-light); color: var(--green-dark); }
+    .notif-icon.danger { background: var(--red-light); color: var(--red); }
+
+    .notif-card .notif-title {
+      font-weight: 600; font-size: 13px; margin-bottom: 4px;
+      color: var(--gray-800);
+    }
+    .notif-card .notif-body {
+      font-size: 11px; color: var(--gray-600); margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .notif-card .notif-footer {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .notif-card .notif-time {
+      font-size: 10px; color: var(--gray-400);
+    }
+    .badge-unread {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); display: inline-block; margin-right: 6px;
+    }
+    .mark-read-btn {
+      background: none; border: 1px solid var(--gray-200);
+      color: var(--green); font-size: 10px; font-weight: 600;
+      cursor: pointer; padding: 4px 10px; border-radius: 14px;
+      transition: var(--transition);
+    }
+    .mark-read-btn:hover { background: var(--green); color: white; border-color: var(--green); }
+
+    /* Action bar */
+    .action-bar {
+      display: flex; gap: 8px; margin-bottom: 16px; justify-content: flex-end;
+    }
+    .action-btn {
+      background: var(--white); border: 1px solid var(--gray-200);
+      color: var(--gray-600); font-size: 11px; font-weight: 600;
+      cursor: pointer; padding: 6px 12px; border-radius: 16px;
+      transition: var(--transition); font-family: 'Poppins', sans-serif;
+    }
+    .action-btn:hover { background: var(--gray-100); }
+    .action-btn.danger { color: var(--red); }
+    .action-btn.danger:hover { background: var(--red-light); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--gray-400);
+    }
+    .empty-state i { font-size: 56px; display: block; margin-bottom: 16px; opacity: 0.5; }
+    .empty-state h4 { font-size: 16px; color: var(--gray-600); margin-bottom: 4px; }
+    .empty-state p { font-size: 12px; }
+
+    /* Skeleton loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-lg); height: 80px; margin-bottom: 10px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 12px; }
+      .notif-card { padding: 12px 14px; }
+      .notif-card.has-icon { padding-left: 56px; }
+      .notif-card .notif-icon { width: 30px; height: 30px; font-size: 14px; left: 14px; top: 14px; }
+    }
   </style>
 </head>
 <body>
+
   <header class="app-header">
     <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>Notifikasi</h3>
+    <h3>Notifikasi <span id="unreadCount" style="font-size:11px;opacity:0.7;"></span></h3>
   </header>
+
   <div class="content">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('semua')">Semua</button>
+      <button class="tab-btn" onclick="switchTab('belum')">Belum Dibaca</button>
+    </div>
+
+    <!-- Action bar -->
+    <div class="action-bar">
+      <button class="action-btn" onclick="tandaiSemuaDibaca()"><i class="fa-solid fa-check-double"></i> Tandai Semua Dibaca</button>
+    </div>
+
+    <!-- List -->
     <div class="notification-list" id="notifList">
-      <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
     </div>
   </div>
+
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
     <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
@@ -59,39 +216,161 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
+    let allNotifications = [];
+    let currentTab = 'semua';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tab-btn:nth-child(${tab === 'semua' ? 1 : 2})`).classList.add('active');
+      renderNotifications();
+    }
+    window.switchTab = switchTab;
+
     async function loadNotifikasi() {
       const container = document.getElementById('notifList');
+      container.innerHTML = `
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>`;
+
       try {
-        const snapUser = await db.collection('notifikasi').where('targetUserId', '==', user.uid).get();
-        const snapRole = await db.collection('notifikasi').where('targetRole', '==', user.role).get();
+        // Ambil SEMUA notifikasi (hindari composite index)
+        const snap = await db.collection('notifikasi').get();
+        console.log('📬 Total notifikasi di Firestore:', snap.size);
 
-        const allNotif = [...snapUser.docs, ...snapRole.docs]
-          .filter((doc, index, self) => index === self.findIndex(d => d.id === doc.id))
-          .sort((a, b) => (b.data().createdAt?.toMillis?.() || 0) - (a.data().createdAt?.toMillis?.() || 0));
+        // Filter di JavaScript
+        allNotifications = snap.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(n => {
+            // Cocokkan dengan user ID atau role
+            return n.targetUserId === user.uid 
+              || n.targetRole === user.role 
+              || n.targetRole === 'all';
+          })
+          .sort((a, b) => {
+            const timeA = a.createdAt?.toMillis?.() || a.createdAt || 0;
+            const timeB = b.createdAt?.toMillis?.() || b.createdAt || 0;
+            return timeB - timeA;
+          });
 
-        if (allNotif.length === 0) {
-          container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-bell-slash"></i>Belum ada notifikasi</div>';
-          return;
-        }
-        container.innerHTML = allNotif.map(doc => {
-          const data = doc.data();
-          const time = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('id-ID') : '';
-          const isUnread = !data.dibaca;
-          return `<div class="notif-card ${isUnread ? 'unread' : ''}">
-            <div class="notif-title">${data.judul || 'Notifikasi'}</div>
-            <div class="notif-body">${data.pesan || ''}</div>
-            <div class="notif-time">${time}</div>
-            ${isUnread ? `<button class="mark-read-btn" onclick="event.stopPropagation();markAsRead('${doc.id}')">Tandai Dibaca</button>` : ''}
-          </div>`;
-        }).join('');
+        console.log('📬 Notifikasi untuk user ini:', allNotifications.length);
+        renderNotifications();
       } catch(e) {
-        container.innerHTML = '<p style="text-align:center;color:red;">Gagal memuat notifikasi: ' + e.message + '</p>';
+        console.error('❌ Error:', e);
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h4>Gagal memuat</h4>
+            <p>${e.message}</p>
+            <button onclick="loadNotifikasi()" style="margin-top:12px;padding:8px 16px;background:var(--green-dark);color:white;border:none;border-radius:20px;font-family:'Poppins',sans-serif;cursor:pointer;">
+              <i class="fa-solid fa-rotate"></i> Coba Lagi
+            </button>
+          </div>`;
       }
     }
 
+    function renderNotifications() {
+      const container = document.getElementById('notifList');
+      
+      // Filter by tab
+      let filtered = [...allNotifications];
+      if (currentTab === 'belum') {
+        filtered = filtered.filter(n => !n.dibaca);
+      }
+
+      // Update unread count
+      const unreadTotal = allNotifications.filter(n => !n.dibaca).length;
+      document.getElementById('unreadCount').textContent = unreadTotal > 0 ? `(${unreadTotal} belum dibaca)` : '';
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-bell-slash"></i>
+            <h4>${currentTab === 'belum' ? 'Tidak ada notifikasi baru' : 'Belum ada notifikasi'}</h4>
+            <p>${currentTab === 'belum' ? 'Semua notifikasi sudah dibaca ✅' : 'Notifikasi akan muncul di sini'}</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(n => {
+        const time = n.createdAt?.toMillis 
+          ? timeAgo(n.createdAt.toMillis()) 
+          : (n.createdAt ? new Date(n.createdAt).toLocaleString('id-ID') : '');
+        const isUnread = !n.dibaca;
+        const iconType = n.tipe || 'info';
+        const iconMap = {
+          info: 'fa-circle-info',
+          warning: 'fa-triangle-exclamation',
+          success: 'fa-circle-check',
+          danger: 'fa-circle-exclamation',
+          izin: 'fa-person-walking-arrow-right',
+          hp: 'fa-mobile-screen',
+          absensi: 'fa-clipboard-check',
+          nilai: 'fa-chart-line',
+          halaqoh: 'fa-mosque'
+        };
+        const icon = iconMap[iconType] || iconMap.info;
+
+        return `
+        <div class="notif-card ${isUnread ? 'unread' : ''} has-icon">
+          <div class="notif-icon ${iconType}"><i class="fa-solid ${icon}"></i></div>
+          <div class="notif-title">${n.judul || 'Notifikasi'}</div>
+          <div class="notif-body">${n.pesan || ''}</div>
+          <div class="notif-footer">
+            <span class="notif-time">${isUnread ? '<span class="badge-unread"></span>' : ''}${time}</span>
+            ${isUnread ? `<button class="mark-read-btn" onclick="event.stopPropagation();markAsRead('${n.id}')">Tandai Dibaca</button>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function timeAgo(millis) {
+      const now = Date.now();
+      const diff = now - millis;
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (days > 7) return new Date(millis).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      if (days > 0) return days + ' hari lalu';
+      if (hours > 0) return hours + ' jam lalu';
+      if (minutes > 0) return minutes + ' menit lalu';
+      return 'Baru saja';
+    }
+
     window.markAsRead = async function(id) {
-      await db.collection('notifikasi').doc(id).update({ dibaca: true });
-      loadNotifikasi();
+      try {
+        await db.collection('notifikasi').doc(id).update({ dibaca: true });
+        // Update local
+        const notif = allNotifications.find(n => n.id === id);
+        if (notif) notif.dibaca = true;
+        renderNotifications();
+      } catch(e) {
+        console.error('Gagal tandai dibaca:', e);
+        alert('Gagal: ' + e.message);
+      }
+    };
+
+    window.tandaiSemuaDibaca = async function() {
+      const unread = allNotifications.filter(n => !n.dibaca);
+      if (unread.length === 0) return;
+      
+      if (!confirm(`Tandai ${unread.length} notifikasi sebagai sudah dibaca?`)) return;
+      
+      try {
+        const batch = db.batch();
+        unread.forEach(n => {
+          batch.update(db.collection('notifikasi').doc(n.id), { dibaca: true });
+          n.dibaca = true;
+        });
+        await batch.commit();
+        renderNotifications();
+      } catch(e) {
+        console.error('Gagal:', e);
+        alert('Gagal: ' + e.message);
+      }
     };
 
     loadNotifikasi();
