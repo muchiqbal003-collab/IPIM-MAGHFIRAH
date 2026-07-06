@@ -264,6 +264,7 @@
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/lang.js"></script>
+  <script src="../../js/fcm.js"></script>
   <script>
     const user = checkRole(['dosen','musyrif','dosen-musyrif','umum']);
     if (!user) window.location.href = '../../index.html';
@@ -656,6 +657,12 @@
       } catch(e) {}
     }
     loadDzikirBadge();
+    // ── SETUP FCM NOTIFIKASI ──   ← tambahin dari sini
+    setupFCM().then(function(success) {
+      if (success) {
+        console.log('✅ Notifikasi push siap');
+      }
+    });
   </script>
 </body>
 </html>
