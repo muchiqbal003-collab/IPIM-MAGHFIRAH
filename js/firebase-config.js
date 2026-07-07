@@ -17,11 +17,11 @@ const firebaseConfig = {
   const auth = firebase.auth();
   
   // Inisialisasi Messaging (untuk notifikasi push)
-  const messaging = firebase.messaging();
+  
   
   // Daftarkan ke window biar bisa diakses file lain
   window.db = db;
   window.auth = auth;
-  window.messaging = messaging;
+ 
   
   console.log("✅ Firebase IPIM siap!");
