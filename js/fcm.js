@@ -11,14 +11,17 @@ async function setupFCM() {
       return false;
     }
 
-    // ← Daftarkan sw.js yang sudah ada, bukan firebase-messaging-sw.js
+    // Daftarkan sw dulu
     const swReg = await navigator.serviceWorker.register(
       '/IPIM-MAGHFIRAH/sw.js'
     );
 
+    // Inisialisasi messaging SETELAH sw terdaftar
+    const messaging = firebase.messaging();
+
     const token = await messaging.getToken({
       vapidKey: 'BE7Ay6FCEtmvjaSb_8JXHBmuGi_YWAKpFfxKYU6xycd5S5CtdioO2lg0idVjTFWrcHHYxrTS6s9GQO_lD7Ce1aI',
-      serviceWorkerRegistration: swReg  // ← tambah ini
+      serviceWorkerRegistration: swReg
     });
 
     console.log('✅ Token FCM didapat');
