@@ -1,4 +1,3 @@
-
 const firebaseConfig = {
     apiKey: "AIzaSyD0UVef3nqiWiG0CtLezxlRKk_bWxq4Fes",
     authDomain: "ipim-7b437.firebaseapp.com",
@@ -16,5 +15,8 @@ const firebaseConfig = {
   // Inisialisasi Firestore & Auth
   const db = firebase.firestore();
   const auth = firebase.auth();
+  
+  // Inisialisasi Messaging (untuk notifikasi push)
+  const messaging = firebase.messaging();
   
   console.log("✅ Firebase IPIM siap!");
