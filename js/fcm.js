@@ -10,47 +10,34 @@ async function setupFCM() {
       return false;
     }
 
-    // Daftarkan sw dulu
-    const swReg = await navigator.serviceWorker.register(
-      '/IPIM-MAGHFIRAH/sw.js'
-    );
+    // Daftarkan Service Worker
+    const swReg = await navigator.serviceWorker.register('/IPIM-MAGHFIRAH/sw.js');
 
-    const token = await messaging.getToken({
+    // Pakai window.messaging dari firebase-config.js
+    const msg = window.messaging || firebase.messaging();
+
+    const token = await msg.getToken({
       vapidKey: 'BE7Ay6FCEtmvjaSb_8JXHBmuGi_YWAKpFfxKYU6xycd5S5CtdioO2lg0idVjTFWrcHHYxrTS6s9GQO_lD7Ce1aI',
       serviceWorkerRegistration: swReg
     });
 
-    console.log('✅ Token FCM didapat');
+    console.log('✅ Token FCM:', token);
 
-    // Ambil UID dari localStorage (user object dari app.js)
+    // Ambil UID
     const userStr = localStorage.getItem('user');
     let uid = null;
-
     if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        uid = user.uid;
-      } catch (e) {
-        uid = userStr;
-      }
+      try { uid = JSON.parse(userStr).uid; } catch (e) { uid = userStr; }
     }
-
-    // Fallback
-    if (!uid) {
-      uid = localStorage.getItem('userUid');
-    }
-
-    if (!uid) {
-      console.error('❌ UID tidak ditemukan');
-      return false;
-    }
+    if (!uid) uid = localStorage.getItem('userUid');
+    if (!uid) { console.error('❌ UID tidak ditemukan'); return false; }
 
     await db.collection('users').doc(uid).update({
       fcmToken: token,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    console.log('✅ Token tersimpan ke Firestore untuk:', uid);
+    console.log('✅ Token tersimpan untuk:', uid);
     return true;
 
   } catch (error) {
