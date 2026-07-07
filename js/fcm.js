@@ -2,23 +2,8 @@
 // IPIM Maghfirah - FCM Token Manager
 // =============================================
 
-let messaging = null;
-
-// Init Firebase Messaging
-function initMessaging() {
-  try {
-    messaging = firebase.messaging();
-    return true;
-  } catch (e) {
-    console.warn('Browser tidak mendukung notifikasi');
-    return false;
-  }
-}
-
 // Minta izin + daftarkan token
 async function setupFCM() {
-  if (!messaging && !initMessaging()) return false;
-
   try {
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
@@ -34,7 +19,6 @@ async function setupFCM() {
 
     const uid = localStorage.getItem('userUid');
     if (uid) {
-      const db = firebase.firestore();
       await db.collection('users').doc(uid).update({
         fcmToken: token,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
