@@ -6,15 +6,12 @@ const PIM_BOT_CONFIG = {
   // Ganti dengan API key Gemini kamu
   // Dapatkan di: https://aistudio.google.com/app/apikey
   API_KEY: 'GANTI_DENGAN_GEMINI_API_KEY',
-  // Model gratis Gemini
   MODEL: 'gemini-1.5-flash',
-  // Endpoint — API key pakai query param, BUKAN header Authorization
   get ENDPOINT() {
     return `https://generativelanguage.googleapis.com/v1beta/models/${this.MODEL}:generateContent?key=${this.API_KEY}`;
   }
 };
 
-// Konteks aplikasi IPIM — bot akan paham fitur-fitur yang ada
 const SYSTEM_CONTEXT = `Kamu adalah PIM Bot, asisten virtual aplikasi IPIM Maghfirah (Institut Pendidikan Islam Maghfirah).
 
 TENTANG APLIKASI:
@@ -74,17 +71,21 @@ function renderPimBot() {
 
   const widget = document.createElement('div');
   widget.id = 'pimBotWidget';
+  
+  // Perhatikan CSS untuk floating button yang sudah di-redesign
   widget.innerHTML = `
     <style>
+      @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+      
       #pimBotWidget * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif; }
 
-      /* FLOATING BUTTON */
+      /* FLOATING BUTTON - REDESIGN */
       #pimBotToggle {
         position: fixed;
-        bottom: 84px;
-        right: 16px;
-        width: 48px;
-        height: 48px;
+        bottom: 24px;
+        right: 24px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         background: linear-gradient(135deg, #003d33, #006644);
         color: white;
@@ -93,16 +94,20 @@ function renderPimBot() {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
-        z-index: 999;
-        box-shadow: 0 4px 16px rgba(0,61,51,0.35);
+        font-size: 26px;
+        z-index: 9999;
+        box-shadow: 0 6px 20px rgba(0,61,51,0.4);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      #pimBotToggle:hover {
+        transform: scale(1.08);
       }
       #pimBotToggle .notif-dot {
         position: absolute;
-        top: 2px;
-        right: 2px;
-        width: 10px;
-        height: 10px;
+        top: 4px;
+        right: 4px;
+        width: 12px;
+        height: 12px;
         background: #f5c842;
         border-radius: 50%;
         border: 2px solid white;
@@ -111,16 +116,16 @@ function renderPimBot() {
       /* CHAT WINDOW */
       #pimBotWindow {
         position: fixed;
-        bottom: 144px;
-        right: 16px;
-        width: 320px;
-        height: 440px;
+        bottom: 100px;
+        right: 24px;
+        width: 340px;
+        height: 480px;
         background: #ffffff;
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         display: none;
         flex-direction: column;
-        z-index: 998;
+        z-index: 9998;
         overflow: hidden;
         border: 1px solid #d1ead8;
       }
@@ -129,67 +134,70 @@ function renderPimBot() {
       /* HEADER */
       .pim-header {
         background: linear-gradient(135deg, #003d33, #006644);
-        padding: 12px 14px;
+        padding: 16px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         flex-shrink: 0;
       }
       .pim-avatar {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: rgba(245,200,66,0.2);
         border: 2px solid rgba(245,200,66,0.5);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 16px;
+        font-size: 20px;
+        color: white;
         flex-shrink: 0;
       }
       .pim-header-info { flex: 1; }
-      .pim-header-name { font-size: 13px; font-weight: 700; color: white; }
-      .pim-header-status { font-size: 10px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+      .pim-header-name { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
+      .pim-header-status { font-size: 11px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 4px; }
       .pim-status-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; }
       .pim-close {
-        background: rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.15);
         border: none;
         color: white;
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 14px;
         flex-shrink: 0;
+        transition: background 0.2s;
       }
+      .pim-close:hover { background: rgba(255,255,255,0.3); }
 
       /* MESSAGES */
       .pim-messages {
         flex: 1;
         overflow-y: auto;
-        padding: 14px;
+        padding: 16px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         background: #f8fdf9;
       }
-      .pim-messages::-webkit-scrollbar { width: 3px; }
-      .pim-messages::-webkit-scrollbar-thumb { background: #c8e6d4; border-radius: 3px; }
+      .pim-messages::-webkit-scrollbar { width: 4px; }
+      .pim-messages::-webkit-scrollbar-thumb { background: #c8e6d4; border-radius: 4px; }
 
       .pim-msg {
         max-width: 85%;
-        font-size: 12.5px;
-        line-height: 1.55;
+        font-size: 13px;
+        line-height: 1.5;
       }
       .pim-msg.bot { align-self: flex-start; }
       .pim-msg.user { align-self: flex-end; }
 
       .pim-bubble {
-        padding: 9px 12px;
-        border-radius: 14px;
+        padding: 10px 14px;
+        border-radius: 16px;
         word-break: break-word;
       }
       .pim-msg.bot .pim-bubble {
@@ -197,12 +205,13 @@ function renderPimBot() {
         color: #222;
         border: 1px solid #e8f5e9;
         border-bottom-left-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
       }
       .pim-msg.user .pim-bubble {
         background: linear-gradient(135deg, #006644, #00a859);
         color: white;
         border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,102,68,0.2);
       }
 
       /* TYPING INDICATOR */
@@ -214,11 +223,11 @@ function renderPimBot() {
       .pim-typing-bubble {
         background: white;
         border: 1px solid #e8f5e9;
-        border-radius: 14px;
+        border-radius: 16px;
         border-bottom-left-radius: 4px;
-        padding: 10px 14px;
+        padding: 12px 16px;
         display: flex;
-        gap: 4px;
+        gap: 5px;
         align-items: center;
       }
       .pim-dot {
@@ -235,33 +244,34 @@ function renderPimBot() {
 
       /* INPUT */
       .pim-input-wrap {
-        padding: 10px 12px;
+        padding: 12px 16px;
         background: white;
         border-top: 1px solid #e8f5e9;
         display: flex;
-        gap: 8px;
+        gap: 10px;
         align-items: flex-end;
         flex-shrink: 0;
       }
       .pim-input {
         flex: 1;
         border: 1.5px solid #d1ead8;
-        border-radius: 20px;
-        padding: 8px 14px;
-        font-size: 12.5px;
+        border-radius: 24px;
+        padding: 10px 16px;
+        font-size: 13px;
         font-family: inherit;
         outline: none;
         resize: none;
-        max-height: 80px;
+        max-height: 90px;
         line-height: 1.4;
         color: #222;
         background: #f8fdf9;
+        transition: border 0.2s;
       }
       .pim-input:focus { border-color: #00a859; background: white; }
       .pim-input::placeholder { color: #aaa; }
       .pim-send {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: linear-gradient(135deg, #006644, #00a859);
         border: none;
@@ -270,22 +280,27 @@ function renderPimBot() {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 15px;
         flex-shrink: 0;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .pim-send:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,102,68,0.3);
       }
       .pim-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
       /* QUICK REPLIES */
       .pim-quick {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         flex-wrap: wrap;
-        padding: 0 14px 10px;
+        padding: 0 16px 12px;
         background: #f8fdf9;
       }
       .pim-quick-btn {
         font-size: 11px;
-        padding: 5px 10px;
+        padding: 6px 12px;
         border-radius: 20px;
         border: 1px solid #c8e6d4;
         background: white;
@@ -293,23 +308,23 @@ function renderPimBot() {
         cursor: pointer;
         font-family: inherit;
         font-weight: 500;
-        white-space: nowrap;
+        transition: background 0.2s, color 0.2s;
       }
-      .pim-quick-btn:active { background: #e8f5e9; }
+      .pim-quick-btn:hover { background: #006644; color: white; border-color: #006644; }
 
       /* RESPONSIVE */
       @media (max-width: 400px) {
         #pimBotWindow {
-          width: calc(100vw - 20px);
-          right: 10px;
-          bottom: 134px;
-          height: 400px;
+          width: calc(100vw - 32px);
+          right: 16px;
+          bottom: 90px;
+          height: 75vh;
         }
-        #pimBotToggle { bottom: 78px; right: 12px; }
+        #pimBotToggle { bottom: 16px; right: 16px; }
       }
     </style>
 
-    <!-- FLOATING BUTTON -->
+    <!-- FLOATING BUTTON (Menggunakan FontAwesome Icon Robot) -->
     <button id="pimBotToggle" onclick="pimBotToggle()" title="PIM Bot">
       <i class="fa-solid fa-robot"></i>
       <span class="notif-dot"></span>
@@ -318,12 +333,14 @@ function renderPimBot() {
     <!-- CHAT WINDOW -->
     <div id="pimBotWindow">
       <div class="pim-header">
-        <div class="pim-avatar">🤖</div>
+        <div class="pim-avatar"><i class="fa-solid fa-robot"></i></div>
         <div class="pim-header-info">
           <div class="pim-header-name">PIM Bot</div>
           <div class="pim-header-status"><span class="pim-status-dot"></span> Siap membantu</div>
         </div>
-        <button class="pim-close" onclick="pimBotToggle()">✕</button>
+        <button class="pim-close" onclick="pimBotToggle()">
+          <i class="fa-solid fa-times"></i>
+        </button>
       </div>
 
       <div class="pim-messages" id="pimMessages">
@@ -373,7 +390,6 @@ window.pimBotToggle = function() {
   win.classList.toggle('open', isOpen);
   if (isOpen) {
     document.getElementById('pimInput').focus();
-    // Hapus notif dot
     const dot = document.querySelector('#pimBotToggle .notif-dot');
     if (dot) dot.style.display = 'none';
   }
@@ -383,14 +399,13 @@ window.pimBotToggle = function() {
 window.pimQuickSend = function(text) {
   document.getElementById('pimInput').value = text;
   pimSendMessage();
-  // Sembunyikan quick replies setelah dipakai
   document.getElementById('pimQuick').style.display = 'none';
 };
 
 // ── AUTO RESIZE TEXTAREA ──
 window.pimAutoResize = function(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
 };
 
 // ── HANDLE ENTER ──
@@ -406,7 +421,13 @@ function pimAddMessage(text, role) {
   const container = document.getElementById('pimMessages');
   const div = document.createElement('div');
   div.className = `pim-msg ${role}`;
-  div.innerHTML = `<div class="pim-bubble">${text.replace(/\n/g, '<br>')}</div>`;
+  
+  // Clean up formatting untuk tampilan HTML sederhana
+  let formattedText = text.replace(/\n/g, '<br>');
+  // Hapus bintang tebal markdown jika AI menggunakannya
+  formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  div.innerHTML = `<div class="pim-bubble">${formattedText}</div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -420,59 +441,52 @@ function pimSetTyping(show) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// ── KIRIM PESAN ──
+// ── KIRIM PESAN (STRUKTUR JSON SUDAH DIPERBAIKI) ──
 window.pimSendMessage = async function() {
   const input = document.getElementById('pimInput');
   const text  = input.value.trim();
   if (!text || isTyping) return;
 
-  // Tampilkan pesan user
   pimAddMessage(text, 'user');
   input.value = '';
   input.style.height = 'auto';
 
-  // Simpan ke history
-  chatHistory.push({ role: 'user', parts: [{ text }] });
-
-  // Tampilkan typing
   pimSetTyping(true);
 
+  // Siapkan payload dengan system_instruction di root
+  const requestBody = {
+    system_instruction: {
+      parts: [{ text: SYSTEM_CONTEXT }]
+    },
+    contents: chatHistory.concat([{ role: 'user', parts: [{ text }] }]),
+    generationConfig: {
+      temperature: 0.3,       // Diturunkan agar AI lebih konsisten
+      maxOutputTokens: 250,   // Dibatasi agar hemat dan tetap ringkas
+      topP: 0.95
+    }
+  };
+
   try {
-    // Panggil Gemini API
-    // API key pakai query param, BUKAN Authorization header
     const res = await fetch(PIM_BOT_CONFIG.ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: SYSTEM_CONTEXT }]
-        },
-        contents: chatHistory,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 300,
-          topP: 0.9
-        },
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
-        ]
-      })
+      body: JSON.stringify(requestBody)
     });
 
+    const data = await res.json();
+    
     if (!res.ok) {
-      const errData = await res.json();
-      console.error('Gemini error:', errData);
-      throw new Error(errData.error?.message || 'Gemini API error');
+      throw new Error(data.error?.message || 'Gagal terhubung ke AI');
     }
 
-    const data   = await res.json();
-    const reply  = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak bisa menjawab saat ini.';
+    // Ambil teks balasan
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak mengerti.';
 
-    // Simpan response ke history
+    // Simpan history agar percakapan bersambung
+    chatHistory.push({ role: 'user', parts: [{ text }] });
     chatHistory.push({ role: 'model', parts: [{ text: reply }] });
 
-    // Batasi history agar tidak terlalu panjang (max 10 giliran)
+    // Batasi history maksimal 10 giliran (20 pesan)
     if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
 
     pimSetTyping(false);
@@ -481,7 +495,7 @@ window.pimSendMessage = async function() {
   } catch(err) {
     pimSetTyping(false);
     console.error('PIM Bot error:', err);
-    pimAddMessage('Maaf, terjadi gangguan koneksi. Silakan coba lagi.', 'bot');
+    pimAddMessage('Maaf, terjadi gangguan sistem. Silakan coba beberapa saat lagi.', 'bot');
   }
 };
 
