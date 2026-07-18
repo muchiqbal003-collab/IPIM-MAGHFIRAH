@@ -120,7 +120,24 @@
     }
     return result;
   };
-
+  
+ (function loadPimBot() {
+    // Tentukan path relatif berdasarkan lokasi halaman
+    const path = window.location.pathname;
+    let botPath;
+    
+    if (path.includes('/pages/')) {
+      botPath = '../../js/pim-bot.js';  // Halaman di dalam folder pages
+    } else {
+      botPath = 'js/pim-bot.js';         // Root (index.html)
+    }
+    
+    const script = document.createElement('script');
+    script.src = botPath;
+    script.onload = () => console.log('🤖 PIM-Bot loaded!');
+    script.onerror = () => console.warn('⚠️ PIM-Bot tidak ditemukan di:', botPath);
+    document.head.appendChild(script);
+  })();
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
   console.log('📅 Hari ini:', formatTanggal(new Date()));
