@@ -9,7 +9,7 @@
   // ============================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('/IPIM-MAGHFIRAH/sw.js')
         .then((reg) => console.log('✅ Service Worker registered:', reg.scope))
         .catch((err) => console.log('❌ Service Worker failed:', err));
     });
@@ -84,7 +84,7 @@
 
   // Ambil nama hari dalam Bahasa Indonesia
   window.getNamaHari = function(date) {
-    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const days = ['Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     return days[new Date(date).getDay()];
   };
 
@@ -120,34 +120,28 @@
     }
     return result;
   };
-  
- (function loadPimBot() {
-  const path = window.location.pathname;
-  let botPath;
-  
-  // Cukup mundur 1 tingkat ('../') asalkan struktur foldernya standar:
-  // - index.html
-  // - pages/dashboard.html
-  // - js/pim-bot.js
-  if (path.includes('/pages/')) {
-    botPath = '../js/pim-bot.js'; 
-  } else {
-    botPath = 'js/pim-bot.js';         
-  }
-  
-  const script = document.createElement('script');
-  script.src = botPath;
-  
-  // Tambahkan defer agar script tidak memblokir render UI utama
-  script.defer = true; 
-  
-  script.onload = () => console.log('🤖 PIM-Bot loaded successfully!');
-  script.onerror = () => console.warn('⚠️ PIM-Bot gagal dimuat dari path:', botPath);
-  
-  document.body.appendChild(script); // Memasukkan ke body biasanya lebih aman untuk widget UI
-})();
 
-  
+  // ============================================
+  // LOAD PIM-BOT AI (Floating Assistant)
+  // ============================================
+  (function loadPimBot() {
+    const path = window.location.pathname;
+    let botPath;
+    
+    if (path.includes('/pages/')) {
+      botPath = '../js/pim-bot.js';
+    } else {
+      botPath = 'js/pim-bot.js';
+    }
+    
+    const script = document.createElement('script');
+    script.src = botPath;
+    script.defer = true;
+    script.onload = () => console.log('🤖 PIM-Bot loaded!');
+    script.onerror = () => console.warn('⚠️ PIM-Bot gagal dimuat dari:', botPath);
+    document.body.appendChild(script);
+  })();
+
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
   console.log('📅 Hari ini:', formatTanggal(new Date()));
