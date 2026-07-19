@@ -3,7 +3,7 @@
 // Powered by Gemini 2.0 Flash
 // =============================================
 
-const GEMINI_API_KEY = 'AQ.Ab8RN6Ktl2e3zqrufKxmRHr75g8zKHJJ7yInBC484HDToSoWYg';
+const GEMINI_API_KEY = 'AQ.Ab8RN6J1Eudpikmdy4Z-NAf_iEi7yNWJzeTjl4auMzginUqRyg';
 
 // System prompt
 const SYSTEM_PROMPT = `
