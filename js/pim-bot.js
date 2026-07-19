@@ -1,505 +1,235 @@
-// js/pim-bot.js
-// PIM Bot — Asisten virtual IPIM Maghfirah
-// Menggunakan Google Gemini API (free tier)
+// =============================================
+// IPIM Maghfirah - PIM-Bot AI Assistant v3.0
+// Powered by Gemini 2.0 Flash
+// Fitur: Voice, Dark Mode, Pakar IPIM, Bisa Jawab Apa Saja
+// =============================================
 
-const PIM_BOT_CONFIG = {
-  // Ganti dengan API key Gemini kamu
-  // Dapatkan di: https://aistudio.google.com/app/apikey
-  API_KEY: 'GANTI_DENGAN_GEMINI_API_KEY',
-  MODEL: 'gemini-1.5-flash',
-  get ENDPOINT() {
-    return `https://generativelanguage.googleapis.com/v1beta/models/${this.MODEL}:generateContent?key=${this.API_KEY}`;
-  }
-};
+const GEMINI_API_KEY = 'AQ.Ab8RN6J5nxIyg20Xumdc4v6Fh-9IXecBeKJIGepD-RhV-rVvWg';
 
-const SYSTEM_CONTEXT = `Kamu adalah PIM Bot, asisten virtual aplikasi IPIM Maghfirah (Institut Pendidikan Islam Maghfirah).
+// System prompt — PAKAR IPIM + BISA JAWAB APA SAJA
+const SYSTEM_PROMPT = `
+Kamu adalah PIM-Bot, asisten AI IPIM Maghfirah yang SANGAT pintar.
+Kamu PAKAR dalam sistem IPIM dan juga bisa menjawab pertanyaan APAPUN (agama, sains, teknologi, dll).
 
-TENTANG APLIKASI:
-IPIM Maghfirah adalah sistem informasi manajemen pesantren berbasis web (PWA) yang bisa diinstall di HP.
+📱 DATA APLIKASI:
+- Website: https://muchiqbal003-collab.github.io/IPIM-MAGHFIRAH/
+- Role: pusat-data, operator-akademik, operator-halaqoh, operator-bahasa, operator-pengasuhan, dosen, musyrif, dosen-musyrif, umum
 
-FITUR UTAMA APLIKASI:
-1. Dashboard — ringkasan kehadiran sholat, jadwal mengajar hari ini, motivasi, visi misi, video YouTube
-2. Jadwal Sholat — jadwal sholat otomatis sesuai lokasi GPS
-3. Al-Qur'an — baca Al-Qur'an offline, tracking tilawah harian otomatis
-4. Dzikir — dzikir pagi dan petang dengan counter dan checklist (23 dzikir pagi, 18 dzikir petang)
-5. Absensi Sholat — isi kehadiran sholat berjamaah harian
-6. Absensi Kelas — dosen isi absensi mahasiswa per matakuliah
-7. Jadwal Mengajar — lihat jadwal mengajar per hari
-8. Kalender Akademik — event akademik dengan kode warna
-9. Profil — ubah nama, password, foto profil, pilih bahasa (Indonesia/Arab), lapor pelanggaran, saran & masukan
-10. Notifikasi — reminder otomatis jadwal mengajar, waktu sholat, pengumuman dari pusat data
+🎯 CARA MENJAWAB:
+- Jawab SEMUA pertanyaan dengan SINGKAT, JELAS, dan BERMANFAAT
+- Gunakan bahasa Indonesia santai tapi sopan
+- Maksimal 3-5 kalimat per jawaban, kecuali diminta detail
+- Pakai emoji secukupnya
+- Jika user tanya tentang pembagian kelas/matakuliah/jadwal, tanyakan dulu detailnya (role, semester, dll)
+- Beri solusi, bukan hanya informasi
+- Akhiri dengan semangat Islami singkat
 
-ROLE PENGGUNA:
-- Dosen: mengajar, isi absensi kelas, lihat jadwal
-- Musyrif: kelola halaqoh, absensi halaqoh
-- Dosen-Musyrif: kombinasi keduanya
-- Operator Akademik: kelola data mahasiswa, jadwal, nilai, kalender
-- Pusat Data: admin utama, kelola semua data dan notifikasi
-- Umum: akses dasar
+📊 KEMAMPUAN KHUSUS:
+1. Bantu analisis pembagian kelas
+2. Rekomendasi jadwal optimal
+3. Troubleshooting aplikasi
+4. Panduan langkah-demi-langkah
+5. Motivasi Islami
+`;
 
-PREDIKAT NILAI:
-- Mumtaz: ≥ 90
-- Jayyid Jiddan: 80–89
-- Jayyid: 70–79
-- Maqbul: 60–69
-- Rasib: < 60
-
-PANDUAN PENGGUNAAN:
-- Untuk isi absensi sholat: buka Dashboard → klik "Isi Absensi Sholat Hari Ini"
-- Untuk baca Al-Qur'an: klik ikon Qur'an di Dashboard → pilih surat
-- Untuk dzikir: klik ikon Dzikir di Dashboard → pilih pagi/petang
-- Untuk ganti bahasa ke Arab: buka Profil → scroll ke bawah → pilih bahasa Arab
-- Untuk laporan pelanggaran: buka Profil → bagian Laporan
-- Untuk hubungi admin: buka Profil → Hubungi via WhatsApp
-
-CARA MENJAWAB:
-- Jawab dalam bahasa yang sama dengan pertanyaan (Indonesia atau Arab)
-- Jawaban singkat, jelas, maksimal 3-4 kalimat
-- Kalau pertanyaan tidak berkaitan dengan aplikasi, tetap jawab dengan ramah dan singkat
-- Sapa dengan "Assalamu'alaikum" hanya di pesan pertama
-- Gunakan bahasa yang sopan dan islami`;
-
-// ── STATE ──
-let chatHistory = [];
-let isOpen = false;
+// State
+let pimBotOpen = false;
+let pimBotMinimized = false;
 let isTyping = false;
+let isListening = false;
+let darkMode = false;
 
-// ── RENDER WIDGET ──
-function renderPimBot() {
-  const existing = document.getElementById('pimBotWidget');
-  if (existing) return;
+// Posisi
+let botX = window.innerWidth - 76;
+let botY = window.innerHeight - 170;
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let dragMoved = false;
 
-  const widget = document.createElement('div');
-  widget.id = 'pimBotWidget';
-  
-  // Perhatikan CSS untuk floating button yang sudah di-redesign
-  widget.innerHTML = `
-    <style>
-      @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-      
-      #pimBotWidget * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif; }
+// Quick actions
+const QUICK_ACTIONS = [
+  { icon: 'fa-mosque', text: 'Cara absensi sholat?', color: '#00897b' },
+  { icon: 'fa-calendar-check', text: 'Cek jadwal hari ini', color: '#1565c0' },
+  { icon: 'fa-book-open', text: 'Input hafalan Quran', color: '#6a1b9a' },
+  { icon: 'fa-user-graduate', text: 'Cara lihat nilai', color: '#e65100' },
+  { icon: 'fa-lightbulb', text: 'Tips produktif belajar', color: '#f57c00' },
+  { icon: 'fa-brain', text: 'Tips menghafal Quran', color: '#2e7d32' },
+];
 
-      /* FLOATING BUTTON - REDESIGN */
-      #pimBotToggle {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #003d33, #006644);
-        color: white;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 26px;
-        z-index: 9999;
-        box-shadow: 0 6px 20px rgba(0,61,51,0.4);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      #pimBotToggle:hover {
-        transform: scale(1.08);
-      }
-      #pimBotToggle .notif-dot {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        width: 12px;
-        height: 12px;
-        background: #f5c842;
-        border-radius: 50%;
-        border: 2px solid white;
-      }
+// =============================================
+// CREATE UI
+// =============================================
 
-      /* CHAT WINDOW */
-      #pimBotWindow {
-        position: fixed;
-        bottom: 100px;
-        right: 24px;
-        width: 340px;
-        height: 480px;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        display: none;
-        flex-direction: column;
-        z-index: 9998;
-        overflow: hidden;
-        border: 1px solid #d1ead8;
-      }
-      #pimBotWindow.open { display: flex; }
+function createPimBot() {
+  // CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes pimPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,77,64,0.4)}50%{box-shadow:0 0 0 14px rgba(0,77,64,0)}}
+    @keyframes pimTyping{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-8px);opacity:1}}
+    @keyframes pimSlideIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .pim-bot-fab{animation:pimPulse 2.5s infinite;transition:transform 0.2s ease,box-shadow 0.2s ease;touch-action:none}
+    .pim-bot-fab:active{animation:none}
+    .pim-bot-chat{animation:pimSlideIn 0.3s ease}
+    .pim-bot-message{animation:pimSlideIn 0.2s ease}
+    .pim-bot-quick-btn{transition:all 0.2s ease;cursor:pointer}
+    .pim-bot-quick-btn:active{transform:scale(0.95)}
+    .pim-bot-messages::-webkit-scrollbar{width:5px}
+    .pim-bot-messages::-webkit-scrollbar-thumb{background:#c0c0c0;border-radius:5px}
+  `;
+  document.head.appendChild(style);
 
-      /* HEADER */
-      .pim-header {
-        background: linear-gradient(135deg, #003d33, #006644);
-        padding: 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-shrink: 0;
-      }
-      .pim-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(245,200,66,0.2);
-        border: 2px solid rgba(245,200,66,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        color: white;
-        flex-shrink: 0;
-      }
-      .pim-header-info { flex: 1; }
-      .pim-header-name { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
-      .pim-header-status { font-size: 11px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 4px; }
-      .pim-status-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; }
-      .pim-close {
-        background: rgba(255,255,255,0.15);
-        border: none;
-        color: white;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        flex-shrink: 0;
-        transition: background 0.2s;
-      }
-      .pim-close:hover { background: rgba(255,255,255,0.3); }
+  // FAB
+  const fab = document.createElement('div');
+  fab.id = 'pimBotFab';
+  fab.className = 'pim-bot-fab';
+  fab.innerHTML = '<i class="fa-solid fa-robot"></i>';
+  fab.title = '🤖 PIM-Bot - Tanya apa saja';
+  Object.assign(fab.style, {
+    position:'fixed',zIndex:'9999',width:'58px',height:'58px',
+    background:'linear-gradient(135deg,#004d40,#00897b)',color:'white',
+    borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',
+    fontSize:'24px',cursor:'grab',boxShadow:'0 4px 20px rgba(0,77,64,0.4)',
+    left:botX+'px',top:botY+'px',userSelect:'none',
+    border:'2px solid rgba(255,255,255,0.3)',touchAction:'none'
+  });
 
-      /* MESSAGES */
-      .pim-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        background: #f8fdf9;
-      }
-      .pim-messages::-webkit-scrollbar { width: 4px; }
-      .pim-messages::-webkit-scrollbar-thumb { background: #c8e6d4; border-radius: 4px; }
+  fab.addEventListener('pointerdown', startDrag);
+  fab.addEventListener('pointermove', onDrag);
+  fab.addEventListener('pointerup', endDrag);
+  fab.addEventListener('pointerleave', endDrag);
+  fab.addEventListener('pointercancel', endDrag);
+  fab.addEventListener('click', (e) => { if(!dragMoved) toggleChat(); dragMoved=false; });
 
-      .pim-msg {
-        max-width: 85%;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-      .pim-msg.bot { align-self: flex-start; }
-      .pim-msg.user { align-self: flex-end; }
+  // Chat panel
+  const chat = document.createElement('div');
+  chat.id = 'pimBotChat';
+  chat.className = 'pim-bot-chat';
+  Object.assign(chat.style, {
+    position:'fixed',zIndex:'9998',width:'380px',maxWidth:'92vw',
+    height:'540px',maxHeight:'78vh',bottom:'80px',right:'16px',
+    background:'white',borderRadius:'18px',
+    boxShadow:'0 12px 48px rgba(0,0,0,0.25)',
+    display:'none',flexDirection:'column',overflow:'hidden',
+    fontFamily:"'Plus Jakarta Sans',sans-serif"
+  });
 
-      .pim-bubble {
-        padding: 10px 14px;
-        border-radius: 16px;
-        word-break: break-word;
-      }
-      .pim-msg.bot .pim-bubble {
-        background: white;
-        color: #222;
-        border: 1px solid #e8f5e9;
-        border-bottom-left-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-      }
-      .pim-msg.user .pim-bubble {
-        background: linear-gradient(135deg, #006644, #00a859);
-        color: white;
-        border-bottom-right-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,102,68,0.2);
-      }
-
-      /* TYPING INDICATOR */
-      .pim-typing {
-        display: none;
-        align-self: flex-start;
-      }
-      .pim-typing.show { display: flex; }
-      .pim-typing-bubble {
-        background: white;
-        border: 1px solid #e8f5e9;
-        border-radius: 16px;
-        border-bottom-left-radius: 4px;
-        padding: 12px 16px;
-        display: flex;
-        gap: 5px;
-        align-items: center;
-      }
-      .pim-dot {
-        width: 6px;
-        height: 6px;
-        background: #00a859;
-        border-radius: 50%;
-        opacity: 0.4;
-      }
-      .pim-dot:nth-child(1) { animation: pimDot 1.2s ease infinite 0s; }
-      .pim-dot:nth-child(2) { animation: pimDot 1.2s ease infinite 0.2s; }
-      .pim-dot:nth-child(3) { animation: pimDot 1.2s ease infinite 0.4s; }
-      @keyframes pimDot { 0%,80%,100%{opacity:0.4;transform:scale(1)} 40%{opacity:1;transform:scale(1.2)} }
-
-      /* INPUT */
-      .pim-input-wrap {
-        padding: 12px 16px;
-        background: white;
-        border-top: 1px solid #e8f5e9;
-        display: flex;
-        gap: 10px;
-        align-items: flex-end;
-        flex-shrink: 0;
-      }
-      .pim-input {
-        flex: 1;
-        border: 1.5px solid #d1ead8;
-        border-radius: 24px;
-        padding: 10px 16px;
-        font-size: 13px;
-        font-family: inherit;
-        outline: none;
-        resize: none;
-        max-height: 90px;
-        line-height: 1.4;
-        color: #222;
-        background: #f8fdf9;
-        transition: border 0.2s;
-      }
-      .pim-input:focus { border-color: #00a859; background: white; }
-      .pim-input::placeholder { color: #aaa; }
-      .pim-send {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #006644, #00a859);
-        border: none;
-        color: white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 15px;
-        flex-shrink: 0;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-      .pim-send:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,102,68,0.3);
-      }
-      .pim-send:disabled { opacity: 0.5; cursor: not-allowed; }
-
-      /* QUICK REPLIES */
-      .pim-quick {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        padding: 0 16px 12px;
-        background: #f8fdf9;
-      }
-      .pim-quick-btn {
-        font-size: 11px;
-        padding: 6px 12px;
-        border-radius: 20px;
-        border: 1px solid #c8e6d4;
-        background: white;
-        color: #006644;
-        cursor: pointer;
-        font-family: inherit;
-        font-weight: 500;
-        transition: background 0.2s, color 0.2s;
-      }
-      .pim-quick-btn:hover { background: #006644; color: white; border-color: #006644; }
-
-      /* RESPONSIVE */
-      @media (max-width: 400px) {
-        #pimBotWindow {
-          width: calc(100vw - 32px);
-          right: 16px;
-          bottom: 90px;
-          height: 75vh;
-        }
-        #pimBotToggle { bottom: 16px; right: 16px; }
-      }
-    </style>
-
-    <!-- FLOATING BUTTON (Menggunakan FontAwesome Icon Robot) -->
-    <button id="pimBotToggle" onclick="pimBotToggle()" title="PIM Bot">
-      <i class="fa-solid fa-robot"></i>
-      <span class="notif-dot"></span>
-    </button>
-
-    <!-- CHAT WINDOW -->
-    <div id="pimBotWindow">
-      <div class="pim-header">
-        <div class="pim-avatar"><i class="fa-solid fa-robot"></i></div>
-        <div class="pim-header-info">
-          <div class="pim-header-name">PIM Bot</div>
-          <div class="pim-header-status"><span class="pim-status-dot"></span> Siap membantu</div>
-        </div>
-        <button class="pim-close" onclick="pimBotToggle()">
-          <i class="fa-solid fa-times"></i>
-        </button>
+  chat.innerHTML = `
+    <div style="background:linear-gradient(135deg,#004d40,#00695c);color:white;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+      <div style="flex:1;cursor:pointer" id="pimBotHeaderInfo">
+        <div style="font-weight:700;font-size:14px">PIM-Bot AI</div>
+        <div style="font-size:10px;opacity:0.8"><span style="width:6px;height:6px;background:#4caf50;border-radius:50%;display:inline-block;margin-right:4px"></span>Online · Pakar IPIM</div>
       </div>
-
-      <div class="pim-messages" id="pimMessages">
-        <div class="pim-msg bot">
-          <div class="pim-bubble">Assalamu'alaikum! Saya PIM Bot 👋<br>Saya siap membantu kamu menggunakan aplikasi IPIM Maghfirah. Ada yang bisa saya bantu?</div>
+      <button onclick="pimBotToggleDark()" title="Dark Mode" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:13px">🌙</button>
+      <button onclick="pimBotClearChat()" title="Hapus Chat" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:13px">🗑️</button>
+      <button onclick="toggleChat()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <div id="pimBotMessages" class="pim-bot-messages" style="flex:1;overflow-y:auto;padding:12px;background:#f5f5f5;display:flex;flex-direction:column;gap:8px">
+      <div class="pim-bot-message" style="display:flex;gap:8px;align-items:flex-start">
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#004d40,#00897b);display:flex;align-items:center;justify-content:center;color:white;font-size:16px;flex-shrink:0">🤖</div>
+        <div style="background:white;padding:14px 18px;border-radius:16px;font-size:13px;line-height:1.7;color:#333;max-width:85%;border:1px solid #e0e0e0">
+          <strong>Assalamu'alaikum! 👋</strong><br><br>
+          Aku <strong>PIM-Bot</strong>, asisten AI IPIM Maghfirah.<br><br>
+          🎯 <strong>Tanya apa saja:</strong> bantuan aplikasi, pembagian kelas, jadwal, agama, sains, atau curhat. Aku siap bantu dengan jawaban singkat & jelas!<br><br>
+          💡 <strong>Tips:</strong> Pakai voice input 🎤 atau quick actions di bawah.
         </div>
       </div>
-
-      <div class="pim-typing" id="pimTyping">
-        <div class="pim-typing-bubble">
-          <div class="pim-dot"></div>
-          <div class="pim-dot"></div>
-          <div class="pim-dot"></div>
-        </div>
-      </div>
-
-      <div class="pim-quick" id="pimQuick">
-        <button class="pim-quick-btn" onclick="pimQuickSend('Cara isi absensi sholat')">Absensi sholat</button>
-        <button class="pim-quick-btn" onclick="pimQuickSend('Cara baca Al-Quran offline')">Al-Qur\'an</button>
-        <button class="pim-quick-btn" onclick="pimQuickSend('Cara ganti bahasa ke Arab')">Ganti bahasa</button>
-        <button class="pim-quick-btn" onclick="pimQuickSend('Cara lapor pelanggaran')">Laporan</button>
-      </div>
-
-      <div class="pim-input-wrap">
-        <textarea
-          class="pim-input"
-          id="pimInput"
-          placeholder="Ketik pesan..."
-          rows="1"
-          onkeydown="pimHandleKey(event)"
-          oninput="pimAutoResize(this)"
-        ></textarea>
-        <button class="pim-send" id="pimSend" onclick="pimSendMessage()">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
+      <div id="pimBotQuickActions" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
+        ${QUICK_ACTIONS.map(qa => `
+          <button class="pim-bot-quick-btn" onclick="pimBotQuickAsk('${qa.text}')" style="background:white;border:1px solid #e0e0e0;border-radius:20px;padding:8px 14px;font-size:11.5px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;color:#333;border-left:3px solid ${qa.color}">
+            <i class="fa-solid ${qa.icon}" style="color:${qa.color};font-size:11px"></i>${qa.text}
+          </button>
+        `).join('')}
       </div>
     </div>
+    <div style="padding:10px 12px;background:white;border-top:1px solid #e0e0e0;display:flex;gap:8px;align-items:center;flex-shrink:0">
+      <button id="pimBotVoiceBtn" onclick="pimBotVoiceInput()" style="width:38px;height:38px;border-radius:50%;background:#f5f5f5;border:1px solid #e0e0e0;font-size:16px;cursor:pointer;flex-shrink:0" title="Voice Input">🎤</button>
+      <input id="pimBotInput" type="text" placeholder="Tanya apa saja..." style="flex:1;padding:11px 16px;border:1.5px solid #e0e0e0;border-radius:24px;font-size:13px;font-family:inherit;outline:none">
+      <button id="pimBotSend" onclick="pimBotSendMessage()" style="width:40px;height:40px;border-radius:50%;background:#004d40;color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0">▶</button>
+    </div>
+    <div style="text-align:center;padding:6px;font-size:9px;color:#999;background:#fafafa;border-top:1px solid #eee;flex-shrink:0">Powered by Gemini 2.0 Flash · 1.500/hari</div>
   `;
 
-  document.body.appendChild(widget);
+  document.body.appendChild(fab);
+  document.body.appendChild(chat);
+
+  document.getElementById('pimBotInput').addEventListener('keydown', (e) => { if(e.key==='Enter') pimBotSendMessage(); });
+  document.getElementById('pimBotHeaderInfo').addEventListener('click', () => {
+    pimBotMinimized=!pimBotMinimized;
+    const d=pimBotMinimized?'none':'flex';
+    document.getElementById('pimBotMessages').style.display=d;
+    document.getElementById('pimBotQuickActions').style.display=d==='none'?'none':'flex';
+    chat.querySelectorAll('div')[2].style.display=d==='none'?'none':'flex';
+    chat.querySelectorAll('div')[3].style.display=d==='none'?'none':'block';
+  });
 }
 
-// ── TOGGLE ──
-window.pimBotToggle = function() {
-  isOpen = !isOpen;
-  const win = document.getElementById('pimBotWindow');
-  win.classList.toggle('open', isOpen);
-  if (isOpen) {
-    document.getElementById('pimInput').focus();
-    const dot = document.querySelector('#pimBotToggle .notif-dot');
-    if (dot) dot.style.display = 'none';
-  }
-};
+// =============================================
+// DRAG (MULUS, HANYA FAB)
+// =============================================
+function startDrag(e){dragMoved=false;dragStartX=e.clientX;dragStartY=e.clientY;const fab=document.getElementById('pimBotFab');fab.style.cursor='grabbing';fab.style.animation='none';fab.style.transition='none';fab.setPointerCapture(e.pointerId);e.preventDefault();e.stopPropagation()}
+function onDrag(e){const fab=document.getElementById('pimBotFab');if(!fab.hasPointerCapture(e.pointerId))return;const dx=e.clientX-dragStartX,dy=e.clientY-dragStartY;if(Math.abs(dx)>2||Math.abs(dy)>2){dragMoved=true;botX+=dx;botY+=dy;botX=Math.max(0,Math.min(botX,window.innerWidth-58));botY=Math.max(0,Math.min(botY,window.innerHeight-58));fab.style.left=botX+'px';fab.style.top=botY+'px';dragStartX=e.clientX;dragStartY=e.clientY}}
+function endDrag(e){const fab=document.getElementById('pimBotFab');fab.style.cursor='grab';fab.style.transition='transform 0.2s ease,box-shadow 0.2s ease';fab.style.animation='pimPulse 2.5s infinite';if(e)fab.releasePointerCapture(e.pointerId)}
 
-// ── QUICK REPLY ──
-window.pimQuickSend = function(text) {
-  document.getElementById('pimInput').value = text;
-  pimSendMessage();
-  document.getElementById('pimQuick').style.display = 'none';
-};
+// =============================================
+// TOGGLE
+// =============================================
+function toggleChat(){const chat=document.getElementById('pimBotChat');pimBotOpen=!pimBotOpen;chat.style.display=pimBotOpen?'flex':'none';if(pimBotOpen){document.getElementById('pimBotMessages').style.display='flex';document.getElementById('pimBotQuickActions').style.display='flex';chat.querySelectorAll('div')[2].style.display='flex';chat.querySelectorAll('div')[3].style.display='block';pimBotMinimized=false;setTimeout(()=>document.getElementById('pimBotInput').focus(),300)}}
 
-// ── AUTO RESIZE TEXTAREA ──
-window.pimAutoResize = function(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
-};
+// =============================================
+// SEND MESSAGE (SINGKAT & JELAS)
+// =============================================
+async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');document.getElementById('pimBotQuickActions').style.display='none';const tid=pimBotAddTyping();
+try{
+const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:SYSTEM_PROMPT}]},contents:[{parts:[{text:msg}]}],generationConfig:{temperature:0.8,maxOutputTokens:500,topP:0.95}})});
+pimBotRemoveTyping(tid);const data=await res.json();
+if(data.candidates?.[0]?.content?.parts?.[0]?.text){pimBotAddMessage(data.candidates[0].content.parts[0].text,'bot')}
+else if(data.error){pimBotAddMessage('⚠️ Error: '+data.error.message,'bot')}
+else{pimBotAddMessage('⚠️ Maaf, coba lagi ya 😅','bot')}
+}catch(e){pimBotRemoveTyping(tid);console.error(e);pimBotAddMessage('❌ Gagal terhubung. Cek internetmu ya!','bot')}
+isTyping=false}
 
-// ── HANDLE ENTER ──
-window.pimHandleKey = function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    pimSendMessage();
-  }
-};
+// =============================================
+// QUICK ASK
+// =============================================
+function pimBotQuickAsk(text){if(!pimBotOpen)toggleChat();document.getElementById('pimBotInput').value=text;pimBotSendMessage()}
 
-// ── TAMBAH PESAN KE UI ──
-function pimAddMessage(text, role) {
-  const container = document.getElementById('pimMessages');
-  const div = document.createElement('div');
-  div.className = `pim-msg ${role}`;
-  
-  // Clean up formatting untuk tampilan HTML sederhana
-  let formattedText = text.replace(/\n/g, '<br>');
-  // Hapus bintang tebal markdown jika AI menggunakannya
-  formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  div.innerHTML = `<div class="pim-bubble">${formattedText}</div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
+// =============================================
+// VOICE INPUT
+// =============================================
+function pimBotVoiceInput(){const btn=document.getElementById('pimBotVoiceBtn');const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('⚠️ Voice input butuh Chrome ya!');return}
+const r=new SR();r.lang='id-ID';r.interimResults=false;
+if(isListening){r.stop();btn.style.background='#f5f5f5';btn.innerHTML='🎤';isListening=false;return}
+isListening=true;btn.style.background='#ff1744';btn.style.color='white';btn.innerHTML='🔴';r.start();
+r.onresult=e=>{document.getElementById('pimBotInput').value=e.results[0][0].transcript;btn.style.background='#4caf50';btn.innerHTML='✅';isListening=false;setTimeout(()=>{btn.style.background='#f5f5f5';btn.style.color='black';btn.innerHTML='🎤'},1000);pimBotSendMessage()}
+r.onerror=()=>{btn.style.background='#f5f5f5';btn.style.color='black';btn.innerHTML='🎤';isListening=false;alert('⚠️ Gagal mendengar. Coba lagi!')}}
 
-// ── SET TYPING ──
-function pimSetTyping(show) {
-  isTyping = show;
-  document.getElementById('pimTyping').classList.toggle('show', show);
-  document.getElementById('pimSend').disabled = show;
-  const messages = document.getElementById('pimMessages');
-  messages.scrollTop = messages.scrollHeight;
-}
+// =============================================
+// DARK MODE
+// =============================================
+function pimBotToggleDark(){darkMode=!darkMode;const c=document.getElementById('pimBotChat');const m=document.getElementById('pimBotMessages');const i=document.getElementById('pimBotInput');
+if(darkMode){c.style.background='#1e1e1e';m.style.background='#1a1a1a';i.style.background='#2d2d2d';i.style.color='#e0e0e0';i.style.borderColor='#3d3d3d'}
+else{c.style.background='white';m.style.background='#f5f5f5';i.style.background='white';i.style.color='#333';i.style.borderColor='#e0e0e0'}}
 
-// ── KIRIM PESAN (STRUKTUR JSON SUDAH DIPERBAIKI) ──
-window.pimSendMessage = async function() {
-  const input = document.getElementById('pimInput');
-  const text  = input.value.trim();
-  if (!text || isTyping) return;
+// =============================================
+// CLEAR
+// =============================================
+function pimBotClearChat(){if(confirm('Hapus percakapan?')){document.getElementById('pimBotMessages').innerHTML='';document.getElementById('pimBotQuickActions').style.display='flex';pimBotAddMessage('Chat dihapus! Tanyakan apa saja 😊','bot')}}
 
-  pimAddMessage(text, 'user');
-  input.value = '';
-  input.style.height = 'auto';
+// =============================================
+// ADD MESSAGE
+// =============================================
+function pimBotAddMessage(text,sender){const msgs=document.getElementById('pimBotMessages');const div=document.createElement('div');div.className='pim-bot-message';div.style.cssText=`display:flex;gap:8px;align-items:flex-start;flex-direction:${sender==='user'?'row-reverse':'row'}`;
+const av=document.createElement('div');av.style.cssText=`width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;${sender==='user'?'background:linear-gradient(135deg,#00897b,#4db6ac);color:white':'background:linear-gradient(135deg,#004d40,#00897b);color:white'}`;av.innerHTML=sender==='user'?'👤':'🤖';
+const bb=document.createElement('div');bb.style.cssText=`padding:10px 15px;border-radius:14px;font-size:13px;line-height:1.6;max-width:82%;word-break:break-word;white-space:pre-wrap;${sender==='user'?'background:#004d40;color:white':'background:white;color:#333;border:1px solid #e0e0e0'}`;bb.textContent=text;
+div.appendChild(av);div.appendChild(bb);msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
 
-  pimSetTyping(true);
+function pimBotAddTyping(){const id='typing-'+Date.now();const msgs=document.getElementById('pimBotMessages');const div=document.createElement('div');div.id=id;div.style.cssText='display:flex;gap:8px;align-items:flex-start';div.innerHTML='<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#004d40,#00897b);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;flex-shrink:0">🤖</div><div style="background:white;padding:14px 18px;border-radius:14px;border:1px solid #e0e0e0;display:flex;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .2s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .4s infinite;display:block"></span></div>';msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;return id}
+function pimBotRemoveTyping(id){const el=document.getElementById(id);if(el)el.remove()}
 
-  // Siapkan payload dengan system_instruction di root
-  const requestBody = {
-    system_instruction: {
-      parts: [{ text: SYSTEM_CONTEXT }]
-    },
-    contents: chatHistory.concat([{ role: 'user', parts: [{ text }] }]),
-    generationConfig: {
-      temperature: 0.3,       // Diturunkan agar AI lebih konsisten
-      maxOutputTokens: 250,   // Dibatasi agar hemat dan tetap ringkas
-      topP: 0.95
-    }
-  };
-
-  try {
-    const res = await fetch(PIM_BOT_CONFIG.ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    });
-
-    const data = await res.json();
-    
-    if (!res.ok) {
-      throw new Error(data.error?.message || 'Gagal terhubung ke AI');
-    }
-
-    // Ambil teks balasan
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak mengerti.';
-
-    // Simpan history agar percakapan bersambung
-    chatHistory.push({ role: 'user', parts: [{ text }] });
-    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
-
-    // Batasi history maksimal 10 giliran (20 pesan)
-    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
-
-    pimSetTyping(false);
-    pimAddMessage(reply, 'bot');
-
-  } catch(err) {
-    pimSetTyping(false);
-    console.error('PIM Bot error:', err);
-    pimAddMessage('Maaf, terjadi gangguan sistem. Silakan coba beberapa saat lagi.', 'bot');
-  }
-};
-
-// ── INIT ──
-document.addEventListener('DOMContentLoaded', () => {
-  renderPimBot();
-});
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded',()=>{createPimBot();console.log('🤖 PIM-Bot v3 siap!')});
+window.toggleChat=toggleChat;window.pimBotSendMessage=pimBotSendMessage;window.pimBotQuickAsk=pimBotQuickAsk;window.pimBotVoiceInput=pimBotVoiceInput;window.pimBotToggleDark=pimBotToggleDark;window.pimBotClearChat=pimBotClearChat;
