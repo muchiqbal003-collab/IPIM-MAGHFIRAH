@@ -1,12 +1,11 @@
 // =============================================
 // IPIM Maghfirah - PIM-Bot AI Assistant v3.1
 // Powered by Gemini 2.0 Flash
-// Fitur: Voice, Dark Mode, Pakar IPIM, Anti-Hilang
 // =============================================
 
-const GEMINI_API_KEY = 'AQ.Ab8RN6JzEbjvGWnUMjjY08w5DOMqw-E-4uO27n_J0GEeXexjmw';
+const GEMINI_API_KEY = 'AQ.Ab8RN6Ktl2e3zqrufKxmRHr75g8zKHJJ7yInBC484HDToSoWYg';
 
-// System prompt — PAKAR IPIM + BISA JAWAB APA SAJA
+// System prompt
 const SYSTEM_PROMPT = `
 Kamu adalah PIM-Bot, asisten AI IPIM Maghfirah yang SANGAT pintar.
 Kamu PAKAR dalam sistem IPIM dan juga bisa menjawab pertanyaan APAPUN (agama, sains, teknologi, dll).
@@ -23,13 +22,6 @@ Kamu PAKAR dalam sistem IPIM dan juga bisa menjawab pertanyaan APAPUN (agama, sa
 - Jika user tanya tentang pembagian kelas/matakuliah/jadwal, tanyakan dulu detailnya (role, semester, dll)
 - Beri solusi, bukan hanya informasi
 - Akhiri dengan semangat Islami singkat
-
-📊 KEMAMPUAN KHUSUS:
-1. Bantu analisis pembagian kelas
-2. Rekomendasi jadwal optimal
-3. Troubleshooting aplikasi
-4. Panduan langkah-demi-langkah
-5. Motivasi Islami
 `;
 
 // State
@@ -58,14 +50,12 @@ const QUICK_ACTIONS = [
 ];
 
 // =============================================
-// CREATE UI (dengan anti-duplicate)
+// CREATE UI
 // =============================================
 
 function createPimBot() {
-  // ⬇️ ANTI-DUPLICATE: Jangan buat ulang kalau sudah ada
   if (document.getElementById('pimBotFab')) return;
 
-  // CSS
   const style = document.createElement('style');
   style.id = 'pimBotStyle';
   style.textContent = `
@@ -135,7 +125,7 @@ function createPimBot() {
         <div style="background:white;padding:14px 18px;border-radius:16px;font-size:13px;line-height:1.7;color:#333;max-width:85%;border:1px solid #e0e0e0">
           <strong>Assalamu'alaikum! 👋</strong><br><br>
           Aku <strong>PIM-Bot</strong>, asisten AI IPIM Maghfirah.<br><br>
-          🎯 <strong>Tanya apa saja:</strong> bantuan aplikasi, pembagian kelas, jadwal, agama, sains, atau curhat. Aku siap bantu dengan jawaban singkat & jelas!<br><br>
+          🎯 <strong>Tanya apa saja:</strong> bantuan aplikasi, pembagian kelas, jadwal, agama, sains, atau curhat. Aku siap bantu!<br><br>
           💡 <strong>Tips:</strong> Pakai voice input 🎤 atau quick actions di bawah.
         </div>
       </div>
@@ -152,7 +142,7 @@ function createPimBot() {
       <input id="pimBotInput" type="text" placeholder="Tanya apa saja..." style="flex:1;padding:11px 16px;border:1.5px solid #e0e0e0;border-radius:24px;font-size:13px;font-family:inherit;outline:none">
       <button id="pimBotSend" onclick="pimBotSendMessage()" style="width:40px;height:40px;border-radius:50%;background:#004d40;color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0">▶</button>
     </div>
-    <div style="text-align:center;padding:6px;font-size:9px;color:#999;background:#fafafa;border-top:1px solid #eee;flex-shrink:0">Powered by Gemini 2.0 Flash · 1.500/hari</div>
+    <div style="text-align:center;padding:6px;font-size:9px;color:#999;background:#fafafa;border-top:1px solid #eee;flex-shrink:0">Powered by Gemini AI · Gratis</div>
   `;
 
   document.body.appendChild(fab);
@@ -172,7 +162,7 @@ function createPimBot() {
 }
 
 // =============================================
-// DRAG (MULUS, HANYA FAB)
+// DRAG
 // =============================================
 function startDrag(e){dragMoved=false;dragStartX=e.clientX;dragStartY=e.clientY;const fab=document.getElementById('pimBotFab');fab.style.cursor='grabbing';fab.style.animation='none';fab.style.transition='none';fab.setPointerCapture(e.pointerId);e.preventDefault();e.stopPropagation()}
 function onDrag(e){const fab=document.getElementById('pimBotFab');if(!fab||!fab.hasPointerCapture(e.pointerId))return;const dx=e.clientX-dragStartX,dy=e.clientY-dragStartY;if(Math.abs(dx)>2||Math.abs(dy)>2){dragMoved=true;botX+=dx;botY+=dy;botX=Math.max(0,Math.min(botX,window.innerWidth-58));botY=Math.max(0,Math.min(botY,window.innerHeight-58));fab.style.left=botX+'px';fab.style.top=botY+'px';dragStartX=e.clientX;dragStartY=e.clientY}}
@@ -184,27 +174,22 @@ function endDrag(e){const fab=document.getElementById('pimBotFab');if(!fab)retur
 function toggleChat(){const chat=document.getElementById('pimBotChat');if(!chat)return;pimBotOpen=!pimBotOpen;chat.style.display=pimBotOpen?'flex':'none';if(pimBotOpen){document.getElementById('pimBotMessages').style.display='flex';document.getElementById('pimBotQuickActions').style.display='flex';chat.querySelectorAll('div')[2].style.display='flex';chat.querySelectorAll('div')[3].style.display='block';pimBotMinimized=false;setTimeout(()=>{const inp=document.getElementById('pimBotInput');if(inp)inp.focus()},300)}}
 
 // =============================================
-// SEND MESSAGE
-// =============================================
-// =============================================
-// SEND MESSAGE via DuckDuckGo AI (GRATIS, NO KEY)
+// SEND MESSAGE (Gemini API)
 // =============================================
 async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');if(!input)return;const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='none';const tid=pimBotAddTyping();
 try{
-const res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{
+const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,{
   method:'POST',
   headers:{'Content-Type':'application/json'},
   body:JSON.stringify({
-    model:'gpt-4o-mini',
-    messages:[
-      {role:'system',content:SYSTEM_PROMPT},
-      {role:'user',content:msg}
-    ]
+    system_instruction:{parts:[{text:SYSTEM_PROMPT}]},
+    contents:[{parts:[{text:msg}]}],
+    generationConfig:{temperature:0.8,maxOutputTokens:500,topP:0.95}
   })
 });
 pimBotRemoveTyping(tid);const data=await res.json();
-if(data.message){pimBotAddMessage(data.message,'bot')}
-else if(data.choices?.[0]?.message?.content){pimBotAddMessage(data.choices[0].message.content,'bot')}
+if(data.candidates?.[0]?.content?.parts?.[0]?.text){pimBotAddMessage(data.candidates[0].content.parts[0].text,'bot')}
+else if(data.error){pimBotAddMessage('⚠️ Error: '+data.error.message,'bot')}
 else{pimBotAddMessage('⚠️ Maaf, coba lagi ya 😅','bot')}
 }catch(e){pimBotRemoveTyping(tid);console.error(e);pimBotAddMessage('❌ Gagal terhubung. Cek internetmu ya!','bot')}
 isTyping=false}
@@ -249,25 +234,15 @@ function pimBotAddTyping(){const id='typing-'+Date.now();const msgs=document.get
 function pimBotRemoveTyping(id){const el=document.getElementById(id);if(el)el.remove()}
 
 // =============================================
-// INIT (DIPERBAIKI — JALAN DI SEMUA HALAMAN)
+// INIT
 // =============================================
 (function initPimBot() {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      createPimBot();
-      console.log('🤖 PIM-Bot v3.1 siap!');
-    });
+    document.addEventListener('DOMContentLoaded', () => { createPimBot(); console.log('🤖 PIM-Bot siap!'); });
   } else {
-    // DOM sudah ready
     createPimBot();
-    console.log('🤖 PIM-Bot v3.1 siap!');
+    console.log('🤖 PIM-Bot siap!');
   }
 })();
 
-// Export ke global scope
-window.toggleChat = toggleChat;
-window.pimBotSendMessage = pimBotSendMessage;
-window.pimBotQuickAsk = pimBotQuickAsk;
-window.pimBotVoiceInput = pimBotVoiceInput;
-window.pimBotToggleDark = pimBotToggleDark;
-window.pimBotClearChat = pimBotClearChat;
+window.toggleChat=toggleChat;window.pimBotSendMessage=pimBotSendMessage;window.pimBotQuickAsk=pimBotQuickAsk;window.pimBotVoiceInput=pimBotVoiceInput;window.pimBotToggleDark=pimBotToggleDark;window.pimBotClearChat=pimBotClearChat;
