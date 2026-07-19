@@ -1,7 +1,7 @@
 // =============================================
-// IPIM Maghfirah - PIM-Bot AI Assistant v3.0
+// IPIM Maghfirah - PIM-Bot AI Assistant v3.1
 // Powered by Gemini 2.0 Flash
-// Fitur: Voice, Dark Mode, Pakar IPIM, Bisa Jawab Apa Saja
+// Fitur: Voice, Dark Mode, Pakar IPIM, Anti-Hilang
 // =============================================
 
 const GEMINI_API_KEY = 'AQ.Ab8RN6J5nxIyg20Xumdc4v6Fh-9IXecBeKJIGepD-RhV-rVvWg';
@@ -58,12 +58,16 @@ const QUICK_ACTIONS = [
 ];
 
 // =============================================
-// CREATE UI
+// CREATE UI (dengan anti-duplicate)
 // =============================================
 
 function createPimBot() {
+  // ⬇️ ANTI-DUPLICATE: Jangan buat ulang kalau sudah ada
+  if (document.getElementById('pimBotFab')) return;
+
   // CSS
   const style = document.createElement('style');
+  style.id = 'pimBotStyle';
   style.textContent = `
     @keyframes pimPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,77,64,0.4)}50%{box-shadow:0 0 0 14px rgba(0,77,64,0)}}
     @keyframes pimTyping{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-8px);opacity:1}}
@@ -163,24 +167,26 @@ function createPimBot() {
     chat.querySelectorAll('div')[2].style.display=d==='none'?'none':'flex';
     chat.querySelectorAll('div')[3].style.display=d==='none'?'none':'block';
   });
+
+  console.log('🤖 PIM-Bot created!');
 }
 
 // =============================================
 // DRAG (MULUS, HANYA FAB)
 // =============================================
 function startDrag(e){dragMoved=false;dragStartX=e.clientX;dragStartY=e.clientY;const fab=document.getElementById('pimBotFab');fab.style.cursor='grabbing';fab.style.animation='none';fab.style.transition='none';fab.setPointerCapture(e.pointerId);e.preventDefault();e.stopPropagation()}
-function onDrag(e){const fab=document.getElementById('pimBotFab');if(!fab.hasPointerCapture(e.pointerId))return;const dx=e.clientX-dragStartX,dy=e.clientY-dragStartY;if(Math.abs(dx)>2||Math.abs(dy)>2){dragMoved=true;botX+=dx;botY+=dy;botX=Math.max(0,Math.min(botX,window.innerWidth-58));botY=Math.max(0,Math.min(botY,window.innerHeight-58));fab.style.left=botX+'px';fab.style.top=botY+'px';dragStartX=e.clientX;dragStartY=e.clientY}}
-function endDrag(e){const fab=document.getElementById('pimBotFab');fab.style.cursor='grab';fab.style.transition='transform 0.2s ease,box-shadow 0.2s ease';fab.style.animation='pimPulse 2.5s infinite';if(e)fab.releasePointerCapture(e.pointerId)}
+function onDrag(e){const fab=document.getElementById('pimBotFab');if(!fab||!fab.hasPointerCapture(e.pointerId))return;const dx=e.clientX-dragStartX,dy=e.clientY-dragStartY;if(Math.abs(dx)>2||Math.abs(dy)>2){dragMoved=true;botX+=dx;botY+=dy;botX=Math.max(0,Math.min(botX,window.innerWidth-58));botY=Math.max(0,Math.min(botY,window.innerHeight-58));fab.style.left=botX+'px';fab.style.top=botY+'px';dragStartX=e.clientX;dragStartY=e.clientY}}
+function endDrag(e){const fab=document.getElementById('pimBotFab');if(!fab)return;fab.style.cursor='grab';fab.style.transition='transform 0.2s ease,box-shadow 0.2s ease';fab.style.animation='pimPulse 2.5s infinite';if(e)fab.releasePointerCapture(e.pointerId)}
 
 // =============================================
 // TOGGLE
 // =============================================
-function toggleChat(){const chat=document.getElementById('pimBotChat');pimBotOpen=!pimBotOpen;chat.style.display=pimBotOpen?'flex':'none';if(pimBotOpen){document.getElementById('pimBotMessages').style.display='flex';document.getElementById('pimBotQuickActions').style.display='flex';chat.querySelectorAll('div')[2].style.display='flex';chat.querySelectorAll('div')[3].style.display='block';pimBotMinimized=false;setTimeout(()=>document.getElementById('pimBotInput').focus(),300)}}
+function toggleChat(){const chat=document.getElementById('pimBotChat');if(!chat)return;pimBotOpen=!pimBotOpen;chat.style.display=pimBotOpen?'flex':'none';if(pimBotOpen){document.getElementById('pimBotMessages').style.display='flex';document.getElementById('pimBotQuickActions').style.display='flex';chat.querySelectorAll('div')[2].style.display='flex';chat.querySelectorAll('div')[3].style.display='block';pimBotMinimized=false;setTimeout(()=>{const inp=document.getElementById('pimBotInput');if(inp)inp.focus()},300)}}
 
 // =============================================
-// SEND MESSAGE (SINGKAT & JELAS)
+// SEND MESSAGE
 // =============================================
-async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');document.getElementById('pimBotQuickActions').style.display='none';const tid=pimBotAddTyping();
+async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');if(!input)return;const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='none';const tid=pimBotAddTyping();
 try{
 const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:SYSTEM_PROMPT}]},contents:[{parts:[{text:msg}]}],generationConfig:{temperature:0.8,maxOutputTokens:500,topP:0.95}})});
 pimBotRemoveTyping(tid);const data=await res.json();
@@ -193,7 +199,7 @@ isTyping=false}
 // =============================================
 // QUICK ASK
 // =============================================
-function pimBotQuickAsk(text){if(!pimBotOpen)toggleChat();document.getElementById('pimBotInput').value=text;pimBotSendMessage()}
+function pimBotQuickAsk(text){if(!pimBotOpen)toggleChat();const input=document.getElementById('pimBotInput');if(input)input.value=text;pimBotSendMessage()}
 
 // =============================================
 // VOICE INPUT
@@ -202,34 +208,53 @@ function pimBotVoiceInput(){const btn=document.getElementById('pimBotVoiceBtn');
 const r=new SR();r.lang='id-ID';r.interimResults=false;
 if(isListening){r.stop();btn.style.background='#f5f5f5';btn.innerHTML='🎤';isListening=false;return}
 isListening=true;btn.style.background='#ff1744';btn.style.color='white';btn.innerHTML='🔴';r.start();
-r.onresult=e=>{document.getElementById('pimBotInput').value=e.results[0][0].transcript;btn.style.background='#4caf50';btn.innerHTML='✅';isListening=false;setTimeout(()=>{btn.style.background='#f5f5f5';btn.style.color='black';btn.innerHTML='🎤'},1000);pimBotSendMessage()}
+r.onresult=e=>{const input=document.getElementById('pimBotInput');if(input)input.value=e.results[0][0].transcript;btn.style.background='#4caf50';btn.innerHTML='✅';isListening=false;setTimeout(()=>{btn.style.background='#f5f5f5';btn.style.color='black';btn.innerHTML='🎤'},1000);pimBotSendMessage()}
 r.onerror=()=>{btn.style.background='#f5f5f5';btn.style.color='black';btn.innerHTML='🎤';isListening=false;alert('⚠️ Gagal mendengar. Coba lagi!')}}
 
 // =============================================
 // DARK MODE
 // =============================================
 function pimBotToggleDark(){darkMode=!darkMode;const c=document.getElementById('pimBotChat');const m=document.getElementById('pimBotMessages');const i=document.getElementById('pimBotInput');
+if(!c||!m||!i)return;
 if(darkMode){c.style.background='#1e1e1e';m.style.background='#1a1a1a';i.style.background='#2d2d2d';i.style.color='#e0e0e0';i.style.borderColor='#3d3d3d'}
 else{c.style.background='white';m.style.background='#f5f5f5';i.style.background='white';i.style.color='#333';i.style.borderColor='#e0e0e0'}}
 
 // =============================================
 // CLEAR
 // =============================================
-function pimBotClearChat(){if(confirm('Hapus percakapan?')){document.getElementById('pimBotMessages').innerHTML='';document.getElementById('pimBotQuickActions').style.display='flex';pimBotAddMessage('Chat dihapus! Tanyakan apa saja 😊','bot')}}
+function pimBotClearChat(){if(confirm('Hapus percakapan?')){const msgs=document.getElementById('pimBotMessages');if(msgs)msgs.innerHTML='';const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='flex';pimBotAddMessage('Chat dihapus! Tanyakan apa saja 😊','bot')}}
 
 // =============================================
 // ADD MESSAGE
 // =============================================
-function pimBotAddMessage(text,sender){const msgs=document.getElementById('pimBotMessages');const div=document.createElement('div');div.className='pim-bot-message';div.style.cssText=`display:flex;gap:8px;align-items:flex-start;flex-direction:${sender==='user'?'row-reverse':'row'}`;
+function pimBotAddMessage(text,sender){const msgs=document.getElementById('pimBotMessages');if(!msgs)return;const div=document.createElement('div');div.className='pim-bot-message';div.style.cssText=`display:flex;gap:8px;align-items:flex-start;flex-direction:${sender==='user'?'row-reverse':'row'}`;
 const av=document.createElement('div');av.style.cssText=`width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;${sender==='user'?'background:linear-gradient(135deg,#00897b,#4db6ac);color:white':'background:linear-gradient(135deg,#004d40,#00897b);color:white'}`;av.innerHTML=sender==='user'?'👤':'🤖';
 const bb=document.createElement('div');bb.style.cssText=`padding:10px 15px;border-radius:14px;font-size:13px;line-height:1.6;max-width:82%;word-break:break-word;white-space:pre-wrap;${sender==='user'?'background:#004d40;color:white':'background:white;color:#333;border:1px solid #e0e0e0'}`;bb.textContent=text;
 div.appendChild(av);div.appendChild(bb);msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
 
-function pimBotAddTyping(){const id='typing-'+Date.now();const msgs=document.getElementById('pimBotMessages');const div=document.createElement('div');div.id=id;div.style.cssText='display:flex;gap:8px;align-items:flex-start';div.innerHTML='<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#004d40,#00897b);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;flex-shrink:0">🤖</div><div style="background:white;padding:14px 18px;border-radius:14px;border:1px solid #e0e0e0;display:flex;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .2s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .4s infinite;display:block"></span></div>';msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;return id}
+function pimBotAddTyping(){const id='typing-'+Date.now();const msgs=document.getElementById('pimBotMessages');if(!msgs)return id;const div=document.createElement('div');div.id=id;div.style.cssText='display:flex;gap:8px;align-items:flex-start';div.innerHTML='<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#004d40,#00897b);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;flex-shrink:0">🤖</div><div style="background:white;padding:14px 18px;border-radius:14px;border:1px solid #e0e0e0;display:flex;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .2s infinite;display:block"></span><span style="width:8px;height:8px;border-radius:50%;background:#999;animation:pimTyping 1.4s .4s infinite;display:block"></span></div>';msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;return id}
 function pimBotRemoveTyping(id){const el=document.getElementById(id);if(el)el.remove()}
 
 // =============================================
-// INIT
+// INIT (DIPERBAIKI — JALAN DI SEMUA HALAMAN)
 // =============================================
-document.addEventListener('DOMContentLoaded',()=>{createPimBot();console.log('🤖 PIM-Bot v3 siap!')});
-window.toggleChat=toggleChat;window.pimBotSendMessage=pimBotSendMessage;window.pimBotQuickAsk=pimBotQuickAsk;window.pimBotVoiceInput=pimBotVoiceInput;window.pimBotToggleDark=pimBotToggleDark;window.pimBotClearChat=pimBotClearChat;
+(function initPimBot() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      createPimBot();
+      console.log('🤖 PIM-Bot v3.1 siap!');
+    });
+  } else {
+    // DOM sudah ready
+    createPimBot();
+    console.log('🤖 PIM-Bot v3.1 siap!');
+  }
+})();
+
+// Export ke global scope
+window.toggleChat = toggleChat;
+window.pimBotSendMessage = pimBotSendMessage;
+window.pimBotQuickAsk = pimBotQuickAsk;
+window.pimBotVoiceInput = pimBotVoiceInput;
+window.pimBotToggleDark = pimBotToggleDark;
+window.pimBotClearChat = pimBotClearChat;
