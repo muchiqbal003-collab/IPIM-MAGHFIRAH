@@ -186,27 +186,28 @@ function toggleChat(){const chat=document.getElementById('pimBotChat');if(!chat)
 // =============================================
 // SEND MESSAGE
 // =============================================
+// =============================================
+// SEND MESSAGE via DuckDuckGo AI (GRATIS, NO KEY)
+// =============================================
 async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');if(!input)return;const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='none';const tid=pimBotAddTyping();
 try{
-const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',{
+const res=await fetch('https://duckduckgo.com/duckchat/v1/chat',{
   method:'POST',
-  headers:{
-    'Content-Type':'application/json',
-    'x-goog-api-key': GEMINI_API_KEY
-  },
+  headers:{'Content-Type':'application/json'},
   body:JSON.stringify({
-    system_instruction:{parts:[{text:SYSTEM_PROMPT}]},
-    contents:[{parts:[{text:msg}]}],
-    generationConfig:{temperature:0.8,maxOutputTokens:500,topP:0.95}
+    model:'gpt-4o-mini',
+    messages:[
+      {role:'system',content:SYSTEM_PROMPT},
+      {role:'user',content:msg}
+    ]
   })
 });
 pimBotRemoveTyping(tid);const data=await res.json();
-if(data.candidates?.[0]?.content?.parts?.[0]?.text){pimBotAddMessage(data.candidates[0].content.parts[0].text,'bot')}
-else if(data.error){pimBotAddMessage('⚠️ Error: '+data.error.message,'bot')}
+if(data.message){pimBotAddMessage(data.message,'bot')}
+else if(data.choices?.[0]?.message?.content){pimBotAddMessage(data.choices[0].message.content,'bot')}
 else{pimBotAddMessage('⚠️ Maaf, coba lagi ya 😅','bot')}
 }catch(e){pimBotRemoveTyping(tid);console.error(e);pimBotAddMessage('❌ Gagal terhubung. Cek internetmu ya!','bot')}
 isTyping=false}
-
 
 // =============================================
 // QUICK ASK
