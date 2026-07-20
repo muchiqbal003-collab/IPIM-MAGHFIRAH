@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- SheetJS untuk baca/tulis Excel -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
@@ -15,6 +17,7 @@
       --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
       --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
       --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
+      --blue: #1565c0; --blue-light: #e3f2fd;
       --sidebar-width: 260px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
       --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease;
@@ -48,9 +51,10 @@
     .btn-success { background: var(--green); color: white; } .btn-success:hover { background: #008c4a; }
     .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-info { background: var(--blue-light); color: var(--blue); } .btn-info:hover { background: #bbdefb; }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    .action-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .action-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
     .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 20px; }
     .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .card-header h3 { font-size: 14px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
@@ -73,6 +77,10 @@
     .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
     .alert-success { background: var(--green-light); color: #1b5e20; }
     .alert-error { background: var(--red-light); color: #b71c1c; }
+
+    .import-preview { max-height: 200px; overflow-y: auto; margin: 12px 0; font-size: 11px; }
+    .import-preview table { font-size: 10px; }
+    .import-preview .error-row { background: #fce4ec; }
 
     @media (max-width: 1024px) { .form-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 16px 12px; } .form-grid { grid-template-columns: 1fr; } }
@@ -99,12 +107,10 @@
         <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
         <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
         <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
-     
       </div>
       <div class="nav-section"><div class="nav-section-title">Akademik</div>
         <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
         <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
-           
         <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
         <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
       </div>
@@ -115,11 +121,10 @@
     </div>
   </aside>
 
-
   <!-- MAIN CONTENT -->
   <main class="main-content">
     <div class="topbar">
-      <div class="page-title"><h1>📖 Data Matakuliah</h1><p>Kelola mata kuliah</p></div>
+      <div class="page-title"><h1>📖 Data Matakuliah</h1><p>Kelola mata kuliah · Import Excel</p></div>
       <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     </div>
 
@@ -127,14 +132,27 @@
     <div id="alertError" class="alert alert-error"></div>
 
     <!-- Action Bar -->
-    <div class="action-bar" style="margin-bottom:16px;">
+    <div class="action-bar">
       <button class="btn btn-primary btn-sm" onclick="showForm()"><i class="fa-solid fa-plus"></i> Tambah</button>
-      <button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       <button class="btn btn-success btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
-      <button class="btn btn-outline btn-sm" onclick="document.getElementById('csvFile').click()"><i class="fa-solid fa-upload"></i> Import CSV</button>
-      <button class="btn btn-outline btn-sm" onclick="downloadTemplate()"><i class="fa-solid fa-download"></i> Template</button>
-      <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="importCSV(event)">
+      <button class="btn btn-info btn-sm" onclick="document.getElementById('excelFile').click()"><i class="fa-solid fa-upload"></i> Import Excel</button>
+      <button class="btn btn-outline btn-sm" onclick="downloadTemplate()"><i class="fa-solid fa-download"></i> Template Excel</button>
+      <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none;" onchange="importExcel(event)">
       <input type="text" id="searchInput" placeholder="🔍 Cari..." style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;margin-left:auto;max-width:200px;" onkeyup="filterTable()">
+    </div>
+
+    <!-- Preview Import -->
+    <div class="card" id="previewCard" style="display:none;">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-eye"></i> Preview Import (<span id="previewCount">0</span> data)</h3>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-success btn-sm" onclick="confirmImport()"><i class="fa-solid fa-check"></i> Import Semua</button>
+          <button class="btn btn-outline btn-sm" onclick="cancelImport()"><i class="fa-solid fa-xmark"></i> Batal</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="import-preview" id="previewTable"></div>
+      </div>
     </div>
 
     <!-- Form Tambah/Edit -->
@@ -147,7 +165,7 @@
             <div class="form-group"><label>Nama Matakuliah</label><input type="text" id="nama" placeholder="Pengantar Manajemen" required></div>
             <div class="form-group"><label>SKS</label><input type="number" id="sks" placeholder="3" required min="1" max="8"></div>
             <div class="form-group"><label>Prodi</label><select id="prodiId" required><option value="">Pilih Prodi...</option></select></div>
-            <div class="form-group"><label>Semester</label><select id="semester"><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option><option value="4">Semester 4</option><option value="5">Semester 5</option><option value="6">Semester 6</option><option value="7">Semester 7</option><option value="8">Semester 8</option></select></div>
+            <div class="form-group"><label>Semester</label><select id="semester"><option value="i'dad">Semester i'dad</option><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option><option value="4">Semester 4</option><option value="5">Semester 5</option><option value="6">Semester 6</option><option value="7">Semester 7</option><option value="8">Semester 8</option></select></div>
             <div class="form-group"><label>Status</label><select id="status"><option value="aktif">Aktif</option><option value="nonaktif">Non-Aktif</option></select></div>
             <div class="form-group"><label>&nbsp;</label><div style="display:flex;gap:8px;"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Simpan</button><button type="button" class="btn btn-outline btn-sm" onclick="hideForm()">Batal</button></div></div>
           </div>
@@ -176,6 +194,8 @@
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
     let allMK = [];
+    let importData = [];
+    let prodiMap = {};
 
     function showAlert(type, text) {
       const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
@@ -192,7 +212,15 @@
         const snap = await db.collection('prodi').orderBy('nama').get();
         const sel = document.getElementById('prodiId');
         sel.innerHTML = '<option value="">Pilih Prodi...</option>';
-        snap.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; sel.appendChild(o); });
+        prodiMap = {};
+        snap.forEach(d => { 
+          const o = document.createElement('option'); 
+          o.value = d.id; 
+          o.textContent = d.data().nama; 
+          sel.appendChild(o); 
+          prodiMap[d.data().nama.toLowerCase()] = d.id;
+          prodiMap[d.id] = d.data().nama;
+        });
       } catch(e) { console.error(e); }
     }
 
@@ -237,6 +265,225 @@
       renderTable(filtered);
     }
 
+    // ============================================
+    // IMPORT EXCEL (pakai SheetJS)
+    // ============================================
+    function importExcel(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+          
+          if (rows.length < 2) {
+            showAlert('error', 'File Excel kosong atau format salah!');
+            return;
+          }
+          
+          // Parse header
+          const header = rows[0].map(h => String(h || '').toLowerCase().trim());
+          const kodeIdx = header.findIndex(h => h.includes('kode'));
+          const namaIdx = header.findIndex(h => h.includes('nama'));
+          const sksIdx = header.findIndex(h => h.includes('sks'));
+          const prodiIdx = header.findIndex(h => h.includes('prodi'));
+          const semesterIdx = header.findIndex(h => h.includes('semester'));
+          const statusIdx = header.findIndex(h => h.includes('status'));
+          
+          if (namaIdx === -1) {
+            showAlert('error', 'Kolom "Nama" wajib ada di Excel!');
+            return;
+          }
+          
+          importData = [];
+          const errors = [];
+          
+          for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (!row || row.every(c => !c)) continue; // skip baris kosong
+            
+            const kode = kodeIdx >= 0 ? String(row[kodeIdx] || '').trim().toUpperCase() : '';
+            const nama = namaIdx >= 0 ? String(row[namaIdx] || '').trim() : '';
+            const sks = sksIdx >= 0 ? parseInt(row[sksIdx]) || 2 : 2;
+            const prodiNama = prodiIdx >= 0 ? String(row[prodiIdx] || '').trim() : '';
+            const semester = semesterIdx >= 0 ? String(row[semesterIdx] || '1').trim() : '1';
+            const status = statusIdx >= 0 ? String(row[statusIdx] || 'aktif').trim().toLowerCase() : 'aktif';
+            
+            if (!nama) continue;
+            
+            const prodiId = prodiMap[prodiNama.toLowerCase()] || '';
+            
+            importData.push({
+              kode, nama, sks, prodiId, prodiNama: prodiId ? prodiNama : '', semester,
+              status: status === 'nonaktif' ? 'nonaktif' : 'aktif',
+              rowNum: i + 1,
+              errors: !prodiId && prodiNama ? ['Prodi tidak ditemukan'] : []
+            });
+            
+            if (!prodiId && prodiNama) errors.push(`Baris ${i+1}: Prodi "${prodiNama}" tidak ditemukan`);
+          }
+          
+          // Tampilkan preview
+          showImportPreview(errors);
+          
+        } catch (err) {
+          console.error(err);
+          showAlert('error', 'Gagal membaca file Excel! Pastikan formatnya benar.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      event.target.value = ''; // Reset file input
+    }
+
+    function showImportPreview(errors) {
+      if (importData.length === 0) {
+        showAlert('error', 'Tidak ada data valid untuk diimport!');
+        return;
+      }
+      
+      document.getElementById('previewCount').textContent = importData.length;
+      
+      let html = '<table><thead><tr><th>#</th><th>Kode</th><th>Nama</th><th>SKS</th><th>Prodi</th><th>Semester</th><th>Status</th></tr></thead><tbody>';
+      importData.forEach((d, i) => {
+        const errClass = d.errors.length > 0 ? 'error-row' : '';
+        html += `<tr class="${errClass}">
+          <td>${i+1}</td>
+          <td>${d.kode || '-'}</td>
+          <td><strong>${d.nama}</strong></td>
+          <td>${d.sks}</td>
+          <td>${d.prodiNama || '<span style="color:red">?</span>'}</td>
+          <td>${d.semester}</td>
+          <td>${d.status}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      
+      if (errors.length > 0) {
+        html += '<div style="color:var(--red);margin-top:8px;font-size:11px;">⚠️ ' + errors.join('<br>') + '</div>';
+      }
+      
+      document.getElementById('previewTable').innerHTML = html;
+      document.getElementById('previewCard').style.display = 'block';
+      document.getElementById('previewCard').scrollIntoView({behavior:'smooth'});
+    }
+
+    async function confirmImport() {
+      if (importData.length === 0) return;
+      
+      const btn = document.querySelector('#previewCard .btn-success');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengimport...';
+      
+      let count = 0;
+      const batch = db.batch();
+      
+      for (const d of importData) {
+        const ref = db.collection('matakuliah').doc();
+        batch.set(ref, {
+          kode: d.kode,
+          nama: d.nama,
+          sks: d.sks,
+          prodiId: d.prodiId,
+          prodiNama: d.prodiNama || '-',
+          semester: d.semester,
+          status: d.status,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        count++;
+        
+        // Firestore batch max 500
+        if (count >= 500) break;
+      }
+      
+      try {
+        await batch.commit();
+        showAlert('success', `${count} matakuliah berhasil diimport!`);
+        cancelImport();
+        loadMatakuliah();
+      } catch (e) {
+        showAlert('error', 'Gagal import: ' + e.message);
+      }
+      
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Import Semua';
+    }
+
+    function cancelImport() {
+      importData = [];
+      document.getElementById('previewCard').style.display = 'none';
+    }
+
+    // ============================================
+    // EXPORT EXCEL
+    // ============================================
+    function exportExcel() {
+      if (allMK.length === 0) { alert('Tidak ada data!'); return; }
+      
+      const data = allMK.map((d, i) => ({
+        No: i + 1,
+        Kode: d.kode || '',
+        Nama: d.nama || '',
+        SKS: d.sks || '',
+        Prodi: d.prodiNama || '',
+        Semester: d.semester || '',
+        Status: d.status || 'aktif'
+      }));
+      
+      const ws = XLSX.utils.json_to_sheet(data);
+      
+      // Set lebar kolom
+      ws['!cols'] = [
+        { wch: 5 },  // No
+        { wch: 12 }, // Kode
+        { wch: 35 }, // Nama
+        { wch: 6 },  // SKS
+        { wch: 15 }, // Prodi
+        { wch: 10 }, // Semester
+        { wch: 10 }  // Status
+      ];
+      
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Matakuliah');
+      XLSX.writeFile(wb, 'data-matakuliah.xlsx');
+      showAlert('success', 'Data diexport ke Excel!');
+    }
+
+    // ============================================
+    // TEMPLATE EXCEL
+    // ============================================
+    function downloadTemplate() {
+      const template = [
+        { Kode: 'MPI101', Nama: 'Pengantar Manajemen', SKS: 3, Prodi: 'MPI', Semester: 1, Status: 'aktif' },
+        { Kode: 'PAI102', Nama: 'Aqidah Akhlak', SKS: 2, Prodi: 'PAI', Semester: 1, Status: 'aktif' },
+        { Kode: '', Nama: '', SKS: '', Prodi: '', Semester: '', Status: '' }
+      ];
+      
+      const ws = XLSX.utils.json_to_sheet(template);
+      ws['!cols'] = [
+        { wch: 12 }, { wch: 35 }, { wch: 6 }, { wch: 15 }, { wch: 10 }, { wch: 10 }
+      ];
+      
+      // Highlight header
+      ws['A1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      ws['B1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      ws['C1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      ws['D1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      ws['E1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      ws['F1'].s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "004d40" } } };
+      
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Template');
+      XLSX.writeFile(wb, 'template-matakuliah.xlsx');
+      showAlert('success', 'Template Excel didownload! Isi dan import kembali.');
+    }
+
+    // ============================================
+    // CRUD
+    // ============================================
     document.getElementById('mkForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const kode = document.getElementById('kode').value.trim().toUpperCase();
@@ -248,8 +495,7 @@
       const editId = document.getElementById('editId').value;
       if (!kode || !nama || !sks || !prodiId) { showAlert('error', 'Kode, Nama, SKS, dan Prodi wajib!'); return; }
 
-      let prodiNama = '-';
-      try { const p = await db.collection('prodi').doc(prodiId).get(); if(p.exists) prodiNama = p.data().nama; } catch(e) {}
+      let prodiNama = prodiMap[prodiId] || '-';
 
       const btn = this.querySelector('button[type="submit"]');
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
@@ -290,63 +536,6 @@
       showAlert('success', 'Dihapus!');
       loadMatakuliah();
     };
-
-    function exportCSV() {
-      if (allMK.length === 0) { alert('Tidak ada data!'); return; }
-      let csv = 'Kode,Nama,SKS,Prodi,Semester,Status\n';
-      allMK.forEach(d => { csv += `"${d.kode||''}","${d.nama||''}","${d.sks||''}","${d.prodiNama||''}","${d.semester||''}","${d.status||''}"\n`; });
-      downloadFile(csv, 'data-matakuliah.csv', 'text/csv');
-    }
-
-    function exportExcel() {
-      if (allMK.length === 0) { alert('Tidak ada data!'); return; }
-      let csv = '\uFEFFKode,Nama,SKS,Prodi,Semester,Status\n';
-      allMK.forEach(d => { csv += `"${d.kode||''}","${d.nama||''}","${d.sks||''}","${d.prodiNama||''}","${d.semester||''}","${d.status||''}"\n`; });
-      downloadFile(csv, 'data-matakuliah.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    }
-
-    function downloadTemplate() {
-      const template = 'Kode,Nama,SKS,Prodi,Semester,Status\nMPI101,Pengantar Manajemen,3,MPI,1,aktif\n';
-      downloadFile(template, 'template-matakuliah.csv', 'text/csv');
-      showAlert('success', 'Template didownload!');
-    }
-
-    function importCSV(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const text = e.target.result;
-        const rows = text.split('\n').filter(r => r.trim());
-        if (rows.length < 2) { showAlert('error', 'File CSV kosong!'); return; }
-        let count = 0;
-        for (let i = 1; i < rows.length; i++) {
-          const cols = rows[i].split(',');
-          if (cols.length >= 6) {
-            const [kode, nama, sks, prodiNama, semester, status] = cols.map(c => c.trim().replace(/"/g, ''));
-            let prodiId = '';
-            try { const pSnap = await db.collection('prodi').where('nama','==',prodiNama).get(); if(!pSnap.empty) prodiId = pSnap.docs[0].id; } catch(e) {}
-            await db.collection('matakuliah').add({
-              kode: kode.toUpperCase(), nama, sks: parseInt(sks) || 1,
-              prodiId, prodiNama: prodiId ? prodiNama : '-',
-              semester, status: status || 'aktif',
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            count++;
-          }
-        }
-        showAlert('success', `${count} matakuliah berhasil diimport!`);
-        loadMatakuliah();
-      };
-      reader.readAsText(file);
-    }
-
-    function downloadFile(content, filename, mimeType) {
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-      URL.revokeObjectURL(url);
-    }
 
     window.logout = function() {
       if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); }
