@@ -1,9 +1,10 @@
 // =============================================
-// IPIM Maghfirah - PIM-Bot AI Assistant v3.2
-// Powered by DeepSeek (GRATIS UNLIMITED)
+// IPIM Maghfirah - PIM-Bot AI Assistant v4.0
+// Powered by Gemini Flash
 // =============================================
 
-const DEEPSEEK_API_KEY = 'sk-669f0559d1a548ea97ebd8512266560c';
+const GEMINI_API_KEY = 'AQ.Ab8RN6Kz3NaYeNtgUFgBttbK8yckVLnybDUcNikg3welAyU0_w';
+const GEMINI_MODEL = 'gemini-flash-latest';
 
 // System prompt
 const SYSTEM_PROMPT = `
@@ -19,7 +20,7 @@ Kamu PAKAR dalam sistem IPIM dan juga bisa menjawab pertanyaan APAPUN (agama, sa
 - Gunakan bahasa Indonesia santai tapi sopan
 - Maksimal 3-5 kalimat per jawaban, kecuali diminta detail
 - Pakai emoji secukupnya
-- Jika user tanya tentang pembagian kelas/matakuliah/jadwal, tanyakan dulu detailnya
+- Jika user tanya tentang pembagian kelas/matakuliah/jadwal, tanyakan dulu detailnya (role, semester, dll)
 - Beri solusi, bukan hanya informasi
 - Akhiri dengan semangat Islami singkat
 `;
@@ -30,6 +31,7 @@ let pimBotMinimized = false;
 let isTyping = false;
 let isListening = false;
 let darkMode = false;
+let conversationHistory = [];
 
 // Posisi
 let botX = window.innerWidth - 76;
@@ -113,7 +115,7 @@ function createPimBot() {
       <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
       <div style="flex:1;cursor:pointer" id="pimBotHeaderInfo">
         <div style="font-weight:700;font-size:14px">PIM-Bot AI</div>
-        <div style="font-size:10px;opacity:0.8"><span style="width:6px;height:6px;background:#4caf50;border-radius:50%;display:inline-block;margin-right:4px"></span>Online · DeepSeek</div>
+        <div style="font-size:10px;opacity:0.8"><span style="width:6px;height:6px;background:#4caf50;border-radius:50%;display:inline-block;margin-right:4px"></span>Online · v4.0</div>
       </div>
       <button onclick="pimBotToggleDark()" title="Dark Mode" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:13px">🌙</button>
       <button onclick="pimBotClearChat()" title="Hapus Chat" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:13px">🗑️</button>
@@ -142,7 +144,7 @@ function createPimBot() {
       <input id="pimBotInput" type="text" placeholder="Tanya apa saja..." style="flex:1;padding:11px 16px;border:1.5px solid #e0e0e0;border-radius:24px;font-size:13px;font-family:inherit;outline:none">
       <button id="pimBotSend" onclick="pimBotSendMessage()" style="width:40px;height:40px;border-radius:50%;background:#004d40;color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0">▶</button>
     </div>
-    <div style="text-align:center;padding:6px;font-size:9px;color:#999;background:#fafafa;border-top:1px solid #eee;flex-shrink:0">Powered by DeepSeek AI · Gratis</div>
+    <div style="text-align:center;padding:6px;font-size:9px;color:#999;background:#fafafa;border-top:1px solid #eee;flex-shrink:0">Powered by Gemini Flash · v4.0</div>
   `;
 
   document.body.appendChild(fab);
@@ -158,7 +160,7 @@ function createPimBot() {
     chat.querySelectorAll('div')[3].style.display=d==='none'?'none':'block';
   });
 
-  console.log('🤖 PIM-Bot (DeepSeek) created!');
+  console.log('🤖 PIM-Bot v4.0 ready!');
 }
 
 // =============================================
@@ -174,32 +176,91 @@ function endDrag(e){const fab=document.getElementById('pimBotFab');if(!fab)retur
 function toggleChat(){const chat=document.getElementById('pimBotChat');if(!chat)return;pimBotOpen=!pimBotOpen;chat.style.display=pimBotOpen?'flex':'none';if(pimBotOpen){document.getElementById('pimBotMessages').style.display='flex';document.getElementById('pimBotQuickActions').style.display='flex';chat.querySelectorAll('div')[2].style.display='flex';chat.querySelectorAll('div')[3].style.display='block';pimBotMinimized=false;setTimeout(()=>{const inp=document.getElementById('pimBotInput');if(inp)inp.focus()},300)}}
 
 // =============================================
-// SEND MESSAGE (DeepSeek API)
+// SEND MESSAGE (Gemini API) - FIXED VERSION
 // =============================================
-async function pimBotSendMessage(){if(isTyping)return;const input=document.getElementById('pimBotInput');if(!input)return;const msg=input.value.trim();if(!msg)return;input.value='';input.focus();isTyping=true;pimBotAddMessage(msg,'user');const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='none';const tid=pimBotAddTyping();
-try{
-const res=await fetch('https://api.deepseek.com/v1/chat/completions',{
-  method:'POST',
-  headers:{
-    'Content-Type':'application/json',
-    'Authorization':'Bearer '+DEEPSEEK_API_KEY
-  },
-  body:JSON.stringify({
-    model:'deepseek-chat',
-    messages:[
-      {role:'system',content:SYSTEM_PROMPT},
-      {role:'user',content:msg}
-    ],
-    max_tokens:500,
-    temperature:0.8
-  })
-});
-pimBotRemoveTyping(tid);const data=await res.json();
-if(data.choices?.[0]?.message?.content){pimBotAddMessage(data.choices[0].message.content,'bot')}
-else if(data.error){pimBotAddMessage('⚠️ Error: '+data.error.message,'bot')}
-else{pimBotAddMessage('⚠️ Maaf, coba lagi ya 😅','bot')}
-}catch(e){pimBotRemoveTyping(tid);console.error(e);pimBotAddMessage('❌ Gagal terhubung. Cek internetmu ya!','bot')}
-isTyping=false}
+async function pimBotSendMessage() {
+  if(isTyping) return;
+  
+  const input = document.getElementById('pimBotInput');
+  if(!input) return;
+  
+  const msg = input.value.trim();
+  if(!msg) return;
+  
+  input.value = '';
+  input.focus();
+  isTyping = true;
+  
+  // Add user message
+  pimBotAddMessage(msg, 'user');
+  conversationHistory.push({ role: 'user', text: msg });
+  
+  // Hide quick actions
+  const qa = document.getElementById('pimBotQuickActions');
+  if(qa) qa.style.display = 'none';
+  
+  // Show typing
+  const tid = pimBotAddTyping();
+  
+  try {
+    console.log('🚀 Sending to Gemini Flash...');
+    
+    // PAKAI HEADER X-goog-api-key (BUKAN query param)
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': GEMINI_API_KEY  // <-- INI YANG BENER
+        },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ parts: [{ text: msg }] }],
+          generationConfig: { 
+            temperature: 0.8, 
+            maxOutputTokens: 500, 
+            topP: 0.95 
+          }
+        })
+      }
+    );
+    
+    console.log('📡 Status:', response.status);
+    
+    pimBotRemoveTyping(tid);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('❌ Error:', errorData);
+      
+      if (response.status === 429) {
+        pimBotAddMessage('⚠️ Terlalu banyak request. Tunggu sebentar ya!', 'bot');
+      } else {
+        pimBotAddMessage('❌ Error: ' + (errorData.error?.message || 'Unknown error'), 'bot');
+      }
+      return;
+    }
+    
+    const data = await response.json();
+    console.log('✅ Success:', data);
+    
+    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      const botReply = data.candidates[0].content.parts[0].text;
+      pimBotAddMessage(botReply, 'bot');
+      conversationHistory.push({ role: 'bot', text: botReply });
+    } else {
+      pimBotAddMessage('⚠️ Maaf, coba lagi ya 😅', 'bot');
+    }
+    
+  } catch(e) {
+    pimBotRemoveTyping(tid);
+    console.error('❌ Error:', e);
+    pimBotAddMessage('❌ Gagal terhubung. Cek internetmu ya!', 'bot');
+  }
+  
+  isTyping = false;
+}
 
 // =============================================
 // QUICK ASK
@@ -227,7 +288,16 @@ else{c.style.background='white';m.style.background='#f5f5f5';i.style.background=
 // =============================================
 // CLEAR
 // =============================================
-function pimBotClearChat(){if(confirm('Hapus percakapan?')){const msgs=document.getElementById('pimBotMessages');if(msgs)msgs.innerHTML='';const qa=document.getElementById('pimBotQuickActions');if(qa)qa.style.display='flex';pimBotAddMessage('Chat dihapus! Tanyakan apa saja 😊','bot')}}
+function pimBotClearChat(){
+  if(confirm('Hapus percakapan?')){
+    const msgs = document.getElementById('pimBotMessages');
+    if(msgs) msgs.innerHTML = '';
+    const qa = document.getElementById('pimBotQuickActions');
+    if(qa) qa.style.display = 'flex';
+    conversationHistory = [];
+    pimBotAddMessage('Chat dihapus! Tanyakan apa saja 😊', 'bot');
+  }
+}
 
 // =============================================
 // ADD MESSAGE
@@ -245,11 +315,21 @@ function pimBotRemoveTyping(id){const el=document.getElementById(id);if(el)el.re
 // =============================================
 (function initPimBot() {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { createPimBot(); console.log('🤖 PIM-Bot DeepSeek siap!'); });
+    document.addEventListener('DOMContentLoaded', () => { 
+      createPimBot(); 
+      console.log('🤖 PIM-Bot v4.0 siap!');
+      console.log('✅ Menggunakan header X-goog-api-key');
+    });
   } else {
     createPimBot();
-    console.log('🤖 PIM-Bot DeepSeek siap!');
+    console.log('🤖 PIM-Bot v4.0 siap!');
+    console.log('✅ Menggunakan header X-goog-api-key');
   }
 })();
 
-window.toggleChat=toggleChat;window.pimBotSendMessage=pimBotSendMessage;window.pimBotQuickAsk=pimBotQuickAsk;window.pimBotVoiceInput=pimBotVoiceInput;window.pimBotToggleDark=pimBotToggleDark;window.pimBotClearChat=pimBotClearChat;
+window.toggleChat=toggleChat;
+window.pimBotSendMessage=pimBotSendMessage;
+window.pimBotQuickAsk=pimBotQuickAsk;
+window.pimBotVoiceInput=pimBotVoiceInput;
+window.pimBotToggleDark=pimBotToggleDark;
+window.pimBotClearChat=pimBotClearChat;
