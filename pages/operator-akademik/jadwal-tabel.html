@@ -3,89 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabel Jadwal - Input Cepat - Operator Akademik IPIM</title>
+  <title>Tabel Jadwal - Input Cepat - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- jsPDF & autotable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <!-- SheetJS -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
-      --gold: #d4a843; --gold-light: #fdf6e3;
-      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
       --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
       --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
-      --sidebar-width: 260px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
-      --transition: all 0.25s ease;
+      --blue: #1565c0; --blue-light: #e3f2fd;
+      --sidebar-width: 260px; --radius-sm: 8px; --radius: 12px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
 
     .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
     .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
-    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
-    .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; }
+    .sidebar-brand span { font-size: 10px; opacity: 0.6; }
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
     .nav-section { margin-bottom: 8px; }
-    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.4; padding: 12px 12px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.25s; margin-bottom: 2px; cursor: pointer; }
     .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
     .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
     .nav-item i { width: 20px; text-align: center; font-size: 14px; }
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
-    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
-    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; }
 
-    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 20px 24px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; }
     .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
-    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.25s; white-space: nowrap; }
     .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
-    .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-success { background: var(--green); color: white; } .btn-success:hover { background: #008c4a; }
+    .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-info { background: var(--blue-light); color: var(--blue); } .btn-info:hover { background: #bbdefb; }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; overflow: hidden; }
-    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-    .card-header h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
-    .card-body { padding: 20px; overflow-x: auto; }
+    .card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 16px; overflow: hidden; }
+    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .card-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 16px; overflow-x: auto; }
 
-    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-bottom: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; }
     .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
-    .form-group select { padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; min-width: 200px; }
+    .form-group select { padding: 9px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; min-width: 180px; max-width: 250px; }
+    .form-group select:focus { border-color: var(--green); }
 
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; }
-    thead th { background: var(--green-dark); color: white; padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 700; border: 1px solid #003d33; }
-    thead th:first-child { width: 70px; background: #003d33; }
-    tbody td { padding: 0; text-align: center; border: 1px solid var(--gray-200); vertical-align: top; height: 90px; }
-    tbody td:first-child { font-weight: 700; color: var(--green-dark); background: var(--green-light); text-align: center; vertical-align: middle; font-size: 13px; }
-    .cell-content { padding: 8px 6px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 70px; }
-    .cell-mapel { font-weight: 700; color: var(--green-dark); font-size: 12px; margin-bottom: 3px; }
-    .cell-kelas { font-size: 11px; color: var(--gray-600); margin-bottom: 1px; }
-    .cell-dosen { font-size: 10px; color: var(--gray-400); margin-bottom: 6px; }
-    .cell-actions { display: flex; gap: 4px; }
-    .cell-actions .btn { padding: 3px 8px; font-size: 10px; border-radius: 4px; }
-    .cell-filled { background: #e8f5e9; cursor: pointer; transition: var(--transition); }
+    .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 750px; }
+    thead th { background: var(--green-dark); color: white; padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 700; border: 1px solid #003d33; position: sticky; top: 0; z-index: 1; }
+    thead th:first-child { width: 60px; background: #003d33; }
+    tbody td { padding: 6px 4px; text-align: center; border: 1px solid var(--gray-200); vertical-align: middle; height: 80px; }
+    tbody td:first-child { font-weight: 700; color: var(--green-dark); background: var(--green-light); font-size: 12px; width: 60px; }
+    .cell-content { padding: 6px 4px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; min-height: 65px; }
+    .cell-mapel { font-weight: 700; color: var(--green-dark); font-size: 11px; line-height: 1.2; }
+    .cell-kelas { font-size: 10px; color: var(--gray-600); }
+    .cell-dosen { font-size: 9px; color: var(--gray-400); margin-bottom: 4px; }
+    .cell-actions { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
+    .cell-actions .btn { padding: 3px 7px; font-size: 9px; border-radius: 4px; }
+    .cell-filled { background: #e8f5e9; cursor: pointer; transition: all 0.2s; }
     .cell-filled:hover { background: #c8e6c9; }
-    .cell-empty { background: var(--white); cursor: pointer; transition: var(--transition); }
-    .cell-empty:hover { background: #f0f0f0; }
-    .cell-empty .add-icon { font-size: 20px; color: var(--gray-400); }
+    .cell-empty { background: white; cursor: pointer; transition: all 0.2s; }
+    .cell-empty:hover { background: #f5f5f5; }
+    .cell-empty .add-icon { font-size: 22px; color: var(--gray-400); }
 
-    /* Modal */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
-    .modal-box { background: white; border-radius: var(--radius-lg); width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; padding: 24px; }
-    .modal-box h3 { margin-bottom: 16px; font-size: 16px; }
-    .modal-box .form-group { margin-bottom: 12px; }
-    .modal-box .form-group input, .modal-box .form-group select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; }
-    .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+    .modal-box { background: white; border-radius: var(--radius); width: 92%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 22px; }
+    .modal-box h3 { margin-bottom: 14px; font-size: 15px; }
+    .modal-box .form-group { margin-bottom: 10px; }
+    .modal-box .form-group input, .modal-box .form-group select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; }
+    .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 
-    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } }
+    .alert { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 12px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; }
+    .alert-error { background: var(--red-light); color: #b71c1c; }
+
+    @media print {
+      .sidebar, .topbar, .btn, .action-bar, .filter-row, .modal-overlay, .cell-actions, .add-icon { display: none !important; }
+      .main-content { margin: 0 !important; padding: 0 !important; }
+      .card { border: none !important; box-shadow: none !important; }
+      table { font-size: 9px; } thead th { font-size: 10px; padding: 6px 4px; } tbody td { height: auto; padding: 4px; }
+      .cell-empty { border: 1px solid #ccc; }
+    }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 12px; } .form-group select { min-width: 140px; } }
   </style>
 </head>
 <body>
@@ -107,6 +123,7 @@
       <div class="nav-section"><div class="nav-section-title">Akademik</div>
         <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
         <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
+        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
         <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
       </div>
     </nav>
@@ -114,28 +131,51 @@
   </aside>
 
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>📅 Tabel Jadwal - Input Cepat</h1><p>Klik sel kosong untuk tambah jadwal. JP & Waktu otomatis.</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar">
+      <div class="page-title"><h1>📅 Tabel Jadwal</h1><p>Klik sel kosong untuk tambah · Share & Export</p></div>
+      <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </div>
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
 
+    <!-- ACTION BAR -->
     <div class="card">
-      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
-      <div class="card-body">
-        <div class="filter-row">
-          <div class="form-group"><label>Dosen</label><select id="filterDosen" onchange="renderTabel()"><option value="">Semua Dosen</option></select></div>
-          <div class="form-group"><label>Kelas</label><select id="filterKelas" onchange="renderTabel()"><option value="">Semua Kelas</option></select></div>
+      <div class="card-header">
+        <h3><i class="fa-solid fa-share-alt"></i> Export & Share</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-info btn-sm" onclick="shareWA()"><i class="fa-brands fa-whatsapp"></i> Share WA</button>
+          <button class="btn btn-outline btn-sm" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="cetakPDF()"><i class="fa-solid fa-print"></i> Cetak</button>
+          <button class="btn btn-outline btn-sm" onclick="downloadExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
         </div>
       </div>
     </div>
 
+    <!-- FILTER -->
     <div class="card">
-      <div class="card-header"><h3><i class="fa-solid fa-table"></i> Tabel Jadwal (Klik Sel Kosong)</h3></div>
-      <div class="card-body" id="tableContainer"><p style="text-align:center;color:var(--gray-400);">Memuat data...</p></div>
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group"><label>👨‍🏫 Dosen</label><select id="filterDosen" onchange="renderTabel()"><option value="">Semua Dosen</option></select></div>
+          <div class="form-group"><label>🏫 Kelas</label><select id="filterKelas" onchange="renderTabel()"><option value="">Semua Kelas</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABEL -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-table"></i> Tabel Jadwal</h3>
+        <span style="font-size:11px;color:var(--gray-600);">💡 Klik sel kosong untuk tambah</span>
+      </div>
+      <div class="card-body">
+        <div class="table-wrapper" id="tableContainer"><p style="text-align:center;">Memuat data...</p></div>
+      </div>
     </div>
   </main>
 
-  <!-- Modal Input Cepat -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-box" id="modalContent"></div>
-  </div>
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay"><div class="modal-box" id="modalContent"></div></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -149,30 +189,47 @@
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
     let allJadwal = [];
-    let dosenMap = {}, kelasMap = {}, mkMap = {};
+    let dosenMap = {}, dosenList = [], kelasMap = {}, kelasList = [], mkMap = {};
     const JP_WAKTU = {
-      1: '08:00 - 08:50',
-      2: '08:55 - 09:45',
-      3: '10:05 - 10:55',
-      4: '11:00 - 11:50',
-      5: '12:30 - 13:20'
+      1: '07:00-07:40', 2: '07:40-08:20', 3: '08:20-09:00',
+      4: '10:00-10:40', 5: '10:40-11:20'
     };
+    const HARI_LIST = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu', 'Ahad'];
+    const JAM_LIST = [1, 2, 3, 4, 5];
 
+    function showAlert(type, text) {
+      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
+      if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+    }
     function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
 
     async function loadFilters() {
       try {
-        const [dosenSnap, kelasSnap, mkSnap] = await Promise.all([
+        const [dSnap, kSnap, mSnap] = await Promise.all([
           db.collection('users').where('role', 'in', ['dosen', 'dosen-musyrif']).get(),
           db.collection('kelas').get(),
           db.collection('matakuliah').get()
         ]);
-        const dosenSel = document.getElementById('filterDosen');
-        dosenSnap.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; dosenSel.appendChild(o); dosenMap[d.id] = d.data().nama; });
-        const kelasDocs = kelasSnap.docs.sort((a,b) => { const o = {idad:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8}; return (o[a.data().semester]??99) - (o[b.data().semester]??99) || (a.data().nama||'').localeCompare(b.data().nama||''); });
-        const kelasSel = document.getElementById('filterKelas');
-        kelasDocs.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; kelasSel.appendChild(o); kelasMap[d.id] = d.data().nama; });
-        mkSnap.forEach(d => { mkMap[d.id] = d.data(); });
+
+        // Dosen
+        dosenList = dSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        dosenMap = {};
+        const dSel = document.getElementById('filterDosen');
+        dSel.innerHTML = '<option value="">Semua Dosen</option>';
+        dosenList.forEach(d => { dosenMap[d.id] = d.nama; const o = document.createElement('option'); o.value = d.id; o.textContent = d.nama; dSel.appendChild(o); });
+
+        // Kelas — urut by semester
+        kelasList = kSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const semOrder = {idad:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8};
+        kelasList.sort((a,b) => (semOrder[a.semester]??99) - (semOrder[b.semester]??99) || (a.nama||'').localeCompare(b.nama||''));
+        kelasMap = {};
+        const kSel = document.getElementById('filterKelas');
+        kSel.innerHTML = '<option value="">Semua Kelas</option>';
+        kelasList.forEach(k => { kelasMap[k.id] = k.nama; const o = document.createElement('option'); o.value = k.id; o.textContent = `${k.nama} (${k.semester==='idad'?"I'dad":`Sem ${k.semester}`})`; kSel.appendChild(o); });
+
+        // MK
+        mkMap = {};
+        mSnap.forEach(d => { mkMap[d.id] = d.data(); });
       } catch(e) { console.error(e); }
     }
 
@@ -191,19 +248,16 @@
       if (dosenFilter) filtered = filtered.filter(j => j.dosenId === dosenFilter);
       if (kelasFilter) filtered = filtered.filter(j => j.kelasId === kelasFilter);
 
-      const hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu', 'Ahad'];
-      const jamList = [1, 2, 3, 4, 5];
-
       const jadwalMap = {};
       filtered.forEach(j => { const key = `${j.hari}_${j.jamKe}`; jadwalMap[key] = j; });
 
-      let html = '<table><thead><tr><th>JP</th>';
-      hariList.forEach(h => { html += `<th>${h}</th>`; });
+      let html = '<table id="jadwalTable"><thead><tr><th>JP</th>';
+      HARI_LIST.forEach(h => html += `<th>${h}</th>`);
       html += '</tr></thead><tbody>';
 
-      jamList.forEach(jam => {
-        html += `<tr><td>${jam}<br><small style="font-size:9px;color:#666;">${JP_WAKTU[jam]}</small></td>`;
-        hariList.forEach(hari => {
+      JAM_LIST.forEach(jam => {
+        html += `<tr><td>${jam}<br><small style="font-size:9px;">${JP_WAKTU[jam]}</small></td>`;
+        HARI_LIST.forEach(hari => {
           const key = `${hari}_${jam}`;
           const j = jadwalMap[key];
           if (j) {
@@ -230,43 +284,25 @@
       document.getElementById('tableContainer').innerHTML = html;
     }
 
+    // ============ FORM ============
     window.openForm = function(hari, jamKe) {
       const waktu = JP_WAKTU[jamKe];
       let html = `<h3>➕ Tambah Jadwal</h3>
         <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;">${hari}, JP ${jamKe} (${waktu})</p>
-        <div class="form-group"><label>Dosen</label><select id="fDosenId">${Object.entries(dosenMap).map(([id,nama]) => `<option value="${id}">${nama}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Matakuliah</label><select id="fMkId">${Object.entries(mkMap).map(([id,m]) => `<option value="${id}">${m.nama}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Kelas</label><select id="fKelasId">${Object.entries(kelasMap).map(([id,nama]) => `<option value="${id}">${nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Dosen</label><select id="fDosenId">${dosenList.map(d => `<option value="${d.id}">${d.nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Matakuliah</label><select id="fMkId">${Object.values(mkMap).sort((a,b)=>a.nama.localeCompare(b.nama)).map(m => `<option value="${m.id||m._id}">${m.kode||''} - ${m.nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Kelas</label><select id="fKelasId">${kelasList.map(k => `<option value="${k.id}">${k.nama} (${k.semester==='idad'?"I'dad":'Sem '+k.semester})</option>`).join('')}</select></div>
         <div class="form-group"><label>Semester</label><select id="fSemester"><option value="idad">I'dad</option>${[1,2,3,4,5,6,7,8].map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Total Pertemuan</label><input type="number" id="fTotalPertemuan" value="16" min="1"></div>
-        <div class="form-group"><label>Min. Kehadiran (%)</label><input type="number" id="fMinKehadiran" value="75" min="1" max="100"></div>
-        <div class="modal-buttons">
-          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnSimpanCepat">Simpan</button>
-        </div>`;
+        <div class="form-group"><label>Total Pertemuan</label><input type="number" id="fTotal" value="16" min="1"></div>
+        <div class="form-group"><label>Min. Kehadiran (%)</label><input type="number" id="fMin" value="75" min="1" max="100"></div>
+        <div class="modal-buttons"><button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-primary" id="btnSimpan">Simpan</button></div>`;
       document.getElementById('modalContent').innerHTML = html;
       document.getElementById('modalOverlay').classList.add('show');
 
-      document.getElementById('btnSimpanCepat').onclick = async () => {
-        const dosenId = document.getElementById('fDosenId').value;
-        const mkId = document.getElementById('fMkId').value;
-        const kelasId = document.getElementById('fKelasId').value;
-        const semester = document.getElementById('fSemester').value;
-        const totalPertemuan = parseInt(document.getElementById('fTotalPertemuan').value);
-        const minKehadiran = parseInt(document.getElementById('fMinKehadiran').value);
-
-        const data = {
-          hari, jamKe: parseInt(jamKe), waktu,
-          dosenId, dosenNama: dosenMap[dosenId] || '-',
-          mkId, mkNama: mkMap[mkId]?.nama || '-',
-          kelasId, kelasNama: kelasMap[kelasId] || '-',
-          semester, totalPertemuan, minKehadiran,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        await db.collection('jadwal').add(data);
-        closeModal();
-        loadData();
+      document.getElementById('btnSimpan').onclick = async () => {
+        const data = getFormData(hari, jamKe, waktu);
+        await db.collection('jadwal').add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal(); loadData(); showAlert('success', 'Jadwal ditambahkan!');
       };
     };
 
@@ -276,47 +312,125 @@
       const j = doc.data();
       let html = `<h3>✏️ Edit Jadwal</h3>
         <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;">${j.hari}, JP ${j.jamKe} (${j.waktu})</p>
-        <div class="form-group"><label>Dosen</label><select id="fDosenId">${Object.entries(dosenMap).map(([id,nama]) => `<option value="${id}" ${id===j.dosenId?'selected':''}>${nama}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Matakuliah</label><select id="fMkId">${Object.entries(mkMap).map(([id,m]) => `<option value="${id}" ${id===j.mkId?'selected':''}>${m.nama}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Kelas</label><select id="fKelasId">${Object.entries(kelasMap).map(([id,nama]) => `<option value="${id}" ${id===j.kelasId?'selected':''}>${nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Dosen</label><select id="fDosenId">${dosenList.map(d => `<option value="${d.id}" ${d.id===j.dosenId?'selected':''}>${d.nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Matakuliah</label><select id="fMkId">${Object.values(mkMap).sort((a,b)=>a.nama.localeCompare(b.nama)).map(m => `<option value="${m.id||m._id}" ${(m.id||m._id)===j.mkId?'selected':''}>${m.kode||''} - ${m.nama}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Kelas</label><select id="fKelasId">${kelasList.map(k => `<option value="${k.id}" ${k.id===j.kelasId?'selected':''}>${k.nama}</option>`).join('')}</select></div>
         <div class="form-group"><label>Semester</label><select id="fSemester"><option value="idad" ${j.semester==='idad'?'selected':''}>I'dad</option>${[1,2,3,4,5,6,7,8].map(s => `<option value="${s}" ${j.semester==s?'selected':''}>${s}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Total Pertemuan</label><input type="number" id="fTotalPertemuan" value="${j.totalPertemuan||16}" min="1"></div>
-        <div class="form-group"><label>Min. Kehadiran (%)</label><input type="number" id="fMinKehadiran" value="${j.minKehadiran||75}" min="1" max="100"></div>
-        <div class="modal-buttons">
-          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnSimpanCepat">Update</button>
-        </div>`;
+        <div class="form-group"><label>Total Pertemuan</label><input type="number" id="fTotal" value="${j.totalPertemuan||16}" min="1"></div>
+        <div class="form-group"><label>Min. Kehadiran (%)</label><input type="number" id="fMin" value="${j.minKehadiran||75}" min="1" max="100"></div>
+        <div class="modal-buttons"><button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-primary" id="btnSimpan">Update</button></div>`;
       document.getElementById('modalContent').innerHTML = html;
       document.getElementById('modalOverlay').classList.add('show');
 
-      document.getElementById('btnSimpanCepat').onclick = async () => {
-        const dosenId = document.getElementById('fDosenId').value;
-        const mkId = document.getElementById('fMkId').value;
-        const kelasId = document.getElementById('fKelasId').value;
-        const semester = document.getElementById('fSemester').value;
-        const totalPertemuan = parseInt(document.getElementById('fTotalPertemuan').value);
-        const minKehadiran = parseInt(document.getElementById('fMinKehadiran').value);
-
-        await db.collection('jadwal').doc(id).update({
-          dosenId, dosenNama: dosenMap[dosenId] || '-',
-          mkId, mkNama: mkMap[mkId]?.nama || '-',
-          kelasId, kelasNama: kelasMap[kelasId] || '-',
-          semester, totalPertemuan, minKehadiran,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        closeModal();
-        loadData();
+      document.getElementById('btnSimpan').onclick = async () => {
+        const data = getFormData(j.hari, j.jamKe, j.waktu);
+        await db.collection('jadwal').doc(id).update({ ...data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal(); loadData(); showAlert('success', 'Diupdate!');
       };
     };
 
-    window.hapusJadwal = async function(id) {
+    function getFormData(hari, jamKe, waktu) {
+      const dosenId = document.getElementById('fDosenId').value;
+      const mkId = document.getElementById('fMkId').value;
+      const kelasId = document.getElementById('fKelasId').value;
+      return {
+        hari, jamKe: parseInt(jamKe), waktu,
+        dosenId, dosenNama: dosenMap[dosenId] || '-',
+        mkId, mkNama: mkMap[mkId]?.nama || '-',
+        kelasId, kelasNama: kelasMap[kelasId] || '-',
+        semester: document.getElementById('fSemester').value,
+        totalPertemuan: parseInt(document.getElementById('fTotal').value),
+        minKehadiran: parseInt(document.getElementById('fMin').value)
+      };
+    }
+
+    window.hapusJadwal = async (id) => {
       if (!confirm('Hapus jadwal ini?')) return;
       await db.collection('jadwal').doc(id).delete();
-      alert('Jadwal dihapus!');
+      showAlert('success', 'Dihapus!');
       loadData();
     };
 
-    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    // ============ EXPORT & SHARE ============
+    
+    // Generate data tabel untuk export
+    function getTableData() {
+      const data = [];
+      JAM_LIST.forEach(jam => {
+        const row = { JP: `JP ${jam} (${JP_WAKTU[jam]})` };
+        HARI_LIST.forEach(hari => {
+          const j = allJadwal.find(jj => jj.hari === hari && jj.jamKe === jam);
+          row[hari] = j ? `${j.mkNama||''}\n${j.kelasNama||''}\n${j.dosenNama||''}` : '-';
+        });
+        data.push(row);
+      });
+      return data;
+    }
+
+    // Share WA
+    window.shareWA = () => {
+      let text = '*📅 Jadwal IPIM Maghfirah*\n\n';
+      JAM_LIST.forEach(jam => {
+        text += `*JP ${jam} (${JP_WAKTU[jam]})*\n`;
+        HARI_LIST.forEach(hari => {
+          const j = allJadwal.find(jj => jj.hari === hari && jj.jamKe === jam);
+          text += `${hari}: ${j ? `${j.mkNama||'-'} | ${j.kelasNama||'-'} | ${j.dosenNama||'-'}` : '-'}\n`;
+        });
+        text += '\n';
+      });
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    };
+
+    // Download PDF
+    window.downloadPDF = () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      
+      doc.setFontSize(14);
+      doc.text('Jadwal IPIM Maghfirah', 14, 15);
+      doc.setFontSize(9);
+      doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 21);
+
+      const head = [['JP', ...HARI_LIST]];
+      const body = JAM_LIST.map(jam => {
+        const row = [`JP ${jam}`];
+        HARI_LIST.forEach(hari => {
+          const j = allJadwal.find(jj => jj.hari === hari && jj.jamKe === jam);
+          row.push(j ? `${j.mkNama||''}\n${j.kelasNama||''}\n${j.dosenNama||''}` : '-');
+        });
+        return row;
+      });
+
+      doc.autoTable({ head, body, startY: 25, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [0, 77, 64] } });
+      doc.save('jadwal-ipim.pdf');
+      showAlert('success', 'PDF didownload!');
+    };
+
+    // Cetak PDF
+    window.cetakPDF = () => { window.print(); };
+
+    // Download Excel
+    window.downloadExcel = () => {
+      const data = [];
+      data.push(['JP', ...HARI_LIST]);
+      JAM_LIST.forEach(jam => {
+        const row = [`JP ${jam} (${JP_WAKTU[jam]})`];
+        HARI_LIST.forEach(hari => {
+          const j = allJadwal.find(jj => jj.hari === hari && jj.jamKe === jam);
+          row.push(j ? `${j.mkNama||''} - ${j.kelasNama||''} - ${j.dosenNama||''}` : '-');
+        });
+        data.push(row);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      ws['!cols'] = [{wch:15}, ...HARI_LIST.map(() => ({wch:25}))];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Jadwal');
+      XLSX.writeFile(wb, 'jadwal-ipim.xlsx');
+      showAlert('success', 'Excel didownload!');
+    };
+
+    window.logout = () => { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
 
     loadFilters();
     loadData();
