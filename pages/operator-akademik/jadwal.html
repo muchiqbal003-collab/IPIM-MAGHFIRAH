@@ -311,8 +311,10 @@
         allMK.forEach((_, i) => {
           const dosenSel = document.getElementById(`dosen_${i}`);
           const jpInput = document.getElementById(`jp_${i}`);
-          if (dosenSel?.value && jpInput?.value) {
-            total += parseInt(jpInput.value) || 0;
+          const kelasCount = document.querySelectorAll(`#kelasCb${i} .kelas-check.checked`).length;
+          if (dosenSel?.value && jpInput?.value && kelasCount > 0) {
+            // Setiap kelas yang dicentang mendapat jatah JP penuh (bukan dibagi antar kelas)
+            total += (parseInt(jpInput.value) || 0) * kelasCount;
           }
         });
         document.getElementById('totalJP').textContent = total;
@@ -348,42 +350,79 @@
 
         const allSlots = [];
         HARI_LIST.forEach(hari => SLOT_WAKTU.forEach(slot => allSlots.push({ hari, ...slot })));
-        const shuffledSlots = [...allSlots].sort(() => Math.random() - 0.5);
 
-        generatedJadwal = [];
-        const usedSlots = {};
+        // Setiap kelas yang dicentang mendapat jatah JP PENUH sesuai input (bukan dibagi rata antar kelas).
+        // Jadi 1 assignment dengan JP=2 dan 3 kelas dicentang = 6 sesi yang perlu ditempatkan.
+        const tasks = [];
+        assignments.forEach(assign => {
+          assign.kelasIds.forEach(kelasId => {
+            const kelas = allKelas.find(k => k.id === kelasId);
+            for (let n = 0; n < assign.jp; n++) {
+              tasks.push({
+                dosenId: assign.dosenId, dosenNama: assign.dosenNama,
+                mkId: assign.mkId, mkNama: `${assign.mkKode||''} - ${assign.mkNama}`,
+                kelasId, kelasNama: kelas?.nama || '-',
+                semester: kelas?.semester || '1', totalPertemuan: 16, minKehadiran: 75
+              });
+            }
+          });
+        });
 
-        for (const assign of assignments) {
-          let jpRemaining = assign.jp;
-          const shuffledKelas = [...assign.kelasIds].sort(() => Math.random() - 0.5);
-          let kelasIdx = 0;
+        const totalExpected = tasks.length;
 
-          while (jpRemaining > 0 && kelasIdx < shuffledKelas.length) {
-            const kelasId = shuffledKelas[kelasIdx];
-            let placed = false;
-            const randomSlots = [...shuffledSlots].sort(() => Math.random() - 0.5);
-            
+        // Hitung beban tiap dosen & kelas untuk heuristik "yang paling padat ditempatkan duluan" —
+        // ini mengurangi risiko kehabisan slot kosong di akhir proses (deadlock penempatan acak).
+        const dosenLoad = {}, kelasLoad = {};
+        tasks.forEach(t => {
+          dosenLoad[t.dosenId] = (dosenLoad[t.dosenId] || 0) + 1;
+          kelasLoad[t.kelasId] = (kelasLoad[t.kelasId] || 0) + 1;
+        });
+
+        function attemptPlace() {
+          const usedSlots = {}; // slotKey -> { dosen: Set<dosenId>, kelas: Set<kelasId> }
+          const placed = [];
+          const failed = [];
+          const orderedTasks = [...tasks].sort((a, b) => {
+            const wa = dosenLoad[a.dosenId] + kelasLoad[a.kelasId];
+            const wb = dosenLoad[b.dosenId] + kelasLoad[b.kelasId];
+            return (wb - wa) + (Math.random() - 0.5); // beban terbesar duluan, sedikit acak
+          });
+
+          for (const task of orderedTasks) {
+            const randomSlots = [...allSlots].sort(() => Math.random() - 0.5);
+            let ok = false;
             for (const slot of randomSlots) {
               const slotKey = `${slot.hari}_${slot.waktu}`;
-              if (!usedSlots[slotKey]) usedSlots[slotKey] = new Set();
-              
-              if (!usedSlots[slotKey].has(assign.dosenId)) {
-                const kelas = allKelas.find(k => k.id === kelasId);
-                generatedJadwal.push({
-                  hari: slot.hari, jamKe: slot.jp, waktu: slot.waktu,
-                  dosenId: assign.dosenId, dosenNama: assign.dosenNama,
-                  mkId: assign.mkId, mkNama: `${assign.mkKode||''} - ${assign.mkNama}`,
-                  kelasId, kelasNama: kelas?.nama || '-',
-                  semester: kelas?.semester || '1', totalPertemuan: 16, minKehadiran: 75
-                });
-                usedSlots[slotKey].add(assign.dosenId);
-                jpRemaining--;
-                placed = true;
+              if (!usedSlots[slotKey]) usedSlots[slotKey] = { dosen: new Set(), kelas: new Set() };
+              const usage = usedSlots[slotKey];
+
+              // Cek bentrok guru (dosen sudah mengajar di jam ini) DAN bentrok kelas (kelas sudah ada mata kuliah lain di jam ini)
+              if (!usage.dosen.has(task.dosenId) && !usage.kelas.has(task.kelasId)) {
+                usage.dosen.add(task.dosenId);
+                usage.kelas.add(task.kelasId);
+                placed.push({ ...task, hari: slot.hari, jamKe: slot.jp, waktu: slot.waktu });
+                ok = true;
                 break;
               }
             }
-            if (!placed) kelasIdx++;
+            if (!ok) failed.push(task);
           }
+          return { placed, failed };
+        }
+
+        // Coba beberapa kali penempatan, ambil hasil terbaik (idealnya semua sesi berhasil ditempatkan)
+        let best = null;
+        const MAX_ATTEMPTS = 40;
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+          const result = attemptPlace();
+          if (!best || result.placed.length > best.placed.length) best = result;
+          if (result.failed.length === 0) break;
+        }
+
+        generatedJadwal = best.placed;
+
+        if (best.failed.length > 0) {
+          showAlert('error', `⚠️ ${best.failed.length} dari ${totalExpected} sesi gagal ditempatkan (slot penuh/bentrok tak terhindar). Coba Generate Ulang, atau kurangi JP / kurangi kelas yang dicentang.`);
         }
 
         renderResult();
@@ -408,21 +447,23 @@
           return (a.jamKe||0) - (b.jamKe||0);
         });
 
-        // Bentrok internal
+        // Bentrok internal: sama hari+waktu, dan (dosennya sama ATAU kelasnya sama)
         const internalConflicts = new Set();
         for (let i = 0; i < sorted.length; i++) {
           for (let j = i+1; j < sorted.length; j++) {
-            if (sorted[i].hari === sorted[j].hari && sorted[i].waktu === sorted[j].waktu && sorted[i].dosenId === sorted[j].dosenId) {
+            if (sorted[i].hari === sorted[j].hari && sorted[i].waktu === sorted[j].waktu &&
+                (sorted[i].dosenId === sorted[j].dosenId || sorted[i].kelasId === sorted[j].kelasId)) {
               internalConflicts.add(i); internalConflicts.add(j);
             }
           }
         }
 
-        // Bentrok dengan existing
+        // Bentrok dengan existing: sama hari+waktu, dan (dosennya sama ATAU kelasnya sama)
         const conflictWithExisting = new Set();
         for (let i = 0; i < sorted.length; i++) {
           for (const oldJ of existingJadwal) {
-            if (sorted[i].hari === oldJ.hari && sorted[i].waktu === oldJ.waktu && sorted[i].dosenId === oldJ.dosenId) {
+            if (sorted[i].hari === oldJ.hari && sorted[i].waktu === oldJ.waktu &&
+                (sorted[i].dosenId === oldJ.dosenId || sorted[i].kelasId === oldJ.kelasId)) {
               conflictWithExisting.add(i);
             }
           }
@@ -487,11 +528,12 @@
       window.simpanSemua = async () => {
         if (generatedJadwal.length === 0) return;
 
-        // Cek bentrok dengan existing
+        // Cek bentrok dengan existing: sama hari+waktu, dan (dosen sama ATAU kelas sama)
         const conflicts = [];
         for (const newJ of generatedJadwal) {
           for (const oldJ of existingJadwal) {
-            if (newJ.hari === oldJ.hari && newJ.waktu === oldJ.waktu && newJ.dosenId === oldJ.dosenId) {
+            if (newJ.hari === oldJ.hari && newJ.waktu === oldJ.waktu &&
+                (newJ.dosenId === oldJ.dosenId || newJ.kelasId === oldJ.kelasId)) {
               conflicts.push({ new: newJ, old: oldJ });
             }
           }
@@ -525,12 +567,12 @@
           });
           savedCount = generatedJadwal.length;
         } else {
-          // Merge: skip bentrok
-          const conflictKeys = new Set(conflicts.map(c => `${c.new.hari}_${c.new.waktu}_${c.new.dosenId}`));
+          // Merge: skip entri baru yang benar-benar terlibat bentrok (dicocokkan by reference,
+          // bukan by key string, supaya tidak salah skip entri lain yang kebetulan mirip)
+          const conflictingNewEntries = new Set(conflicts.map(c => c.new));
           let skipped = 0;
           generatedJadwal.forEach(j => {
-            const key = `${j.hari}_${j.waktu}_${j.dosenId}`;
-            if (conflictKeys.has(key)) { skipped++; return; }
+            if (conflictingNewEntries.has(j)) { skipped++; return; }
             const ref = db.collection('jadwal').doc();
             batch.set(ref, { ...j, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
           });
