@@ -93,10 +93,18 @@
     .alert-success { background: var(--green-light); color: #1b5e20; }
     .alert-error { background: var(--red-light); color: #b71c1c; }
 
+    /* Gambar KOP: hanya tampil saat cetak/PDF, disembunyikan di layar biasa */
+    .kop-print { display: none; }
+
     @media print {
       .sidebar, .topbar, .btn, .action-bar, .filter-row, .modal-overlay, .cell-actions, .add-icon { display: none !important; }
+      /* Sembunyikan seluruh card Export & Share dan Filter saat cetak */
+      #cardExport, #cardFilter { display: none !important; }
+      /* Di card Tabel Jadwal, sembunyikan judul/hint-nya — sisakan KOP + tabel saja */
+      #cardTabel .card-header { display: none !important; }
       .main-content { margin: 0 !important; padding: 0 !important; }
       .card { border: none !important; box-shadow: none !important; }
+      .kop-print { display: block !important; width: 100%; max-width: 100%; height: auto; margin: 0 auto 12px; }
       table { font-size: 9px; } thead th { font-size: 10px; padding: 6px 4px; } tbody td { height: auto; padding: 4px; }
       .cell-empty { border: 1px solid #ccc; }
     }
@@ -139,7 +147,7 @@
     <div id="alertError" class="alert alert-error"></div>
 
     <!-- ACTION BAR -->
-    <div class="card">
+    <div class="card" id="cardExport">
       <div class="card-header">
         <h3><i class="fa-solid fa-share-alt"></i> Export & Share</h3>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -152,7 +160,7 @@
     </div>
 
     <!-- FILTER -->
-    <div class="card">
+    <div class="card" id="cardFilter">
       <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
       <div class="card-body">
         <div class="filter-row">
@@ -163,12 +171,14 @@
     </div>
 
     <!-- TABEL -->
-    <div class="card">
+    <div class="card" id="cardTabel">
       <div class="card-header">
         <h3><i class="fa-solid fa-table"></i> Tabel Jadwal</h3>
         <span style="font-size:11px;color:var(--gray-600);">💡 Klik sel kosong untuk tambah</span>
       </div>
       <div class="card-body">
+        <!-- KOP: hanya muncul saat cetak/print, ganti path/ekstensi di sini jika file bukan .png -->
+        <img class="kop-print" src="../../assets/img/kop.png" alt="Kop Surat">
         <div class="table-wrapper" id="tableContainer"><p style="text-align:center;">Memuat data...</p></div>
       </div>
     </div>
@@ -196,6 +206,10 @@
     };
     const HARI_LIST = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu', 'Ahad'];
     const JAM_LIST = [1, 2, 3, 4, 5];
+
+    // Path gambar KOP untuk PDF — samakan dengan src <img class="kop-print"> di HTML.
+    // Ganti ekstensi (.png/.jpg/.jpeg) sesuai file yang disimpan di assets/img/
+    const KOP_IMG_SRC = '../../assets/img/kop.png';
 
     function showAlert(type, text) {
       const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
@@ -352,7 +366,7 @@
     };
 
     // ============ EXPORT & SHARE ============
-    
+
     // Generate data tabel untuk export
     function getTableData() {
       const data = [];
@@ -365,6 +379,16 @@
         data.push(row);
       });
       return data;
+    }
+
+    // Muat gambar KOP (dipakai untuk PDF). Kalau file belum ada/gagal dimuat, dilewati (tidak error).
+    function loadKopImage() {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = KOP_IMG_SRC;
+      });
     }
 
     // Share WA
@@ -381,15 +405,31 @@
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
 
-    // Download PDF
-    window.downloadPDF = () => {
+    // Download PDF (dengan KOP di atas tabel, jika gambar tersedia)
+    window.downloadPDF = async () => {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-      
-      doc.setFontSize(14);
-      doc.text('Jadwal IPIM Maghfirah', 14, 15);
-      doc.setFontSize(9);
-      doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 21);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const marginX = 14;
+      let startY = 15;
+
+      const kopImg = await loadKopImage();
+      if (kopImg) {
+        const maxWidth = pageWidth - marginX * 2;
+        const ratio = kopImg.naturalHeight / kopImg.naturalWidth;
+        const imgW = maxWidth;
+        const imgH = imgW * ratio;
+        const fmt = /\.(jpg|jpeg)$/i.test(KOP_IMG_SRC) ? 'JPEG' : 'PNG';
+        doc.addImage(kopImg, fmt, marginX, 10, imgW, imgH);
+        startY = 10 + imgH + 8;
+      } else {
+        doc.setFontSize(14);
+        doc.text('Jadwal IPIM Maghfirah', marginX, startY);
+        startY += 6;
+        doc.setFontSize(9);
+        doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')}`, marginX, startY);
+        startY += 6;
+      }
 
       const head = [['JP', ...HARI_LIST]];
       const body = JAM_LIST.map(jam => {
@@ -401,12 +441,12 @@
         return row;
       });
 
-      doc.autoTable({ head, body, startY: 25, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [0, 77, 64] } });
+      doc.autoTable({ head, body, startY, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [0, 77, 64] } });
       doc.save('jadwal-ipim.pdf');
       showAlert('success', 'PDF didownload!');
     };
 
-    // Cetak PDF
+    // Cetak (browser print) — KOP otomatis muncul via CSS @media print, card lain otomatis disembunyikan
     window.cetakPDF = () => { window.print(); };
 
     // Download Excel
