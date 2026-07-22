@@ -6,64 +6,129 @@
     <title>Kalender Akademik - IPIM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
-            --gold: #d4a843; --gold-light: #fdf6e3;
-            --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
-            --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
-            --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
-            --transition: all 0.25s ease;
-            --bottom-nav-height: 64px; --header-height: 56px;
+            --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+            --green-light:#e8f5e9;--green-pale:#f0faf5;
+            --gold:#f5c842;--gold-light:#fffbee;
+            --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+            --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+            --radius-sm:10px;--radius:14px;--radius-lg:18px;
+            --transition:all 0.3s ease;
+            --header-height:56px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom)); }
-
-        .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #004d40 0%, #00695c 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
-        .app-header .btn-back { background: rgba(255,255,255,0.15); border: none; color: white; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); backdrop-filter: blur(10px); }
-        .app-header .btn-back:active { background: rgba(255,255,255,0.25); transform: scale(0.9); }
-        .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
-        .btn-share { background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-family: 'Poppins', sans-serif; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition); backdrop-filter: blur(10px); }
-        .btn-share:active { background: rgba(255,255,255,0.25); transform: scale(0.95); }
-
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-around; z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.04); }
-        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 6px 0; transition: var(--transition); }
-        .bottom-nav .nav-item i { font-size: 20px; }
-        .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
-        .bottom-nav .nav-item:active { transform: scale(0.9); }
-
-        .content { padding: 16px; }
-        .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-
-        .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .calendar-header h2 { font-size: 16px; font-weight: 700; color: var(--gray-800); }
-        .btn-nav { background: var(--gray-100); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); color: var(--gray-600); }
-        .btn-nav:active { background: var(--gray-200); transform: scale(0.9); }
-
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-        .calendar-grid .day-name { font-size: 10px; font-weight: 700; color: var(--gray-600); padding: 6px 0; }
-        .calendar-grid .day { padding: 10px 2px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; position: relative; transition: var(--transition); color: var(--gray-800); }
-        .calendar-grid .day:hover { background: var(--gray-100); }
-        .calendar-grid .day.today { background: var(--green-light); font-weight: 700; color: var(--green-dark); }
-        .calendar-grid .day.selected { background: var(--green-dark); color: white; font-weight: 600; }
-        .calendar-grid .day.has-event::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
-        .calendar-grid .day.selected.has-event::after { background: white; }
-        .calendar-grid .day.other-month { color: var(--gray-400); pointer-events: none; }
-
-        .event-list { display: flex; flex-direction: column; gap: 8px; }
-        .event-item { padding: 10px 12px; background: var(--gray-50); border-radius: var(--radius-sm); font-size: 12px; border-left: 3px solid var(--green); }
-        .event-item .title { font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
-        .event-item .desc { font-size: 11px; color: var(--gray-600); }
-        .event-item .tempat { font-size: 10px; color: var(--gray-400); margin-top: 3px; }
-
-        .section-header { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .section-header i { color: var(--green); }
-
-        @media (max-width: 360px) {
-            .calendar-grid .day { padding: 8px 1px; font-size: 12px; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+            color: var(--gray-800);
+            padding-top: var(--header-height);
+            padding-bottom: 100px;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
         }
+
+        /* ═══ HEADER ═══ */
+        .app-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+            color: white; padding: 12px 16px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,61,51,0.35);
+        }
+        .btn-back {
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+            color: white; font-size: 16px; width: 36px; height: 36px;
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+        .btn-share {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 8px 14px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: pointer; display: flex; align-items: center; gap: 6px;
+            transition: var(--transition);
+        }
+
+        /* ═══ CONTENT ═══ */
+        .content { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+
+        /* ═══ CARDS — GLASS ═══ */
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+        }
+
+        /* ═══ CALENDAR ═══ */
+        .calendar-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+        }
+        .calendar-header h2 { font-size: 16px; font-weight: 700; color: var(--green-dark); }
+        .cal-nav-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid rgba(0, 61, 51, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: var(--green-dark); font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center;
+        }
+        .calendar-grid .day-name {
+            font-size: 10px; font-weight: 700; color: var(--gray-600);
+            padding: 6px 0; text-transform: uppercase;
+        }
+        .calendar-grid .day-name:first-child { color: #b71c1c; }
+        .calendar-grid .day {
+            padding: 10px 4px; border-radius: var(--radius-sm); cursor: pointer;
+            font-size: 12px; font-weight: 500; position: relative;
+            transition: var(--transition); color: var(--gray-800);
+        }
+        .calendar-grid .day.today {
+            background: var(--green-light); font-weight: 700;
+            border: 2px solid var(--green);
+        }
+        .calendar-grid .day.selected {
+            background: var(--green-dark); color: white; font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 61, 51, 0.3);
+        }
+        .calendar-grid .day.has-event::after {
+            content: ''; position: absolute; bottom: 3px; left: 50%;
+            transform: translateX(-50%); width: 5px; height: 5px;
+            border-radius: 50%; background: var(--gold);
+        }
+        .calendar-grid .day.selected.has-event::after { background: white; }
+
+        /* ═══ EVENT LIST ═══ */
+        .section-title {
+            font-size: 14px; font-weight: 700; color: var(--green-dark);
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { font-size: 16px; color: var(--green); }
+        .event-list { display: flex; flex-direction: column; gap: 8px; }
+        .event-item {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 3px solid var(--green);
+            font-size: 12px;
+        }
+        .event-item .title { font-weight: 700; color: var(--gray-800); margin-bottom: 3px; }
+        .event-item .desc { font-size: 11px; color: var(--gray-600); }
+        .no-event { text-align: center; color: var(--gray-600); font-size: 13px; padding: 20px; }
     </style>
 </head>
 <body>
@@ -75,38 +140,124 @@
     </header>
 
     <div class="content">
-        <!-- Kalender -->
         <div class="card">
             <div class="calendar-header">
-                <button class="btn-nav" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                 <h2 id="monthLabel">Januari 2026</h2>
-                <button class="btn-nav" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="calendar-grid" id="calendarGrid"></div>
         </div>
 
-        <!-- Event Terpilih -->
         <div class="card">
-            <div class="section-header"><i class="fa-solid fa-calendar-day"></i> <span id="selectedDateLabel">Event Hari Ini</span></div>
-            <div class="event-list" id="eventList"><p style="color:var(--gray-600);font-size:13px;">Pilih tanggal untuk melihat event</p></div>
+            <div class="section-title">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span id="selectedDateLabel">📅 Event Hari Ini</span>
+            </div>
+            <div class="event-list" id="eventList">
+                <p class="no-event">Pilih tanggal untuk lihat event</p>
+            </div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item active"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-        <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span>Menu</span></div>
-        <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
-        <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
-    </nav>
+    <!-- ══════════════════════════════════════ -->
+    <!-- BOTTOM NAV — GLASS FLOATING PREMIUM  -->
+    <!-- ══════════════════════════════════════ -->
+    <style>
+        .bottom-nav {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 420px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 100;
+            box-shadow: 
+                0 8px 32px rgba(0, 61, 51, 0.1),
+                0 2px 8px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 0 8px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            text-decoration: none;
+            padding: 8px 0;
+            flex: 1;
+            border-radius: 18px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        .nav-item i {
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        .nav-item.active {
+            color: var(--green-dark);
+            font-weight: 700;
+        }
+        .nav-item.active i {
+            color: var(--green);
+            filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3));
+        }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            width: 28px;
+            height: 3px;
+            background: var(--green);
+            border-radius: 0 0 4px 4px;
+        }
+    </style>
 
+     <!-- ══════════════════════════════════════ -->
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')">
+      <i class="fa-solid fa-house"></i>
+      <span id="navHome">Home</span>
+    </div>
+    <div class="nav-item active" onclick="goTo('kalender.html')">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span id="navKalender">Kalender</span>
+    </div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')">
+      <i class="fa-brands fa-html5"></i>
+      <span id="navMenu">Menu</span>
+    </div>
+    <div class="nav-item" onclick="goTo('rekap.html')">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span id="navRekap">Rekap</span>
+    </div>
+    <div class="nav-item" onclick="goTo('profil.html')">
+      <i class="fa-solid fa-circle-user"></i>
+      <span id="navProfil">Profil</span>
+    </div>
+  </nav>
+  
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="../../js/firebase-config.js"></script>
     <script src="../../js/app.js"></script>
     <script>
-        // Auth check untuk user biasa (dosen, musyrif, umum)
         const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
         if (!user) window.location.href = '../../index.html';
         window.goTo = page => window.location.href = page;
@@ -115,35 +266,15 @@
         let events = [];
         let selectedDate = new Date().toISOString().split('T')[0];
 
-        // Load events dari Firestore
         async function loadEvents() {
             try {
-                const snap = await db.collection('kalenderAkademik')
-                    .orderBy('tglMulai', 'asc')
-                    .get();
-                
-                events = snap.docs.map(d => {
-                    const data = d.data();
-                    return {
-                        id: d.id,
-                        judul: data.judul || 'Tanpa Judul',
-                        deskripsi: data.deskripsi || '',
-                        tempat: data.tempat || '',
-                        tglMulai: data.tglMulai || '',
-                        tglSelesai: data.tglSelesai || data.tglMulai || '',
-                        warna: data.warna || '#004d40'
-                    };
-                });
-                
+                const snap = await db.collection('kalenderAkademik').get();
+                events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderCalendar();
                 loadEventsByDate(selectedDate);
-            } catch(e) {
-                console.error('Gagal load event:', e);
-                document.getElementById('eventList').innerHTML = '<p style="color:red;font-size:12px;">⚠️ Gagal memuat data</p>';
-            }
+            } catch(e) { console.error(e); }
         }
 
-        // Render kalender
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -153,40 +284,21 @@
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const today = new Date().toISOString().split('T')[0];
-            const dayNames = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-            
+            const dayNames = ['Ahad','Sen','Sel','Rab','Kam','Jum','Sab'];
             let html = dayNames.map(d => `<div class="day-name">${d}</div>`).join('');
-            
-            // Hari kosong sebelum tanggal 1
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="day other-month"></div>';
-            }
-            
-            // Tanggal dalam bulan
+            for (let i = 0; i < firstDay; i++) html += '<div class="day"></div>';
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 const isToday = dateStr === today;
                 const isSelected = dateStr === selectedDate;
-                
-                // Cek event di rentang tanggal (bukan hanya tanggal tunggal)
-                const hasEvent = events.some(e => {
-                    if (!e.tglMulai) return false;
-                    return e.tglMulai <= dateStr && e.tglSelesai >= dateStr;
-                });
-                
-                html += `<div class="day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${hasEvent ? 'has-event' : ''}" onclick="selectDate('${dateStr}')">${d}</div>`;
+                const hasEvent = events.some(e => e.tanggal === dateStr);
+                html += `<div class="day ${isToday?'today':''} ${isSelected?'selected':''} ${hasEvent?'has-event':''}" onclick="selectDate('${dateStr}')">${d}</div>`;
             }
-            
             document.getElementById('calendarGrid').innerHTML = html;
         }
 
-        // Navigasi bulan
-        window.changeMonth = function(delta) {
-            currentDate.setMonth(currentDate.getMonth() + delta);
-            renderCalendar();
-        };
+        window.changeMonth = function(delta) { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); };
 
-        // Pilih tanggal
         window.selectDate = function(dateStr) {
             selectedDate = dateStr;
             document.getElementById('selectedDateLabel').textContent = `📅 Event ${formatDate(dateStr)}`;
@@ -194,96 +306,37 @@
             loadEventsByDate(dateStr);
         };
 
-        // Load event berdasarkan tanggal (support rentang)
         function loadEventsByDate(dateStr) {
-            const filtered = events.filter(e => {
-                if (!e.tglMulai) return false;
-                return e.tglMulai <= dateStr && e.tglSelesai >= dateStr;
-            });
-            
+            const filtered = events.filter(e => e.tanggal === dateStr);
             const list = document.getElementById('eventList');
-            
-            if (filtered.length === 0) {
-                list.innerHTML = '<p style="color:var(--gray-600);font-size:13px;">Tidak ada event pada tanggal ini</p>';
-                return;
-            }
-            
-            list.innerHTML = filtered.map(e => {
-                let tanggalText = formatDate(e.tglMulai);
-                if (e.tglSelesai && e.tglSelesai !== e.tglMulai) {
-                    tanggalText += ` - ${formatDate(e.tglSelesai)}`;
-                }
-                
-                return `
-                <div class="event-item" style="border-left-color: ${e.warna || '#004d40'};">
-                    <div class="title">${e.judul}</div>
-                    ${e.deskripsi ? `<div class="desc">${e.deskripsi}</div>` : ''}
-                    ${e.tempat ? `<div class="tempat">📍 ${e.tempat}</div>` : ''}
-                    <div style="font-size:10px;color:var(--gray-400);margin-top:2px;">📅 ${tanggalText}</div>
-                </div>`;
-            }).join('');
+            list.innerHTML = filtered.length === 0 
+                ? '<p class="no-event">Tidak ada event</p>' 
+                : filtered.map(e => `<div class="event-item"><div class="title">${e.judul}</div><div class="desc">${e.deskripsi||''}</div></div>`).join('');
         }
 
-        // Format tanggal untuk tampilan
         function formatDate(dateStr) {
-            if (!dateStr) return '';
             const [y, m, d] = dateStr.split('-');
             const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
             return `${d} ${months[parseInt(m)-1]} ${y}`;
         }
 
-        // Fitur Bagikan Kalender
         async function shareKalender() {
-            if (events.length === 0) {
-                alert('Belum ada event untuk dibagikan.');
-                return;
-            }
-
-            // Urutkan event berdasarkan tanggal
-            const sorted = [...events].sort((a, b) => (a.tglMulai || '').localeCompare(b.tglMulai || ''));
-
-            // Buat teks yang rapi
-            let text = '📅 *KALENDER AKADEMIK IPIM*\n';
-            text += '━━━━━━━━━━━━━━━━\n\n';
-
-            sorted.forEach(event => {
-                let tanggalText = formatDate(event.tglMulai);
-                if (event.tglSelesai && event.tglSelesai !== event.tglMulai) {
-                    tanggalText += ` - ${formatDate(event.tglSelesai)}`;
-                }
-                
-                text += `📌 *${tanggalText}*\n`;
-                text += `   📖 ${event.judul}\n`;
-                if (event.deskripsi) {
-                    text += `   📝 ${event.deskripsi}\n`;
-                }
-                if (event.tempat) {
-                    text += `   📍 ${event.tempat}\n`;
-                }
+            if (events.length === 0) { alert('Belum ada event!'); return; }
+            const sorted = [...events].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || ''));
+            let text = '📅 *KALENDER AKADEMIK IPIM*\n━━━━━━━━━━━━━━━━\n\n';
+            sorted.forEach(e => {
+                text += `📌 *${formatDate(e.tanggal)}*\n   📖 ${e.judul}\n`;
+                if (e.deskripsi) text += `   📝 ${e.deskripsi}\n`;
                 text += '\n';
             });
-
-            text += '━━━━━━━━━━━━━━━━\n';
-            text += '© IPIM Maghfirah';
-
-            // Gunakan Web Share API jika tersedia (HP)
+            text += '━━━━━━━━━━━━━━━━\n© IPIM Maghfirah';
             if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'Kalender Akademik IPIM',
-                        text: text,
-                    });
-                } catch (err) {
-                    console.log('Share dibatalkan atau gagal:', err);
-                }
+                try { await navigator.share({ title: 'Kalender Akademik IPIM', text }); } catch(err) {}
             } else {
-                // Fallback: buka WhatsApp Web dengan teks
-                const encodedText = encodeURIComponent(text);
-                window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
             }
         }
 
-        // Inisialisasi
         loadEvents();
     </script>
 </body>
