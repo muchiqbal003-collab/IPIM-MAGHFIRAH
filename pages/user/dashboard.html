@@ -18,10 +18,10 @@
       --red:#e53935;--orange:#f57c00;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;
-      --bottom-nav-height:68px;--header-max-height:185px;--header-min-height:60px;
+      --header-max-height:185px;--header-min-height:60px;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--green-pale);color:var(--gray-800);padding-top:var(--header-max-height);padding-bottom:var(--bottom-nav-height);transition:padding-top 0.3s ease;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--green-pale);color:var(--gray-800);padding-top:var(--header-max-height);padding-bottom:100px;transition:padding-top 0.3s ease;-webkit-tap-highlight-color:transparent;}
     body.scrolled{padding-top:var(--header-min-height);}
     body.lang-ar{font-family:'Noto Sans Arabic','Plus Jakarta Sans',sans-serif;}
 
@@ -60,10 +60,77 @@
     .shortcut-badge{font-size:10px;color:var(--green-mid);font-weight:600;margin-top:1px;}
     .shortcut-badge.dzikir-badge{color:#a08000;}
 
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-height);background:var(--white);border-top:0.5px solid var(--gray-200);display:flex;align-items:center;justify-content:space-around;z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.05);padding-bottom:env(safe-area-inset-bottom);}
-    .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--gray-600);cursor:pointer;text-decoration:none;padding:8px 0;flex:1;}
-    .nav-item i{font-size:20px;}
-    .nav-item.active{color:var(--green-mid);font-weight:700;}
+    /* ══════════════════════════════════════ */
+    /* BOTTOM NAV — GLASSMORPHISM FLOATING */
+    /* ══════════════════════════════════════ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 420px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 
+        0 8px 32px rgba(0, 61, 51, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px;
+      padding-bottom: env(safe-area-inset-bottom);
+      transition: all 0.3s ease;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--gray-600);
+      cursor: pointer;
+      text-decoration: none;
+      padding: 8px 0;
+      flex: 1;
+      border-radius: 18px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active {
+      color: var(--green-dark);
+      font-weight: 700;
+    }
+
+    .nav-item.active i {
+      color: var(--green);
+      filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3));
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      width: 28px;
+      height: 3px;
+      background: var(--green);
+      border-radius: 0 0 4px 4px;
+    }
 
     .main-content{padding:14px;display:flex;flex-direction:column;gap:12px;}
     .card{background:var(--white);border-radius:var(--radius-lg);padding:15px;border:0.5px solid var(--gray-200);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
@@ -250,14 +317,33 @@
 
   </main>
 
+  <!-- ══════════════════════════════════════ -->
+  <!-- BOTTOM NAV — GLASSMORPHISM FLOATING -->
+  <!-- ══════════════════════════════════════ -->
   <nav class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span id="navHome">Home</span></div>
-    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span id="navKalender">Kalender</span></div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-bolt"></i><span id="navMenu">Menu</span></div>
-    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span id="navRekap">Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span id="navProfil">Profil</span></div>
+    <div class="nav-item active" onclick="goTo('dashboard.html')">
+      <i class="fa-solid fa-house"></i>
+      <span id="navHome">Home</span>
+    </div>
+    <div class="nav-item" onclick="goTo('kalender.html')">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span id="navKalender">Kalender</span>
+    </div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')">
+      <i class="fa-brands fa-html5"></i>
+      <span id="navMenu">Menu</span>
+    </div>
+    <div class="nav-item" onclick="goTo('rekap.html')">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span id="navRekap">Rekap</span>
+    </div>
+    <div class="nav-item" onclick="goTo('profil.html')">
+      <i class="fa-solid fa-circle-user"></i>
+      <span id="navProfil">Profil</span>
+    </div>
   </nav>
-
+  
+  
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
