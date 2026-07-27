@@ -223,8 +223,17 @@
           db.collection('kelas').get()
         ]);
         mkMap = {}; kelasMap = {};
-        mkSnap.forEach(d => { mkMap[d.id] = d.data(); });
-        kelasSnap.forEach(d => { kelasMap[d.id] = d.data(); });
+        mkSnap.forEach(d => { 
+          const data = d.data();
+          data._id = d.id;
+          mkMap[d.id] = data; 
+        });
+        kelasSnap.forEach(d => { 
+          const data = d.data();
+          data._id = d.id;
+          kelasMap[d.id] = data; 
+        });
+        console.log('✅ Options loaded: MK=' + Object.keys(mkMap).length + ', Kelas=' + Object.keys(kelasMap).length);
       } catch(e) { console.error(e); }
     }
 
@@ -279,46 +288,70 @@
     // ═══ FORM TAMBAH JADWAL ═══
     window.openForm = function(hari, jamKe) {
       const waktu = JP_WAKTU[jamKe];
-      const mkOptions = Object.values(mkMap).sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(m => 
-        `<option value="${m.id || m._id}">${m.kode||''} - ${m.nama}</option>`
-      ).join('');
       
-      const kelasOptions = Object.values(kelasMap).sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(k =>
-        `<option value="${k.id || k._id}">${k.nama} (${k.semester||'-'})</option>`
-      ).join('');
+      // Debug: cek isi mkMap
+      console.log('mkMap keys:', Object.keys(mkMap));
+      console.log('kelasMap keys:', Object.keys(kelasMap));
+      
+      const mkOptions = Object.entries(mkMap)
+        .sort((a,b) => (a[1].nama||'').localeCompare(b[1].nama||''))
+        .map(([id, m]) => `<option value="${id}">${m.kode||''} - ${m.nama}</option>`)
+        .join('');
+      
+      const kelasOptions = Object.entries(kelasMap)
+        .sort((a,b) => (a[1].nama||'').localeCompare(b[1].nama||''))
+        .map(([id, k]) => `<option value="${id}">${k.nama} (${k.semester||'-'})</option>`)
+        .join('');
 
       document.getElementById('modalContent').innerHTML = `
         <h4>➕ Tambah Jadwal</h4>
         <p style="font-size:11px;color:var(--gray-600);margin-bottom:12px;">${hari} · JP ${jamKe} · ${waktu}</p>
-        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId">${mkOptions}</select></div>
-        <div class="form-group"><label>🏫 Kelas</label><select id="fKelasId">${kelasOptions}</select></div>
+        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId"><option value="">Pilih Matakuliah...</option>${mkOptions}</select></div>
+        <div class="form-group"><label>🏫 Kelas</label><select id="fKelasId"><option value="">Pilih Kelas...</option>${kelasOptions}</select></div>
         <div class="modal-buttons">
           <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnSimpan">Simpan</button>
+          <button class="btn btn-primary" id="btnSimpan" type="button">Simpan</button>
         </div>`;
       document.getElementById('modalOverlay').classList.add('show');
 
       document.getElementById('btnSimpan').onclick = async () => {
         const mkId = document.getElementById('fMkId').value;
         const kelasId = document.getElementById('fKelasId').value;
-        if (!mkId || !kelasId) { alert('Pilih matakuliah dan kelas!'); return; }
+        
+        console.log('Simpan:', { mkId, kelasId });
+        
+        if (!mkId) { alert('⚠️ Pilih matakuliah!'); return; }
+        if (!kelasId) { alert('⚠️ Pilih kelas!'); return; }
 
         // Cek bentrok
         const bentrok = allJadwal.find(j => j.hari === hari && j.jamKe === jamKe);
         if (bentrok) { alert('⚠️ Sudah ada jadwal di slot ini! Hapus dulu yang lama.'); return; }
 
-        const mk = mkMap[mkId]; const kelas = kelasMap[kelasId];
-        await db.collection('jadwal').add({
-          hari, jamKe, waktu,
-          dosenId: user.uid, dosenNama: user.nama || '-',
-          mkId, mkNama: mk?.nama || '-', mkKode: mk?.kode || '',
-          kelasId, kelasNama: kelas?.nama || '-',
-          semester: kelas?.semester || '1',
-          totalPertemuan: 16, minKehadiran: 75,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        closeModal();
-        await loadJadwal();
+        const mk = mkMap[mkId]; 
+        const kelas = kelasMap[kelasId];
+        
+        console.log('Data:', { mk, kelas });
+        
+        if (!mk) { alert('⚠️ Data matakuliah tidak ditemukan!'); return; }
+        if (!kelas) { alert('⚠️ Data kelas tidak ditemukan!'); return; }
+
+        try {
+          await db.collection('jadwal').add({
+            hari, jamKe, waktu,
+            dosenId: user.uid, dosenNama: user.nama || '-',
+            mkId, mkNama: mk.nama || '-', mkKode: mk.kode || '',
+            kelasId, kelasNama: kelas.nama || '-',
+            semester: kelas.semester || '1',
+            totalPertemuan: 16, minKehadiran: 75,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          closeModal();
+          alert('✅ Jadwal berhasil ditambahkan!');
+          await loadJadwal();
+        } catch(e) {
+          alert('❌ Gagal: ' + e.message);
+          console.error(e);
+        }
       };
     };
 
@@ -327,13 +360,15 @@
       const j = allJadwal.find(x => x.id === id);
       if (!j) return;
 
-      const mkOptions = Object.values(mkMap).sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(m => 
-        `<option value="${m.id || m._id}" ${(m.id||m._id)===j.mkId?'selected':''}>${m.kode||''} - ${m.nama}</option>`
-      ).join('');
+      const mkOptions = Object.entries(mkMap)
+        .sort((a,b) => (a[1].nama||'').localeCompare(b[1].nama||''))
+        .map(([id, m]) => `<option value="${id}" ${id===j.mkId?'selected':''}>${m.kode||''} - ${m.nama}</option>`)
+        .join('');
       
-      const kelasOptions = Object.values(kelasMap).sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).map(k =>
-        `<option value="${k.id || k._id}" ${(k.id||k._id)===j.kelasId?'selected':''}>${k.nama} (${k.semester||'-'})</option>`
-      ).join('');
+      const kelasOptions = Object.entries(kelasMap)
+        .sort((a,b) => (a[1].nama||'').localeCompare(b[1].nama||''))
+        .map(([id, k]) => `<option value="${id}" ${id===j.kelasId?'selected':''}>${k.nama} (${k.semester||'-'})</option>`)
+        .join('');
 
       document.getElementById('modalContent').innerHTML = `
         <h4>✏️ Edit Jadwal</h4>
@@ -342,13 +377,16 @@
         <div class="form-group"><label>🏫 Kelas</label><select id="fKelasId">${kelasOptions}</select></div>
         <div class="modal-buttons">
           <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnUpdate">Update</button>
+          <button class="btn btn-primary" id="btnUpdate" type="button">Update</button>
         </div>`;
       document.getElementById('modalOverlay').classList.add('show');
 
       document.getElementById('btnUpdate').onclick = async () => {
         const mkId = document.getElementById('fMkId').value;
         const kelasId = document.getElementById('fKelasId').value;
+        
+        if (!mkId || !kelasId) { alert('Pilih matakuliah dan kelas!'); return; }
+        
         const mk = mkMap[mkId]; const kelas = kelasMap[kelasId];
         await db.collection('jadwal').doc(id).update({
           mkId, mkNama: mk?.nama || '-', mkKode: mk?.kode || '',
@@ -357,6 +395,7 @@
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         closeModal();
+        alert('✅ Jadwal diupdate!');
         await loadJadwal();
       };
     };
@@ -365,6 +404,7 @@
     window.hapusJadwal = async function(id) {
       if (!confirm('Hapus jadwal ini?')) return;
       await db.collection('jadwal').doc(id).delete();
+      alert('🗑️ Jadwal dihapus!');
       await loadJadwal();
     };
 
