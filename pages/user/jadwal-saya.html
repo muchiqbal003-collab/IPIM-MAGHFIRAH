@@ -51,24 +51,12 @@
       box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06); overflow-x: auto;
     }
 
-    /* Dashboard JP */
-    .jp-dashboard {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 4px;
-    }
-    .jp-stat {
-      text-align: center; padding: 12px 8px;
-      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.5);
-    }
+    .jp-dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 4px; }
+    .jp-stat { text-align: center; padding: 12px 8px; background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.5); }
     .jp-stat .jp-value { font-size: 24px; font-weight: 800; color: var(--green-dark); }
     .jp-stat .jp-label { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
-    .jp-stat.total .jp-value { color: var(--green); }
 
-    .info-box {
-      background: var(--blue-light); border-radius: var(--radius-sm);
-      padding: 10px 14px; font-size: 12px; color: var(--blue);
-      display: flex; align-items: center; gap: 8px;
-    }
+    .info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
     .info-box.warning { background: var(--orange-light); color: var(--orange); }
 
     .btn {
@@ -83,19 +71,10 @@
     .btn-sm { padding: 5px 10px; font-size: 10px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 650px; }
-    thead th {
-      background: var(--green-dark); color: white; padding: 10px 6px;
-      text-align: center; font-size: 10px; font-weight: 700;
-      border: 1px solid #003d33; white-space: nowrap;
-    }
+    thead th { background: var(--green-dark); color: white; padding: 10px 6px; text-align: center; font-size: 10px; font-weight: 700; border: 1px solid #003d33; white-space: nowrap; }
     thead th:first-child { width: 55px; background: #003d33; }
-    tbody td {
-      padding: 8px 5px; text-align: center; border: 1px solid var(--gray-200);
-      vertical-align: middle; height: 65px;
-    }
-    tbody td:first-child {
-      font-weight: 700; color: var(--green-dark); background: var(--green-light); font-size: 11px;
-    }
+    tbody td { padding: 8px 5px; text-align: center; border: 1px solid var(--gray-200); vertical-align: middle; height: 65px; }
+    tbody td:first-child { font-weight: 700; color: var(--green-dark); background: var(--green-light); font-size: 11px; }
     .cell-filled { background: #e8f5e9; cursor: pointer; } .cell-filled:hover { background: #c8e6c9; }
     .cell-empty { cursor: pointer; } .cell-empty:hover { background: #f0f0f0; }
     .cell-empty .add-icon { font-size: 18px; color: var(--gray-600); opacity: 0.5; }
@@ -103,67 +82,36 @@
     .cell-kelas { font-size: 9px; color: var(--gray-600); }
     .cell-actions { margin-top: 4px; display: flex; gap: 3px; justify-content: center; }
 
-    .modal-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px;
-    }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.show { display: flex; }
-    .modal-box {
-      background: white; border-radius: var(--radius-lg); width: 100%; max-width: 440px;
-      max-height: 85vh; overflow-y: auto; padding: 22px;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
-    }
+    .modal-box { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 22px; box-shadow: 0 12px 48px rgba(0,0,0,0.25); }
     .modal-box h4 { margin-bottom: 14px; font-size: 15px; font-weight: 700; }
     .form-group { margin-bottom: 10px; }
     .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--gray-600); margin-bottom: 4px; }
-    .form-group select, .form-group input {
-      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-sm); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;
-      outline: none; background: white;
-    }
+    .form-group select, .form-group input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white; }
     .form-group select:focus, .form-group input:focus { border-color: var(--green); }
     
-    .checkbox-list {
-      max-height: 120px; overflow-y: auto; border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-sm); padding: 8px; background: white;
-    }
-    .checkbox-list label {
-      display: flex; align-items: center; gap: 6px;
-      padding: 5px 4px; font-size: 12px; cursor: pointer;
-      border-radius: 4px; transition: var(--transition);
-    }
+    .checkbox-list { max-height: 120px; overflow-y: auto; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); padding: 8px; background: white; }
+    .checkbox-list label { display: flex; align-items: center; gap: 6px; padding: 5px 4px; font-size: 12px; cursor: pointer; border-radius: 4px; transition: var(--transition); }
     .checkbox-list label:hover { background: var(--green-light); }
     .checkbox-list input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
     
     .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 
-    /* API Key Section */
-    .api-key-section {
-      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    }
-    .api-key-section input {
-      flex: 1; min-width: 200px; padding: 8px 12px;
-      border: 1.5px solid var(--gray-200); border-radius: 20px;
-      font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none;
-    }
+    .api-key-section { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .api-key-section input { flex: 1; min-width: 200px; padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: 20px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
     .api-key-section input:focus { border-color: var(--green); }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
       background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 24px;
-      display: flex; align-items: center; justify-content: space-around; z-index: 100;
-      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600);
-      cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
-    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
     .nav-item i { font-size: 20px; transition: all 0.3s ease; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
     .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
@@ -184,71 +132,46 @@
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <h4 style="font-size:13px;font-weight:700;color:var(--green-dark);">📊 Statistik JP</h4>
-        <button class="btn btn-outline btn-sm" onclick="document.getElementById('apiKeySection').style.display = document.getElementById('apiKeySection').style.display === 'none' ? 'block' : 'none'">
-          <i class="fa-solid fa-key"></i> API Key
-        </button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('apiKeySection').style.display = document.getElementById('apiKeySection').style.display === 'none' ? 'block' : 'none'"><i class="fa-solid fa-key"></i> API Key</button>
       </div>
-      
-      <!-- API Key Section -->
       <div id="apiKeySection" style="display:none;margin-bottom:10px;">
-        <div class="info-box" style="margin-bottom:6px;">
-          <i class="fa-solid fa-circle-info"></i>
-          <span>API Key disimpan di browser ini. Dapatkan gratis di <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com</a></span>
-        </div>
+        <div class="info-box" style="margin-bottom:6px;"><i class="fa-solid fa-circle-info"></i><span>API Key disimpan di browser. Dapatkan di <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com</a></span></div>
         <div class="api-key-section">
-          <input type="text" id="apiKeyInput" placeholder="Masukkan Gemini API Key..." style="font-family:monospace;font-size:11px;">
+          <input type="text" id="apiKeyInput" placeholder="Gemini API Key..." style="font-family:monospace;font-size:11px;">
           <button class="btn btn-primary btn-sm" onclick="saveApiKey()"><i class="fa-solid fa-save"></i> Simpan</button>
           <button class="btn btn-outline btn-sm" onclick="clearApiKey()"><i class="fa-solid fa-trash"></i></button>
         </div>
         <small style="color:var(--gray-600);" id="apiKeyStatus"></small>
       </div>
-      
       <div class="jp-dashboard" id="jpDashboard"></div>
     </div>
 
     <!-- Quick Add Form -->
     <div class="card">
-      <div class="info-box" style="margin-bottom:10px;">
-        <i class="fa-solid fa-bolt"></i>
-        <span><strong>Quick Add:</strong> Centang MK, Kelas, Hari, JP → langsung tambah banyak jadwal sekaligus!</span>
-      </div>
+      <div class="info-box" style="margin-bottom:10px;"><i class="fa-solid fa-bolt"></i><span><strong>Quick Add:</strong> Pilih Semester → MK terfilter → Centang Kelas, Hari, JP → Tambah!</span></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+        <div class="form-group" style="min-width:140px;">
+          <label>📅 Semester</label>
+          <select id="quickSemester" onchange="filterQuickMK()"><option value="">Semua</option><option value="i'dad">I'dad</option><option value="1">Sem 1</option><option value="2">Sem 2</option><option value="3">Sem 3</option><option value="4">Sem 4</option><option value="5">Sem 5</option><option value="6">Sem 6</option><option value="7">Sem 7</option><option value="8">Sem 8</option></select>
+        </div>
         <div class="form-group" style="min-width:160px;flex:1;">
           <label>📚 Matakuliah</label>
-          <select id="quickMkId" style="width:100%;"><option value="">Pilih MK...</option></select>
+          <select id="quickMkId"><option value="">Pilih Semester dulu...</option></select>
         </div>
-        <div class="form-group" style="min-width:140px;">
-          <label>🏫 Kelas</label>
-          <div class="checkbox-list" id="quickKelasCb"></div>
-        </div>
-        <div class="form-group" style="min-width:120px;">
-          <label>📅 Hari</label>
-          <div class="checkbox-list" id="quickHariCb"></div>
-        </div>
-        <div class="form-group" style="min-width:80px;">
-          <label>🔢 JP</label>
-          <div class="checkbox-list" id="quickJpCb"></div>
-        </div>
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button class="btn btn-primary" onclick="quickAddJadwal()"><i class="fa-solid fa-plus"></i> Tambah</button>
-        </div>
+        <div class="form-group" style="min-width:140px;"><label>🏫 Kelas</label><div class="checkbox-list" id="quickKelasCb"></div></div>
+        <div class="form-group" style="min-width:110px;"><label>📅 Hari</label><div class="checkbox-list" id="quickHariCb"></div></div>
+        <div class="form-group" style="min-width:70px;"><label>🔢 JP</label><div class="checkbox-list" id="quickJpCb"></div></div>
+        <div class="form-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="quickAddJadwal()"><i class="fa-solid fa-plus"></i> Tambah</button></div>
       </div>
     </div>
 
     <!-- Info -->
-    <div class="info-box warning">
-      <i class="fa-solid fa-robot"></i>
-      <span>💡 <strong>PIM-Bot:</strong> Klik robot di pojok kanan bawah, ketik: <em>"Mengajar [MK] kelas [A,B] hari [Senin] JP [1-3]"</em></span>
-    </div>
+    <div class="info-box warning"><i class="fa-solid fa-robot"></i><span>💡 <strong>PIM-Bot:</strong> Klik robot di pojok kanan bawah, ketik: <em>"Mengajar [MK] kelas [A,B] hari [Senin] JP [1-3]"</em></span></div>
 
-    <!-- Tabel Jadwal -->
-    <div class="card" id="jadwalContainer">
-      <p style="text-align:center;color:var(--gray-600);">Memuat jadwal...</p>
-    </div>
+    <!-- Tabel -->
+    <div class="card" id="jadwalContainer"><p style="text-align:center;color:var(--gray-600);">Memuat jadwal...</p></div>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
     <div class="nav-item active" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
@@ -257,7 +180,6 @@
     <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
   </nav>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay"><div class="modal-box" id="modalContent"></div></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -270,50 +192,30 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    const JP_WAKTU = {
-      1:'07:15-08:05',2:'08:10-09:00',3:'09:05-09:55',
-      4:'10:10-11:00',5:'11:05-11:55',
-      6:'13:00-13:50',7:'13:55-14:45',8:'14:50-15:40'
-    };
+    const JP_WAKTU = {1:'07:15-08:05',2:'08:10-09:00',3:'09:05-09:55',4:'10:10-11:00',5:'11:05-11:55',6:'13:00-13:50',7:'13:55-14:45',8:'14:50-15:40'};
     const HARI_LIST = ['Sabtu','Ahad','Senin','Selasa','Rabu','Kamis'];
     const JAM_LIST = [1,2,3,4,5,6,7,8];
-
     let allJadwal = [], mkMap = {}, kelasMap = {};
 
     function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
 
     // ═══ API KEY ═══
     function loadApiKey() {
-      const key = localStorage.getItem('pimBotApiKey') || '';
-      document.getElementById('apiKeyInput').value = key;
-      document.getElementById('apiKeyStatus').textContent = key ? '✅ API Key tersimpan' : '⚠️ API Key belum diatur';
+      document.getElementById('apiKeyInput').value = localStorage.getItem('pimBotApiKey') || '';
+      document.getElementById('apiKeyStatus').textContent = localStorage.getItem('pimBotApiKey') ? '✅ API Key tersimpan' : '⚠️ Belum diatur';
     }
+    window.saveApiKey = () => { const k = document.getElementById('apiKeyInput').value.trim(); if(k){ localStorage.setItem('pimBotApiKey',k); document.getElementById('apiKeyStatus').textContent='✅ Tersimpan!'; alert('✅ Disimpan!'); } };
+    window.clearApiKey = () => { localStorage.removeItem('pimBotApiKey'); document.getElementById('apiKeyInput').value=''; document.getElementById('apiKeyStatus').textContent='🗑️ Dihapus'; };
 
-    window.saveApiKey = function() {
-      const key = document.getElementById('apiKeyInput').value.trim();
-      if (key) {
-        localStorage.setItem('pimBotApiKey', key);
-        document.getElementById('apiKeyStatus').textContent = '✅ API Key tersimpan!';
-        alert('✅ API Key disimpan! PIM-Bot siap dipakai.');
-      }
-    };
-
-    window.clearApiKey = function() {
-      localStorage.removeItem('pimBotApiKey');
-      document.getElementById('apiKeyInput').value = '';
-      document.getElementById('apiKeyStatus').textContent = '🗑️ API Key dihapus';
-    };
-
-    // ═══ LOAD DATA ═══
+    // ═══ LOAD ═══
     async function loadOptions() {
       try {
-        const [mkSnap, kelasSnap] = await Promise.all([
-          db.collection('matakuliah').get(), db.collection('kelas').get()
-        ]);
+        const [mkSnap, kelasSnap] = await Promise.all([db.collection('matakuliah').get(), db.collection('kelas').get()]);
         mkMap = {}; kelasMap = {};
         mkSnap.forEach(d => { const data = d.data(); data._id = d.id; mkMap[d.id] = data; });
         kelasSnap.forEach(d => { const data = d.data(); data._id = d.id; kelasMap[d.id] = data; });
         renderQuickAddForm();
+        filterQuickMK();
       } catch(e) { console.error(e); }
     }
 
@@ -321,150 +223,133 @@
       try {
         const snap = await db.collection('jadwal').where('dosenId','==',user.uid).get();
         allJadwal = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderTabel();
-        updateDashboard();
-      } catch(e) { document.getElementById('jadwalContainer').innerHTML = '<p style="color:red;">Gagal: '+e.message+'</p>'; }
+        renderTabel(); updateDashboard();
+      } catch(e) { document.getElementById('jadwalContainer').innerHTML='<p style="color:red;">Gagal: '+e.message+'</p>'; }
     }
 
-    // ═══ DASHBOARD JP ═══
     function updateDashboard() {
       const totalJP = allJadwal.length;
-      const hariCount = {};
-      HARI_LIST.forEach(h => hariCount[h] = 0);
-      allJadwal.forEach(j => { if (hariCount[j.hari] !== undefined) hariCount[j.hari]++; });
-
-      const maxJP = Math.max(...Object.values(hariCount), 1);
-      const hariTerpadat = Object.entries(hariCount).sort((a,b) => b[1]-a[1])[0]?.[0] || '-';
-
+      const hariCount = {}; HARI_LIST.forEach(h => hariCount[h]=0);
+      allJadwal.forEach(j => { if(hariCount[j.hari]!==undefined) hariCount[j.hari]++; });
+      const maxJP = Math.max(...Object.values(hariCount),1);
+      const hariTerpadat = Object.entries(hariCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'-';
       document.getElementById('jpDashboard').innerHTML = `
-        <div class="jp-stat total"><div class="jp-value">${totalJP}</div><div class="jp-label">Total JP/Pekan</div></div>
+        <div class="jp-stat"><div class="jp-value">${totalJP}</div><div class="jp-label">Total JP/Pekan</div></div>
         <div class="jp-stat"><div class="jp-value">${hariTerpadat}</div><div class="jp-label">Hari Terpadat</div></div>
         <div class="jp-stat"><div class="jp-value">${maxJP}</div><div class="jp-label">JP Maks/Hari</div></div>
-        <div class="jp-stat"><div class="jp-value">${Object.keys(mkMap).filter(k => allJadwal.some(j => j.mkId === k)).length}</div><div class="jp-label">MK Diampu</div></div>
-      `;
+        <div class="jp-stat"><div class="jp-value">${Object.keys(mkMap).filter(k=>allJadwal.some(j=>j.mkId===k)).length}</div><div class="jp-label">MK Diampu</div></div>`;
     }
 
-    // ═══ QUICK ADD FORM ═══
+    // ═══ QUICK ADD ═══
     function renderQuickAddForm() {
-      // MK dropdown
-      document.getElementById('quickMkId').innerHTML = '<option value="">Pilih MK...</option>' +
-        Object.entries(mkMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||''))
-        .map(([id,m]) => `<option value="${id}">${m.kode||''} - ${m.nama}</option>`).join('');
+      document.getElementById('quickKelasCb').innerHTML = Object.entries(kelasMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,k])=>`<label><input type="checkbox" value="${id}" class="quick-kelas"> ${k.nama}</label>`).join('');
+      document.getElementById('quickHariCb').innerHTML = HARI_LIST.map(h=>`<label><input type="checkbox" value="${h}" class="quick-hari"> ${h}</label>`).join('');
+      document.getElementById('quickJpCb').innerHTML = JAM_LIST.map(j=>`<label><input type="checkbox" value="${j}" class="quick-jp"> JP ${j}</label>`).join('');
+    }
 
-      // Kelas
-      document.getElementById('quickKelasCb').innerHTML = 
-        Object.entries(kelasMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||''))
-        .map(([id,k]) => `<label><input type="checkbox" value="${id}" class="quick-kelas"> ${k.nama}</label>`).join('');
-
-      // Hari
-      document.getElementById('quickHariCb').innerHTML = 
-        HARI_LIST.map(h => `<label><input type="checkbox" value="${h}" class="quick-hari"> ${h}</label>`).join('');
-
-      // JP
-      document.getElementById('quickJpCb').innerHTML = 
-        JAM_LIST.map(j => `<label><input type="checkbox" value="${j}" class="quick-jp"> JP ${j}</label>`).join('');
+    function filterQuickMK() {
+      const semester = document.getElementById('quickSemester')?.value || '';
+      const mkSel = document.getElementById('quickMkId');
+      let filtered = Object.entries(mkMap);
+      if (semester) {
+        const target = semester.toLowerCase().replace(/[^a-z0-9]/g,'');
+        filtered = filtered.filter(([id,m]) => { const ms = String(m.semester||'').toLowerCase().replace(/[^a-z0-9]/g,''); return ms === target || ms.includes(target); });
+      }
+      mkSel.innerHTML = filtered.length===0 ? '<option value="">Tidak ada MK</option>' : '<option value="">Pilih MK...</option>' + filtered.sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,m])=>`<option value="${id}">${m.kode||''} - ${m.nama}</option>`).join('');
     }
 
     window.quickAddJadwal = async function() {
       const mkId = document.getElementById('quickMkId').value;
       if (!mkId) { alert('Pilih matakuliah!'); return; }
-
       const selectedKelas = [...document.querySelectorAll('.quick-kelas:checked')].map(cb=>cb.value);
       const selectedHari = [...document.querySelectorAll('.quick-hari:checked')].map(cb=>cb.value);
       const selectedJp = [...document.querySelectorAll('.quick-jp:checked')].map(cb=>parseInt(cb.value));
-
       if (!selectedKelas.length) { alert('Pilih minimal 1 kelas!'); return; }
       if (!selectedHari.length) { alert('Pilih minimal 1 hari!'); return; }
       if (!selectedJp.length) { alert('Pilih minimal 1 JP!'); return; }
 
-      const mk = mkMap[mkId];
-      const kelasNama = selectedKelas.map(id => kelasMap[id]?.nama || id).join(', ');
-      const totalSlot = selectedHari.length * selectedJp.length;
-
-      if (!confirm(`Tambah ${totalSlot} jadwal?\n\nMK: ${mk?.nama}\nKelas: ${kelasNama}\nHari: ${selectedHari.join(', ')}\nJP: ${selectedJp.join(', ')}`)) return;
+      const mk = mkMap[mkId], kelasNama = selectedKelas.map(id=>kelasMap[id]?.nama||id).join(', ');
+      if (!confirm(`Tambah ${selectedHari.length*selectedJp.length} jadwal?\n\nMK: ${mk?.nama}\nKelas: ${kelasNama}\nHari: ${selectedHari.join(', ')}\nJP: ${selectedJp.join(', ')}`)) return;
 
       const batch = db.batch(); let count = 0;
       for (const hari of selectedHari) {
         for (const jamKe of selectedJp) {
-          const waktu = JP_WAKTU[jamKe] || ''; if (!waktu) continue;
-          if (allJadwal.find(j => j.hari === hari && j.jamKe === jamKe)) continue;
+          const waktu = JP_WAKTU[jamKe]||''; if(!waktu) continue;
+          if (allJadwal.find(j=>j.hari===hari&&j.jamKe===jamKe)) continue;
           const ref = db.collection('jadwal').doc();
-          batch.set(ref, {
-            hari, jamKe, waktu, dosenId: user.uid, dosenNama: user.nama || '-',
-            mkId, mkNama: mk?.nama || '-', mkKode: mk?.kode || '',
-            kelasId: selectedKelas[0], kelasIds: selectedKelas, kelasNama,
-            semester: kelasMap[selectedKelas[0]]?.semester || '1',
-            totalPertemuan: 16, minKehadiran: 75,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          batch.set(ref, {hari,jamKe,waktu,dosenId:user.uid,dosenNama:user.nama||'-',mkId,mkNama:mk?.nama||'-',mkKode:mk?.kode||'',kelasId:selectedKelas[0],kelasIds:selectedKelas,kelasNama,semester:kelasMap[selectedKelas[0]]?.semester||'1',totalPertemuan:16,minKehadiran:75,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
           count++;
         }
       }
-      if (count === 0) { alert('⚠️ Semua slot bentrok!'); return; }
-      try { await batch.commit(); alert(`✅ ${count} jadwal ditambahkan!`); loadJadwal(); }
-      catch(e) { alert('❌ Gagal: ' + e.message); }
+      if (count===0) { alert('⚠️ Semua slot bentrok!'); return; }
+      try { await batch.commit(); alert(`✅ ${count} jadwal ditambahkan!`); loadJadwal(); } catch(e) { alert('❌ '+e.message); }
     };
 
     // ═══ TABEL ═══
     function renderTabel() {
-      const jm = {}; allJadwal.forEach(j => { jm[`${j.hari}_${j.jamKe}`] = j; });
-      let h = '<table><thead><tr><th>JP</th>'+HARI_LIST.map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>';
-      JAM_LIST.forEach(jam => {
-        h += `<tr><td>${jam}<br><small style="font-size:9px;">${JP_WAKTU[jam]||''}</small></td>`;
-        HARI_LIST.forEach(hari => {
-          const j = jm[`${hari}_${jam}`];
-          if (j) {
-            h += `<td class="cell-filled" onclick="editJadwal('${j.id}')"><div class="cell-mapel">${j.mkNama||'-'}</div><div class="cell-kelas">${j.kelasNama||'-'}</div><div class="cell-actions" onclick="event.stopPropagation()"><button class="btn btn-outline btn-sm" onclick="editJadwal('${j.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-danger btn-sm" onclick="hapusJadwal('${j.id}')"><i class="fa-solid fa-trash"></i></button></div></td>`;
-          } else {
-            h += `<td class="cell-empty" onclick="openForm('${hari}',${jam})"><div class="add-icon"><i class="fa-solid fa-plus-circle"></i></div></td>`;
-          }
+      const jm={}; allJadwal.forEach(j=>{jm[`${j.hari}_${j.jamKe}`]=j;});
+      let h='<table><thead><tr><th>JP</th>'+HARI_LIST.map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>';
+      JAM_LIST.forEach(jam=>{
+        h+=`<tr><td>${jam}<br><small style="font-size:9px;">${JP_WAKTU[jam]||''}</small></td>`;
+        HARI_LIST.forEach(hari=>{
+          const j=jm[`${hari}_${jam}`];
+          if(j){h+=`<td class="cell-filled" onclick="editJadwal('${j.id}')"><div class="cell-mapel">${j.mkNama||'-'}</div><div class="cell-kelas">${j.kelasNama||'-'}</div><div class="cell-actions" onclick="event.stopPropagation()"><button class="btn btn-outline btn-sm" onclick="editJadwal('${j.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-danger btn-sm" onclick="hapusJadwal('${j.id}')"><i class="fa-solid fa-trash"></i></button></div></td>`;}
+          else{h+=`<td class="cell-empty" onclick="openForm('${hari}',${jam})"><div class="add-icon"><i class="fa-solid fa-plus-circle"></i></div></td>`;}
         });
-        h += '</tr>';
+        h+='</tr>';
       });
-      h += '</tbody></table>';
-      document.getElementById('jadwalContainer').innerHTML = h;
+      h+='</tbody></table>'; document.getElementById('jadwalContainer').innerHTML=h;
     }
 
-    // ═══ RENDER KELAS CHECKBOX ═══
     function renderKelasCheckboxes(selectedIds=[]) {
       return Object.entries(kelasMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,k])=>`<label><input type="checkbox" value="${id}" class="kelas-cb" ${selectedIds.includes(id)?'checked':''}> ${k.nama} (${k.semester==="i'dad"?"I'dad":'Sem '+k.semester})</label>`).join('');
     }
 
+    function filterMKBySemesterModal() {
+      const semester = document.getElementById('fSemesterModal')?.value || '';
+      const mkSel = document.getElementById('fMkId');
+      if(!mkSel) return;
+      let filtered = Object.entries(mkMap);
+      if(semester){const target=semester.toLowerCase().replace(/[^a-z0-9]/g,'');filtered=filtered.filter(([id,m])=>{const ms=String(m.semester||'').toLowerCase().replace(/[^a-z0-9]/g,'');return ms===target||ms.includes(target);});}
+      mkSel.innerHTML = filtered.length===0?'<option value="">Tidak ada MK</option>':'<option value="">Pilih MK...</option>'+filtered.sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,m])=>`<option value="${id}">${m.kode||''} - ${m.nama}</option>`).join('');
+    }
+
     window.openForm = function(hari, jamKe) {
       const waktu = JP_WAKTU[jamKe];
-      const mkOptions = Object.entries(mkMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,m])=>`<option value="${id}">${m.kode||''} - ${m.nama}</option>`).join('');
       document.getElementById('modalContent').innerHTML = `
         <h4>➕ Tambah Jadwal</h4><p style="font-size:11px;color:var(--gray-600);margin-bottom:12px;">${hari} · JP ${jamKe} · ${waktu}</p>
-        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId"><option value="">Pilih...</option>${mkOptions}</select></div>
+        <div class="form-group"><label>📅 Semester</label><select id="fSemesterModal" onchange="filterMKBySemesterModal()"><option value="">Semua</option><option value="i'dad">I'dad</option>${[1,2,3,4,5,6,7,8].map(s=>`<option value="${s}">Sem ${s}</option>`).join('')}</select></div>
+        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId"><option value="">Pilih Semester dulu...</option></select></div>
         <div class="form-group"><label>🏫 Kelas</label><div class="checkbox-list">${renderKelasCheckboxes()}</div><small style="color:var(--gray-600);">💡 Bisa pilih multiple</small></div>
         <div class="modal-buttons"><button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-primary" id="btnSimpan" type="button">Simpan</button></div>`;
       document.getElementById('modalOverlay').classList.add('show');
+      setTimeout(()=>filterMKBySemesterModal(),100);
       document.getElementById('btnSimpan').onclick = async () => {
         const mkId = document.getElementById('fMkId').value;
         const checkedKelas = [...document.querySelectorAll('.kelas-cb:checked')].map(cb=>cb.value);
-        if (!mkId || checkedKelas.length===0) { alert('Lengkapi!'); return; }
-        if (allJadwal.find(j=>j.hari===hari&&j.jamKe===jamKe)) { alert('Sudah ada jadwal!'); return; }
-        const mk = mkMap[mkId], kelasNama = checkedKelas.map(id=>kelasMap[id]?.nama||id).join(', ');
+        if(!mkId||checkedKelas.length===0){alert('Lengkapi!');return;}
+        if(allJadwal.find(j=>j.hari===hari&&j.jamKe===jamKe)){alert('Sudah ada!');return;}
+        const mk=mkMap[mkId],kelasNama=checkedKelas.map(id=>kelasMap[id]?.nama||id).join(', ');
         await db.collection('jadwal').add({hari,jamKe,waktu,dosenId:user.uid,dosenNama:user.nama||'-',mkId,mkNama:mk?.nama||'-',mkKode:mk?.kode||'',kelasId:checkedKelas[0],kelasIds:checkedKelas,kelasNama,semester:kelasMap[checkedKelas[0]]?.semester||'1',totalPertemuan:16,minKehadiran:75,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
         closeModal(); alert('✅ Ditambahkan!'); loadJadwal();
       };
     };
 
     window.editJadwal = async function(id) {
-      const j = allJadwal.find(x=>x.id===id); if(!j)return;
-      const selectedKelas = j.kelasIds || [j.kelasId];
-      const mkOptions = Object.entries(mkMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,m])=>`<option value="${id}" ${id===j.mkId?'selected':''}>${m.kode||''} - ${m.nama}</option>`).join('');
+      const j=allJadwal.find(x=>x.id===id); if(!j)return;
+      const selectedKelas=j.kelasIds||[j.kelasId];
       document.getElementById('modalContent').innerHTML = `
         <h4>✏️ Edit Jadwal</h4><p style="font-size:11px;color:var(--gray-600);margin-bottom:12px;">${j.hari} · JP ${j.jamKe} · ${j.waktu}</p>
-        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId">${mkOptions}</select></div>
+        <div class="form-group"><label>📅 Semester</label><select id="fSemesterModal" onchange="filterMKBySemesterModal()"><option value="">Semua</option><option value="i'dad" ${j.semester==="i'dad"?'selected':''}>I'dad</option>${[1,2,3,4,5,6,7,8].map(s=>`<option value="${s}" ${j.semester==s?'selected':''}>Sem ${s}</option>`).join('')}</select></div>
+        <div class="form-group"><label>📚 Matakuliah</label><select id="fMkId">${Object.entries(mkMap).sort((a,b)=>(a[1].nama||'').localeCompare(b[1].nama||'')).map(([id,m])=>`<option value="${id}" ${id===j.mkId?'selected':''}>${m.kode||''} - ${m.nama}</option>`).join('')}</select></div>
         <div class="form-group"><label>🏫 Kelas</label><div class="checkbox-list">${renderKelasCheckboxes(selectedKelas)}</div></div>
         <div class="modal-buttons"><button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-primary" id="btnUpdate" type="button">Update</button></div>`;
       document.getElementById('modalOverlay').classList.add('show');
       document.getElementById('btnUpdate').onclick = async () => {
-        const mkId = document.getElementById('fMkId').value;
-        const checkedKelas = [...document.querySelectorAll('.kelas-cb:checked')].map(cb=>cb.value);
-        if (!mkId||checkedKelas.length===0) { alert('Lengkapi!'); return; }
-        const mk = mkMap[mkId], kelasNama = checkedKelas.map(id=>kelasMap[id]?.nama||id).join(', ');
+        const mkId=document.getElementById('fMkId').value;
+        const checkedKelas=[...document.querySelectorAll('.kelas-cb:checked')].map(cb=>cb.value);
+        if(!mkId||checkedKelas.length===0){alert('Lengkapi!');return;}
+        const mk=mkMap[mkId],kelasNama=checkedKelas.map(id=>kelasMap[id]?.nama||id).join(', ');
         await db.collection('jadwal').doc(id).update({mkId,mkNama:mk?.nama||'-',mkKode:mk?.kode||'',kelasId:checkedKelas[0],kelasIds:checkedKelas,kelasNama,semester:kelasMap[checkedKelas[0]]?.semester||'1',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
         closeModal(); alert('✅ Diupdate!'); loadJadwal();
       };
@@ -472,7 +357,7 @@
 
     window.hapusJadwal = async (id) => { if(confirm('Hapus?')){ await db.collection('jadwal').doc(id).delete(); alert('🗑️ Dihapus!'); loadJadwal(); } };
 
-    (async function init() { loadApiKey(); await loadOptions(); await loadJadwal(); })();
+    (async function init(){ loadApiKey(); await loadOptions(); await loadJadwal(); })();
   </script>
 </body>
 </html>
