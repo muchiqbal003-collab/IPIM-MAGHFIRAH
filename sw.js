@@ -68,7 +68,7 @@ self.addEventListener('notificationclick', function(event) {
 // CACHE (sama seperti sebelumnya)
 // =============================================
 
-const CACHE_NAME = 'ipim-v01';
+const CACHE_NAME = 'ipim-v2';
 
 const FILES_TO_CACHE = [
   '/IPIM-MAGHFIRAH/',
