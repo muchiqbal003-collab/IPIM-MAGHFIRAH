@@ -73,6 +73,8 @@
     .alert-error { background: var(--red-light); color: #b71c1c; }
 
     .info-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600; background: var(--blue-light); color: var(--blue); margin-left: 6px; }
+    .text-muted { color: var(--gray-400); font-size: 11px; }
+    .highlight { background: #fffde7; }
 
     @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 16px 12px; } .form-group select { min-width: 140px; } }
   </style>
@@ -110,29 +112,36 @@
 
     <!-- Filter -->
     <div class="card">
-      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Pilih Kelas & Filter</h3></div>
+      <div class="card-header"><h3><i class="fa-solid fa-filter"></i> Filter</h3></div>
       <div class="card-body">
         <div class="filter-row">
           <div class="form-group"><label>🏫 Kelas Tujuan</label><select id="filterKelas" onchange="loadPembagian()"><option value="">Pilih Kelas...</option></select></div>
           <div class="form-group"><label>👤 Jenis Kelamin</label><select id="filterJK" onchange="loadPembagian()"><option value="">Semua</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
           <div class="form-group"><label>📅 Angkatan</label><select id="filterAngkatan" onchange="loadPembagian()"><option value="">Semua Angkatan</option></select></div>
+          <div class="form-group" style="margin-left:auto;">
+            <label>&nbsp;</label>
+            <button class="btn btn-outline btn-sm" onclick="loadPembagian()"><i class="fa-solid fa-sync"></i> Refresh</button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Mahasiswa Belum Terbagi -->
     <div class="card" id="cardTambah" style="display:none;">
-      <div class="card-header"><h3><i class="fa-solid fa-user-plus"></i> Tambah Mahasiswa ke Kelas <span id="labelKelasTujuan"></span></h3></div>
+      <div class="card-header">
+        <h3><i class="fa-solid fa-user-plus"></i> Mahasiswa Belum Terbagi</h3>
+        <span id="labelKelasTujuan"></span>
+      </div>
       <div class="card-body">
-        <div id="listTambah"><p style="color:var(--gray-400);">Pilih kelas</p></div>
-        <button class="btn btn-primary" style="margin-top:12px;" id="btnSimpan" onclick="simpanPembagian()"><i class="fa-solid fa-save"></i> Simpan (<span id="countSelected">0</span>)</button>
+        <div id="listTambah"><p class="text-muted" style="text-align:center;padding:20px;">Pilih kelas tujuan terlebih dahulu</p></div>
+        <button class="btn btn-primary" style="margin-top:12px;" id="btnSimpan" onclick="simpanPembagian()"><i class="fa-solid fa-save"></i> Simpan ke Kelas (<span id="countSelected">0</span>)</button>
       </div>
     </div>
 
     <!-- Anggota Saat Ini -->
     <div class="card" id="cardAnggota" style="display:none;">
       <div class="card-header"><h3><i class="fa-solid fa-users"></i> Anggota Kelas (<span id="totalAnggota">0</span>)</h3></div>
-      <div class="card-body" id="tableAnggota"><p style="color:var(--gray-400);">Pilih kelas</p></div>
+      <div class="card-body" id="tableAnggota"><p class="text-muted" style="text-align:center;padding:20px;">Pilih kelas untuk melihat anggota</p></div>
     </div>
   </main>
 
@@ -146,6 +155,7 @@
     if (!user) window.location.href = '../../index.html';
     document.getElementById('sidebarName').textContent = user.nama || 'Operator';
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+    
     let selectedCheckboxes = new Set();
     let allMahasiswaData = [];
 
@@ -171,15 +181,22 @@
           kelasSel.appendChild(o); 
         });
 
-        // Load mahasiswa & kumpulkan angkatan
+        // Load semua mahasiswa
         const mhsSnap = await db.collection('mahasiswa').get();
         allMahasiswaData = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        // Kumpulkan angkatan unik
+        console.log('✅ Total mahasiswa loaded:', allMahasiswaData.length);
+        
+        // Kumpulkan angkatan unik (support number & string)
         const angkatanSet = new Set();
         allMahasiswaData.forEach(m => {
-          if (m.angkatan) angkatanSet.add(m.angkatan);
+          const a = m.angkatan;
+          if (a !== undefined && a !== null && a !== '') {
+            angkatanSet.add(String(a));
+          }
         });
+        
+        console.log('📅 Angkatan found:', [...angkatanSet]);
         
         const angkatanSel = document.getElementById('filterAngkatan');
         angkatanSel.innerHTML = '<option value="">Semua Angkatan</option>';
@@ -189,7 +206,7 @@
           o.textContent = 'Angkatan ' + a;
           angkatanSel.appendChild(o);
         });
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error('loadOptions error:', e); }
     }
 
     async function loadPembagian() {
@@ -197,28 +214,27 @@
       const jkFilter = document.getElementById('filterJK').value;
       const angkatanFilter = document.getElementById('filterAngkatan').value;
       
+      console.log('🔍 Filter:', { kelasId, jkFilter, angkatanFilter });
+      
       if (!kelasId) {
         document.getElementById('cardTambah').style.display = 'none';
         document.getElementById('cardAnggota').style.display = 'none';
         return;
       }
       
-      // Tampilkan label kelas
+      // Label kelas
       const kelasSel = document.getElementById('filterKelas');
       const kelasNama = kelasSel.options[kelasSel.selectedIndex]?.text || '';
-      document.getElementById('labelKelasTujuan').innerHTML = `<span class="info-badge">${kelasNama}</span>`;
+      document.getElementById('labelKelasTujuan').innerHTML = `<span class="info-badge">➡️ ${kelasNama}</span>`;
       
       document.getElementById('cardTambah').style.display = 'block';
       document.getElementById('cardAnggota').style.display = 'block';
 
-      // Filter mahasiswa
-      let filtered = [...allMahasiswaData];
-      
-      // Filter anggota kelas (yang sudah di kelas ini)
-      let anggotaKelas = filtered.filter(d => d.kelasId === kelasId);
+      // Filter anggota kelas
+      let anggotaKelas = allMahasiswaData.filter(d => d.kelasId === kelasId);
       
       // Filter yang BELUM punya kelas
-      let available = filtered.filter(d => !d.kelasId || d.kelasId === '');
+      let available = allMahasiswaData.filter(d => !d.kelasId || d.kelasId === '');
 
       // Filter JK
       if (jkFilter) {
@@ -226,11 +242,13 @@
         available = available.filter(d => d.jk === jkFilter);
       }
       
-      // Filter Angkatan
+      // Filter Angkatan (konversi ke string untuk perbandingan)
       if (angkatanFilter) {
-        anggotaKelas = anggotaKelas.filter(d => d.angkatan === angkatanFilter);
-        available = available.filter(d => d.angkatan === angkatanFilter);
+        anggotaKelas = anggotaKelas.filter(d => String(d.angkatan) === angkatanFilter);
+        available = available.filter(d => String(d.angkatan) === angkatanFilter);
       }
+
+      console.log('📊 Anggota:', anggotaKelas.length, '| Available:', available.length);
 
       selectedCheckboxes.clear();
       renderAvailable(available);
@@ -239,16 +257,18 @@
     }
 
     function renderAvailable(data) {
-      let html = '<table><thead><tr><th><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th></tr></thead><tbody>';
+      let html = '<table><thead><tr><th><input type="checkbox" id="checkAll" onchange="toggleAll(this)" title="Pilih Semua"></th><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th></tr></thead><tbody>';
       if (data.length === 0) {
         html += '<tr><td colspan="6" style="text-align:center;padding:20px;">✅ Semua mahasiswa sudah memiliki kelas</td></tr>';
       } else {
         data.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach((d, i) => {
           html += `<tr>
             <td><input type="checkbox" class="checkbox-lg mhs-check" value="${d.id}" onchange="toggleCheck('${d.id}', this.checked)"></td>
-            <td>${i+1}</td><td>${d.nim||'-'}</td><td><strong>${d.nama||'-'}</strong></td>
+            <td>${i+1}</td>
+            <td>${d.nim||'-'}</td>
+            <td><strong>${d.nama||'-'}</strong></td>
             <td>${d.jk || '-'}</td>
-            <td>${d.angkatan || '-'}</td>
+            <td>${d.angkatan !== undefined && d.angkatan !== null ? d.angkatan : '-'}</td>
           </tr>`;
         });
       }
@@ -260,13 +280,15 @@
       document.getElementById('totalAnggota').textContent = data.length;
       let html = '<table><thead><tr><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th><th>Aksi</th></tr></thead><tbody>';
       if (data.length === 0) {
-        html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Belum ada anggota</td></tr>';
+        html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Belum ada anggota di kelas ini</td></tr>';
       } else {
         data.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach((d, i) => {
           html += `<tr class="anggota-row">
-            <td>${i+1}</td><td>${d.nim||'-'}</td><td><strong>${d.nama||'-'}</strong></td>
+            <td>${i+1}</td>
+            <td>${d.nim||'-'}</td>
+            <td><strong>${d.nama||'-'}</strong></td>
             <td>${d.jk || '-'}</td>
-            <td>${d.angkatan || '-'}</td>
+            <td>${d.angkatan !== undefined && d.angkatan !== null ? d.angkatan : '-'}</td>
             <td><button class="btn btn-danger btn-sm" onclick="hapusAnggota('${d.id}')"><i class="fa-solid fa-trash"></i> Keluarkan</button></td>
           </tr>`;
         });
@@ -278,45 +300,77 @@
     window.toggleAll = function(el) {
       document.querySelectorAll('.mhs-check').forEach(cb => {
         cb.checked = el.checked;
-        toggleCheck(cb.value, el.checked);
+        if (el.checked) selectedCheckboxes.add(cb.value);
+        else selectedCheckboxes.delete(cb.value);
       });
+      document.getElementById('countSelected').textContent = selectedCheckboxes.size;
     };
 
     window.toggleCheck = function(id, checked) {
-      if (checked) selectedCheckboxes.add(id); else selectedCheckboxes.delete(id);
+      if (checked) selectedCheckboxes.add(id); 
+      else selectedCheckboxes.delete(id);
       document.getElementById('countSelected').textContent = selectedCheckboxes.size;
+      
+      // Update checkAll state
+      const allCbs = document.querySelectorAll('.mhs-check');
+      const checkAll = document.getElementById('checkAll');
+      if (checkAll) checkAll.checked = selectedCheckboxes.size === allCbs.length;
     };
 
     async function simpanPembagian() {
       const kelasId = document.getElementById('filterKelas').value;
-      if (!kelasId || selectedCheckboxes.size === 0) { showAlert('error', 'Pilih kelas dan minimal 1 mahasiswa!'); return; }
+      if (!kelasId) { showAlert('error', 'Pilih kelas tujuan!'); return; }
+      if (selectedCheckboxes.size === 0) { showAlert('error', 'Pilih minimal 1 mahasiswa!'); return; }
       
       const btn = document.getElementById('btnSimpan');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      btn.disabled = true; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan ' + selectedCheckboxes.size + ' mhs...';
       
       try {
         const batch = db.batch();
         for (const mhsId of selectedCheckboxes) {
-          batch.update(db.collection('mahasiswa').doc(mhsId), { kelasId: kelasId });
+          batch.update(db.collection('mahasiswa').doc(mhsId), { 
+            kelasId: kelasId,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
         }
         await batch.commit();
-        showAlert('success', `${selectedCheckboxes.size} mahasiswa berhasil ditambahkan ke kelas!`);
+        showAlert('success', `✅ ${selectedCheckboxes.size} mahasiswa berhasil ditambahkan!`);
         loadPembagian();
-      } catch(e) { showAlert('error', e.message); }
-      finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan (<span id="countSelected">0</span>)'; }
+      } catch(e) { 
+        console.error('Simpan error:', e);
+        showAlert('error', 'Gagal: ' + e.message); 
+      }
+      finally { 
+        btn.disabled = false; 
+        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan ke Kelas (<span id="countSelected">0</span>)'; 
+      }
     }
 
     window.hapusAnggota = async function(mhsId) {
       if (!confirm('Keluarkan mahasiswa dari kelas ini?')) return;
-      await db.collection('mahasiswa').doc(mhsId).update({ kelasId: '' });
-      showAlert('success', 'Mahasiswa dikeluarkan dari kelas!');
-      loadPembagian();
+      try {
+        await db.collection('mahasiswa').doc(mhsId).update({ 
+          kelasId: '',
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showAlert('success', 'Mahasiswa dikeluarkan dari kelas!');
+        loadPembagian();
+      } catch(e) {
+        showAlert('error', 'Gagal: ' + e.message);
+      }
     };
 
     window.logout = function() { 
-      if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } 
+      if (confirm('Keluar?')) { 
+        auth.signOut().then(() => { 
+          localStorage.removeItem('user'); 
+          window.location.href = '../../index.html'; 
+        }); 
+      } 
     };
 
+    // Init
     loadOptions();
   </script>
 </body>
