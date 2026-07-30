@@ -1,343 +1,298 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Kalender Akademik - IPIM</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
-            --green-light:#e8f5e9;--green-pale:#f0faf5;
-            --gold:#f5c842;--gold-light:#fffbee;
-            --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
-            --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
-            --radius-sm:10px;--radius:14px;--radius-lg:18px;
-            --transition:all 0.3s ease;
-            --header-height:56px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
-            color: var(--gray-800);
-            padding-top: var(--header-height);
-            padding-bottom: 100px;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Kalender - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+      min-height: 100vh; color: #e2e8f0;
+      position: relative; overflow-x: hidden; padding-bottom: 100px;
+    }
+    body::before {
+      content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(15, 118, 110, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; pointer-events: none; z-index: 0;
+    }
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(1%, -1%); }
+      66% { transform: translate(-1%, 1%); }
+    }
 
-        /* ═══ HEADER ═══ */
-        .app-header {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: linear-gradient(135deg, #003d33 0%, #006644 100%);
-            color: white; padding: 12px 16px;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 4px 20px rgba(0,61,51,0.35);
-        }
-        .btn-back {
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
-            color: white; font-size: 16px; width: 36px; height: 36px;
-            border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
-        .btn-share {
-            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 8px 14px; border-radius: 20px;
-            font-size: 12px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
-            cursor: pointer; display: flex; align-items: center; gap: 6px;
-            transition: var(--transition);
-        }
+    .container { max-width: 640px; margin: 0 auto; padding: 1.5rem; position: relative; z-index: 1; }
 
-        /* ═══ CONTENT ═══ */
-        .content { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
+      padding: 1.5rem; text-align: center; margin-bottom: 1rem;
+      position: relative; overflow: hidden;
+    }
+    .header::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    }
+    .header-icon {
+      width: 48px; height: 48px; margin: 0 auto 0.5rem;
+      background: rgba(15, 118, 110, 0.2); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(15, 118, 110, 0.3);
+    }
+    .header h1 { color: #fff; font-size: 1.5rem; font-weight: 700; }
+    .header-subtitle { color: rgba(255, 255, 255, 0.5); font-size: 0.8rem; margin-top: 0.25rem; }
 
-        /* ═══ CARDS — GLASS ═══ */
-        .card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
-        }
+    /* Month Navigator */
+    .month-nav {
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px;
+      padding: 0.75rem 1rem; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+    }
+    .nav-btn {
+      width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+      cursor: pointer; color: #5eead4; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: all 0.2s;
+    }
+    .nav-btn:active { background: rgba(15, 118, 110, 0.2); }
+    .month-label { font-size: 1rem; font-weight: 600; color: #f1f5f9; text-align: center; }
+    .month-count { font-size: 0.7rem; color: rgba(255, 255, 255, 0.4); margin-top: 0.15rem; }
+    .today-btn {
+      background: rgba(15, 118, 110, 0.2); border: 1px solid rgba(15, 118, 110, 0.3);
+      border-radius: 10px; padding: 0.5rem 0.75rem; cursor: pointer;
+      color: #5eead4; font-size: 0.75rem; font-weight: 600; font-family: inherit;
+    }
 
-        /* ═══ CALENDAR ═══ */
-        .calendar-header {
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
-        }
-        .calendar-header h2 { font-size: 16px; font-weight: 700; color: var(--green-dark); }
-        .cal-nav-btn {
-            width: 36px; height: 36px; border-radius: 50%;
-            border: 1px solid rgba(0, 61, 51, 0.1);
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            color: var(--green-dark); font-size: 14px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: var(--transition);
-        }
-        .calendar-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center;
-        }
-        .calendar-grid .day-name {
-            font-size: 10px; font-weight: 700; color: var(--gray-600);
-            padding: 6px 0; text-transform: uppercase;
-        }
-        .calendar-grid .day-name:first-child { color: #b71c1c; }
-        .calendar-grid .day {
-            padding: 10px 4px; border-radius: var(--radius-sm); cursor: pointer;
-            font-size: 12px; font-weight: 500; position: relative;
-            transition: var(--transition); color: var(--gray-800);
-        }
-        .calendar-grid .day.today {
-            background: var(--green-light); font-weight: 700;
-            border: 2px solid var(--green);
-        }
-        .calendar-grid .day.selected {
-            background: var(--green-dark); color: white; font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0, 61, 51, 0.3);
-        }
-        .calendar-grid .day.has-event::after {
-            content: ''; position: absolute; bottom: 3px; left: 50%;
-            transform: translateX(-50%); width: 5px; height: 5px;
-            border-radius: 50%; background: var(--gold);
-        }
-        .calendar-grid .day.selected.has-event::after { background: white; }
+    /* Event List */
+    .event-list { display: flex; flex-direction: column; gap: 1rem; }
+    .event-card {
+      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px;
+      padding: 1.25rem; position: relative; overflow: hidden;
+      transition: all 0.3s;
+    }
+    .event-card:active { transform: translateY(-2px); background: rgba(255, 255, 255, 0.06); }
+    .event-card::after {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; border-radius: 0 4px 4px 0;
+    }
+    .event-card.ipim::after { background: linear-gradient(180deg, #0f766e, #14b8a6); }
+    .event-card.eo::after { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
 
-        /* ═══ EVENT LIST ═══ */
-        .section-title {
-            font-size: 14px; font-weight: 700; color: var(--green-dark);
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-        }
-        .section-title i { font-size: 16px; color: var(--green); }
-        .event-list { display: flex; flex-direction: column; gap: 8px; }
-        .event-item {
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-radius: var(--radius-sm);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 3px solid var(--green);
-            font-size: 12px;
-        }
-        .event-item .title { font-weight: 700; color: var(--gray-800); margin-bottom: 3px; }
-        .event-item .desc { font-size: 11px; color: var(--gray-600); }
-        .no-event { text-align: center; color: var(--gray-600); font-size: 13px; padding: 20px; }
-    </style>
+    .event-date { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; padding-left: 0.5rem; }
+    .date-badge {
+      background: rgba(15, 118, 110, 0.15); border: 1px solid rgba(15, 118, 110, 0.2);
+      border-radius: 12px; padding: 0.25rem 0.75rem; font-size: 0.75rem;
+      font-weight: 600; color: #5eead4; white-space: nowrap;
+    }
+    .event-card.eo .date-badge { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+    .event-title { font-size: 1rem; font-weight: 600; color: #f1f5f9; padding-left: 0.5rem; margin-bottom: 0.35rem; }
+    .event-desc { color: rgba(255, 255, 255, 0.5); font-size: 0.8rem; line-height: 1.5; padding-left: 0.5rem; }
+    .event-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; padding-left: 0.5rem; font-size: 0.75rem; color: rgba(255, 255, 255, 0.4); margin-top: 0.5rem; }
+    .event-source {
+      display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.65rem;
+      font-weight: 700; margin-top: 0.5rem; margin-left: 0.5rem;
+    }
+    .event-source.ipim { background: rgba(15, 118, 110, 0.2); color: #5eead4; }
+    .event-source.eo { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+    .today-badge {
+      background: #14b8a6; color: #fff; font-size: 0.55rem; padding: 2px 6px;
+      border-radius: 8px; margin-left: 4px; font-weight: 700;
+    }
+
+    .empty-state { text-align: center; padding: 3rem; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); }
+    .empty-state p { color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+    .loading { text-align: center; padding: 3rem; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #14b8a6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .footer { text-align: center; margin-top: 2rem; padding: 1.5rem; color: rgba(255,255,255,0.25); font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    .footer a { color: #5eead4; text-decoration: none; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px;
+      display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      padding: 0 8px;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: #5eead4; font-weight: 700; }
+    .nav-item.active i { color: #14b8a6; }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: #14b8a6; border-radius: 0 0 4px 4px; }
+  </style>
 </head>
 <body>
-
-    <header class="app-header">
-        <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-        <h3>Kalender Akademik</h3>
-        <button class="btn-share" onclick="shareKalender()"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
-    </header>
-
-    <div class="content">
-        <div class="card">
-            <div class="calendar-header">
-                <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <h2 id="monthLabel">Januari 2026</h2>
-                <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-            <div class="calendar-grid" id="calendarGrid"></div>
-        </div>
-
-        <div class="card">
-            <div class="section-title">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span id="selectedDateLabel">📅 Event Hari Ini</span>
-            </div>
-            <div class="event-list" id="eventList">
-                <p class="no-event">Pilih tanggal untuk lihat event</p>
-            </div>
-        </div>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-icon">📅</div>
+      <h1>Kalender Kegiatan</h1>
+      <div class="header-subtitle">IPIM Maghfirah × EO HK</div>
     </div>
 
-    <!-- ══════════════════════════════════════ -->
-    <!-- BOTTOM NAV — GLASS FLOATING PREMIUM  -->
-    <!-- ══════════════════════════════════════ -->
-    <style>
-        .bottom-nav {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 420px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            z-index: 100;
-            box-shadow: 
-                0 8px 32px rgba(0, 61, 51, 0.1),
-                0 2px 8px rgba(0, 0, 0, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            padding: 0 8px;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--gray-600);
-            cursor: pointer;
-            text-decoration: none;
-            padding: 8px 0;
-            flex: 1;
-            border-radius: 18px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        .nav-item i {
-            font-size: 20px;
-            transition: all 0.3s ease;
-        }
-        .nav-item.active {
-            color: var(--green-dark);
-            font-weight: 700;
-        }
-        .nav-item.active i {
-            color: var(--green);
-            filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3));
-        }
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            width: 28px;
-            height: 3px;
-            background: var(--green);
-            border-radius: 0 0 4px 4px;
-        }
-    </style>
+    <!-- Month Navigator -->
+    <div class="month-nav">
+      <button class="nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+      <div style="text-align:center;">
+        <div class="month-label" id="monthLabel">Juli 2026</div>
+        <div class="month-count" id="monthCount">0 kegiatan</div>
+      </div>
+      <button class="nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+      <button class="today-btn" onclick="goToToday()">Hari Ini</button>
+    </div>
 
-     <!-- ══════════════════════════════════════ -->
+    <!-- Event List -->
+    <div id="eventList">
+      <div class="loading"><div class="spinner"></div><p>Memuat kegiatan...</p></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      © 2026 <a href="#">IPIM Maghfirah</a> × <a href="#">EO HK</a> · Kalender Kegiatan
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
   <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')">
-      <i class="fa-solid fa-house"></i>
-      <span id="navHome">Home</span>
-    </div>
-    <div class="nav-item active" onclick="goTo('kalender.html')">
-      <i class="fa-solid fa-calendar-days"></i>
-      <span id="navKalender">Kalender</span>
-    </div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')">
-      <i class="fa-brands fa-html5"></i>
-      <span id="navMenu">Menu</span>
-    </div>
-    <div class="nav-item" onclick="goTo('rekap.html')">
-      <i class="fa-solid fa-chart-simple"></i>
-      <span id="navRekap">Rekap</span>
-    </div>
-    <div class="nav-item" onclick="goTo('profil.html')">
-      <i class="fa-solid fa-circle-user"></i>
-      <span id="navProfil">Profil</span>
-    </div>
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item active" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
   </nav>
-  
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="../../js/firebase-config.js"></script>
-    <script src="../../js/app.js"></script>
-    <script>
-        const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
-        if (!user) window.location.href = '../../index.html';
-        window.goTo = page => window.location.href = page;
 
-        let currentDate = new Date();
-        let events = [];
-        let selectedDate = new Date().toISOString().split('T')[0];
+  <!-- Supabase -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+    
+    const supabaseEO = createClient(
+      'https://twdtfckgwlclfznznrvu.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3ZHRmY2tnd2xjbGZ6bnpucnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTMwMjAsImV4cCI6MjA5NzMyOTAyMH0.HmGPveqQ6CdhKfH2PsofEfBN6vZx8Np6opUM-XOywKQ'
+    )
 
-        async function loadEvents() {
-            try {
-                const snap = await db.collection('kalenderAkademik').get();
-                events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderCalendar();
-                loadEventsByDate(selectedDate);
-            } catch(e) { console.error(e); }
+    const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    const now = new Date();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+    const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    function updateLabel() {
+      document.getElementById('monthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    }
+
+    async function loadEvents(month, year) {
+      const container = document.getElementById('eventList');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat...</p></div>';
+
+      try {
+        // Load IPIM events
+        const startDate = `${year}-${String(month+1).padStart(2,'0')}-01`;
+        const endDay = new Date(year, month+1, 0).getDate();
+        const endDate = `${year}-${String(month+1).padStart(2,'0')}-${String(endDay).padStart(2,'0')}`;
+        const today = new Date().toISOString().split('T')[0];
+
+        const ipimSnap = await db.collection('kalenderAkademik')
+          .where('tanggal', '>=', startDate)
+          .where('tanggal', '<=', endDate)
+          .get();
+        
+        const ipimEvents = ipimSnap.docs.map(d => ({ ...d.data(), sumber: 'IPIM' }));
+
+        // Load EO HK events
+        const { data: eoData } = await supabaseEO
+          .from('kalender_kegiatan')
+          .select('*')
+          .eq('is_public', true)
+          .gte('tanggal', startDate)
+          .lte('tanggal', endDate)
+          .order('tanggal', { ascending: true });
+
+        const eoEvents = (eoData || []).map(e => ({
+          judul: e.judul,
+          deskripsi: e.deskripsi || '',
+          tanggal: e.tanggal,
+          waktuMulai: e.waktu_mulai?.slice(0,5),
+          waktuSelesai: e.waktu_selesai?.slice(0,5),
+          tempat: e.tempat || '',
+          sumber: 'EO HK'
+        }));
+
+        // Gabung & sort
+        const allEvents = [...ipimEvents, ...eoEvents].sort((a,b) => a.tanggal.localeCompare(b.tanggal));
+        
+        document.getElementById('monthCount').textContent = `${allEvents.length} kegiatan`;
+
+        if (allEvents.length === 0) {
+          container.innerHTML = `<div class="empty-state"><p>📭 Belum ada kegiatan</p><p style="font-size:0.7rem;margin-top:0.25rem;">${monthNames[month]} ${year}</p></div>`;
+          return;
         }
 
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-            document.getElementById('monthLabel').textContent = `${monthNames[month]} ${year}`;
+        container.innerHTML = `<div class="event-list">${allEvents.map(e => {
+          const d = new Date(e.tanggal + 'T00:00:00');
+          const formatted = d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+          const isToday = e.tanggal === today;
+          const isEO = e.sumber === 'EO HK';
+          
+          return `<div class="event-card ${isEO ? 'eo' : 'ipim'}">
+            <div class="event-date">
+              <span class="date-badge">📅 ${formatted}${isToday ? '<span class="today-badge">HARI INI</span>' : ''}</span>
+            </div>
+            <div class="event-title">${e.judul}</div>
+            ${e.deskripsi ? `<div class="event-desc">${e.deskripsi}</div>` : ''}
+            <div class="event-meta">
+              ${e.waktuMulai ? `<span>⏰ ${e.waktuMulai}${e.waktuSelesai?' - '+e.waktuSelesai:''} WIB</span>` : ''}
+              ${e.tempat ? `<span>📍 ${e.tempat}</span>` : ''}
+            </div>
+            <span class="event-source ${isEO ? 'eo' : 'ipim'}">${isEO ? 'EO HK' : 'IPIM'}</span>
+          </div>`;
+        }).join('')}</div>`;
+      } catch(e) {
+        container.innerHTML = `<div class="empty-state"><p>❌ Gagal memuat: ${e.message}</p></div>`;
+      }
+    }
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date().toISOString().split('T')[0];
-            const dayNames = ['Ahad','Sen','Sel','Rab','Kam','Jum','Sab'];
-            let html = dayNames.map(d => `<div class="day-name">${d}</div>`).join('');
-            for (let i = 0; i < firstDay; i++) html += '<div class="day"></div>';
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const isToday = dateStr === today;
-                const isSelected = dateStr === selectedDate;
-                const hasEvent = events.some(e => e.tanggal === dateStr);
-                html += `<div class="day ${isToday?'today':''} ${isSelected?'selected':''} ${hasEvent?'has-event':''}" onclick="selectDate('${dateStr}')">${d}</div>`;
-            }
-            document.getElementById('calendarGrid').innerHTML = html;
-        }
+    window.changeMonth = function(delta) {
+      if (currentMonth === 0 && delta < 0) { currentMonth = 11; currentYear--; }
+      else if (currentMonth === 11 && delta > 0) { currentMonth = 0; currentYear++; }
+      else { currentMonth += delta; }
+      updateLabel();
+      loadEvents(currentMonth, currentYear);
+    };
 
-        window.changeMonth = function(delta) { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); };
+    window.goToToday = function() {
+      currentMonth = now.getMonth();
+      currentYear = now.getFullYear();
+      updateLabel();
+      loadEvents(currentMonth, currentYear);
+    };
 
-        window.selectDate = function(dateStr) {
-            selectedDate = dateStr;
-            document.getElementById('selectedDateLabel').textContent = `📅 Event ${formatDate(dateStr)}`;
-            renderCalendar();
-            loadEventsByDate(dateStr);
-        };
+    // Init
+    updateLabel();
+    loadEvents(currentMonth, currentYear);
+  </script>
 
-        function loadEventsByDate(dateStr) {
-            const filtered = events.filter(e => e.tanggal === dateStr);
-            const list = document.getElementById('eventList');
-            list.innerHTML = filtered.length === 0 
-                ? '<p class="no-event">Tidak ada event</p>' 
-                : filtered.map(e => `<div class="event-item"><div class="title">${e.judul}</div><div class="desc">${e.deskripsi||''}</div></div>`).join('');
-        }
-
-        function formatDate(dateStr) {
-            const [y, m, d] = dateStr.split('-');
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-            return `${d} ${months[parseInt(m)-1]} ${y}`;
-        }
-
-        async function shareKalender() {
-            if (events.length === 0) { alert('Belum ada event!'); return; }
-            const sorted = [...events].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || ''));
-            let text = '📅 *KALENDER AKADEMIK IPIM*\n━━━━━━━━━━━━━━━━\n\n';
-            sorted.forEach(e => {
-                text += `📌 *${formatDate(e.tanggal)}*\n   📖 ${e.judul}\n`;
-                if (e.deskripsi) text += `   📝 ${e.deskripsi}\n`;
-                text += '\n';
-            });
-            text += '━━━━━━━━━━━━━━━━\n© IPIM Maghfirah';
-            if (navigator.share) {
-                try { await navigator.share({ title: 'Kalender Akademik IPIM', text }); } catch(err) {}
-            } else {
-                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-            }
-        }
-
-        loadEvents();
-    </script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
 </body>
 </html>
