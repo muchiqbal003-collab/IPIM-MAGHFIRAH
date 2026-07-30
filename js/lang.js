@@ -1,4 +1,4 @@
-// js/lang.js - Kamus Bahasa Dashboard IPIM
+// js/lang.js - Kamus Bahasa Dashboard IPIM (Updated)
 const LANG = {
   id: {
     // Header
@@ -37,7 +37,7 @@ const LANG = {
     tidakAdaJadwalHariIni: 'Tidak ada jadwal hari ini',
     absensi: 'Absensi',
     
-    // ⭐ TAMBAHAN: Untuk Rekap Ketidakhadiran
+    // Rekap Ketidakhadiran
     tidakHadir: 'Rekap Ketidakhadiran Hari Ini',
     tidakHadirHalaqoh: 'Kehadiran Halaqoh Hari Ini',
     hadir: 'Hadir',
@@ -80,7 +80,7 @@ const LANG = {
     memuat: 'Memuat...',
     dataTidakDitemukan: 'Data tidak ditemukan',
     
-    // ⭐ TAMBAHAN: Untuk Edit Profil
+    // ═══ PROFIL ═══
     profilSaya: 'Profil Saya',
     akun: 'Akun',
     ubahNama: 'Ubah Nama',
@@ -94,56 +94,51 @@ const LANG = {
     simpanNama: 'Simpan Nama',
     simpanPassword: 'Simpan Password',
     
-    // ⭐ TAMBAHAN: Laporan
-    laporan: 'Laporan',
-    laporBahasa: 'Lapor Bahasa',
-    laporBahasaSub: 'Laporkan pelanggaran bahasa',
-    laporPengasuhan: 'Lapor Pengasuhan',
-    laporPengasuhanSub: 'Laporkan pelanggaran pengasuhan',
-    namaMahasiswa: 'Nama Mahasiswa',
-    jenisPelanggaran: 'Jenis Pelanggaran',
-    deskripsi: 'Deskripsi',
-    kirimLaporan: 'Kirim Laporan',
-    
-    // ⭐ TAMBAHAN: Saran & Bantuan
-    bantuanKeluhan: 'Bantuan & Keluhan',
-    saranMasukan: 'Saran & Masukan',
-    saranMasukanSub: 'Sampaikan saran untuk pengembangan',
-    hubungiWA: 'Hubungi via WhatsApp',
-    hubungiWASub: 'Klik untuk langsung chat',
-    kategoriSaran: 'Kategori',
-    pesanSaran: 'Pesan / Saran',
-    pesanSaranPlaceholder: 'Tulis saran atau masukan kamu...',
-    kirimSaran: 'Kirim Saran',
-    
-    // ⭐ TAMBAHAN: Pengaturan
-    bahasa: 'Bahasa / اللغة',
+    // Bahasa Sistem
+    bahasaSistem: 'Bahasa Sistem',
     bahasaSub: 'Pilih bahasa tampilan aplikasi',
-    keluar: 'Keluar dari Akun',
+    pilihBahasa: 'Pilih Bahasa',
+    bahasaIndonesia: '🇮🇩 Bahasa Indonesia',
+    bahasaInggris: '🇬🇧 English',
+    bahasaArab: '🇸🇦 العربية',
+    bahasaDiubah: '✅ Bahasa diubah! Refresh untuk menerapkan.',
     
-    // ⭐ TAMBAHAN: Foto Profil
+    // Bantuan & Rating
+    bantuanRating: 'Bantuan & Rating',
+    hubungiAdmin: 'Hubungi Admin / Call Center',
+    hubungiAdminSub: 'Chat WhatsApp atau telepon',
+    beriRating: 'Beri Rating',
+    beriRatingSub: 'Nilai aplikasi IPIM',
+    klikBintang: 'Klik bintang untuk menilai',
+    ratingTersimpan: '✅ Terima kasih! Rating tersimpan.',
+    pilihRating: 'Pilih rating dulu!',
+    
+    // Foto Profil
     gantiFoto: 'Ganti Foto',
     hapusFoto: 'Hapus',
     fotoProfil: 'Foto Profil',
+    fotoBerhasil: '✅ Foto berhasil disimpan!',
+    fotoTerlaluBesar: 'Foto terlalu besar, coba foto lebih kecil',
+    fotoDihapus: 'Foto dihapus',
     
-    // ⭐ TAMBAHAN: Kategori
-    katFitur: 'Fitur Aplikasi',
-    katAkademik: 'Akademik',
-    katFasilitas: 'Fasilitas',
-    katLainnya: 'Lainnya',
+    // Logout
+    keluar: 'Keluar dari Akun',
+    konfirmasiKeluar: 'Apakah Anda yakin ingin keluar?',
     
-    // ⭐ TAMBAHAN: Toast / Notifikasi
+    // Toast / Notifikasi
     berhasilDisimpan: '✅ Berhasil disimpan!',
     gagalDisimpan: '❌ Gagal disimpan',
     berhasilDihapus: '🗑️ Berhasil dihapus',
     gagalDihapus: '❌ Gagal dihapus',
     dataBerhasilDimuat: 'Data berhasil dimuat',
+    namaBerhasil: '✅ Nama berhasil diubah!',
+    passwordBerhasil: '✅ Password berhasil diubah!',
+    sesiLama: 'Sesi terlalu lama, silakan login ulang',
     
-    // ⭐ TAMBAHAN: Status
+    // Status
     aktif: 'Aktif',
     nonaktif: 'Nonaktif',
     pending: 'Menunggu',
-    selesai: 'Selesai',
     batal: 'Batal',
   },
   
@@ -227,7 +222,7 @@ const LANG = {
     memuat: 'Loading...',
     dataTidakDitemukan: 'Data not found',
     
-    // Profil
+    // ═══ PROFIL ═══
     profilSaya: 'My Profile',
     akun: 'Account',
     ubahNama: 'Change Name',
@@ -241,43 +236,36 @@ const LANG = {
     simpanNama: 'Save Name',
     simpanPassword: 'Save Password',
     
-    // Laporan
-    laporan: 'Reports',
-    laporBahasa: 'Language Report',
-    laporBahasaSub: 'Report language violations',
-    laporPengasuhan: 'Mentoring Report',
-    laporPengasuhanSub: 'Report mentoring violations',
-    namaMahasiswa: 'Student Name',
-    jenisPelanggaran: 'Violation Type',
-    deskripsi: 'Description',
-    kirimLaporan: 'Send Report',
-    
-    // Saran & Bantuan
-    bantuanKeluhan: 'Help & Complaints',
-    saranMasukan: 'Suggestions & Feedback',
-    saranMasukanSub: 'Share suggestions for development',
-    hubungiWA: 'Contact via WhatsApp',
-    hubungiWASub: 'Click to chat directly',
-    kategoriSaran: 'Category',
-    pesanSaran: 'Message / Suggestion',
-    pesanSaranPlaceholder: 'Write your suggestion or feedback here...',
-    kirimSaran: 'Send Suggestion',
-    
-    // Pengaturan
-    bahasa: 'Language / اللغة',
+    // Bahasa Sistem
+    bahasaSistem: 'System Language',
     bahasaSub: 'Select app display language',
-    keluar: 'Logout',
+    pilihBahasa: 'Select Language',
+    bahasaIndonesia: '🇮🇩 Bahasa Indonesia',
+    bahasaInggris: '🇬🇧 English',
+    bahasaArab: '🇸🇦 العربية',
+    bahasaDiubah: '✅ Language changed! Refresh to apply.',
+    
+    // Bantuan & Rating
+    bantuanRating: 'Help & Rating',
+    hubungiAdmin: 'Contact Admin / Call Center',
+    hubungiAdminSub: 'Chat via WhatsApp or call',
+    beriRating: 'Rate App',
+    beriRatingSub: 'Rate IPIM application',
+    klikBintang: 'Tap stars to rate',
+    ratingTersimpan: '✅ Thank you! Rating saved.',
+    pilihRating: 'Please select a rating first!',
     
     // Foto Profil
     gantiFoto: 'Change Photo',
     hapusFoto: 'Delete',
     fotoProfil: 'Profile Photo',
+    fotoBerhasil: '✅ Photo saved successfully!',
+    fotoTerlaluBesar: 'Photo too large, try a smaller photo',
+    fotoDihapus: 'Photo deleted',
     
-    // Kategori
-    katFitur: 'App Features',
-    katAkademik: 'Academic',
-    katFasilitas: 'Facilities',
-    katLainnya: 'Others',
+    // Logout
+    keluar: 'Sign Out',
+    konfirmasiKeluar: 'Are you sure you want to sign out?',
     
     // Toast / Notifikasi
     berhasilDisimpan: '✅ Saved successfully!',
@@ -285,12 +273,14 @@ const LANG = {
     berhasilDihapus: '🗑️ Deleted successfully',
     gagalDihapus: '❌ Failed to delete',
     dataBerhasilDimuat: 'Data loaded successfully',
+    namaBerhasil: '✅ Name updated successfully!',
+    passwordBerhasil: '✅ Password updated successfully!',
+    sesiLama: 'Session expired, please login again',
     
     // Status
     aktif: 'Active',
     nonaktif: 'Inactive',
     pending: 'Pending',
-    selesai: 'Done',
     batal: 'Cancel',
   },
   
@@ -374,7 +364,7 @@ const LANG = {
     memuat: 'جاري التحميل...',
     dataTidakDitemukan: 'البيانات غير موجودة',
     
-    // Profil
+    // ═══ PROFIL ═══
     profilSaya: 'ملفي الشخصي',
     akun: 'الحساب',
     ubahNama: 'تغيير الاسم',
@@ -388,43 +378,36 @@ const LANG = {
     simpanNama: 'حفظ الاسم',
     simpanPassword: 'حفظ كلمة المرور',
     
-    // Laporan
-    laporan: 'البلاغات',
-    laporBahasa: 'الإبلاغ عن مخالفة لغوية',
-    laporBahasaSub: 'رصد مخالفات اللغة',
-    laporPengasuhan: 'الإبلاغ عن مخالفة تربوية',
-    laporPengasuhanSub: 'رصد مخالفات الرعاية',
-    namaMahasiswa: 'اسم الطالب',
-    jenisPelanggaran: 'نوع المخالفة',
-    deskripsi: 'الوصف',
-    kirimLaporan: 'إرسال البلاغ',
-    
-    // Saran & Bantuan
-    bantuanKeluhan: 'المساعدة والشكاوى',
-    saranMasukan: 'الاقتراحات والملاحظات',
-    saranMasukanSub: 'شاركنا اقتراحاتك للتطوير',
-    hubungiWA: 'التواصل عبر واتساب',
-    hubungiWASub: 'انقر للمحادثة المباشرة',
-    kategoriSaran: 'الفئة',
-    pesanSaran: 'الرسالة / الاقتراح',
-    pesanSaranPlaceholder: 'اكتب اقتراحك أو ملاحظتك هنا...',
-    kirimSaran: 'إرسال الاقتراح',
-    
-    // Pengaturan
-    bahasa: 'اللغة / Bahasa',
+    // Bahasa Sistem
+    bahasaSistem: 'لغة النظام',
     bahasaSub: 'اختر لغة عرض التطبيق',
-    keluar: 'تسجيل الخروج',
+    pilihBahasa: 'اختر اللغة',
+    bahasaIndonesia: '🇮🇩 Bahasa Indonesia',
+    bahasaInggris: '🇬🇧 English',
+    bahasaArab: '🇸🇦 العربية',
+    bahasaDiubah: '✅ تم تغيير اللغة! قم بالتحديث للتطبيق.',
+    
+    // Bantuan & Rating
+    bantuanRating: 'المساعدة والتقييم',
+    hubungiAdmin: 'اتصل بالمشرف / مركز الاتصال',
+    hubungiAdminSub: 'محادثة واتساب أو اتصال',
+    beriRating: 'قيم التطبيق',
+    beriRatingSub: 'تقييم تطبيق IPIM',
+    klikBintang: 'اضغط على النجوم للتقييم',
+    ratingTersimpan: '✅ شكرا لك! تم حفظ التقييم.',
+    pilihRating: 'الرجاء اختيار تقييم أولاً!',
     
     // Foto Profil
     gantiFoto: 'تغيير الصورة',
     hapusFoto: 'حذف',
     fotoProfil: 'الصورة الشخصية',
+    fotoBerhasil: '✅ تم حفظ الصورة بنجاح!',
+    fotoTerlaluBesar: 'الصورة كبيرة جداً، جرب صورة أصغر',
+    fotoDihapus: 'تم حذف الصورة',
     
-    // Kategori
-    katFitur: 'ميزات التطبيق',
-    katAkademik: 'الأكاديمية',
-    katFasilitas: 'المرافق',
-    katLainnya: 'أخرى',
+    // Logout
+    keluar: 'تسجيل الخروج',
+    konfirmasiKeluar: 'هل أنت متأكد من تسجيل الخروج؟',
     
     // Toast / Notifikasi
     berhasilDisimpan: '✅ تم الحفظ بنجاح!',
@@ -432,12 +415,14 @@ const LANG = {
     berhasilDihapus: '🗑️ تم الحذف بنجاح',
     gagalDihapus: '❌ فشل الحذف',
     dataBerhasilDimuat: 'تم تحميل البيانات بنجاح',
+    namaBerhasil: '✅ تم تحديث الاسم بنجاح!',
+    passwordBerhasil: '✅ تم تحديث كلمة المرور بنجاح!',
+    sesiLama: 'انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى',
     
     // Status
     aktif: 'نشط',
     nonaktif: 'غير نشط',
     pending: 'قيد الانتظار',
-    selesai: 'مكتمل',
     batal: 'إلغاء',
   }
 };
@@ -448,15 +433,11 @@ const LANG = {
 
 let currentLang = 'id';
 
-/**
- * Mendapatkan bahasa yang aktif
- */
 function getLang() {
   const saved = localStorage.getItem('appLang');
   if (saved && LANG[saved]) {
     currentLang = saved;
   } else {
-    // Deteksi bahasa browser
     const browserLang = navigator.language?.split('-')[0];
     if (browserLang === 'ar') currentLang = 'ar';
     else if (browserLang === 'en') currentLang = 'en';
@@ -466,18 +447,11 @@ function getLang() {
   return currentLang;
 }
 
-/**
- * Menerjemahkan key ke bahasa aktif
- */
 function t(key) {
   const lang = getLang();
-  // Cari di bahasa aktif, jika tidak ada cari di Indonesia, jika tidak ada return key
   return LANG[lang]?.[key] || LANG['id']?.[key] || key;
 }
 
-/**
- * Mengganti bahasa aplikasi
- */
 function setLang(lang) {
   if (!LANG[lang]) {
     console.warn('Bahasa "' + lang + '" tidak tersedia');
@@ -485,58 +459,43 @@ function setLang(lang) {
   }
   currentLang = lang;
   localStorage.setItem('appLang', lang);
-  applyLang(); // Terapkan perubahan ke UI
+  applyLang();
   return true;
 }
 
-/**
- * Menerapkan bahasa ke seluruh elemen di halaman
- * Fungsi ini menggantikan applyLangDir() yang lebih sederhana
- */
 function applyLang() {
   const lang = getLang();
   
-  // Set atribut HTML
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   
-  // Set font untuk bahasa Arab
   if (lang === 'ar') {
     document.body.style.fontFamily = "'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif";
   } else {
     document.body.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
   }
   
-  // Class untuk styling tambahan
   document.body.classList.toggle('lang-ar', lang === 'ar');
   document.body.classList.toggle('lang-id', lang === 'id');
   document.body.classList.toggle('lang-en', lang === 'en');
   
-  // Terjemahkan elemen dengan data-lang attribute
   document.querySelectorAll('[data-lang]').forEach(el => {
     const key = el.getAttribute('data-lang');
     el.textContent = t(key);
   });
   
-  // Terjemahkan placeholder dengan data-lang-placeholder
   document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
     const key = el.getAttribute('data-lang-placeholder');
     el.placeholder = t(key);
   });
   
-  console.log('🌍 Bahasa diubah ke:', lang);
+  console.log('🌍 Bahasa:', lang);
 }
 
-/**
- * Versi sederhana untuk kompatibilitas dengan kode lama
- */
 function applyLangDir() {
   applyLang();
 }
 
-/**
- * Mendapatkan daftar bahasa yang tersedia
- */
 function getAvailableLangs() {
   return Object.keys(LANG).map(code => ({
     code: code,
@@ -544,21 +503,14 @@ function getAvailableLangs() {
   }));
 }
 
-// ═══════════════════════════════════════════
-// AUTO INIT - Jalankan saat script dimuat
-// ═══════════════════════════════════════════
-
-// Terapkan bahasa saat halaman dimuat
+// Auto init
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', applyLang);
 } else {
   applyLang();
 }
 
-// ═══════════════════════════════════════════
-// EKSPOR untuk penggunaan di file lain
-// ═══════════════════════════════════════════
-
+// Export
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { LANG, getLang, t, setLang, applyLang, applyLangDir, getAvailableLangs };
 }
