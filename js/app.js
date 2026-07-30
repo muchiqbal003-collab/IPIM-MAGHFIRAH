@@ -121,17 +121,7 @@
     return result;
   };
 
-   // ============================================
-  // LOAD PIM-BOT AI
-  // ============================================
-  (function loadPimBot() {
-    const script = document.createElement('script');
-    // Pakai absolute path — pasti benar di semua halaman
-    script.src = '/IPIM-MAGHFIRAH/js/pim-bot.js';
-    script.onload = () => console.log('🤖 PIM-Bot loaded!');
-    script.onerror = () => console.warn('⚠️ PIM-Bot gagal dimuat');
-    document.body.appendChild(script);
-  })();
+  
   
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
