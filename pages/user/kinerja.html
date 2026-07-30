@@ -1,121 +1,344 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Laporan Kinerjaku - IPIM</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
-            --gold: #d4a843; --gold-light: #fdf6e3;
-            --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
-            --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333;
-            --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
-            --transition: all 0.25s ease;
-            --bottom-nav-height: 64px; --header-height: 56px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
-        .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-        .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-        .app-header h3 { font-size: 16px; font-weight: 600; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; }
-        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 6px 0; }
-        .bottom-nav .nav-item i { font-size: 20px; }
-        .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
-        .content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-        .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
-        .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; resize: vertical; min-height: 80px; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; }
-        .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; }
-        .alert-success { background: var(--green-light); color: #1b5e20; }
-        .stat-box { display: flex; gap: 12px; margin-bottom: 12px; }
-        .stat-item { flex: 1; background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
-        .stat-item .val { font-size: 18px; font-weight: 700; color: var(--green-dark); }
-        .stat-item .lbl { font-size: 10px; color: var(--gray-600); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Anggota Halaqohku - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,61,51,0.35);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: white; font-size: 16px; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+    }
+
+    .info-row {
+      display: flex; align-items: center; padding: 10px 8px;
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); margin-bottom: 6px;
+      gap: 10px;
+    }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--green-light); display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-weight: 700; font-size: 16px; flex-shrink: 0;
+    }
+    .detail { flex: 1; min-width: 0; }
+    .detail strong { display: block; font-size: 13px; }
+    .detail span { font-size: 10px; color: var(--gray-600); }
+
+    .btn {
+      padding: 9px 16px; border: none; border-radius: 40px;
+      font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .btn-primary { background: linear-gradient(135deg, #004d40, #006644); color: white; }
+    .btn-danger { background: var(--red); color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 5px 10px; font-size: 10px; }
+
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 10px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 120px; flex: 1; }
+    .form-group label { font-size: 10px; font-weight: 600; color: var(--gray-600); }
+    .form-group select { padding: 8px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white; }
+    .form-group select:focus { border-color: var(--green); }
+
+    .checkbox-list { max-height: 200px; overflow-y: auto; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); padding: 8px; background: white; }
+    .checkbox-list label { display: flex; align-items: center; gap: 6px; padding: 5px 4px; font-size: 12px; cursor: pointer; border-radius: 4px; transition: var(--transition); }
+    .checkbox-list label:hover { background: var(--green-light); }
+    .checkbox-list input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--gray-600); }
+    .empty-state i { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.5; }
+    .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+  </style>
 </head>
 <body>
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>🕌 Anggota Halaqohku</h3>
+  </header>
 
-    <header class="app-header">
-        <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-        <h3>Laporan Kinerjaku</h3>
-    </header>
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
 
-    <div class="content">
-        <div id="alertSuccess" class="alert alert-success"></div>
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item active" onclick="goTo('anggota-halaqohku.html')"><i class="fa-solid fa-users"></i><span>Halaqoh</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
 
-        <div class="card">
-            <h4 style="margin-bottom:12px;">📊 Statistik Pekan Ini</h4>
-            <div class="stat-box">
-                <div class="stat-item"><div class="val" id="statMengajar">-</div><div class="lbl">Mengajar/Halaqoh</div></div>
-                <div class="stat-item"><div class="val" id="statSholat">-</div><div class="lbl">Sholat Jamaah</div></div>
-                <div class="stat-item"><div class="val" id="statLapor">-</div><div class="lbl">Laporan</div></div>
-            </div>
-        </div>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['musyrif', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
-        <div class="card">
-            <h4 style="margin-bottom:12px;">📋 Kirim Laporan Kinerja Pekan Ini</h4>
-            <form id="kinerjaForm">
-                <div class="form-group"><label>Ringkasan Kegiatan</label><textarea id="ringkasan" placeholder="Apa saja yang sudah dikerjakan pekan ini?"></textarea></div>
-                <div class="form-group"><label>Kendala / Hambatan</label><textarea id="kendala" placeholder="Apakah ada kendala?"></textarea></div>
-                <div class="form-group"><label>Rencana Pekan Depan</label><textarea id="rencana" placeholder="Rencana untuk pekan depan?"></textarea></div>
-                <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan</button>
-            </form>
-        </div>
-    </div>
+    let halaqohId = null, halaqohData = null;
+    let anggotaList = [], allMahasiswa = [], allKelas = [];
+    let availableList = [];
 
-    <nav class="bottom-nav">
-        <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item" onclick="goTo('absensi.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
-        <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-        <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
-        <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
-    </nav>
+    async function loadAll() {
+      const container = document.getElementById('mainContent');
+      container.innerHTML = '<p style="text-align:center;">Mencari halaqoh Anda...</p>';
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="../../js/firebase-config.js"></script>
-    <script src="../../js/app.js"></script>
-    <script>
-        const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
-        if (!user) window.location.href = '../../index.html';
-        window.goTo = page => window.location.href = page;
+      try {
+        // Cari halaqoh musyrif ini
+        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
 
-        function showAlert(text) {
-            const el = document.getElementById('alertSuccess');
-            el.textContent = text; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 4000);
+        if (hSnap.empty) {
+          container.innerHTML = `<div class="warning-box"><i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i><strong>Anda belum memiliki Halaqoh.</strong><p style="margin-top:8px;font-size:13px;">Hubungi Operator Halaqoh.</p></div>`;
+          return;
         }
 
-        // Simpan laporan
-        document.getElementById('kinerjaForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const ringkasan = document.getElementById('ringkasan').value.trim();
-            const kendala = document.getElementById('kendala').value.trim();
-            const rencana = document.getElementById('rencana').value.trim();
-            if (!ringkasan) return alert('Ringkasan wajib diisi!');
-            try {
-                await db.collection('laporanKinerja').add({
-                    userId: user.uid,
-                    nama: user.nama,
-                    role: user.role,
-                    ringkasan,
-                    kendala,
-                    rencana,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showAlert('✅ Laporan kinerja berhasil dikirim!');
-                this.reset();
-            } catch(e) { alert('Gagal: ' + e.message); }
+        halaqohId = hSnap.docs[0].id;
+        halaqohData = hSnap.docs[0].data();
+
+        // Load semua data
+        const [aSnap, mSnap, pSnap, kSnap] = await Promise.all([
+          db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get(),
+          db.collection('mahasiswa').get(),
+          db.collection('pembagianHalaqoh').get(),
+          db.collection('kelas').get()
+        ]);
+
+        const anggotaIds = new Set(aSnap.docs.map(d => d.data().mahasiswaId));
+        const semuaIds = new Set(pSnap.docs.map(d => d.data().mahasiswaId));
+
+        allMahasiswa = mSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        allKelas = kSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        
+        anggotaList = allMahasiswa.filter(m => anggotaIds.has(m.id));
+        availableList = allMahasiswa.filter(m => !semuaIds.has(m.id));
+
+        renderUI();
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box"><strong>Gagal memuat</strong><p>${e.message}</p></div>`;
+      }
+    }
+
+    function renderUI() {
+      const container = document.getElementById('mainContent');
+      
+      // Kumpulkan angkatan & kelas unik dari available
+      const angkatanSet = new Set(availableList.map(m => m.angkatan).filter(Boolean));
+      const kelasSet = new Set(availableList.map(m => m.kelasNama || m.kelasId).filter(Boolean));
+      
+      const angkatanOptions = [...angkatanSet].sort().map(a => `<option value="${a}">${a}</option>`).join('');
+      const kelasOptions = allKelas.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
+
+      let html = `
+        <div class="card">
+          <h3 style="margin-bottom:4px;">🕌 ${halaqohData.nama}</h3>
+          <p style="color:var(--gray-600);font-size:13px;">Musyrif: <strong>${halaqohData.musyrifNama || 'Anda'}</strong> · Anggota: <strong>${anggotaList.length}</strong> orang</p>
+          ${anggotaList.length > 0 ? `<button class="btn btn-danger btn-sm" style="margin-top:8px;" onclick="keluarkanSemua()"><i class="fa-solid fa-trash-can"></i> Keluarkan Semua</button>` : ''}
+        </div>
+
+        <!-- TAMBAH ANGGOTA -->
+        <div class="card">
+          <h4 style="margin-bottom:10px;">➕ Tambah Anggota</h4>
+          <div class="filter-row">
+            <div class="form-group">
+              <label>👤 Gender</label>
+              <select id="filterJK" onchange="renderAvailable()">
+                <option value="">Semua</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>📅 Angkatan</label>
+              <select id="filterAngkatan" onchange="renderAvailable()">
+                <option value="">Semua</option>
+                ${angkatanOptions}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>🏫 Kelas</label>
+              <select id="filterKelas" onchange="renderAvailable()">
+                <option value="">Semua</option>
+                ${kelasOptions}
+              </select>
+            </div>
+          </div>
+
+          <div class="checkbox-list" id="availableList">
+            ${renderCheckboxList(getFilteredAvailable())}
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <span style="font-size:11px;color:var(--gray-600);">Terpilih: <strong id="countSelected">0</strong></span>
+            <button class="btn btn-primary btn-sm" onclick="tambahAnggota()"><i class="fa-solid fa-user-plus"></i> Tambah</button>
+          </div>
+        </div>
+
+        <!-- DAFTAR ANGGOTA -->
+        <div class="card">
+          <h4 style="margin-bottom:12px;">📋 Daftar Anggota (${anggotaList.length})</h4>`;
+
+      if (anggotaList.length === 0) {
+        html += '<div class="empty-state"><i class="fa-solid fa-user-slash"></i><p>Belum ada anggota</p></div>';
+      } else {
+        anggotaList.forEach(m => {
+          html += `
+            <div class="info-row">
+              <div class="avatar">${(m.nama||'?')[0].toUpperCase()}</div>
+              <div class="detail">
+                <strong>${m.nama||'-'}</strong>
+                <span>NIM: ${m.nim||'-'} · ${m.angkatan||'-'} · ${m.kelasNama||'-'}</span>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="hapusAnggota('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>`;
         });
-    </script>
+      }
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function getFilteredAvailable() {
+      const jk = document.getElementById('filterJK')?.value || '';
+      const angkatan = document.getElementById('filterAngkatan')?.value || '';
+      const kelasId = document.getElementById('filterKelas')?.value || '';
+      
+      let filtered = [...availableList];
+      if (jk) filtered = filtered.filter(m => m.jk === jk);
+      if (angkatan) filtered = filtered.filter(m => String(m.angkatan) === angkatan);
+      if (kelasId) filtered = filtered.filter(m => m.kelasId === kelasId);
+      
+      return filtered.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+    }
+
+    function renderCheckboxList(list) {
+      if (list.length === 0) {
+        return '<div style="text-align:center;padding:10px;color:var(--gray-400);">Tidak ada mahasiswa tersedia</div>';
+      }
+      return list.map(m => `
+        <label>
+          <input type="checkbox" value="${m.id}" class="mhs-check" onchange="updateCount()">
+          ${m.nama||'-'} <span style="color:var(--gray-400);font-size:10px;">${m.nim||''} · ${m.kelasNama||''}</span>
+        </label>
+      `).join('');
+    }
+
+    window.renderAvailable = function() {
+      const list = getFilteredAvailable();
+      document.getElementById('availableList').innerHTML = renderCheckboxList(list);
+      document.getElementById('countSelected').textContent = '0';
+    };
+
+    window.updateCount = function() {
+      const count = document.querySelectorAll('.mhs-check:checked').length;
+      document.getElementById('countSelected').textContent = count;
+    };
+
+    window.tambahAnggota = async function() {
+      const checkedIds = [...document.querySelectorAll('.mhs-check:checked')].map(cb => cb.value);
+      if (checkedIds.length === 0) { alert('Pilih minimal 1 mahasiswa!'); return; }
+      if (!confirm(`Tambah ${checkedIds.length} mahasiswa ke halaqoh ini?`)) return;
+
+      const batch = db.batch();
+      for (const mhsId of checkedIds) {
+        const ref = db.collection('pembagianHalaqoh').doc();
+        batch.set(ref, {
+          halaqohId, halaqohNama: halaqohData.nama || '',
+          mahasiswaId: mhsId,
+          musyrifId: user.uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      try {
+        await batch.commit();
+        alert(`✅ ${checkedIds.length} anggota ditambahkan!`);
+        loadAll();
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    window.hapusAnggota = async function(mhsId) {
+      if (!confirm('Keluarkan mahasiswa ini?')) return;
+      try {
+        const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).where('mahasiswaId','==',mhsId).get();
+        const batch = db.batch(); snap.forEach(d => batch.delete(d.ref));
+        await batch.commit();
+        alert('✅ Anggota dikeluarkan!');
+        loadAll();
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    window.keluarkanSemua = async function() {
+      if (anggotaList.length === 0) return;
+      if (!confirm(`⚠️ Keluarkan SEMUA ${anggotaList.length} anggota?\nIni tidak bisa dibatalkan!`)) return;
+      try {
+        const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
+        const batch = db.batch(); snap.forEach(d => batch.delete(d.ref));
+        await batch.commit();
+        alert(`✅ ${snap.size} anggota dikeluarkan!`);
+        loadAll();
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    loadAll();
+  </script>
 </body>
 </html>
