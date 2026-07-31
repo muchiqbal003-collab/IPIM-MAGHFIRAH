@@ -6,7 +6,7 @@
   <title>Menu Cepat - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -48,9 +48,7 @@
     .content { padding: 14px; max-width: 600px; margin: 0 auto; }
 
     /* Search */
-    .search-wrap {
-      position: relative; margin-bottom: 14px;
-    }
+    .search-wrap { position: relative; margin-bottom: 14px; }
     .search-wrap input {
       width: 100%; padding: 12px 16px 12px 42px;
       border: none; border-radius: 40px;
@@ -61,32 +59,19 @@
       font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
       color: var(--gray-800); outline: none; transition: var(--transition);
     }
-    .search-wrap input:focus {
-      border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1);
-    }
+    .search-wrap input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
     .search-wrap input::placeholder { color: var(--gray-600); }
-    .search-wrap i {
-      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-      color: var(--gray-600); font-size: 16px;
-    }
+    .search-wrap i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gray-600); font-size: 16px; }
 
     /* Section */
     .section-wrapper { margin-bottom: 18px; }
-    .section-header {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
-    }
-    .section-icon {
-      width: 32px; height: 32px; border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center; font-size: 14px;
-    }
+    .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .section-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; }
     .section-icon.umum { background: var(--blue-light); color: var(--blue); }
     .section-icon.akademik { background: var(--green-light); color: var(--green-dark); }
     .section-icon.halaqoh { background: var(--orange-light); color: var(--orange); }
     .section-label { font-size: 13px; font-weight: 700; color: var(--gray-800); }
-    .section-badge {
-      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
-      background: var(--gray-200); color: var(--gray-600); margin-left: auto;
-    }
+    .section-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: var(--gray-200); color: var(--gray-600); margin-left: auto; }
 
     /* Menu Grid */
     .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -96,35 +81,22 @@
       border-radius: var(--radius); padding: 16px 8px 12px; text-align: center;
       cursor: pointer; transition: var(--transition);
       border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 1px 3px rgba(0,61,51,0.04);
-      position: relative;
+      box-shadow: 0 1px 3px rgba(0,61,51,0.04); position: relative;
     }
     .menu-card:active { transform: scale(0.95); background: rgba(255,255,255,0.9); }
     .menu-card.favorite { border: 2px solid var(--gold); }
-    .menu-card.favorite::after {
-      content: '⭐'; position: absolute; top: 6px; right: 8px; font-size: 12px;
-    }
-    .menu-icon {
-      width: 42px; height: 42px; border-radius: 12px; margin: 0 auto 8px;
-      display: flex; align-items: center; justify-content: center; font-size: 18px;
-    }
+    .menu-card.favorite::after { content: '⭐'; position: absolute; top: 6px; right: 8px; font-size: 12px; }
+    .menu-icon { width: 42px; height: 42px; border-radius: 12px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
     .menu-icon.green { background: var(--green-light); color: #1b5e20; }
     .menu-icon.blue { background: var(--blue-light); color: var(--blue); }
     .menu-icon.orange { background: var(--orange-light); color: var(--orange); }
     .menu-icon.purple { background: var(--purple-light); color: var(--purple); }
     .menu-icon.teal { background: var(--teal-light); color: var(--teal); }
     .menu-icon.gold { background: var(--gold-light); color: #b8860b; }
-    .menu-label {
-      font-size: 11px; font-weight: 600; color: var(--gray-800);
-      line-height: 1.3; display: -webkit-box;
-      -webkit-line-clamp: 2; line-clamp: 2;   -webkit-box-orient: vertical; overflow: hidden;
-    }
+    .menu-label { font-size: 11px; font-weight: 600; color: var(--gray-800); line-height: 1.3; }
     .menu-sub { font-size: 9px; color: var(--gray-600); margin-top: 2px; }
 
-    .no-result {
-      text-align: center; padding: 30px; color: var(--gray-600); font-size: 13px;
-      display: none;
-    }
+    .no-result { text-align: center; padding: 30px; color: var(--gray-600); font-size: 13px; display: none; }
 
     /* Bottom Nav */
     .bottom-nav {
@@ -136,55 +108,42 @@
       z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600);
-      cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
-    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
     .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
     .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
 
-    .hidden { display: none !important; }
-
-    @media (max-width: 360px) {
-      .menu-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-      .menu-card { padding: 12px 4px 10px; }
-      .menu-icon { width: 36px; height: 36px; font-size: 15px; }
-      .menu-label { font-size: 10px; }
-    }
+    @media (max-width: 360px) { .menu-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; } .menu-card { padding: 12px 4px 10px; } .menu-icon { width: 36px; height: 36px; font-size: 15px; } .menu-label { font-size: 10px; } }
   </style>
 </head>
 <body>
 
   <header class="app-header">
     <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>Menu Cepat</h3>
+    <h3 data-lang="menuCepat">Menu Cepat</h3>
   </header>
 
   <div class="content">
     <!-- Search -->
     <div class="search-wrap">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" placeholder="Cari menu..." onkeyup="filterMenu()">
+      <input type="text" id="searchInput" data-lang-placeholder="cariMenu" placeholder="Cari menu..." onkeyup="filterMenu()">
     </div>
 
-    <!-- Menu Container -->
     <div id="menuContainer"></div>
     <div class="no-result" id="noResult">
       <i class="fa-solid fa-search" style="font-size:30px;opacity:0.3;display:block;margin-bottom:10px;"></i>
-      Tidak ada menu ditemukan
+      <span data-lang="noMenuFound">Tidak ada menu ditemukan</span>
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span>Menu</span></div>
-    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span data-lang="home">Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span data-lang="kalender">Kalender</span></div>
+    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span data-lang="menu">Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span data-lang="rekap">Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span data-lang="profil">Profil</span></div>
   </nav>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -192,6 +151,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
     if (!user) window.location.href = '../../index.html';
@@ -199,25 +159,25 @@
 
     // ═══ MENU DEFINITIONS ═══
     const menuUmum = [
-      { id:'absensi-sholat', icon:'fa-mosque', color:'blue', label:'Absensi Sholat', page:'absensi.html', sub:'Catat sholat', section:'umum' },
-      { id:'kinerjaku', icon:'fa-chart-line', color:'green', label:'Kinerjaku', page:'kinerja.html', sub:'Lihat statistik', section:'umum' },
+      { id:'absensi-sholat', icon:'fa-mosque', color:'blue', labelKey:'absensiSholat', page:'absensi.html', subKey:'absensiSholatSub', section:'umum' },
+      { id:'kinerjaku', icon:'fa-chart-line', color:'green', labelKey:'kinerjaku', page:'kinerja.html', subKey:'kinerjakuSub', section:'umum' },
     ];
 
     const menuAkademik = [
-      { id:'jadwal-saya', icon:'fa-calendar-alt', color:'blue', label:'Jadwal Saya', page:'jadwal-saya.html', sub:'Lihat jadwal', section:'akademik' },
-      { id:'input-nilai', icon:'fa-chart-line', color:'orange', label:'Input Nilai', page:'nilai.html', sub:'Nilai mhs', section:'akademik' },
-      { id:'absensi-mk', icon:'fa-clipboard-check', color:'teal', label:'Absensi MK', page:'rekap-absensi-kelas.html', sub:'Rekap hadir', section:'akademik' },
-      { id:'mahasiswa-pa', icon:'fa-user-graduate', color:'purple', label:'Mahasiswa PA', page:'mahasiswa-bimbingan.html', sub:'Bimbingan', section:'akademik' },
-      { id:'silabus', icon:'fa-file-alt', color:'green', label:'Silabus', page:'silabus.html', sub:'RPS & materi', section:'akademik' },
-      { id:'pencapaian', icon:'fa-pen-to-square', color:'teal', label:'Pencapaian', page:'pencapaian.html', sub:'Input capaian', section:'akademik' },
+      { id:'jadwal-saya', icon:'fa-calendar-alt', color:'blue', labelKey:'jadwalSaya', page:'jadwal-saya.html', subKey:'jadwalSayaSub', section:'akademik' },
+      { id:'input-nilai', icon:'fa-chart-line', color:'orange', labelKey:'inputNilai', page:'nilai.html', subKey:'inputNilaiSub', section:'akademik' },
+      { id:'absensi-mk', icon:'fa-clipboard-check', color:'teal', labelKey:'absensiMK', page:'rekap-absensi-kelas.html', subKey:'absensiMKSub', section:'akademik' },
+      { id:'mahasiswa-pa', icon:'fa-user-graduate', color:'purple', labelKey:'mahasiswaPA', page:'mahasiswa-bimbingan.html', subKey:'mahasiswaPASub', section:'akademik' },
+      { id:'silabus', icon:'fa-file-alt', color:'green', labelKey:'silabus', page:'silabus.html', subKey:'silabusSub', section:'akademik' },
+      { id:'pencapaian', icon:'fa-pen-to-square', color:'teal', labelKey:'pencapaian', page:'pencapaian.html', subKey:'pencapaianSub', section:'akademik' },
     ];
 
     const menuHalaqoh = [
-      { id:'anggota-halaqoh', icon:'fa-users', color:'orange', label:'Anggota Halaqoh', page:'anggota-halaqohku.html', sub:'Lihat anggota', section:'halaqoh' },
-      { id:'absensi-halaqoh', icon:'fa-clipboard-check', color:'green', label:'Absensi Halaqoh', page:'absensi-halaqoh.html', sub:'Catat hadir', section:'halaqoh' },
-      { id:'setoran-hafalan', icon:'fa-book-open', color:'purple', label:'Setoran Hafalan', page:'hafalan.html', sub:'Input hafalan', section:'halaqoh' },
-      { id:'ujian-quran', icon:'fa-quran', color:'gold', label:'Ujian Quran', page:'ujian-quran.html', sub:'Nilai ujian', section:'halaqoh' },
-      { id:'rekap-halaqoh', icon:'fa-chart-simple', color:'blue', label:'Rekap Halaqoh', page:'rekap-halaqoh.html', sub:'Progress', section:'halaqoh' },
+      { id:'anggota-halaqoh', icon:'fa-users', color:'orange', labelKey:'anggotaHalaqoh', page:'anggota-halaqohku.html', subKey:'anggotaHalaqohSub', section:'halaqoh' },
+      { id:'absensi-halaqoh', icon:'fa-clipboard-check', color:'green', labelKey:'absensiHalaqoh', page:'absensi-halaqoh.html', subKey:'absensiHalaqohSub', section:'halaqoh' },
+      { id:'setoran-hafalan', icon:'fa-book-open', color:'purple', labelKey:'setoranHafalan', page:'hafalan.html', subKey:'setoranHafalanSub', section:'halaqoh' },
+      { id:'ujian-quran', icon:'fa-quran', color:'gold', labelKey:'ujianQuran', page:'ujian-quran.html', subKey:'ujianQuranSub', section:'halaqoh' },
+      { id:'rekap-halaqoh', icon:'fa-chart-simple', color:'blue', labelKey:'rekapHalaqoh', page:'rekap-halaqoh.html', subKey:'rekapHalaqohSub', section:'halaqoh' },
     ];
 
     // Gabung menu sesuai role
@@ -225,30 +185,29 @@
     if (user.role === 'dosen' || user.role === 'dosen-musyrif') allMenus = [...allMenus, ...menuAkademik];
     if (user.role === 'musyrif' || user.role === 'dosen-musyrif') allMenus = [...allMenus, ...menuHalaqoh];
 
-    // ═══ FAVORIT (localStorage) ═══
-    function getFavorites() {
-      try { return JSON.parse(localStorage.getItem('menuFavorites') || '[]'); } catch { return []; }
-    }
+    // Favorit — maksimal 3
+    function getFavorites() { try { return JSON.parse(localStorage.getItem('menuFavorites') || '[]'); } catch { return []; } }
     function saveFavorite(id) {
-      const favs = getFavorites().filter(f => f !== id);
+      let favs = getFavorites().filter(f => f !== id);
       favs.unshift(id);
-      if (favs.length > 5) favs.pop();
+      if (favs.length > 3) favs = favs.slice(0, 3); // ⬅️ MAKS 3
       localStorage.setItem('menuFavorites', JSON.stringify(favs));
     }
 
-    // ═══ RENDER ═══
+    const sectionLabels = { umum: 'menuUmum', akademik: 'akademik', halaqoh: 'halaqohTahfidz' };
+    const sectionIcons = { umum: 'fa-grip', akademik: 'fa-book-open', halaqoh: 'fa-mosque' };
+    const sectionIconClasses = { umum: 'umum', akademik: 'akademik', halaqoh: 'halaqoh' };
+
     function renderMenus(filterText = '') {
       const container = document.getElementById('menuContainer');
       const noResult = document.getElementById('noResult');
       const search = filterText.toLowerCase().trim();
 
-      // Filter menu
       let filtered = allMenus;
       if (search) {
         filtered = allMenus.filter(m => 
-          m.label.toLowerCase().includes(search) || 
-          m.sub.toLowerCase().includes(search) ||
-          (m.section || '').toLowerCase().includes(search)
+          t(m.labelKey).toLowerCase().includes(search) || 
+          t(m.subKey).toLowerCase().includes(search)
         );
       }
 
@@ -259,42 +218,28 @@
       }
       noResult.style.display = 'none';
 
-      // Pisah favorit vs non-favorit
       const favs = getFavorites();
       const favMenus = filtered.filter(m => favs.includes(m.id));
       const nonFavMenus = filtered.filter(m => !favs.includes(m.id));
 
-      // Group by section
       const sections = {};
-      const allOrdered = [...favMenus, ...nonFavMenus];
-      
-      allOrdered.forEach(m => {
+      [...favMenus, ...nonFavMenus].forEach(m => {
         const sec = m.section || 'umum';
         if (!sections[sec]) sections[sec] = [];
-        sections[sec].push(m);
+        if (!sections[sec].find(x => x.id === m.id)) sections[sec].push(m);
       });
 
-      const sectionLabels = { umum: 'Menu Umum', akademik: 'Akademik', halaqoh: 'Halaqoh & Tahfidz' };
-      const sectionIcons = { umum: 'fa-grip', akademik: 'fa-book-open', halaqoh: 'fa-mosque' };
-      const sectionIconClasses = { umum: 'umum', akademik: 'akademik', halaqoh: 'halaqoh' };
-
-      // Jika ada favorit, tampilkan section "Favorit" di paling atas
       let html = '';
+      // Favorit section
       if (favMenus.length > 0) {
-        html += buildSectionHTML('fa-star', 'halaqoh', '⭐ Favorit', favMenus);
+        html += buildSectionHTML('fa-star', 'halaqoh', '⭐ ' + t('favorit'), favMenus);
       }
 
-      // Render section lainnya
+      // Section lainnya (tanpa menu yang sudah di favorit)
       for (const [sec, items] of Object.entries(sections)) {
-        if (favMenus.length > 0 && sec === Object.keys(sections)[0]) {
-          // Skip section pertama kalau sudah dirender sebagai favorit
-          if (items.every(m => favMenus.includes(m))) continue;
-          const nonFav = items.filter(m => !favMenus.includes(m));
-          if (nonFav.length > 0) {
-            html += buildSectionHTML(sectionIcons[sec] || 'fa-grip', sectionIconClasses[sec] || 'umum', sectionLabels[sec] || sec, nonFav);
-          }
-        } else {
-          html += buildSectionHTML(sectionIcons[sec] || 'fa-grip', sectionIconClasses[sec] || 'umum', sectionLabels[sec] || sec, items);
+        const nonFav = items.filter(m => !favs.includes(m.id));
+        if (nonFav.length > 0) {
+          html += buildSectionHTML(sectionIcons[sec], sectionIconClasses[sec], t(sectionLabels[sec]), nonFav);
         }
       }
 
@@ -308,14 +253,14 @@
           <div class="section-header">
             <div class="section-icon ${iconColorClass}"><i class="fa-solid ${iconClass}"></i></div>
             <span class="section-label">${label}</span>
-            <span class="section-badge">${items.length} menu</span>
+            <span class="section-badge">${items.length}</span>
           </div>
           <div class="menu-grid">
             ${items.map(m => `
-              <div class="menu-card ${getFavorites().includes(m.id) ? 'favorite' : ''}" onclick="goTo('${m.page}'); saveFavorite('${m.id}');">
+              <div class="menu-card ${getFavorites().includes(m.id) ? 'favorite' : ''}" onclick="goTo('${m.page}'); saveFavorite('${m.id}'); renderMenus();">
                 <div class="menu-icon ${m.color}"><i class="fa-solid ${m.icon}"></i></div>
-                <div class="menu-label">${m.label}</div>
-                ${m.sub ? `<div class="menu-sub">${m.sub}</div>` : ''}
+                <div class="menu-label">${t(m.labelKey)}</div>
+                <div class="menu-sub">${t(m.subKey)}</div>
               </div>
             `).join('')}
           </div>
@@ -328,6 +273,11 @@
 
     // Init
     renderMenus();
+
+    // Multi-bahasa
+    if (typeof applyLang === 'function') {
+      setTimeout(applyLang, 200);
+    }
   </script>
 </body>
 </html>
