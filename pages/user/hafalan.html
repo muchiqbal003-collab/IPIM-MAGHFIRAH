@@ -3,59 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Hafalan - IPIM</title>
+    <title>Input Hafalan - IPIM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease; --bottom-nav-height: 64px; --header-height: 56px; }
+        :root {
+            --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+            --green-light:#e8f5e9;--green-pale:#f0faf5;
+            --gold:#f5c842;--gold-light:#fffbee;
+            --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+            --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+            --radius-sm:10px;--radius:14px;--radius-lg:18px;
+            --transition:all 0.3s ease;--header-height:56px;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: var(--bottom-nav-height); }
-        .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-        .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-        .app-header h3 { font-size: 16px; font-weight: 600; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-around; z-index: 100; }
-        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 6px 0; }
-        .bottom-nav .nav-item i { font-size: 20px; }
-        .bottom-nav .nav-item.active { color: var(--green-dark); font-weight: 600; }
-        .content { padding: 16px; }
-        .card { background: var(--white); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 12px; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+            color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+            -webkit-tap-highlight-color: transparent; min-height: 100vh;
+        }
+
+        .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+        .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+        .content { padding: 14px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+            padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+        }
+        .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--green); }
+
         .form-group { margin-bottom: 12px; }
-        .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; }
-        .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; }
-        .alert-success { background: var(--green-light); color: #1b5e20; }
+        .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+        .form-group select, .form-group input {
+            width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm); font-size: 13px;
+            font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
+        }
+        .form-group select:focus, .form-group input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+
+        .btn {
+            padding: 9px 16px; border: none; border-radius: 40px;
+            font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            transition: var(--transition);
+        }
+        .btn-primary { width: 100%; padding: 13px; justify-content: center; background: linear-gradient(135deg, #004d40, #006644); color: white; }
+        .btn-primary:disabled { opacity: 0.6; }
+        .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+        .grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .grade-btn {
+            padding: 10px 6px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm);
+            text-align: center; cursor: pointer; font-size: 11px; font-weight: 600;
+            background: white; transition: var(--transition);
+        }
+        .grade-btn.active { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+        .grade-btn .arabic { font-family: 'Noto Sans Arabic', sans-serif; font-size: 13px; display: block; }
+        .grade-btn .latin { font-size: 10px; color: var(--gray-600); }
+
+        .info-box {
+            background: #fff3e0; border-radius: var(--radius-sm);
+            padding: 10px 14px; font-size: 11px; color: #e65100;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 32px); max-width: 420px; height: 64px;
+            background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
+            z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .nav-item i { font-size: 20px; }
+        .nav-item.active { color: var(--green-dark); font-weight: 700; }
+        .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+        .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
+        .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
+        .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
     </style>
 </head>
 <body>
 
     <header class="app-header">
         <button class="btn-back" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-arrow-left"></i></button>
-        <h3>Input Hafalan</h3>
+        <h3>📖 Input Hafalan</h3>
     </header>
 
     <div class="content">
         <div id="alertSuccess" class="alert alert-success"></div>
 
+        <!-- Form Input -->
         <div class="card">
-            <form id="hafalanForm">
-                <div class="form-group"><label>Mahasiswa</label><select id="mhsId" required><option value="">Pilih...</option></select></div>
-                <div class="form-group"><label>Surah</label><input type="text" id="surah" placeholder="Al-Baqarah" required></div>
-                <div class="form-group"><label>Ayat</label><input type="text" id="ayat" placeholder="1-10" required></div>
-                <div class="form-group"><label>Juz</label><input type="text" id="juz" placeholder="1"></div>
-                <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Simpan</button>
+            <div class="card-title"><i class="fa-solid fa-book-open"></i> Tambah Hafalan Baru</div>
+            <form id="hafalanForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label>👨‍🎓 Mahasiswa</label>
+                    <select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select>
+                </div>
+
+                <div class="form-group">
+                    <label>📚 Juz</label>
+                    <select id="juz" onchange="filterSurahByJuz()" required>
+                        <option value="">Pilih Juz...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📖 Surah</label>
+                    <select id="surah" required>
+                        <option value="">Pilih Juz dulu...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>🔢 Ayat</label>
+                    <input type="text" id="ayat" placeholder="Contoh: 1-5, 10, 15-20" required>
+                </div>
+
+                <!-- Nilai -->
+                <div class="form-group">
+                    <label>⭐ Nilai Hafalan</label>
+                    <div class="grade-grid" id="gradeGrid"></div>
+                    <input type="hidden" id="nilai" value="">
+                </div>
+
+                <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanHafalan()">
+                    <i class="fa-solid fa-save"></i> Simpan Hafalan
+                </button>
             </form>
+        </div>
+
+        <!-- Info -->
+        <div class="info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Pilih Juz terlebih dahulu, Surah akan otomatis terfilter sesuai Juz yang dipilih.</span>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item" onclick="goTo('absensi.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
         <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-        <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-bar"></i><span>Rekap</span></div>
-        <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+        <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+        <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+        <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -68,43 +171,204 @@
         if (!user) window.location.href = '../../index.html';
         window.goTo = page => window.location.href = page;
 
+        let allSurahData = [];
+        let selectedNilai = '';
+
+        // Nilai Hafalan
+        const GRADES = [
+            { arabic: 'ممتاز', latin: 'Mumtaz', color: '#1b5e20' },
+            { arabic: 'جيد جداً', latin: 'Jayyid Jiddan', color: '#2e7d32' },
+            { arabic: 'جيد', latin: 'Jayyid', color: '#1565c0' },
+            { arabic: 'مقبول', latin: 'Maqbul', color: '#e65100' },
+            { arabic: 'راسب', latin: 'Rasib', color: '#b71c1c' }
+        ];
+
         function showAlert(text) {
             const el = document.getElementById('alertSuccess');
             el.textContent = text; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 3000);
+            setTimeout(() => el.style.display = 'none', 4000);
         }
 
-        async function loadMahasiswa() {
-            // Ambil anggota halaqoh yang diasuh musyrif ini
-            const hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
-            if (hSnap.empty) return;
-            const halaqohId = hSnap.docs[0].id;
-            const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
-            const sel = document.getElementById('mhsId');
-            for (const d of pSnap.docs) {
-                const mhsDoc = await db.collection('mahasiswa').doc(d.data().mahasiswaId).get();
-                if (mhsDoc.exists) {
-                    const o = document.createElement('option'); o.value = mhsDoc.id; o.textContent = mhsDoc.data().nama; sel.appendChild(o);
-                }
+        // ═══ RENDER NILAI ═══
+        function renderGrades() {
+            document.getElementById('gradeGrid').innerHTML = GRADES.map((g, i) => `
+                <div class="grade-btn" data-grade="${g.latin}" onclick="selectGrade('${g.latin}', this)" style="border-left:3px solid ${g.color};">
+                    <span class="arabic">${g.arabic}</span>
+                    <span class="latin">${g.latin}</span>
+                </div>
+            `).join('');
+        }
+
+        window.selectGrade = function(grade, el) {
+            selectedNilai = grade;
+            document.getElementById('nilai').value = grade;
+            document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        };
+
+        // ═══ DATA SURAH PER JUZ ═══
+        function generateSurahData() {
+            // Data surah per juz (nama surah, juz, nomor surah)
+            const raw = [
+                { nama: "Al-Fatihah", juz: 1, no: 1 },
+                { nama: "Al-Baqarah", juz: 1, no: 2 }, { nama: "Al-Baqarah", juz: 2, no: 2 }, { nama: "Al-Baqarah", juz: 3, no: 2 },
+                { nama: "Ali 'Imran", juz: 3, no: 3 }, { nama: "Ali 'Imran", juz: 4, no: 3 },
+                { nama: "An-Nisa'", juz: 4, no: 4 }, { nama: "An-Nisa'", juz: 5, no: 4 }, { nama: "An-Nisa'", juz: 6, no: 4 },
+                { nama: "Al-Ma'idah", juz: 6, no: 5 }, { nama: "Al-Ma'idah", juz: 7, no: 5 },
+                { nama: "Al-An'am", juz: 7, no: 6 }, { nama: "Al-An'am", juz: 8, no: 6 },
+                { nama: "Al-A'raf", juz: 8, no: 7 }, { nama: "Al-A'raf", juz: 9, no: 7 },
+                { nama: "Al-Anfal", juz: 9, no: 8 }, { nama: "Al-Anfal", juz: 10, no: 8 },
+                { nama: "At-Taubah", juz: 10, no: 9 }, { nama: "At-Taubah", juz: 11, no: 9 },
+                { nama: "Yunus", juz: 11, no: 10 }, { nama: "Hud", juz: 11, no: 11 }, { nama: "Hud", juz: 12, no: 11 },
+                { nama: "Yusuf", juz: 12, no: 12 }, { nama: "Yusuf", juz: 13, no: 12 },
+                { nama: "Ar-Ra'd", juz: 13, no: 13 }, { nama: "Ibrahim", juz: 13, no: 14 },
+                { nama: "Al-Hijr", juz: 14, no: 15 }, { nama: "An-Nahl", juz: 14, no: 16 },
+                { nama: "Al-Isra'", juz: 15, no: 17 }, { nama: "Al-Kahf", juz: 15, no: 18 }, { nama: "Al-Kahf", juz: 16, no: 18 },
+                { nama: "Maryam", juz: 16, no: 19 }, { nama: "Taha", juz: 16, no: 20 },
+                { nama: "Al-Anbiya'", juz: 17, no: 21 }, { nama: "Al-Hajj", juz: 17, no: 22 },
+                { nama: "Al-Mu'minun", juz: 18, no: 23 }, { nama: "An-Nur", juz: 18, no: 24 },
+                { nama: "Al-Furqan", juz: 18, no: 25 }, { nama: "Al-Furqan", juz: 19, no: 25 },
+                { nama: "Asy-Syu'ara'", juz: 19, no: 26 }, { nama: "An-Naml", juz: 19, no: 27 }, { nama: "An-Naml", juz: 20, no: 27 },
+                { nama: "Al-Qasas", juz: 20, no: 28 }, { nama: "Al-'Ankabut", juz: 20, no: 29 }, { nama: "Al-'Ankabut", juz: 21, no: 29 },
+                { nama: "Ar-Rum", juz: 21, no: 30 }, { nama: "Luqman", juz: 21, no: 31 },
+                { nama: "As-Sajdah", juz: 21, no: 32 }, { nama: "Al-Ahzab", juz: 21, no: 33 }, { nama: "Al-Ahzab", juz: 22, no: 33 },
+                { nama: "Saba'", juz: 22, no: 34 }, { nama: "Fatir", juz: 22, no: 35 }, { nama: "Yasin", juz: 22, no: 36 }, { nama: "Yasin", juz: 23, no: 36 },
+                { nama: "As-Saffat", juz: 23, no: 37 }, { nama: "Sad", juz: 23, no: 38 }, { nama: "Az-Zumar", juz: 23, no: 39 }, { nama: "Az-Zumar", juz: 24, no: 39 },
+                { nama: "Ghafir", juz: 24, no: 40 }, { nama: "Fussilat", juz: 24, no: 41 }, { nama: "Fussilat", juz: 25, no: 41 },
+                { nama: "Asy-Syura", juz: 25, no: 42 }, { nama: "Az-Zukhruf", juz: 25, no: 43 },
+                { nama: "Ad-Dukhan", juz: 25, no: 44 }, { nama: "Al-Jasiyah", juz: 25, no: 45 },
+                { nama: "Al-Ahqaf", juz: 26, no: 46 }, { nama: "Muhammad", juz: 26, no: 47 },
+                { nama: "Al-Fath", juz: 26, no: 48 }, { nama: "Al-Hujurat", juz: 26, no: 49 },
+                { nama: "Qaf", juz: 26, no: 50 }, { nama: "Az-Zariyat", juz: 26, no: 51 }, { nama: "Az-Zariyat", juz: 27, no: 51 },
+                { nama: "At-Tur", juz: 27, no: 52 }, { nama: "An-Najm", juz: 27, no: 53 },
+                { nama: "Al-Qamar", juz: 27, no: 54 }, { nama: "Ar-Rahman", juz: 27, no: 55 },
+                { nama: "Al-Waqi'ah", juz: 27, no: 56 }, { nama: "Al-Hadid", juz: 27, no: 57 },
+                { nama: "Al-Mujadilah", juz: 28, no: 58 }, { nama: "Al-Hasyr", juz: 28, no: 59 },
+                { nama: "Al-Mumtahanah", juz: 28, no: 60 }, { nama: "As-Saff", juz: 28, no: 61 },
+                { nama: "Al-Jumu'ah", juz: 28, no: 62 }, { nama: "Al-Munafiqun", juz: 28, no: 63 },
+                { nama: "At-Taghabun", juz: 28, no: 64 }, { nama: "At-Talaq", juz: 28, no: 65 },
+                { nama: "At-Tahrim", juz: 28, no: 66 }, { nama: "Al-Mulk", juz: 29, no: 67 },
+                { nama: "Al-Qalam", juz: 29, no: 68 }, { nama: "Al-Haqqah", juz: 29, no: 69 },
+                { nama: "Al-Ma'arij", juz: 29, no: 70 }, { nama: "Nuh", juz: 29, no: 71 },
+                { nama: "Al-Jinn", juz: 29, no: 72 }, { nama: "Al-Muzzammil", juz: 29, no: 73 },
+                { nama: "Al-Muddassir", juz: 29, no: 74 }, { nama: "Al-Qiyamah", juz: 29, no: 75 },
+                { nama: "Al-Insan", juz: 29, no: 76 }, { nama: "Al-Mursalat", juz: 29, no: 77 },
+                { nama: "An-Naba'", juz: 30, no: 78 }, { nama: "An-Nazi'at", juz: 30, no: 79 },
+                { nama: "'Abasa", juz: 30, no: 80 }, { nama: "At-Takwir", juz: 30, no: 81 },
+                { nama: "Al-Infitar", juz: 30, no: 82 }, { nama: "Al-Mutaffifin", juz: 30, no: 83 },
+                { nama: "Al-Insyiqaq", juz: 30, no: 84 }, { nama: "Al-Buruj", juz: 30, no: 85 },
+                { nama: "At-Tariq", juz: 30, no: 86 }, { nama: "Al-A'la", juz: 30, no: 87 },
+                { nama: "Al-Gasyiyah", juz: 30, no: 88 }, { nama: "Al-Fajr", juz: 30, no: 89 },
+                { nama: "Al-Balad", juz: 30, no: 90 }, { nama: "Asy-Syams", juz: 30, no: 91 },
+                { nama: "Al-Lail", juz: 30, no: 92 }, { nama: "Ad-Duha", juz: 30, no: 93 },
+                { nama: "Al-Insyirah", juz: 30, no: 94 }, { nama: "At-Tin", juz: 30, no: 95 },
+                { nama: "Al-'Alaq", juz: 30, no: 96 }, { nama: "Al-Qadr", juz: 30, no: 97 },
+                { nama: "Al-Bayyinah", juz: 30, no: 98 }, { nama: "Az-Zalzalah", juz: 30, no: 99 },
+                { nama: "Al-'Adiyat", juz: 30, no: 100 }, { nama: "Al-Qari'ah", juz: 30, no: 101 },
+                { nama: "At-Takasur", juz: 30, no: 102 }, { nama: "Al-'Asr", juz: 30, no: 103 },
+                { nama: "Al-Humazah", juz: 30, no: 104 }, { nama: "Al-Fil", juz: 30, no: 105 },
+                { nama: "Quraisy", juz: 30, no: 106 }, { nama: "Al-Ma'un", juz: 30, no: 107 },
+                { nama: "Al-Kausar", juz: 30, no: 108 }, { nama: "Al-Kafirun", juz: 30, no: 109 },
+                { nama: "An-Nasr", juz: 30, no: 110 }, { nama: "Al-Lahab", juz: 30, no: 111 },
+                { nama: "Al-Ikhlas", juz: 30, no: 112 }, { nama: "Al-Falaq", juz: 30, no: 113 },
+                { nama: "An-Nas", juz: 30, no: 114 }
+            ];
+            allSurahData = raw;
+        }
+
+        // ═══ RENDER JUZ ═══
+        function renderJuz() {
+            const sel = document.getElementById('juz');
+            sel.innerHTML = '<option value="">Pilih Juz...</option>';
+            for (let i = 1; i <= 30; i++) {
+                const o = document.createElement('option');
+                o.value = i; o.textContent = `Juz ${i}`;
+                sel.appendChild(o);
             }
         }
 
-        document.getElementById('hafalanForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const data = {
-                mahasiswaId: document.getElementById('mhsId').value,
-                surah: document.getElementById('surah').value.trim(),
-                ayat: document.getElementById('ayat').value.trim(),
-                juz: document.getElementById('juz').value.trim(),
-                musyrifId: user.uid,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            if (!data.mahasiswaId || !data.surah || !data.ayat) return alert('Field wajib diisi!');
-            await db.collection('hafalan').add(data);
-            showAlert('✅ Hafalan dicatat!');
-            this.reset();
-        });
+        // ═══ FILTER SURAH BY JUZ ═══
+        window.filterSurahByJuz = function() {
+            const juz = parseInt(document.getElementById('juz').value);
+            const sel = document.getElementById('surah');
+            sel.innerHTML = '<option value="">Pilih Surah...</option>';
+            
+            if (!juz) return;
 
+            const surahInJuz = [...new Set(allSurahData.filter(s => s.juz === juz).map(s => s.nama))];
+            surahInJuz.forEach(nama => {
+                const s = allSurahData.find(x => x.nama === nama && x.juz === juz);
+                const o = document.createElement('option');
+                o.value = nama;
+                o.textContent = `${nama} (No. ${s.no})`;
+                sel.appendChild(o);
+            });
+        };
+
+        // ═══ LOAD MAHASISWA ═══
+        async function loadMahasiswa() {
+            try {
+                const hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
+                if (hSnap.empty) {
+                    document.getElementById('mhsId').innerHTML = '<option value="">Tidak ada halaqoh</option>';
+                    return;
+                }
+                const halaqohId = hSnap.docs[0].id;
+                const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
+                const sel = document.getElementById('mhsId');
+                sel.innerHTML = '<option value="">Pilih Mahasiswa...</option>';
+                
+                for (const d of pSnap.docs) {
+                    const mhsDoc = await db.collection('mahasiswa').doc(d.data().mahasiswaId).get();
+                    if (mhsDoc.exists) {
+                        const o = document.createElement('option');
+                        o.value = mhsDoc.id;
+                        o.textContent = mhsDoc.data().nama;
+                        sel.appendChild(o);
+                    }
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        // ═══ SIMPAN ═══
+        window.simpanHafalan = async function() {
+            const mhsId = document.getElementById('mhsId').value;
+            const juz = document.getElementById('juz').value;
+            const surah = document.getElementById('surah').value;
+            const ayat = document.getElementById('ayat').value.trim();
+            const nilai = selectedNilai;
+
+            if (!mhsId || !juz || !surah || !ayat) { alert('⚠️ Semua field wajib diisi!'); return; }
+            if (!nilai) { alert('⚠️ Pilih nilai hafalan!'); return; }
+
+            const btn = document.getElementById('btnSimpan');
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+            try {
+                await db.collection('hafalan').add({
+                    mahasiswaId: mhsId,
+                    juz: parseInt(juz),
+                    surah: surah,
+                    ayat: ayat,
+                    nilai: nilai,
+                    musyrifId: user.uid,
+                    musyrifNama: user.nama || '-',
+                    tanggal: new Date().toISOString().split('T')[0],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showAlert('✅ Hafalan berhasil dicatat!');
+                document.getElementById('hafalanForm').reset();
+                document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+                selectedNilai = '';
+                document.getElementById('surah').innerHTML = '<option value="">Pilih Juz dulu...</option>';
+            } catch(e) { alert('❌ Gagal: ' + e.message); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Hafalan'; }
+        };
+
+        // Init
+        generateSurahData();
+        renderJuz();
+        renderGrades();
         loadMahasiswa();
     </script>
 </body>
