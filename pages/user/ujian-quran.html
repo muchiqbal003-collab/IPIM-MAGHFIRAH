@@ -6,75 +6,185 @@
   <title>Ujian Al-Quran - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; --header-height: 56px; }
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); padding-top: var(--header-height); }
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-    .app-header .btn-back { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-    .content { padding: 16px; }
-    .card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
     .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
-    .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; }
-    .soal-box { background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px; }
-    .soal-box h5 { margin-bottom: 8px; color: var(--green-dark); }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group select, .form-group input {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
+    }
+    .form-group select:focus, .form-group input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+
+    .filter-row { display: flex; gap: 8px; }
+    .filter-row .form-group { flex: 1; }
+
+    .soal-box { background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.5); }
+    .soal-box h5 { margin-bottom: 8px; color: var(--green-dark); font-size: 13px; }
     .nilai-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-    .nilai-row label { flex: 1; font-size: 11px; }
-    .nilai-row input { width: 70px; padding: 8px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); text-align: center; font-size: 13px; }
-    .total-soal { text-align: right; font-weight: 700; font-size: 13px; margin-top: 4px; }
-    .hasil-akhir { background: var(--green-light); border-radius: var(--radius-sm); padding: 12px; margin-top: 12px; text-align: center; }
-    .hasil-akhir .nilai { font-size: 24px; font-weight: 700; color: var(--green-dark); }
-    .hasil-akhir .predikat { font-size: 14px; font-weight: 600; }
-    .btn-primary { width: 100%; padding: 12px; background: var(--green-dark); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 16px; }
-    .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; }
-    .debug-box { background: #f0f0f0; border-radius: var(--radius-sm); padding: 12px; font-size: 11px; margin-bottom: 12px; color: var(--gray-600); }
+    .nilai-row label { flex: 1; font-size: 11px; color: var(--gray-600); }
+    .nilai-row input { width: 65px; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); text-align: center; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .total-soal { text-align: right; font-weight: 700; font-size: 12px; margin-top: 4px; color: var(--green-dark); }
+
+    .hasil-akhir {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-radius: var(--radius); padding: 16px; margin-top: 12px; text-align: center;
+    }
+    .hasil-akhir .nilai { font-size: 28px; font-weight: 800; color: var(--green-dark); }
+    .hasil-akhir .predikat { font-size: 14px; font-weight: 700; margin-top: 2px; }
+    .hasil-akhir .arabic { font-family: 'Noto Sans Arabic', sans-serif; font-size: 18px; margin-top: 4px; }
+
+    .btn {
+      padding: 9px 16px; border: none; border-radius: 40px;
+      font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: var(--transition);
+    }
+    .btn-primary { width: 100%; padding: 13px; justify-content: center; background: linear-gradient(135deg, #004d40, #006644); color: white; margin-top: 8px; }
+    .btn-primary:disabled { opacity: 0.6; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
     .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+    .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
   </style>
 </head>
 <body>
   <header class="app-header">
-    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>Ujian Al-Quran</h3>
+    <button class="btn-back" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📖 Ujian Al-Quran</h3>
   </header>
+
   <div class="content">
     <div id="alertSuccess" class="alert alert-success"></div>
-    <div id="alertError" class="alert alert-error"></div>
+
     <div class="card" id="mainCard">
-      <div class="debug-box" id="debugBox">UID: <span id="debugUid">-</span></div>
-      <form id="ujianForm">
-        <div class="form-group"><label>Pilih Mahasiswa</label><select id="mhsId" required><option value="">Pilih...</option></select></div>
+      <div class="card-title"><i class="fa-solid fa-quran"></i> Input Nilai Ujian</div>
+      <form id="ujianForm" onsubmit="return false;">
+        <!-- Mahasiswa -->
+        <div class="form-group"><label>👨‍🎓 Mahasiswa</label><select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select></div>
+
+        <!-- Ujian ke & Bulan -->
+        <div class="filter-row">
+          <div class="form-group">
+            <label>📝 Ujian Ke-</label>
+            <select id="ujianKe">
+              <option value="1">Ujian 1</option><option value="2">Ujian 2</option><option value="3">Ujian 3</option>
+              <option value="4">Ujian 4</option><option value="5">Ujian 5</option><option value="6">Ujian 6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>📅 Bulan</label>
+            <select id="bulan">
+              <option value="Januari">Januari</option><option value="Februari">Februari</option>
+              <option value="Maret">Maret</option><option value="April">April</option>
+              <option value="Mei">Mei</option><option value="Juni">Juni</option>
+              <option value="Juli">Juli</option><option value="Agustus">Agustus</option>
+              <option value="September">September</option><option value="Oktober">Oktober</option>
+              <option value="November">November</option><option value="Desember">Desember</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Soal 1 -->
         <div class="soal-box"><h5>📝 Soal 1</h5>
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s1_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s1_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s1_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total: <span id="totalS1">0</span></div>
+          <div class="total-soal">Total Soal 1: <span id="totalS1">0</span></div>
         </div>
+
+        <!-- Soal 2 -->
         <div class="soal-box"><h5>📝 Soal 2</h5>
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s2_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s2_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s2_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total: <span id="totalS2">0</span></div>
+          <div class="total-soal">Total Soal 2: <span id="totalS2">0</span></div>
         </div>
+
+        <!-- Soal 3 -->
         <div class="soal-box"><h5>📝 Soal 3</h5>
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s3_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s3_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s3_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total: <span id="totalS3">0</span></div>
+          <div class="total-soal">Total Soal 3: <span id="totalS3">0</span></div>
         </div>
-        <div class="hasil-akhir"><div class="nilai" id="nilaiAkhir">0</div><div class="predikat" id="predikat">-</div></div>
-        <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Simpan Nilai Ujian</button>
+
+        <!-- Hasil -->
+        <div class="hasil-akhir">
+          <div class="nilai" id="nilaiAkhir">0</div>
+          <div class="predikat" id="predikatLatin">-</div>
+          <div class="arabic" id="predikatArab"></div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanUjian()">
+          <i class="fa-solid fa-save"></i> Simpan Nilai Ujian
+        </button>
       </form>
     </div>
+
     <div id="warningCard" class="warning-box" style="display:none;">
-      <i class="fa-solid fa-circle-exclamation"></i><br>
-      <strong>Anda belum memiliki Halaqoh.</strong><br>
-      Silakan hubungi Operator Halaqoh.
+      <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+      <strong>Anda belum memiliki Halaqoh.</strong><br>Silakan hubungi Operator Halaqoh.
     </div>
   </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -84,22 +194,35 @@
   <script>
     const user = checkRole(['musyrif', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
-    // Debug UID
-    document.getElementById('debugUid').textContent = user.uid || 'TIDAK ADA UID';
+    // Nilai Arab
+    const PREDIKAT_ARAB = {
+      'Mumtaz': 'ممتاز',
+      'Jayyid Jiddan': 'جيد جداً',
+      'Jayyid': 'جيد',
+      'Maqbul': 'مقبول',
+      'Rasib': 'راسب'
+    };
 
-    function showAlert(type, text) {
-      const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+    function showAlert(text) {
+      const el = document.getElementById('alertSuccess');
       el.textContent = text; el.style.display = 'block';
       setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function getPredikat(nilaiAkhir) {
+      if (nilaiAkhir >= 85) return 'Mumtaz';
+      if (nilaiAkhir >= 75) return 'Jayyid Jiddan';
+      if (nilaiAkhir >= 65) return 'Jayyid';
+      if (nilaiAkhir >= 50) return 'Maqbul';
+      return 'Rasib';
     }
 
     async function loadMahasiswa() {
       try {
         let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
         if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
-        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('uid', '==', user.uid).get();
-
         if (hSnap.empty) {
           document.getElementById('mainCard').style.display = 'none';
           document.getElementById('warningCard').style.display = 'block';
@@ -113,9 +236,7 @@
         const sel = document.getElementById('mhsId');
         sel.innerHTML = '<option value="">Pilih Mahasiswa...</option>';
         for (const d of pSnap.docs) {
-          const mhsId = d.data().mahasiswaId;
-          if (!mhsId) continue;
-          const mhsDoc = await db.collection('mahasiswa').doc(mhsId).get();
+          const mhsDoc = await db.collection('mahasiswa').doc(d.data().mahasiswaId).get();
           if (mhsDoc.exists) {
             const o = document.createElement('option');
             o.value = mhsDoc.id;
@@ -135,38 +256,50 @@
       document.getElementById('totalS1').textContent = s1;
       document.getElementById('totalS2').textContent = s2;
       document.getElementById('totalS3').textContent = s3;
+
       const total = s1 + s2 + s3;
       const nilaiAkhir = Math.round((total / 300) * 100);
-      let predikat = 'D';
-      if (nilaiAkhir >= 85) predikat = 'A';
-      else if (nilaiAkhir >= 75) predikat = 'B';
-      else if (nilaiAkhir >= 60) predikat = 'C';
+      const predikat = getPredikat(nilaiAkhir);
+
       document.getElementById('nilaiAkhir').textContent = nilaiAkhir;
-      document.getElementById('predikat').textContent = `Predikat: ${predikat}`;
+      document.getElementById('predikatLatin').textContent = predikat;
+      document.getElementById('predikatArab').textContent = PREDIKAT_ARAB[predikat] || '';
     };
 
-    document.getElementById('ujianForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    window.simpanUjian = async function() {
       const mhsId = document.getElementById('mhsId').value;
-      if (!mhsId) return showAlert('error', 'Pilih mahasiswa!');
+      if (!mhsId) { alert('Pilih mahasiswa!'); return; }
+
+      const btn = document.getElementById('btnSimpan');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
       const data = {
-        mahasiswaId: mhsId, musyrifId: user.uid,
+        mahasiswaId: mhsId,
+        musyrifId: user.uid,
+        musyrifNama: user.nama || '-',
+        ujianKe: document.getElementById('ujianKe').value,
+        bulan: document.getElementById('bulan').value,
         soal1: { kelancaran: getVal('s1_kelancaran'), tajwid: getVal('s1_tajwid'), makhorij: getVal('s1_makhorij') },
         soal2: { kelancaran: getVal('s2_kelancaran'), tajwid: getVal('s2_tajwid'), makhorij: getVal('s2_makhorij') },
         soal3: { kelancaran: getVal('s3_kelancaran'), tajwid: getVal('s3_tajwid'), makhorij: getVal('s3_makhorij') },
         nilaiAkhir: parseInt(document.getElementById('nilaiAkhir').textContent),
-        predikat: document.getElementById('predikat').textContent.replace('Predikat: ', ''),
+        predikat: document.getElementById('predikatLatin').textContent,
+        predikatArab: document.getElementById('predikatArab').textContent,
+        tanggal: new Date().toISOString().split('T')[0],
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
+
       try {
         await db.collection('ujianQuran').add(data);
-        showAlert('success', '✅ Nilai ujian berhasil disimpan!');
-        this.reset();
+        showAlert('✅ Nilai ujian berhasil disimpan!');
+        document.getElementById('ujianForm').reset();
         document.getElementById('nilaiAkhir').textContent = '0';
-        document.getElementById('predikat').textContent = '-';
+        document.getElementById('predikatLatin').textContent = '-';
+        document.getElementById('predikatArab').textContent = '';
         ['S1','S2','S3'].forEach(s => document.getElementById('total'+s).textContent = '0');
-      } catch(e) { showAlert('error', 'Gagal: ' + e.message); }
-    });
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+      finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Nilai Ujian'; }
+    };
 
     loadMahasiswa();
     hitungTotal();
