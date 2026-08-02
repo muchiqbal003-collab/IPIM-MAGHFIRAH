@@ -179,45 +179,59 @@
 </head>
 <body>
 
-<button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-    <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section"><div class="nav-section-title">Utama</div>
-      <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-grid-2"></i> Home</a>
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div>
     </div>
-    <div class="nav-section"><div class="nav-section-title">Master Data</div>
-      <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
-      <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
-      <a href="prodi.html" class="nav-item"><i class="fa-solid fa-building-columns"></i> Data Prodi</a>
-      <a href="matakuliah.html" class="nav-item"><i class="fa-solid fa-book"></i> Data Matakuliah</a>
-      <a href="kelas.html" class="nav-item"><i class="fa-solid fa-school"></i> Data Kelas</a>
-      <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Buat Jadwal</a>
-      <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
-      <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
-      <a href="pembagian-pa.html" class="nav-item"><i class="fa-solid fa-user-tie"></i> Pembagian PA</a>
+    <nav class="sidebar-nav">
+      <!-- Utama -->
+      <div class="nav-section">
+        <div class="nav-section-title">Utama</div>
+        <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-grid-2"></i> Home</a>
+      </div>
+  
+      <!-- Master Data -->
+      <div class="nav-section">
+        <div class="nav-section-title">Master Data</div>
+        <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
+        <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
+        <a href="prodi.html" class="nav-item"><i class="fa-solid fa-building-columns"></i> Data Prodi</a>
+        <a href="matakuliah.html" class="nav-item"><i class="fa-solid fa-book"></i> Data Matakuliah</a>
+        <a href="kelas.html" class="nav-item"><i class="fa-solid fa-school"></i> Data Kelas</a>
+        <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
+        <a href="generate-jadwal.html" class="nav-item"><i class="fa-solid fa-shuffle"></i> Generate Jadwal</a>
+        <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
+        <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
+        <a href="pembagian-pa.html" class="nav-item"><i class="fa-solid fa-user-tie"></i> Pembagian PA</a>
+      </div>
+  
+      <!-- Monitoring -->
+      <div class="nav-section">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="monitoring-jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Monitoring Jadwal</a>
+        <a href="monitoring-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Monitoring Absensi</a>
+      </div>
+  
+      <!-- Akademik -->
+      <div class="nav-section">
+        <div class="nav-section-title">Akademik</div>
+        <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
+        <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
+        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
+        <a href="krs-khs.html" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Cetak KRS/KHS</a>
+        <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="avatarLetter">A</div>
+      <div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div>
     </div>
-    <div class="nav-section"><div class="nav-section-title">Akademik</div>
-      <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
-      <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
-      <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
-      <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
-      <a href="krs-khs.html" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Cetak KRS/KHS</a>
-      <a href="pengaturan-krs.html" class="nav-item active"><i class="fa-solid fa-gear"></i> Pengaturan KRS/KHS</a>
-    
-    </div>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="user-avatar" id="avatarLetter">A</div>
-    <div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div>
-  </div>
-</aside>
-
+  </aside>
+  
 <main class="main-content" id="mainContent">
   <div class="topbar">
     <div class="page-title">
