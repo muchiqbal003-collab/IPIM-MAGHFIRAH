@@ -70,6 +70,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      // ═══════════════════════════════════════
+      // SIMPAN LOG LOGIN
+      // ═══════════════════════════════════════
+      try {
+        await db.collection('loginLogs').add({
+          uid: user.uid,
+          nama: userData.nama || email,
+          email: email,
+          role: userData.role || 'unknown',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('✅ Login log tersimpan');
+      } catch(logError) {
+        console.warn('⚠️ Gagal simpan login log:', logError.message);
+      }
+
       // Simpan ke localStorage (TERMASUK UID)
       localStorage.setItem('user', JSON.stringify({
         uid: user.uid,
