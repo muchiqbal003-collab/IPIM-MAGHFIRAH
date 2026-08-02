@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rekap Tidak Hadir Kelas - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--white:#ffffff;
+      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
+      --gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--red-light:#fce4ec;
+      --amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    .summary-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .summary-chip { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .chip-red { background: #fce4ec; color: #b71c1c; }
+    .chip-amber { background: #fff3e0; color: #e65100; }
+    .chip-blue { background: #e3f2fd; color: #0d47a1; }
+    .chip-purple { background: #f3e5f5; color: #6a1b9a; }
+
+    .mhs-list { display: flex; flex-direction: column; gap: 8px; }
+    .mhs-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .mhs-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .mhs-info { flex: 1; }
+    .mhs-nama { font-size: 13px; font-weight: 600; }
+    .mhs-mk { font-size: 10px; color: var(--gray-600); }
+    .mhs-status { padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; }
+    .status-sakit { background: #fff3e0; color: #e65100; }
+    .status-izin { background: #e3f2fd; color: #0d47a1; }
+    .status-alfa { background: #fce4ec; color: #b71c1c; }
+    .status-jaga { background: #f3e5f5; color: #6a1b9a; }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--gray-400); }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📋 Rekap Tidak Hadir Kelas</h3>
+  </header>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-calendar-day"></i> Hari Ini — <span id="dateLabel"></span></div>
+      <div class="summary-row" id="summaryRow"></div>
+      <div class="mhs-list" id="mhsList"><div class="empty-state">Memuat data...</div></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    async function loadRekap() {
+      const todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('dateLabel').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+      try {
+        // Ambil absensi hari ini untuk semua dosen (bukan hanya user ini)
+        const absensiSnap = await db.collection('absensi').where('tanggal','==',todayStr).get();
+        const semuaAbsensi = absensiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        
+        const tidakHadir = semuaAbsensi.filter(a => ['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
+
+        // Summary
+        const sakitC = tidakHadir.filter(a=>a.status==='sakit').length;
+        const izinC = tidakHadir.filter(a=>a.status==='izin').length;
+        const alfaC = tidakHadir.filter(a=>a.status==='alfa').length;
+        const jagaC = tidakHadir.filter(a=>a.status==='jaga').length;
+
+        document.getElementById('summaryRow').innerHTML = `
+          <span class="summary-chip chip-red">❌ ${alfaC} Alfa</span>
+          <span class="summary-chip chip-amber">🤒 ${sakitC} Sakit</span>
+          <span class="summary-chip chip-blue">📝 ${izinC} Izin</span>
+          <span class="summary-chip chip-purple">🛡️ ${jagaC} Jaga</span>
+        `;
+
+        if (tidakHadir.length === 0) {
+          document.getElementById('mhsList').innerHTML = '<div class="empty-state">✅ Semua mahasiswa hadir hari ini!</div>';
+          return;
+        }
+
+        // Batch load mahasiswa & jadwal
+        const mhsIds = [...new Set(tidakHadir.map(a => a.mahasiswaId).filter(Boolean))];
+        const jadwalIds = [...new Set(tidakHadir.map(a => a.jadwalId).filter(Boolean))];
+        
+        const [mhsSnap, jadwalSnap] = await Promise.all([
+          Promise.all(mhsIds.map(id => db.collection('mahasiswa').doc(id).get())),
+          Promise.all(jadwalIds.map(id => db.collection('jadwal').doc(id).get()))
+        ]);
+
+        const mhsMap = {}; mhsSnap.forEach(d => { if(d.exists) mhsMap[d.id] = d.data(); });
+        const jadwalMap = {}; jadwalSnap.forEach(d => { if(d.exists) jadwalMap[d.id] = d.data(); });
+
+        tidakHadir.sort((a,b) => (mhsMap[a.mahasiswaId]?.nama||'').localeCompare(mhsMap[b.mahasiswaId]?.nama||''));
+
+        document.getElementById('mhsList').innerHTML = tidakHadir.map(a => {
+          const mhs = mhsMap[a.mahasiswaId] || {};
+          const jadwal = jadwalMap[a.jadwalId] || {};
+          const nama = mhs.nama || '-';
+          const sc = (a.status||'').toLowerCase();
+          return `<div class="mhs-item">
+            <div class="mhs-avatar">${(nama[0]||'?').toUpperCase()}</div>
+            <div class="mhs-info">
+              <div class="mhs-nama">${nama}</div>
+              <div class="mhs-mk">${jadwal.mkNama||''} · ${jadwal.kelasNama||''} · JP ${a.jamKe||'-'}</div>
+            </div>
+            <span class="mhs-status status-${sc}">${sc.charAt(0).toUpperCase()+sc.slice(1)}</span>
+          </div>`;
+        }).join('');
+      } catch(e) {
+        document.getElementById('mhsList').innerHTML = `<div class="empty-state">❌ Gagal: ${e.message}</div>`;
+      }
+    }
+
+    loadRekap();
+  </script>
+</body>
+</html>
