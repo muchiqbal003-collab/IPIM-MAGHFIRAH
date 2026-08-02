@@ -55,82 +55,29 @@
     .shortcut-item{flex:1;background:var(--white);border-radius:var(--radius-lg);padding:12px;border:0.5px solid var(--gray-200);display:flex;align-items:center;gap:10px;cursor:pointer;}
     .shortcut-icon{width:38px;height:38px;border-radius:10px;background:var(--green-light);color:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
     .shortcut-icon.dzikir-icon{background:var(--gold-light);color:#a08000;}
+    .shortcut-icon.red-icon{background:#fce4ec;color:#c62828;}
+    .shortcut-icon.orange-icon{background:#fff3e0;color:#e65100;}
     .shortcut-text{flex:1;min-width:0;}
     .shortcut-title{font-size:12px;font-weight:700;color:var(--gray-800);}
     .shortcut-badge{font-size:10px;color:var(--green-mid);font-weight:600;margin-top:1px;}
     .shortcut-badge.dzikir-badge{color:#a08000;}
+    .shortcut-badge.red-badge{color:#c62828;}
+    .shortcut-badge.orange-badge{color:#e65100;}
 
-    /* ══════════════════════════════════════ */
-    /* BOTTOM NAV — GLASSMORPHISM FLOATING */
-    /* ══════════════════════════════════════ */
     .bottom-nav {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 420px;
-      height: 64px;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      z-index: 100;
-      box-shadow: 
-        0 8px 32px rgba(0, 61, 51, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      padding: 0 8px;
-      padding-bottom: env(safe-area-inset-bottom);
-      transition: all 0.3s ease;
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--gray-600);
-      cursor: pointer;
-      text-decoration: none;
-      padding: 8px 0;
-      flex: 1;
-      border-radius: 18px;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-    }
-
-    .nav-item i {
-      font-size: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .nav-item.active {
-      color: var(--green-dark);
-      font-weight: 700;
-    }
-
-    .nav-item.active i {
-      color: var(--green);
-      filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3));
-    }
-
-    .nav-item.active::before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      width: 28px;
-      height: 3px;
-      background: var(--green);
-      border-radius: 0 0 4px 4px;
-    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
 
     .main-content{padding:14px;display:flex;flex-direction:column;gap:12px;}
     .card{background:var(--white);border-radius:var(--radius-lg);padding:15px;border:0.5px solid var(--gray-200);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
@@ -158,20 +105,6 @@
     .jadwal-mk{font-size:12px;font-weight:700;color:#222;}
     .jadwal-kls{font-size:10px;color:var(--gray-600);margin-top:1px;}
     .btn-absensi{background:var(--green-mid);color:white;border:none;padding:6px 11px;border-radius:20px;font-size:10px;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;}
-
-    .tdk-hadir-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--gray-100);}
-    .tdk-hadir-item:last-child{border-bottom:none;}
-    .tdk-hadir-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;}
-    .tdk-hadir-status.sakit{background:#fff3e0;color:#e65100;}
-    .tdk-hadir-status.izin{background:#e3f2fd;color:#0d47a1;}
-    .tdk-hadir-status.jaga{background:#fce4ec;color:#880e4f;}
-    .tdk-hadir-status.alfa{background:#ffebee;color:#b71c1c;}
-    .tdk-hadir-status.hadir{background:#d1fae5;color:#065f46;}
-    .tdk-hadir-info{flex:1;min-width:0;}
-    .tdk-hadir-nama{font-size:12px;font-weight:600;color:var(--gray-800);}
-    .tdk-hadir-mk{font-size:10px;color:var(--gray-600);}
-    .tdk-hadir-pa{font-size:10px;color:var(--gray-600);margin-top:6px;padding:6px 10px;background:var(--green-pale);border-radius:8px;}
-    .mhs-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
 
     .card-motivasi{background:linear-gradient(135deg,#003d33,#005a47);border:none;}
     .card-motivasi .card-title{color:rgba(255,255,255,0.85);}
@@ -207,14 +140,6 @@
     .misi-num{width:22px;height:22px;border-radius:50%;background:var(--green);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
     .misi-judul{font-size:12px;font-weight:700;color:var(--green-dark);}
     .misi-teks{font-size:11.5px;color:var(--gray-600);line-height:1.6;margin-top:2px;}
-
-    .yt-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:var(--radius-sm);background:var(--gray-50);border:0.5px solid var(--gray-200);cursor:pointer;text-decoration:none;margin-bottom:8px;}
-    .yt-item:last-of-type{margin-bottom:0;}
-    .yt-thumb{width:90px;height:56px;border-radius:8px;object-fit:cover;background:var(--gray-200);flex-shrink:0;}
-    .yt-info{flex:1;min-width:0;}
-    .yt-title{font-size:12px;font-weight:600;color:var(--gray-800);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-    .yt-sub{font-size:10px;color:var(--gray-600);margin-top:3px;}
-    .yt-channel-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px;border-radius:var(--radius-sm);background:#ff0000;color:white;text-decoration:none;font-size:12px;font-weight:700;}
     .pengumuman-box{border-radius:var(--radius-sm);padding:14px;}
 
     @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}}
@@ -255,6 +180,7 @@
 
   <main class="main-content">
 
+    <!-- Shortcut: Al-Quran & Dzikir -->
     <div class="shortcut-row">
       <div class="shortcut-item" onclick="goTo('quran.html')">
         <div class="shortcut-icon"><i class="fa-solid fa-book-quran"></i></div>
@@ -272,27 +198,38 @@
       </div>
     </div>
 
+    <!-- Shortcut: Rekap Ketidakhadiran -->
+    <div class="shortcut-row">
+      <div class="shortcut-item" onclick="goTo('rekap-tidak-hadir-kelas.html')" style="border-left:3px solid var(--red);">
+        <div class="shortcut-icon red-icon"><i class="fa-solid fa-user-xmark"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title">Rekap Tidak Hadir</div>
+          <div class="shortcut-badge red-badge">Kelas</div>
+        </div>
+      </div>
+      <div class="shortcut-item" onclick="goTo('rekap-tidak-hadir-halaqoh.html')" style="border-left:3px solid var(--orange);">
+        <div class="shortcut-icon orange-icon"><i class="fa-solid fa-mosque"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title">Rekap Tidak Hadir</div>
+          <div class="shortcut-badge orange-badge">Halaqoh</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Sholat -->
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-mosque"></i> <span id="lblRekapSholat">Rekap Sholat Berjamaah</span></div>
       <div id="sholatProgressContainer"><p style="text-align:center;color:var(--gray-600);font-size:13px;" id="lblMemuatSholat">Memuat data sholat...</p></div>
       <a href="absensi.html" class="absensi-btn"><i class="fa-solid fa-check-circle"></i> <span id="lblIsiAbsensi">Isi Absensi Sholat Hari Ini</span></a>
     </div>
 
+    <!-- Card Jadwal -->
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-calendar-day"></i> <span id="lblJadwal">Jadwalku Hari Ini</span></div>
       <div class="jadwal-list" id="jadwalList"><p style="font-size:12px;color:var(--gray-600);">...</p></div>
     </div>
 
-    <div class="card" id="cardTidakHadirAkademik" style="display:none;">
-      <div class="card-title"><i class="fa-solid fa-user-xmark" style="color:var(--red);"></i> <span id="lblTidakHadir">Rekap Ketidakhadiran Hari Ini</span></div>
-      <div id="tidakHadirAkademikContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
-    </div>
-
-    <div class="card" id="cardTidakHadirHalaqoh" style="display:none;">
-      <div class="card-title"><i class="fa-solid fa-mosque" style="color:var(--orange);"></i> <span id="lblTidakHadirHalaqoh">Kehadiran Halaqoh Hari Ini</span></div>
-      <div id="tidakHadirHalaqohContent"><p style="font-size:12px;color:var(--gray-600);">Memuat...</p></div>
-    </div>
-
+    <!-- Card Motivasi -->
     <div class="card card-motivasi">
       <div class="card-title"><i class="fa-solid fa-star-and-crescent"></i> <span id="lblMotivasi">Motivasi</span></div>
       <div class="motivation-scroll" id="motivationScroll">
@@ -301,49 +238,38 @@
       <div class="scroll-dots" id="motivDots"></div>
     </div>
 
+    <!-- Card Visi Misi -->
     <div class="card" id="visiMisiCard" style="display:none;">
       <div class="card-title"><i class="fa-solid fa-bullseye"></i> <span id="lblVisiMisi">Visi &amp; Misi</span></div>
       <div id="visiMisiContainer"></div>
     </div>
 
-    <div class="card" id="ytCard" style="display:none;">
-      <div class="card-title"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> <span id="lblVideoInspirasi">Video Inspirasi</span></div>
-      <div id="ytContainer"></div>
-    </div>
-
+    <!-- Card Pengumuman -->
     <div class="card" id="pengumumanCard" style="display:none;">
       <div id="pengumumanContent"></div>
     </div>
 
   </main>
 
-  <!-- ══════════════════════════════════════ -->
-  <!-- BOTTOM NAV — GLASSMORPHISM FLOATING -->
-  <!-- ══════════════════════════════════════ -->
+  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="goTo('dashboard.html')">
-      <i class="fa-solid fa-house"></i>
-      <span id="navHome">Home</span>
+      <i class="fa-solid fa-house"></i><span id="navHome">Home</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
-      <i class="fa-solid fa-calendar-days"></i>
-      <span id="navKalender">Kalender</span>
+      <i class="fa-solid fa-calendar-days"></i><span id="navKalender">Kalender</span>
     </div>
     <div class="nav-item" onclick="goTo('menu-cepat.html')">
-      <i class="fa-brands fa-html5"></i>
-      <span id="navMenu">Menu</span>
+      <i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span>
     </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
-      <i class="fa-solid fa-chart-simple"></i>
-      <span id="navRekap">Rekap</span>
+      <i class="fa-solid fa-chart-simple"></i><span id="navRekap">Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
-      <i class="fa-solid fa-circle-user"></i>
-      <span id="navProfil">Profil</span>
+      <i class="fa-solid fa-circle-user"></i><span id="navProfil">Profil</span>
     </div>
   </nav>
-  
-  
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -357,53 +283,45 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    // ── BAHASA ──
     function applyLang() {
       const lang = getLang();
       document.documentElement.lang = lang;
       document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
       document.body.classList.toggle('lang-ar', lang === 'ar');
-
-      // FIX: hanya set elemen yang BENAR-BENAR ADA di HTML
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-      set('greetingSub',        t('greetingSub'));
-      set('lblQuran',           t('quran'));
-      set('lblRekapSholat',     t('rekapSholat'));
-      set('lblMemuatSholat',    t('memuatSholat'));
-      set('lblIsiAbsensi',      t('isiAbsensi'));
-      set('lblJadwal',          t('jadwalHariIni'));
-      set('lblMotivasi',        t('motivasi'));
-      set('lblVisiMisi',        t('visiMisi'));
-      set('lblVideoInspirasi',  t('videoInspirasi'));
-      set('navHome',            t('home'));
-      set('navKalender',        t('kalender'));
-      set('navMenu',            t('menu'));
-      set('navRekap',           t('rekap'));
-      set('navProfil',          t('profil'));
-
-      // Greeting pakai childNodes karena ada <span> di dalamnya
+      set('greetingSub', t('greetingSub'));
+      set('lblQuran', t('quran'));
+      set('lblRekapSholat', t('rekapSholat'));
+      set('lblMemuatSholat', t('memuatSholat'));
+      set('lblIsiAbsensi', t('isiAbsensi'));
+      set('lblJadwal', t('jadwalHariIni'));
+      set('lblMotivasi', t('motivasi'));
+      set('lblVisiMisi', t('visiMisi'));
+      set('navHome', t('home'));
+      set('navKalender', t('kalender'));
+      set('navMenu', t('menu'));
+      set('navRekap', t('rekap'));
+      set('navProfil', t('profil'));
       const grEl = document.getElementById('greetingText');
       if (grEl) grEl.childNodes[0].textContent = t('greeting') + ', ';
     }
     applyLang();
 
-    // ── SCROLL ──
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY > 10;
       document.getElementById('appHeader').classList.toggle('scrolled', scrolled);
       document.body.classList.toggle('scrolled', scrolled);
     });
 
-    // ── INIT HEADER ──
     (function initHeader() {
       document.getElementById('greetingName').textContent = user.nama || 'User';
       const savedFoto = localStorage.getItem('fotoProfil_' + user.uid);
-      const avatarEl  = document.getElementById('avatarText');
+      const avatarEl = document.getElementById('avatarText');
       if (savedFoto) { avatarEl.innerHTML = '<img src="' + savedFoto + '" alt="Foto">'; }
       else { avatarEl.textContent = (user.nama || 'U')[0].toUpperCase(); }
       const now = new Date();
       document.getElementById('masehiDate').textContent = now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-      document.getElementById('hijriDate').textContent  = getHijri(now);
+      document.getElementById('hijriDate').textContent = getHijri(now);
     })();
 
     function getHijri(d) {
@@ -416,7 +334,7 @@
       } catch(e) { return '1 Muharram 1448 H'; }
     }
 
-    // ── REKAP SHOLAT ──
+    // Sholat
     async function renderSholatCard() {
       const container = document.getElementById('sholatProgressContainer');
       try {
@@ -430,7 +348,7 @@
         }
         const docs = snap.docs.map(d => d.data());
         const todayCount = docs.filter(d => d.tanggal === today).length;
-        const weekCount  = docs.filter(d => d.tanggal >= weekAgoStr && d.tanggal <= today).length;
+        const weekCount = docs.filter(d => d.tanggal >= weekAgoStr && d.tanggal <= today).length;
         const targetH = 5, targetP = 35;
         const pctH = Math.round((todayCount/targetH)*100);
         const pctP = Math.round((weekCount/targetP)*100);
@@ -442,12 +360,12 @@
     }
     renderSholatCard();
 
-    // ── JADWAL HARI INI ──
+    // Jadwal
     (async function loadJadwalHariIni() {
       const list = document.getElementById('jadwalList');
       try {
         const today = new Date();
-        const hari  = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
+        const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
         if (hari === 'Jumat') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('libur') + '</p>'; return; }
         if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('tidakAdaJadwal') + '</p>'; return; }
         const snap = await db.collection('jadwal').where('dosenId','==',user.uid).get();
@@ -460,149 +378,29 @@
       } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">' + t('gagalMemuat') + '</p>'; }
     })();
 
-    // ── REKAP TIDAK HADIR AKADEMIK (hanya dosen/dosen-musyrif) ──
-    (async function loadRekapTidakHadir() {
-      if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') return;
-      const container = document.getElementById('tidakHadirAkademikContent');
-      const card      = document.getElementById('cardTidakHadirAkademik');
-      try {
-        const todayStr = new Date().toISOString().split('T')[0];
-        const absensiSnap = await db.collection('absensi').where('tanggal','==',todayStr).get();
-        if (absensiSnap.empty) {
-          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada data absensi hari ini</p>';
-          card.style.display = 'block'; return;
-        }
-        const semuaAbsensi = absensiSnap.docs.map(d => ({id:d.id,...d.data()}));
-        const tidakHadir   = semuaAbsensi.filter(a => ['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
-        if (!tidakHadir.length) {
-          container.innerHTML = '<p style="font-size:12px;color:var(--green-dark);">✅ Semua mahasiswa hadir hari ini</p>';
-          card.style.display = 'block'; return;
-        }
-        // Batch ambil data mahasiswa
-        const mhsIds = [...new Set(tidakHadir.map(a => a.mahasiswaId).filter(Boolean))];
-        const mhsMap = {};
-        for (let i = 0; i < mhsIds.length; i += 10) {
-          const snap = await db.collection('mahasiswa').where(firebase.firestore.FieldPath.documentId(),'in',mhsIds.slice(i,i+10)).get();
-          snap.forEach(doc => { mhsMap[doc.id] = doc.data(); });
-        }
-        // Batch ambil data jadwal
-        const jadwalIds = [...new Set(tidakHadir.map(a => a.jadwalId).filter(Boolean))];
-        const jadwalMap = {};
-        for (let i = 0; i < jadwalIds.length; i += 10) {
-          const snap = await db.collection('jadwal').where(firebase.firestore.FieldPath.documentId(),'in',jadwalIds.slice(i,i+10)).get();
-          snap.forEach(doc => { jadwalMap[doc.id] = doc.data(); });
-        }
-        const sakitC = tidakHadir.filter(a=>a.status==='sakit').length;
-        const izinC  = tidakHadir.filter(a=>a.status==='izin').length;
-        const alfaC  = tidakHadir.filter(a=>a.status==='alfa').length;
-        const jagaC  = tidakHadir.filter(a=>a.status==='jaga').length;
-        let html = '<div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:11px;">';
-        html += '<span style="color:var(--gray-800);"><strong>' + tidakHadir.length + '</strong> Tidak Hadir</span>';
-        if (sakitC) html += '<span style="color:#e65100;">🤒 Sakit: <strong>' + sakitC + '</strong></span>';
-        if (izinC)  html += '<span style="color:#0d47a1;">📝 Izin: <strong>' + izinC + '</strong></span>';
-        if (alfaC)  html += '<span style="color:#b71c1c;">❌ Alfa: <strong>' + alfaC + '</strong></span>';
-        if (jagaC)  html += '<span style="color:#6d28d9;">🛡️ Jaga: <strong>' + jagaC + '</strong></span>';
-        html += '</div>';
-        tidakHadir.sort((a,b) => (mhsMap[a.mahasiswaId]?.nama||'').localeCompare(mhsMap[b.mahasiswaId]?.nama||''));
-        tidakHadir.forEach(a => {
-          const mhs    = mhsMap[a.mahasiswaId] || {};
-          const jadwal = jadwalMap[a.jadwalId]  || {};
-          const nama   = mhs.nama || '-';
-          const sc     = (a.status||'').toLowerCase();
-          html += '<div class="tdk-hadir-item">' +
-            '<div class="mhs-avatar">' + (nama[0]||'?').toUpperCase() + '</div>' +
-            '<div class="tdk-hadir-info">' +
-              '<div class="tdk-hadir-nama">' + nama + '</div>' +
-              '<div class="tdk-hadir-mk">' + (jadwal.mkNama||'') + (jadwal.kelasNama?' · '+jadwal.kelasNama:'') + '</div>' +
-              '<div class="tdk-hadir-pa"><i class="fa-solid fa-user-tie"></i> PA: ' + (mhs.paNama||'Belum ada PA') + '</div>' +
-            '</div>' +
-            '<span class="tdk-hadir-status ' + sc + '">' + (sc.charAt(0).toUpperCase()+sc.slice(1)) + '</span>' +
-          '</div>';
-        });
-        container.innerHTML = html;
-        card.style.display = 'block';
-      } catch(e) { console.error(e); container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; card.style.display = 'block'; }
-    })();
-
-    // ── TIDAK HADIR HALAQOH (hanya musyrif/dosen-musyrif) ──
-    (async function loadTidakHadirHalaqoh() {
-      if (user.role !== 'musyrif' && user.role !== 'dosen-musyrif') return;
-      const container = document.getElementById('tidakHadirHalaqohContent');
-      const card      = document.getElementById('cardTidakHadirHalaqoh');
-      try {
-        const todayStr = new Date().toISOString().split('T')[0];
-        // Cari halaqoh milik musyrif ini
-        let hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
-        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId','==',user.uid).get();
-        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('uid','==',user.uid).get();
-        if (hSnap.empty) {
-          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Anda belum memiliki halaqoh</p>';
-          card.style.display = 'block'; return;
-        }
-        const halaqohData = {id:hSnap.docs[0].id,...hSnap.docs[0].data()};
-        const absensiSnap = await db.collection('absensiHalaqoh').where('halaqohId','==',halaqohData.id).where('tanggal','==',todayStr).get();
-        if (absensiSnap.empty) {
-          container.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">Belum ada absensi halaqoh hari ini</p>';
-          card.style.display = 'block'; return;
-        }
-        const semuaAbsensi = absensiSnap.docs.map(d => ({id:d.id,...d.data()}));
-        const mhsIds = [...new Set(semuaAbsensi.map(a => a.mahasiswaId).filter(Boolean))];
-        const mhsMap = {};
-        for (let i = 0; i < mhsIds.length; i += 10) {
-          const snap = await db.collection('mahasiswa').where(firebase.firestore.FieldPath.documentId(),'in',mhsIds.slice(i,i+10)).get();
-          snap.forEach(doc => { mhsMap[doc.id] = doc.data(); });
-        }
-        const hadir      = semuaAbsensi.filter(a => !['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
-        const tidakHadir = semuaAbsensi.filter(a => ['sakit','izin','alfa','jaga'].includes((a.status||'').toLowerCase()));
-        let html = '<div style="margin-bottom:10px;font-size:11px;color:var(--gray-600);">' +
-          '<i class="fa-solid fa-mosque"></i> <strong>' + (halaqohData.nama||'Halaqoh') + '</strong> · ' +
-          semuaAbsensi.length + ' anggota · ' + hadir.length + ' hadir' +
-          (tidakHadir.length ? ' · <span style="color:#e65100;">' + tidakHadir.length + ' tidak hadir</span>' : '') + '</div>';
-        if (!tidakHadir.length) {
-          html += '<p style="font-size:12px;color:var(--green-dark);">✅ Semua anggota hadir hari ini</p>';
-        } else {
-          tidakHadir.sort((a,b) => (mhsMap[a.mahasiswaId]?.nama||'').localeCompare(mhsMap[b.mahasiswaId]?.nama||''));
-          tidakHadir.forEach(a => {
-            const mhs  = mhsMap[a.mahasiswaId] || {};
-            const nama = mhs.nama || '-';
-            const sc   = (a.status||'').toLowerCase();
-            html += '<div class="tdk-hadir-item">' +
-              '<div class="mhs-avatar">' + (nama[0]||'?').toUpperCase() + '</div>' +
-              '<div class="tdk-hadir-info"><div class="tdk-hadir-nama">' + nama + '</div><div class="tdk-hadir-mk">' + (mhs.nim||'-') + '</div></div>' +
-              '<span class="tdk-hadir-status ' + sc + '">' + (sc.charAt(0).toUpperCase()+sc.slice(1)) + '</span>' +
-            '</div>';
-          });
-        }
-        container.innerHTML = html;
-        card.style.display = 'block';
-      } catch(e) { console.error(e); container.innerHTML = '<p style="font-size:12px;color:red;">Gagal memuat</p>'; card.style.display = 'block'; }
-    })();
-
-    // ── MOTIVASI — baca dari pengaturan.html field 'motivasi' ──
+    // Motivasi
     (async function loadMotivasi() {
       const container = document.getElementById('motivationScroll');
-      const dotsEl    = document.getElementById('motivDots');
-      const defaults  = [{teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},{teks:"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.",sumber:'HR. Bukhari'}];
+      const dotsEl = document.getElementById('motivDots');
+      const defaults = [{teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},{teks:"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.",sumber:'HR. Bukhari'}];
       try {
-        const doc  = await db.collection('pengaturan').doc('app').get();
+        const doc = await db.collection('pengaturan').doc('app').get();
         const data = doc.exists ? doc.data() : {};
         let list = [];
-        // Support field: motivasi (baru), motivasiList, artikelMotivasi (lama)
-        if (data.motivasi?.length)             { list = data.motivasi; }
-        else if (data.motivasiList?.length)    { list = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m); }
-        else if (data.artikelMotivasi?.length) { list = data.artikelMotivasi.map(m => typeof m==='string'?{teks:m,sumber:''}:m); }
-        else                                   { list = defaults; }
-
+        if (data.motivasi?.length) list = data.motivasi;
+        else if (data.motivasiList?.length) list = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
+        else if (data.artikelMotivasi?.length) list = data.artikelMotivasi.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
+        else list = defaults;
         container.innerHTML = list.map((m,i) => {
           const theme = (i%6)+1;
-          const teks  = typeof m==='string' ? m : (m.teks||'');
-          const src   = typeof m==='object' ? (m.sumber||'') : '';
+          const teks = typeof m==='string' ? m : (m.teks||'');
+          const src = typeof m==='object' ? (m.sumber||'') : '';
           return '<div class="motivation-card theme-' + theme + '"><div class="motiv-icon"><i class="fa-solid fa-quote-left"></i></div><div class="quote-text">"' + teks + '"</div>' + (src?'<div class="quote-source">— '+src+'</div>':'') + '<div class="quote-number">'+(i+1)+'/'+list.length+'</div></div>';
         }).join('');
         dotsEl.innerHTML = list.map((_,i) => '<div class="scroll-dot'+(i===0?' active':'')+'"></div>').join('');
         container.addEventListener('scroll', () => {
           const cardW = container.querySelector('.motivation-card')?.offsetWidth || 230;
-          const idx   = Math.round(container.scrollLeft/(cardW+10));
+          const idx = Math.round(container.scrollLeft/(cardW+10));
           dotsEl.querySelectorAll('.scroll-dot').forEach((d,i) => d.classList.toggle('active',i===idx));
         });
       } catch(e) {
@@ -610,10 +408,10 @@
       }
     })();
 
-    // ── VISI MISI — baca dari pengaturan.html field 'visi' dan 'misi' ──
+    // Visi Misi
     (async function loadVisiMisi() {
       try {
-        const doc  = await db.collection('pengaturan').doc('app').get();
+        const doc = await db.collection('pengaturan').doc('app').get();
         if (!doc.exists) return;
         const data = doc.data();
         if (!data.visi && !data.misi?.length) return;
@@ -629,38 +427,20 @@
       } catch(e) {}
     })();
 
-    // ── YOUTUBE — baca dari pengaturan.html field 'youtube' (array) ──
-    (async function loadYoutube() {
-      try {
-        const doc    = await db.collection('pengaturan').doc('app').get();
-        if (!doc.exists) return;
-        const data   = doc.data();
-        const videos = data.youtube || [];
-        if (!videos.length) return;
-        document.getElementById('ytCard').style.display = 'block';
-        const html = videos.map(v => {
-          const vid   = extractYoutubeId(v.url||'');
-          const thumb = vid ? 'https://img.youtube.com/vi/'+vid+'/mqdefault.jpg' : '';
-          return '<a href="'+v.url+'" target="_blank" class="yt-item">'+(thumb?'<img class="yt-thumb" src="'+thumb+'" alt="'+v.judul+'">':'<div class="yt-thumb"></div>')+'<div class="yt-info"><div class="yt-title">'+(v.judul||'Video Kajian')+'</div><div class="yt-sub"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> Kampung Maghfirah</div></div><i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--gray-400);flex-shrink:0;"></i></a>';
-        }).join('');
-        document.getElementById('ytContainer').innerHTML = html + '<a href="https://www.youtube.com/@KampungMaghfirah" target="_blank" class="yt-channel-btn"><i class="fa-brands fa-youtube"></i> '+t('kunjungiChannel')+'</a>';
-      } catch(e) { console.error('YouTube error:', e); }
-    })();
-
-    // ── PENGUMUMAN — baca dari pengaturan.html field pengumuman* ──
+    // Pengumuman
     (async function loadPengumuman() {
       try {
-        const doc  = await db.collection('pengaturan').doc('app').get();
+        const doc = await db.collection('pengaturan').doc('app').get();
         if (!doc.exists) return;
         const data = doc.data();
         if (!data.pengumumanJudul && !data.pengumumanIsi) return;
         if (data.pengumumanExpired && new Date() > new Date(data.pengumumanExpired)) return;
         const warnaMap = {
-          green:  {bg:'#e8f5e9',border:'#00a859',text:'#1b5e20',icon:'fa-circle-info'},
-          blue:   {bg:'#e3f2fd',border:'#1e88e5',text:'#0d47a1',icon:'fa-circle-info'},
+          green: {bg:'#e8f5e9',border:'#00a859',text:'#1b5e20',icon:'fa-circle-info'},
+          blue: {bg:'#e3f2fd',border:'#1e88e5',text:'#0d47a1',icon:'fa-circle-info'},
           orange: {bg:'#fff3e0',border:'#e65100',text:'#bf360c',icon:'fa-circle-exclamation'},
-          red:    {bg:'#fce4ec',border:'#e53935',text:'#b71c1c',icon:'fa-triangle-exclamation'},
-          gold:   {bg:'#fff8e1',border:'#f5c842',text:'#7a6000',icon:'fa-star'}
+          red: {bg:'#fce4ec',border:'#e53935',text:'#b71c1c',icon:'fa-triangle-exclamation'},
+          gold: {bg:'#fff8e1',border:'#f5c842',text:'#7a6000',icon:'fa-star'}
         };
         const w = warnaMap[data.pengumumanWarna] || warnaMap.green;
         document.getElementById('pengumumanCard').style.display = 'block';
@@ -668,27 +448,21 @@
       } catch(e) {}
     })();
 
-    // ── HELPER ──
-    function extractYoutubeId(url) {
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-      return match ? match[1] : null;
-    }
-
-    // ── SHOLAT MINI ──
+    // Sholat Mini
     const ORDER_MINI = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
     const PRAYER_NAMES = {Fajr:'Subuh',Sunrise:'Terbit',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
     async function loadSholatMini() {
       const nameEl = document.getElementById('sholatMiniName');
       const timeEl = document.getElementById('sholatMiniTime');
-      const cntEl  = document.getElementById('sholatMiniCountdown');
+      const cntEl = document.getElementById('sholatMiniCountdown');
       nameEl.textContent = t('memuatJadwal');
       if (!navigator.geolocation) { nameEl.textContent = t('lihatJadwal'); return; }
       navigator.geolocation.getCurrentPosition(async pos => {
         try {
           const lat = pos.coords.latitude, lon = pos.coords.longitude;
-          const today  = new Date();
-          const dateStr= String(today.getDate()).padStart(2,'0')+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+today.getFullYear();
-          const cKey   = 'jadwalSholat_'+lat.toFixed(2)+'_'+lon.toFixed(2)+'_'+dateStr;
+          const today = new Date();
+          const dateStr = String(today.getDate()).padStart(2,'0')+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+today.getFullYear();
+          const cKey = 'jadwalSholat_'+lat.toFixed(2)+'_'+lon.toFixed(2)+'_'+dateStr;
           let timings;
           const cached = localStorage.getItem(cKey);
           if (cached) { timings = JSON.parse(cached); }
@@ -710,45 +484,44 @@
           const dH = Math.floor(diffMs/3600000), dM = Math.floor((diffMs%3600000)/60000);
           nameEl.textContent = active.name;
           timeEl.textContent = active.time;
-          cntEl.textContent  = dH+t('jam')+' '+dM+t('menit');
+          cntEl.textContent = dH+t('jam')+' '+dM+t('menit');
         } catch(e) { nameEl.textContent = t('lihatJadwal'); }
       }, () => { nameEl.textContent = t('lihatJadwal'); }, {timeout:8000});
     }
     loadSholatMini();
 
-    // ── BADGE TILAWAH ──
+    // Badge Tilawah
     function loadTilawahBadge() {
       try {
-        const saved    = localStorage.getItem('tilawahProgress_'+user.uid);
+        const saved = localStorage.getItem('tilawahProgress_'+user.uid);
         const progress = saved ? JSON.parse(saved) : {halamanDibaca:{}};
         const todayKey = new Date().toISOString().split('T')[0];
-        const hlm      = (progress.halamanDibaca?.[todayKey]||[]).length;
+        const hlm = (progress.halamanDibaca?.[todayKey]||[]).length;
         document.getElementById('tilawahBadge').textContent = t('tilawahBadge')+': '+hlm+' '+t('hlm');
       } catch(e) {}
     }
     loadTilawahBadge();
 
-    // ── BADGE DZIKIR ──
+    // Badge Dzikir
     function loadDzikirBadge() {
       try {
-        const hour     = new Date().getHours();
+        const hour = new Date().getHours();
         const isPetang = hour >= 12 && hour < 19;
-        const waktu    = isPetang ? 'petang' : 'pagi';
+        const waktu = isPetang ? 'petang' : 'pagi';
         document.getElementById('dzikirTitle').textContent = isPetang ? t('dzikirPetang') : t('dzikirPagi');
-        document.getElementById('dzikirIcon').innerHTML    = isPetang ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
-        const todayKey  = new Date().toISOString().split('T')[0];
-        const saved     = localStorage.getItem('dzikirProgress_'+user.uid+'_'+todayKey);
-        const state     = saved ? JSON.parse(saved) : {};
+        document.getElementById('dzikirIcon').innerHTML = isPetang ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+        const todayKey = new Date().toISOString().split('T')[0];
+        const saved = localStorage.getItem('dzikirProgress_'+user.uid+'_'+todayKey);
+        const state = saved ? JSON.parse(saved) : {};
         const doneCount = Object.keys(state).filter(k => k.startsWith(waktu) && state[k]?.done).length;
         document.getElementById('dzikirBadge').textContent = doneCount+' '+t('selesai');
       } catch(e) {}
     }
     loadDzikirBadge();
-    // ── SETUP FCM NOTIFIKASI ──   ← tambahin dari sini
+
+    // FCM
     setupFCM().then(function(success) {
-      if (success) {
-        console.log('✅ Notifikasi push siap');
-      }
+      if (success) console.log('✅ Notifikasi push siap');
     });
   </script>
 </body>
