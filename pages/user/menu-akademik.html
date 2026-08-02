@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Menu Akademik - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --green-dark:#003d33;--green-mid:#006644;--green:#00a859;--green-light:#e8f5e9;--green-pale:#f0faf5;--gold:#f5c842;--white:#ffffff;--gray-50:#f9f9f9;--gray-600:#666666;--gray-800:#222222;--red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;--orange:#f57c00;--purple:#6a1b9a;--purple-light:#f3e5f5;--teal:#00695c;--radius-sm:10px;--radius:14px;--radius-lg:18px;--transition:all 0.3s ease;--header-height:56px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px; -webkit-tap-highlight-color: transparent; min-height: 100vh; }
+
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .hero-card {
+      background: linear-gradient(135deg, #004d40, #006644); color: white;
+      border-radius: var(--radius-lg); padding: 20px; text-align: center;
+      box-shadow: 0 8px 24px rgba(0,61,51,0.2);
+    }
+    .hero-card .icon { font-size: 40px; margin-bottom: 8px; }
+    .hero-card h2 { font-size: 18px; font-weight: 800; }
+    .hero-card p { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .menu-card {
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius);
+      padding: 18px 14px; text-align: center; cursor: pointer; transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 2px 8px rgba(0,61,51,0.04);
+    }
+    .menu-card:active { transform: scale(0.96); background: rgba(255,255,255,0.9); }
+    .menu-card .m-icon {
+      width: 48px; height: 48px; border-radius: 14px; margin: 0 auto 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .m-icon.green { background: var(--green-light); color: #1b5e20; }
+    .m-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .m-icon.orange { background: #fff3e0; color: var(--orange); }
+    .m-icon.purple { background: var(--purple-light); color: var(--purple); }
+    .m-icon.teal { background: #e0f2f1; color: var(--teal); }
+    .menu-card .m-label { font-size: 12px; font-weight: 700; color: var(--gray-800); }
+    .menu-card .m-sub { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255,255,255,0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,61,51,0.1), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0,168,89,0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📚 Menu Akademik</h3>
+  </header>
+
+  <div class="content">
+    <div class="hero-card">
+      <div class="icon"></div>
+      <h2>Menu Akademik</h2>
+      <p>Kelola perkuliahan, absensi, nilai, & mahasiswa bimbingan</p>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-card" onclick="goTo('jadwal-saya.html')">
+        <div class="m-icon blue"><i class="fa-solid fa-calendar-alt"></i></div>
+        <div class="m-label">Jadwal Saya</div>
+        <div class="m-sub">Lihat & atur jadwal</div>
+      </div>
+      <div class="menu-card" onclick="goTo('rekap-absensi-kelas.html')">
+        <div class="m-icon teal"><i class="fa-solid fa-clipboard-check"></i></div>
+        <div class="m-label"> Rekap Absensi Kelas</div>
+        <div class="m-sub">Rekap absensi MK</div>
+      </div>
+      <div class="menu-card" onclick="goTo('nilai.html')">
+        <div class="m-icon orange"><i class="fa-solid fa-star"></i></div>
+        <div class="m-label">Input Nilai</div>
+        <div class="m-sub">Nilai mahasiswa</div>
+      </div>
+      <div class="menu-card" onclick="goTo('rekap-nilai-matkul.html')">
+        <div class="m-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="m-label">Rekap Nilai</div>
+        <div class="m-sub">Lihat rekap nilai</div>
+      </div>
+      <div class="menu-card" onclick="goTo('mahasiswa-bimbingan.html')">
+        <div class="m-icon green"><i class="fa-solid fa-user-graduate"></i></div>
+        <div class="m-label">Mahasiswa PA</div>
+        <div class="m-sub">Bimbingan akademik</div>
+      </div>
+      <div class="menu-card" onclick="goTo('silabus.html')">
+        <div class="m-icon teal"><i class="fa-solid fa-file-alt"></i></div>
+        <div class="m-label">Silabus</div>
+        <div class="m-sub">RPS & materi</div>
+      </div>
+      <div class="menu-card" onclick="goTo('pencapaian.html')">
+        <div class="m-icon orange"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="m-label">Pencapaian</div>
+        <div class="m-sub">Input capaian</div>
+      </div>
+      <div class="menu-card" onclick="goTo('rekap-tidak-hadir-kelas.html')">
+        <div class="m-icon green"><i class="fa-solid fa-user-xmark"></i></div>
+        <div class="m-label">Tidak Hadir</div>
+        <div class="m-sub">Rekap ketidakhadiran</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item active" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+  </script>
+</body>
+</html>
