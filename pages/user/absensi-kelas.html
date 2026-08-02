@@ -87,6 +87,21 @@
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
     .toast.show { opacity: 1; }
 
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
     @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
@@ -104,9 +119,19 @@
     <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
-  <div style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
+  <!-- Bottom Simpan -->
+  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
     <button class="btn-simpan" id="btnSimpan"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>
   </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item active" onclick="goTo('absensi-kelas.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
 
   <div class="toast" id="toast"></div>
 
@@ -118,6 +143,7 @@
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
     const params = new URLSearchParams(window.location.search);
     const jadwalId = params.get('jadwalId');
@@ -128,6 +154,8 @@
     let isSaving = false;
     let pertemuanKe = 1;
     let allKelasIds = [];
+    let currentJamKe = 1;
+    let jadwalData = {};
 
     function showToast(msg, type = '') {
       const el = document.getElementById('toast');
@@ -138,10 +166,14 @@
     function updateSummary() {
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
       Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
-      document.getElementById('sumHadir').textContent = counts.hadir;
-      document.getElementById('sumSakit').textContent = counts.sakit;
-      document.getElementById('sumIzin').textContent = counts.izin;
-      document.getElementById('sumAlfa').textContent = counts.alfa;
+      const elHadir = document.getElementById('sumHadir');
+      const elSakit = document.getElementById('sumSakit');
+      const elIzin = document.getElementById('sumIzin');
+      const elAlfa = document.getElementById('sumAlfa');
+      if (elHadir) elHadir.textContent = counts.hadir;
+      if (elSakit) elSakit.textContent = counts.sakit;
+      if (elIzin) elIzin.textContent = counts.izin;
+      if (elAlfa) elAlfa.textContent = counts.alfa;
     }
 
     window.setStatus = function(mhsId, status) {
@@ -158,6 +190,7 @@
       Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
     };
 
+    // ═══ SIMPAN — DENGAN jamKe AGAR JP TIDAK TIMPA ═══
     document.getElementById('btnSimpan').addEventListener('click', async function() {
       if (isSaving) return;
       if (Object.keys(absensiState).length === 0) { showToast('Tidak ada mahasiswa', 'error'); return; }
@@ -171,30 +204,60 @@
         const batch = db.batch();
 
         for (const [mhsId, status] of Object.entries(absensiState)) {
+          // ⬇️ QUERY: mahasiswaId + jadwalId + tanggal, lalu filter jamKe di JS
           const existingSnap = await db.collection('absensi')
             .where('mahasiswaId', '==', mhsId)
-            .where('mapelId', '==', mapelId)
+            .where('jadwalId', '==', jadwalId)
             .where('tanggal', '==', today)
             .get();
 
-          if (!existingSnap.empty) {
-            existingSnap.docs.forEach(d => batch.update(d.ref, { status }));
+          // Filter manual by jamKe (hindari composite index)
+          const existingDocs = existingSnap.docs.filter(d => d.data().jamKe === currentJamKe);
+
+          if (existingDocs.length > 0) {
+            // Update absensi yang sudah ada untuk JP ini
+            existingDocs.forEach(d => batch.update(d.ref, { 
+              status, 
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+            }));
           } else {
+            // Buat data baru untuk JP ini
             const ref = db.collection('absensi').doc();
             batch.set(ref, {
-              mahasiswaId: mhsId, kelasId, mapelId, jadwalId,
-              dosenId: user.uid, status, tanggal: today,
-              pertemuanKe, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              mahasiswaId: mhsId,
+              kelasId: kelasId,
+              mapelId: mapelId,
+              jadwalId: jadwalId,
+              dosenId: user.uid,
+              status: status,
+              tanggal: today,
+              pertemuanKe: pertemuanKe,
+              jamKe: currentJamKe,       // ⬅️ SIMPAN jamKe
+              mkNama: jadwalData.mkNama || '',
+              kelasNama: jadwalData.kelasNama || '',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
           }
         }
 
         await batch.commit();
-        showToast(`✅ Pertemuan ke-${pertemuanKe} tersimpan!`, 'success');
-        setTimeout(() => history.back(), 1500);
+        showToast(`✅ JP ${currentJamKe} · Pertemuan ke-${pertemuanKe} tersimpan!`, 'success');
+        
+        // Reset form untuk JP berikutnya (jika ada)
+        setTimeout(() => {
+          // Cek apakah ada JP berikutnya di hari yang sama
+          const nextJP = currentJamKe + 1;
+          const hasNext = allKelasIds.length > 0; // Bisa di-improve lebih lanjut
+          if (hasNext) {
+            // Reset absensiState ke hadir semua untuk JP berikutnya
+            Object.keys(absensiState).forEach(id => { absensiState[id] = 'hadir'; });
+          }
+        }, 1500);
       } catch(e) {
         showToast('❌ Gagal: ' + e.message, 'error');
-        isSaving = false; btn.disabled = false;
+      } finally {
+        isSaving = false;
+        btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Simpan Absensi';
       }
     });
@@ -207,24 +270,30 @@
 
       try {
         const jDoc = await db.collection('jadwal').doc(jadwalId).get();
-        const j = jDoc.exists ? jDoc.data() : {};
+        jadwalData = jDoc.exists ? jDoc.data() : {};
+        currentJamKe = jadwalData.jamKe || 1;
 
-        // ⬇️ DAPATKAN SEMUA KELAS (GABUNGAN)
-        allKelasIds = j.kelasIds || [kelasId];
+        // Dapatkan semua kelas (gabungan)
+        allKelasIds = jadwalData.kelasIds || [kelasId];
         if (!allKelasIds.includes(kelasId)) allKelasIds.push(kelasId);
 
         // Hitung pertemuan ke-
         const absensiSnap = await db.collection('absensi').where('jadwalId', '==', jadwalId).get();
         const tanggalUnik = new Set(absensiSnap.docs.map(d => d.data().tanggal).filter(Boolean));
         const todayStr = new Date().toISOString().split('T')[0];
-        if (!tanggalUnik.has(todayStr)) pertemuanKe = tanggalUnik.size + 1;
-        else { const sorted = [...tanggalUnik].sort(); pertemuanKe = sorted.indexOf(todayStr) + 1; }
+        
+        if (!tanggalUnik.has(todayStr)) {
+          pertemuanKe = tanggalUnik.size + 1;
+        } else {
+          const sorted = [...tanggalUnik].sort();
+          pertemuanKe = sorted.indexOf(todayStr) + 1;
+        }
         if (pertemuanKe <= 0) pertemuanKe = 1;
 
-        document.getElementById('headerTitle').textContent = j.mkNama || 'Absensi';
-        document.getElementById('headerSub').textContent = `${j.kelasNama || ''} · Pertemuan ke-${pertemuanKe}`;
+        document.getElementById('headerTitle').textContent = jadwalData.mkNama || 'Absensi';
+        document.getElementById('headerSub').textContent = `${jadwalData.kelasNama || ''} · JP ${currentJamKe} · Pertemuan ke-${pertemuanKe}`;
 
-        // ⬇️ AMBIL MAHASISWA DARI SEMUA KELAS (GABUNGAN)
+        // Ambil mahasiswa dari semua kelas (gabungan)
         let allMhs = [];
         for (const kid of allKelasIds) {
           const mSnap = await db.collection('mahasiswa').where('kelasId', '==', kid).get();
@@ -239,15 +308,23 @@
           return;
         }
 
-        // Existing absensi hari ini
+        // Existing absensi hari ini untuk JP ini
         const existingSnap = await db.collection('absensi')
           .where('dosenId', '==', user.uid)
+          .where('jadwalId', '==', jadwalId)
           .where('tanggal', '==', todayStr)
-          .where('mapelId', '==', mapelId)
           .get();
+        
         const existingMap = {};
-        existingSnap.forEach(d => { const data = d.data(); if (data.mahasiswaId) existingMap[data.mahasiswaId] = data.status; });
+        existingSnap.forEach(d => {
+          const data = d.data();
+          // Hanya ambil yang jamKe-nya cocok
+          if (data.mahasiswaId && data.jamKe === currentJamKe) {
+            existingMap[data.mahasiswaId] = data.status;
+          }
+        });
 
+        // Set default state
         allMhs.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
 
         // Render
@@ -273,9 +350,10 @@
 
         document.getElementById('mainContent').innerHTML = `
           <div class="info-card">
-            <div class="mk-nama">${j.mkNama || '-'}</div>
+            <div class="mk-nama">${jadwalData.mkNama || '-'}</div>
             <div class="info-row">
-              <div class="info-chip"><i class="fa-solid fa-users"></i> ${j.kelasNama || allKelasIds.length+' kelas'}</div>
+              <div class="info-chip"><i class="fa-solid fa-users"></i> ${jadwalData.kelasNama || allKelasIds.length+' kelas'}</div>
+              <div class="info-chip"><i class="fa-solid fa-clock"></i> JP ${currentJamKe} · ${jadwalData.waktu || ''}</div>
               <div class="info-chip"><i class="fa-solid fa-calendar-check"></i> Pertemuan ke-${pertemuanKe}</div>
             </div>
           </div>
