@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --red-light: #fce4ec; --orange: #f57c00; --orange-light: #fff3e0; --sidebar-width: 260px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; }
+    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --red-light: #fce4ec; --orange: #f57c00; --orange-light: #fff3e0; --blue: #1565c0; --blue-light: #e3f2fd; --sidebar-width: 260px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
 
@@ -32,71 +32,111 @@
     .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); } .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
     .stat-card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); text-align: center; }
     .stat-card .val { font-size: 28px; font-weight: 700; color: var(--green-dark); }
     .stat-card .lbl { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
 
+    /* Filter Tabs */
+    .filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+    .filter-tab {
+      padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--gray-200); background: var(--white);
+      color: var(--gray-600); transition: var(--transition);
+    }
+    .filter-tab.active { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+    .filter-tab .count { font-size: 10px; opacity: 0.7; margin-left: 4px; }
+
     .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 20px; }
-    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: 14px; }
     .card-body { padding: 16px; }
 
-    .dosen-list { display: flex; flex-direction: column; gap: 8px; }
-    .dosen-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--gray-50); border-radius: var(--radius-sm); border: 1px solid var(--gray-200); }
-    .dosen-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .dosen-list { display: flex; flex-direction: column; gap: 10px; }
+    .dosen-card { background: var(--gray-50); border-radius: var(--radius-sm); border: 1px solid var(--gray-200); padding: 14px; transition: var(--transition); }
+    .dosen-card:hover { box-shadow: var(--shadow-sm); }
+    .dosen-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .dosen-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 16px; flex-shrink: 0; }
     .dosen-info { flex: 1; }
-    .dosen-nama { font-weight: 600; font-size: 13px; }
-    .dosen-jadwal { font-size: 10px; color: var(--gray-600); }
-    .badge { padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; }
+    .dosen-nama { font-weight: 700; font-size: 14px; }
+    .dosen-email { font-size: 10px; color: var(--gray-600); }
+
+    .jadwal-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-left: 50px; }
+    .jadwal-chip { padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .jadwal-chip.belum { background: var(--red-light); color: #b71c1c; border: 1px solid #ef9a9a; }
+    .jadwal-chip.sudah { background: var(--green-light); color: #1b5e20; border: 1px solid #a5d6a7; }
+    .jadwal-chip.libur { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); }
+
+    .badge { padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: 700; white-space: nowrap; }
     .badge-sudah { background: var(--green-light); color: #1b5e20; }
     .badge-belum { background: var(--red-light); color: #b71c1c; }
-    .badge-tidak-mengajar { background: var(--gray-100); color: var(--gray-600); }
+    .badge-libur { background: var(--gray-100); color: var(--gray-600); }
 
     .empty-state { text-align: center; padding: 30px; color: var(--gray-400); }
+    .legend { display: flex; gap: 16px; font-size: 11px; color: var(--gray-600); margin-bottom: 8px; }
 
-    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar">
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
     <nav class="sidebar-nav">
       <div class="nav-section"><div class="nav-section-title">Utama</div><a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a></div>
+      <div class="nav-section"><div class="nav-section-title">Master Data</div>
+        <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
+        <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
+        <a href="prodi.html" class="nav-item"><i class="fa-solid fa-building-columns"></i> Data Prodi</a>
+        <a href="matakuliah.html" class="nav-item"><i class="fa-solid fa-book"></i> Data Matakuliah</a>
+        <a href="kelas.html" class="nav-item"><i class="fa-solid fa-school"></i> Data Kelas</a>
+        <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
+        <a href="generate-jadwal.html" class="nav-item"><i class="fa-solid fa-shuffle"></i> Generate Jadwal</a>
+        <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
+        <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
+        <a href="pembagian-pa.html" class="nav-item"><i class="fa-solid fa-user-tie"></i> Pembagian PA</a>
+      </div>
       <div class="nav-section"><div class="nav-section-title">Monitoring</div>
         <a href="monitoring-jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Monitoring Jadwal</a>
         <a href="monitoring-absensi.html" class="nav-item active"><i class="fa-solid fa-clipboard-check"></i> Monitoring Absensi</a>
+      </div>
+      <div class="nav-section"><div class="nav-section-title">Akademik</div>
+        <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
+        <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
+        <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
+        <a href="krs-khs.html" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Cetak KRS/KHS</a>
+        <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
       </div>
     </nav>
     <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
   </aside>
 
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>📋 Monitoring Absensi Harian</h1><p>Pantau dosen yang sudah/belum absen hari ini</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar"><div class="page-title"><h1>📋 Monitoring Absensi Harian</h1><p>Pantau dosen yang sudah/belum absen hari ini · Detail per JP</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
 
     <div class="stats-grid" id="statsGrid"></div>
 
-    <!-- Dosen yang BELUM absen -->
-    <div class="card">
-      <div class="card-header"><i class="fa-solid fa-circle-xmark" style="color:var(--red);"></i> Dosen yang BELUM Absen Hari Ini</div>
-      <div class="card-body">
-        <div class="dosen-list" id="belumList"><div class="empty-state">Memuat...</div></div>
-      </div>
+    <div class="legend">
+      <span><span class="jadwal-chip sudah" style="display:inline-flex;">✅</span> Sudah Absen</span>
+      <span><span class="jadwal-chip belum" style="display:inline-flex;">❌</span> Belum Absen</span>
     </div>
 
-    <!-- Dosen yang SUDAH absen -->
-    <div class="card">
-      <div class="card-header"><i class="fa-solid fa-circle-check" style="color:var(--green);"></i> Dosen yang SUDAH Absen Hari Ini</div>
-      <div class="card-body">
-        <div class="dosen-list" id="sudahList"><div class="empty-state">Memuat...</div></div>
-      </div>
+    <!-- Filter Tabs -->
+    <div class="filter-tabs" id="filterTabs">
+      <span class="filter-tab active" data-filter="all">📋 Semua <span class="count" id="countAll">0</span></span>
+      <span class="filter-tab" data-filter="mengajar">👨‍🏫 Mengajar <span class="count" id="countMengajar">0</span></span>
+      <span class="filter-tab" data-filter="tidak">🔘 Tidak Mengajar <span class="count" id="countTidak">0</span></span>
     </div>
 
-    <!-- Dosen yang tidak mengajar hari ini -->
     <div class="card">
-      <div class="card-header"><i class="fa-solid fa-minus-circle" style="color:var(--gray-600);"></i> Dosen Tidak Mengajar Hari Ini</div>
+      <div class="card-header">
+        <span><i class="fa-solid fa-list"></i> Status Absensi — <span id="dateLabel"></span></span>
+        <button class="btn btn-outline btn-sm" onclick="loadMonitoring()"><i class="fa-solid fa-sync"></i> Refresh</button>
+      </div>
       <div class="card-body">
-        <div class="dosen-list" id="tidakMengajarList"><div class="empty-state">Memuat...</div></div>
+        <div class="dosen-list" id="dosenList"><div class="empty-state">Memuat...</div></div>
       </div>
     </div>
   </main>
@@ -107,14 +147,29 @@
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script>
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
+
     const user = checkRole(['operator-akademik', 'pusat-data']);
     if (!user) window.location.href = '../../index.html';
     document.getElementById('sidebarName').textContent = user.nama || 'Operator';
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
+    let allDosenData = [];
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        renderDosenCards(this.dataset.filter);
+      });
+    });
+
     async function loadMonitoring() {
       const todayStr = new Date().toISOString().split('T')[0];
       const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][new Date().getDay()];
+      document.getElementById('dateLabel').textContent = `${hari}, ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}`;
 
       try {
         const [dosenSnap, jadwalSnap, absensiSnap] = await Promise.all([
@@ -123,83 +178,73 @@
           db.collection('absensi').where('tanggal','==',todayStr).get()
         ]);
 
-        const allDosen = dosenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const allDosen = dosenSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
         const allJadwal = jadwalSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         const allAbsensi = absensiSnap.docs.map(d => d.data());
 
-        // Dosen yang mengajar hari ini
-        const dosenMengajarHariIni = new Set(allJadwal.filter(j => j.hari === hari).map(j => j.dosenId));
-        
-        // Dosen yang sudah absen hari ini
-        const dosenSudahAbsen = new Set(allAbsensi.map(a => a.dosenId));
-
-        // Kategorisasi
-        const mengajarSudahAbsen = [];
-        const mengajarBelumAbsen = [];
-        const tidakMengajar = [];
-
-        allDosen.forEach(d => {
-          if (dosenMengajarHariIni.has(d.id)) {
-            if (dosenSudahAbsen.has(d.id)) {
-              // Cari jadwalnya
-              const jadwalDosen = allJadwal.filter(j => j.dosenId === d.id && j.hari === hari);
-              mengajarSudahAbsen.push({ ...d, jadwal: jadwalDosen });
-            } else {
-              const jadwalDosen = allJadwal.filter(j => j.dosenId === d.id && j.hari === hari);
-              mengajarBelumAbsen.push({ ...d, jadwal: jadwalDosen });
-            }
-          } else {
-            tidakMengajar.push(d);
-          }
+        // Build data per dosen
+        allDosenData = allDosen.map(d => {
+          const jadwalHariIni = allJadwal.filter(j => j.dosenId === d.id && j.hari === hari);
+          const absensiDosen = allAbsensi.filter(a => a.dosenId === d.id);
+          const absensiJP = new Set(absensiDosen.map(a => a.jadwalId));
+          const sudahAbsen = jadwalHariIni.length > 0 && jadwalHariIni.every(j => absensiJP.has(j.id));
+          return { ...d, jadwalHariIni, absensiJP, sudahAbsen };
         });
 
         // Stats
+        const totalMengajar = allDosenData.filter(d => d.jadwalHariIni.length > 0).length;
+        const totalSudah = allDosenData.filter(d => d.jadwalHariIni.length > 0 && d.sudahAbsen).length;
+        const totalBelum = totalMengajar - totalSudah;
+
         document.getElementById('statsGrid').innerHTML = `
           <div class="stat-card"><div class="val">${allDosen.length}</div><div class="lbl">Total Dosen</div></div>
-          <div class="stat-card"><div class="val" style="color:#1b5e20;">${mengajarSudahAbsen.length}</div><div class="lbl">Sudah Absen</div></div>
-          <div class="stat-card"><div class="val" style="color:#b71c1c;">${mengajarBelumAbsen.length}</div><div class="lbl">Belum Absen</div></div>
+          <div class="stat-card"><div class="val">${totalMengajar}</div><div class="lbl">Mengajar Hari Ini</div></div>
+          <div class="stat-card"><div class="val" style="color:#1b5e20;">${totalSudah}</div><div class="lbl">✅ Sudah Absen</div></div>
+          <div class="stat-card"><div class="val" style="color:#b71c1c;">${totalBelum}</div><div class="lbl">❌ Belum Absen</div></div>
         `;
 
-        // Render belum absen
-        document.getElementById('belumList').innerHTML = mengajarBelumAbsen.length === 0
-          ? '<div class="empty-state">✅ Semua dosen sudah absen hari ini!</div>'
-          : mengajarBelumAbsen.map(d => `
-            <div class="dosen-row">
-              <div class="dosen-avatar">${(d.nama||'?')[0].toUpperCase()}</div>
-              <div class="dosen-info">
-                <div class="dosen-nama">${d.nama||'-'}</div>
-                <div class="dosen-jadwal">${d.jadwal.map(j => `${j.mkNama||''} (JP ${j.jamKe})`).join(', ') || 'Ada jadwal'}</div>
-              </div>
-              <span class="badge badge-belum">❌ Belum Absen</span>
-            </div>`).join('');
+        // Update filter counts
+        document.getElementById('countAll').textContent = allDosen.length;
+        document.getElementById('countMengajar').textContent = totalMengajar;
+        document.getElementById('countTidak').textContent = allDosen.length - totalMengajar;
 
-        // Render sudah absen
-        document.getElementById('sudahList').innerHTML = mengajarSudahAbsen.length === 0
-          ? '<div class="empty-state">Belum ada yang absen hari ini</div>'
-          : mengajarSudahAbsen.map(d => `
-            <div class="dosen-row">
-              <div class="dosen-avatar">${(d.nama||'?')[0].toUpperCase()}</div>
-              <div class="dosen-info">
-                <div class="dosen-nama">${d.nama||'-'}</div>
-                <div class="dosen-jadwal">${d.jadwal.map(j => `${j.mkNama||''} (JP ${j.jamKe})`).join(', ') || 'Ada jadwal'}</div>
-              </div>
-              <span class="badge badge-sudah">✅ Sudah Absen</span>
-            </div>`).join('');
-
-        // Render tidak mengajar
-        document.getElementById('tidakMengajarList').innerHTML = tidakMengajar.length === 0
-          ? '<div class="empty-state">Semua dosen mengajar hari ini</div>'
-          : tidakMengajar.map(d => `
-            <div class="dosen-row">
-              <div class="dosen-avatar">${(d.nama||'?')[0].toUpperCase()}</div>
-              <div class="dosen-info">
-                <div class="dosen-nama">${d.nama||'-'}</div>
-                <div class="dosen-jadwal">Tidak ada jadwal hari ini</div>
-              </div>
-              <span class="badge badge-tidak-mengajar">Libur</span>
-            </div>`).join('');
-
+        // Render with current active filter
+        const activeFilter = document.querySelector('.filter-tab.active').dataset.filter;
+        renderDosenCards(activeFilter);
       } catch(e) { console.error(e); }
+    }
+
+    function renderDosenCards(filter = 'all') {
+      let filtered = allDosenData;
+      if (filter === 'mengajar') filtered = allDosenData.filter(d => d.jadwalHariIni.length > 0);
+      else if (filter === 'tidak') filtered = allDosenData.filter(d => d.jadwalHariIni.length === 0);
+
+      if (filtered.length === 0) {
+        document.getElementById('dosenList').innerHTML = '<div class="empty-state">Tidak ada data</div>';
+        return;
+      }
+
+      document.getElementById('dosenList').innerHTML = filtered.map(d => {
+        let status = 'libur', badgeClass = 'badge-libur', statusText = '🔘 Tidak Mengajar';
+        if (d.jadwalHariIni.length > 0) {
+          if (d.sudahAbsen) { status = 'sudah'; badgeClass = 'badge-sudah'; statusText = '✅ Sudah Absen'; }
+          else { status = 'belum'; badgeClass = 'badge-belum'; statusText = '❌ Belum Absen'; }
+        }
+        const jadwalChips = d.jadwalHariIni.map(j => {
+          const sudahAbsenJP = d.absensiJP.has(j.id);
+          const chipClass = sudahAbsenJP ? 'sudah' : 'belum';
+          const icon = sudahAbsenJP ? '✅' : '❌';
+          return `<span class="jadwal-chip ${chipClass}">${icon} JP ${j.jamKe} · ${j.mkNama||'-'} · ${j.kelasNama||'-'} (${j.waktu||''})</span>`;
+        }).join('');
+        return `<div class="dosen-card">
+          <div class="dosen-header">
+            <div class="dosen-avatar">${(d.nama||'?')[0].toUpperCase()}</div>
+            <div class="dosen-info"><div class="dosen-nama">${d.nama||'-'}</div><div class="dosen-email">${d.email||'-'}</div></div>
+            <span class="badge ${badgeClass}">${statusText}</span>
+          </div>
+          ${d.jadwalHariIni.length > 0 ? `<div class="jadwal-chips">${jadwalChips}</div>` : '<div style="padding-left:50px;font-size:10px;color:var(--gray-400);">Tidak ada jadwal hari ini</div>'}
+        </div>`;
+      }).join('');
     }
 
     window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
