@@ -2,267 +2,154 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Absensi Halaqoh - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --green: #00875A; --green-dark: #006644; --green-bg: #E3FCEF; --green-text: #006644;
-      --red: #DE350B; --red-bg: #FFEBE6; --red-text: #BF2600;
-      --amber: #FF8B00; --amber-bg: #FFF7D0; --amber-text: #7A4100;
-      --blue: #0052CC; --blue-bg: #DEEBFF; --blue-text: #0747A6;
-      --purple: #5243AA; --purple-bg: #EAE6FF; --purple-text: #403294;
-      --surface: #FFFFFF; --bg: #F4F5F7; --border: #DFE1E6;
-      --text: #172B4D; --text-muted: #6B778C; --text-subtle: #97A0AF;
-      --radius: 8px; --radius-lg: 14px; --header-h: 56px;
-      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--white:#ffffff;
+      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
+      --gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.2s ease;--header-height:56px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg); color: var(--text);
-      padding-top: var(--header-h); padding-bottom: 40px;
-      min-height: 100vh; font-size: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
     }
 
-    .header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      background: var(--green-dark); height: var(--header-h);
-      display: flex; align-items: center; gap: 10px; padding: 0 16px;
-    }
-    .btn-back {
-      width: 36px; height: 36px; flex-shrink: 0;
-      background: rgba(255,255,255,0.12); border: none; border-radius: 50%;
-      color: white; font-size: 15px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
-    }
-    .btn-back:active { background: rgba(255,255,255,0.25); transform: scale(0.94); }
-    .header-title { color: white; font-size: 15px; font-weight: 600; flex: 1; }
-    .header-date { font-size: 10.5px; color: rgba(255,255,255,0.55); text-align: right; line-height: 1.35; white-space: nowrap; }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .header-info { flex: 1; }
+    .header-info h3 { font-size: 15px; font-weight: 700; }
+    .header-info .sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
 
-    .page { padding: 14px; max-width: 540px; margin: 0 auto; }
-    .card { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 12px; overflow: visible; }
-    .card-body { padding: 16px; }
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
-    .info-strip {
-      background: var(--blue-bg); border-radius: var(--radius);
-      padding: 9px 13px; display: flex; gap: 8px; align-items: center; margin-bottom: 14px;
+    .info-card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
     }
-    .info-strip i { color: var(--blue); font-size: 13px; flex-shrink: 0; }
-    .info-strip span { font-size: 12px; color: var(--blue-text); }
-    .info-strip strong { font-weight: 600; }
+    .info-card .halaqoh-nama { font-size: 16px; font-weight: 800; color: var(--green-dark); }
+    .info-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .info-chip { display: flex; align-items: center; gap: 5px; background: var(--green-light); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--green-dark); }
+    .info-chip.warning { background: var(--orange-light); color: var(--orange); }
 
-    .label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-    .select-wrap { position: relative; }
-    .select-wrap select {
-      width: 100%; padding: 10px 34px 10px 12px;
-      border: 1.5px solid var(--border); border-radius: var(--radius);
-      font-size: 14px; font-family: inherit; color: var(--text); background: var(--surface);
-      appearance: none; outline: none; cursor: pointer;
-      transition: border-color 0.15s, box-shadow 0.15s;
+    .summary-card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 12px 16px;
+      display: flex; gap: 0; border: 1px solid rgba(255,255,255,0.6);
     }
-    .select-wrap select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,135,90,0.12); }
-    .select-wrap::after {
-      content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-      position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); font-size: 10px; pointer-events: none;
+    .summary-item { flex: 1; text-align: center; }
+    .summary-val { font-size: 20px; font-weight: 800; color: var(--green-dark); }
+    .summary-lbl { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
+
+    .list-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; margin-bottom: 4px; }
+    .list-header span { font-size: 12px; font-weight: 700; color: var(--green-dark); }
+    .mark-all-btn { font-size: 11px; color: var(--green-mid); font-weight: 600; background: var(--green-light); border: none; cursor: pointer; padding: 4px 10px; border-radius: 20px; }
+
+    .santri-list { display: flex; flex-direction: column; gap: 6px; }
+    .santri-row {
+      background: rgba(255, 255, 255, 0.7); border-radius: var(--radius);
+      padding: 10px 14px; border: 1px solid rgba(255, 255, 255, 0.6);
+      display: flex; align-items: center; gap: 10px; transition: var(--transition);
     }
+    .santri-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-light); color: var(--green-mid); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .santri-nama { flex: 1; font-size: 13px; font-weight: 600; }
 
-    .date-input {
-      width: 100%; padding: 10px 34px 10px 12px;
-      border: 1.5px solid var(--border); border-radius: var(--radius);
-      font-size: 14px; font-family: inherit; color: var(--text); background: var(--surface);
-      outline: none; cursor: pointer;
-      transition: border-color 0.15s, box-shadow 0.15s;
+    .status-select { padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; outline: none; }
+    .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
+    .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
+    .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
+    .status-select.alfa { border-color: #ef4444; background: #fce4ec; color: #991b1b; }
+    .status-select.jaga { border-color: #8b5cf6; background: #ede9fe; color: #6d28d9; }
+
+    .btn-simpan {
+      width: 100%; padding: 13px; border: none; border-radius: 40px;
+      background: linear-gradient(135deg, #004d40, #006644); color: white;
+      font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,61,51,0.3);
     }
-    .date-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,135,90,0.12); }
+    .btn-simpan:disabled { opacity: 0.6; }
 
-    .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-
-    .santri-list { display: flex; flex-direction: column; }
-    .santri-item {
-      display: flex; align-items: center; gap: 10px; padding: 11px 0;
-      border-bottom: 1px solid var(--border); transition: background 0.18s var(--ease); position: relative;
+    .halaqoh-card {
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
+      padding: 14px; border: 1px solid rgba(255,255,255,0.5);
+      cursor: pointer; transition: var(--transition); margin-bottom: 8px;
     }
-    .santri-item:last-child { border-bottom: none; }
-    .santri-item.flash { animation: flashAnim 0.32s var(--ease); }
-    @keyframes flashAnim { 0% { background: rgba(0,135,90,0.08); } 100% { background: transparent; } }
+    .halaqoh-card:active { background: rgba(255,255,255,0.9); transform: scale(0.98); }
+    .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
 
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; flex-shrink: 0; background: var(--bg); color: var(--text-muted);
-      transition: background 0.2s, color 0.2s; user-select: none;
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+    .badge-pengganti { background: var(--orange-light); color: var(--orange); }
+    .badge-tetap { background: var(--green-light); color: var(--green-dark); }
+
+    .info-box { background: #e3f2fd; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 12px; color: #1565c0; display: flex; align-items: center; gap: 8px; }
+    .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
+    .toast.show { opacity: 1; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .santri-item.s-sakit .avatar { background: #FFF3CD; color: #92400E; }
-    .santri-item.s-izin  .avatar { background: var(--blue-bg); color: var(--blue-text); }
-    .santri-item.s-alfa  .avatar { background: var(--red-bg); color: var(--red-text); }
-    .santri-item.s-jaga  .avatar { background: var(--purple-bg); color: var(--purple-text); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
 
-    .santri-info { flex: 1; min-width: 0; }
-    .santri-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .santri-nim { font-size: 10.5px; color: var(--text-subtle); margin-top: 1px; }
-
-    .status-select {
-      appearance: none; border: 1.5px solid var(--border); border-radius: 20px;
-      padding: 5px 26px 5px 11px; font-size: 12px; font-weight: 600; font-family: inherit;
-      cursor: pointer; outline: none; background: var(--surface); color: var(--text);
-      min-width: 90px; transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B778C' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 9px center; -webkit-appearance: none;
-    }
-    .status-select:focus { box-shadow: 0 0 0 3px rgba(0,135,90,0.12); border-color: var(--green); }
-    .status-select.s-hadir { border-color: var(--green); background-color: var(--green-bg); color: var(--green-text); }
-    .status-select.s-sakit { border-color: #F59E0B; background-color: #FFF3CD; color: #92400E; }
-    .status-select.s-izin  { border-color: #3B82F6; background-color: var(--blue-bg); color: var(--blue-text); }
-    .status-select.s-alfa  { border-color: #EF4444; background-color: var(--red-bg); color: var(--red-text); }
-    .status-select.s-jaga  { border-color: #8B5CF6; background-color: var(--purple-bg); color: var(--purple-text); }
-
-    .summary-wrap { margin-top: 14px; }
-    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
-    .sum-card {
-      background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border);
-      padding: 10px 12px; transition: transform 0.15s;
-    }
-    .sum-card .sc-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-    .sum-card .sc-val { font-size: 22px; font-weight: 700; color: var(--text); margin-top: 2px; transition: color 0.2s; }
-    .sum-card.danger .sc-val { color: var(--red); }
-
-    .sub-list { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .sub-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 12px; border-bottom: 1px solid var(--border); transition: background 0.15s;
-    }
-    .sub-row:last-child { border-bottom: none; }
-    .sub-row .sl { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 7px; }
-    .sub-row .sl i { font-size: 11px; width: 14px; text-align: center; }
-    .sub-row .sv { font-size: 13px; font-weight: 700; color: var(--text); min-width: 20px; text-align: right; }
-
-    .btn-save {
-      width: 100%; padding: 13px; background: var(--green-dark); color: white;
-      border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600;
-      font-family: inherit; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: background 0.15s, transform 0.12s, opacity 0.15s; margin-top: 12px;
-    }
-    .btn-save:active { transform: scale(0.98); background: #004d34; }
-    .btn-save:disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .state-box { text-align: center; padding: 32px 20px; color: var(--text-subtle); }
-    .state-box i { font-size: 30px; margin-bottom: 8px; display: block; opacity: 0.5; }
-    .state-box p { font-size: 13px; }
-
-    .warning-card {
-      background: #FFFAE6; border: 1px solid #FFE380;
-      border-radius: var(--radius-lg); padding: 28px 20px; text-align: center; display: none;
-    }
-    .warning-card i { font-size: 32px; color: var(--amber); margin-bottom: 8px; display: block; }
-    .warning-card strong { font-size: 14px; color: var(--amber-text); }
-    .warning-card p { font-size: 12px; color: #856404; margin-top: 5px; }
-
-    .toast-overlay {
-      position: fixed; inset: 0; z-index: 9990; background: rgba(0,0,0,0.3);
-      opacity: 0; pointer-events: none; transition: opacity 0.22s;
-    }
-    .toast-overlay.show { opacity: 1; pointer-events: auto; }
-    .toast {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88);
-      z-index: 9999; opacity: 0; pointer-events: none;
-      background: #1B2638; color: white; padding: 16px 22px; border-radius: 14px;
-      max-width: 82vw; min-width: 220px;
-      display: flex; align-items: center; gap: 11px;
-      font-size: 14px; font-weight: 500;
-      transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.28);
-    }
-    .toast.show { opacity: 1; pointer-events: none; transform: translate(-50%, -50%) scale(1); }
-    .toast.success { background: var(--green-dark); }
-    .toast.error { background: var(--red); }
-    .toast i { font-size: 19px; flex-shrink: 0; }
-    .toast-text { line-height: 1.4; }
-    .toast-text small { display: block; font-size: 11px; opacity: 0.75; margin-top: 2px; }
-
-    .spinner {
-      width: 15px; height: 15px; flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
-      border-radius: 50%; animation: spin 0.55s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <button class="btn-back" onclick="history.back()" aria-label="Kembali"><i class="fa-solid fa-arrow-left"></i></button>
-    <span class="header-title">Absensi Halaqoh</span>
-    <div class="header-date" id="headerDate"></div>
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="header-info">
+      <h3 id="headerTitle">Absensi Halaqoh</h3>
+      <div class="sub" id="headerSub">Memuat...</div>
+    </div>
   </header>
 
-  <div class="toast-overlay" id="toastOverlay"></div>
-  <div class="toast" id="toast" role="status" aria-live="polite">
-    <i id="toastIcon"></i>
-    <div class="toast-text"><span id="toastMsg"></span><small id="toastSub"></small></div>
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
-  <div class="page">
-    <div class="card" id="mainCard">
-      <div class="card-body">
-
-        <div class="info-strip" id="infoStrip">
-          <i class="fa-solid fa-circle-info"></i>
-          <span>Pertemuan: <strong id="infoPertemuan">—</strong>&ensp;·&ensp;Min. Hadir: <strong id="infoPersentase">—</strong></span>
-        </div>
-
-        <!-- TANGGAL — DENGAN TIMEZONE INDONESIA -->
-        <div class="label">📅 Tanggal Absensi</div>
-        <input type="date" id="tanggalAbsensi" class="date-input" onchange="loadSantriList()">
-
-        <div style="margin-top:12px;"></div>
-
-        <div class="label">🕌 Halaqoh</div>
-        <div class="select-wrap">
-          <select id="filterHalaqoh" onchange="loadSantriList()">
-            <option value="">Pilih halaqoh...</option>
-          </select>
-        </div>
-
-        <hr class="divider" id="listDivider" style="display:none;">
-
-        <div id="listSantri">
-          <div class="state-box"><i class="fa-solid fa-users"></i><p>Pilih halaqoh terlebih dahulu</p></div>
-        </div>
-
-        <div id="summaryWrap" style="display:none;">
-          <hr class="divider">
-          <div class="summary-wrap">
-            <div class="summary-grid">
-              <div class="sum-card"><div class="sc-label">Total Santri</div><div class="sc-val" id="sumTotal">0</div></div>
-              <div class="sum-card danger"><div class="sc-label">Tidak Hadir</div><div class="sc-val" id="sumTidakHadir">0</div></div>
-            </div>
-            <div class="sub-list">
-              <div class="sub-row"><span class="sl"><i class="fa-solid fa-briefcase-medical" style="color:#F59E0B"></i> Sakit</span><span class="sv" id="sumSakit">0</span></div>
-              <div class="sub-row"><span class="sl"><i class="fa-solid fa-file-lines" style="color:#3B82F6"></i> Izin</span><span class="sv" id="sumIzin">0</span></div>
-              <div class="sub-row"><span class="sl"><i class="fa-solid fa-xmark" style="color:#EF4444"></i> Alfa</span><span class="sv" id="sumAlfa">0</span></div>
-              <div class="sub-row"><span class="sl"><i class="fa-solid fa-shield-halved" style="color:#8B5CF6"></i> Jaga Malam</span><span class="sv" id="sumJaga">0</span></div>
-            </div>
-            <button class="btn-save" id="btnSimpan" onclick="simpanAbsensi()">
-              <i class="fa-solid fa-floppy-disk"></i> Simpan Absensi
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="warning-card" id="warningCard">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <strong>Belum ada halaqoh</strong>
-      <p>Hubungi operator untuk mendapatkan pembagian halaqoh.</p>
-    </div>
+  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
+    <button class="btn-simpan" id="btnSimpan" onclick="simpanAbsensi()"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>
   </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item active" onclick="goTo('absensi-halaqoh.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')">
+      <i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span>
+    </div><div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <div class="toast" id="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -272,247 +159,265 @@
   <script>
     const user = checkRole(['musyrif', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
-    // ═══ TIMEZONE INDONESIA ═══
-    function getTodayStr() {
-      const now = new Date();
-      // Gunakan toLocaleDateString dengan timezone Asia/Jakarta
-      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
-      const parts = now.toLocaleDateString('en-CA', options); // format: YYYY-MM-DD
-      return parts; // sudah dalam format YYYY-MM-DD
+    const absensiState = {};
+    let isSaving = false;
+    let halaqohId = null, halaqohData = null;
+    let isPengganti = false;
+    let anggotaList = [];
+
+    function showToast(msg, type = '') {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.className = `toast ${type} show`;
+      setTimeout(() => { el.className = 'toast'; }, 3000);
     }
 
-    const todayStr = getTodayStr();
-    
-    // Set header date
-    const now = new Date();
-    document.getElementById('headerDate').textContent =
-      now.toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-
-    // Set default date input
-    const dateInput = document.getElementById('tanggalAbsensi');
-    dateInput.value = todayStr;
-
-    let santriData = [];
-    let currentHalaqohId = null;
-
-    /* ── TOAST ── */
-    let toastTimer;
-    function showToast(type, text, sub) {
-      clearTimeout(toastTimer);
-      const toast = document.getElementById('toast');
-      const overlay = document.getElementById('toastOverlay');
-      document.getElementById('toastIcon').className =
-        type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
-      document.getElementById('toastMsg').textContent = text;
-      document.getElementById('toastSub').textContent = sub || '';
-      toast.className = 'toast ' + type + ' show';
-      overlay.className = 'toast-overlay show';
-      toastTimer = setTimeout(() => {
-        toast.className = 'toast ' + type;
-        overlay.className = 'toast-overlay';
-      }, 3000);
+    function updateSummary() {
+      const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
+      Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
+      document.getElementById('sumHadir').textContent = counts.hadir;
+      document.getElementById('sumSakit').textContent = counts.sakit;
+      document.getElementById('sumIzin').textContent = counts.izin;
+      document.getElementById('sumAlfa').textContent = counts.alfa;
     }
 
-    /* ── SETTING ── */
-    async function loadSetting() {
-      try {
-        const doc = await db.collection('settings').doc('absensi').get();
-        const d = doc.exists ? doc.data() : {};
-        document.getElementById('infoPertemuan').textContent = d.jumlahPertemuan || 'Belum diset';
-        document.getElementById('infoPersentase').textContent = (d.persentaseMinimal || 75) + '%';
-      } catch(e) {
-        document.getElementById('infoPertemuan').textContent = '—';
-        document.getElementById('infoPersentase').textContent = '—';
-      }
-    }
-
-    /* ── LOAD HALAQOH ── */
-    async function loadFilterHalaqoh() {
-      const sel = document.getElementById('filterHalaqoh');
-      sel.innerHTML = '<option value="">Mencari halaqoh...</option>';
-      try {
-        let snap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
-        if (snap.empty) snap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
-        if (snap.empty) snap = await db.collection('halaqoh').where('uid', '==', user.uid).get();
-        if (snap.empty) {
-          document.getElementById('mainCard').style.display = 'none';
-          document.getElementById('warningCard').style.display = 'block';
-          return;
-        }
-        sel.innerHTML = '<option value="">Pilih halaqoh...</option>';
-        snap.forEach(doc => {
-          const o = document.createElement('option');
-          o.value = doc.id;
-          o.textContent = doc.data().nama || 'Halaqoh ' + doc.id;
-          sel.appendChild(o);
-        });
-      } catch(e) {
-        sel.innerHTML = '<option value="">Gagal memuat</option>';
-      }
-    }
-
-    /* ── LOAD SANTRI ── */
-    window.loadSantriList = async function() {
-      const halaqohId = document.getElementById('filterHalaqoh').value;
-      const listEl = document.getElementById('listSantri');
-      const summaryEl = document.getElementById('summaryWrap');
-      const divider = document.getElementById('listDivider');
-
-      // ⬇️ GUNAKAN TANGGAL DARI INPUT (DEFAULT: HARI INI WIB)
-      const selectedDate = document.getElementById('tanggalAbsensi').value || getTodayStr();
-
-      if (!halaqohId) {
-        listEl.innerHTML = '<div class="state-box"><i class="fa-solid fa-users"></i><p>Pilih halaqoh terlebih dahulu</p></div>';
-        summaryEl.style.display = 'none';
-        divider.style.display = 'none';
-        currentHalaqohId = null;
-        return;
-      }
-
-      currentHalaqohId = halaqohId;
-      listEl.innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Memuat data santri...</p></div>';
-      summaryEl.style.display = 'none';
-      divider.style.display = 'block';
-
-      try {
-        const anggotaSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
-        const mhsIds = anggotaSnap.docs.map(d => d.data().mahasiswaId).filter(Boolean);
-        if (!mhsIds.length) {
-          listEl.innerHTML = '<div class="state-box"><i class="fa-solid fa-user-slash"></i><p>Belum ada santri di halaqoh ini</p></div>';
-          santriData = [];
-          return;
-        }
-
-        santriData = [];
-        for (const id of mhsIds) {
-          const doc = await db.collection('mahasiswa').doc(id).get();
-          if (doc.exists) {
-            santriData.push({ id, nama: doc.data().nama || '—', nim: doc.data().nim || '—', status: null });
-          }
-        }
-        santriData.sort((a, b) => a.nama.localeCompare(b.nama));
-
-        // ⬇️ LOAD EXISTING ABSENSI UNTUK TANGGAL YANG DIPILIH
-        const absenSnap = await db.collection('absensiHalaqoh')
-          .where('halaqohId', '==', halaqohId)
-          .where('tanggal', '==', selectedDate)
-          .get();
-        
-        absenSnap.forEach(doc => {
-          const d = doc.data();
-          const s = santriData.find(s => s.id === d.mahasiswaId);
-          if (s && d.status !== 'hadir') s.status = d.status;
-        });
-
-        renderList();
-        updateSummary();
-        summaryEl.style.display = 'block';
-      } catch(e) {
-        listEl.innerHTML = '<div class="state-box"><i class="fa-solid fa-triangle-exclamation"></i><p>Error: ' + e.message + '</p></div>';
-      }
-    };
-
-    function getInitials(nama) {
-      return nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-    }
-
-    function renderList() {
-      if (!santriData.length) {
-        document.getElementById('listSantri').innerHTML = '<div class="state-box"><i class="fa-solid fa-user-slash"></i><p>Tidak ada santri</p></div>';
-        return;
-      }
-      const rows = santriData.map(s => {
-        const sClass = s.status ? 's-' + s.status : '';
-        return `
-        <div class="santri-item ${sClass}" id="row-${s.id}">
-          <div class="avatar">${getInitials(s.nama)}</div>
-          <div class="santri-info"><div class="santri-name">${s.nama}</div><div class="santri-nim">${s.nim}</div></div>
-          <select class="status-select ${s.status ? 's-' + s.status : 's-hadir'}"
-            onchange="setStatus('${s.id}', this.value, this)" aria-label="Status kehadiran ${s.nama}">
-            <option value="" ${!s.status ? 'selected' : ''}>Hadir</option>
-            <option value="sakit" ${s.status==='sakit'?'selected':''}>Sakit</option>
-            <option value="izin" ${s.status==='izin'?'selected':''}>Izin</option>
-            <option value="alfa" ${s.status==='alfa'?'selected':''}>Alfa</option>
-            <option value="jaga" ${s.status==='jaga'?'selected':''}>Jaga</option>
-          </select>
-        </div>`;
-      }).join('');
-      document.getElementById('listSantri').innerHTML = `<div class="santri-list">${rows}</div>`;
-    }
-
-    window.setStatus = function(id, status, selectEl) {
-      const s = santriData.find(s => s.id === id);
-      if (!s) return;
-      s.status = status || null;
-      const cls = s.status ? 's-' + s.status : 's-hadir';
-      selectEl.className = 'status-select ' + cls;
-      const row = document.getElementById('row-' + id);
-      row.className = 'santri-item' + (s.status ? ' s-' + s.status : '') + ' flash';
-      setTimeout(() => row.classList.remove('flash'), 350);
+    window.setStatus = function(mhsId, status) {
+      absensiState[mhsId] = status;
+      const sel = document.getElementById(`sel_${mhsId}`);
+      if (sel) { sel.className = `status-select ${status}`; sel.value = status; }
       updateSummary();
     };
 
-    function updateSummary() {
-      const sakit = santriData.filter(s => s.status === 'sakit').length;
-      const izin = santriData.filter(s => s.status === 'izin').length;
-      const alfa = santriData.filter(s => s.status === 'alfa').length;
-      const jaga = santriData.filter(s => s.status === 'jaga').length;
-      document.getElementById('sumTotal').textContent = santriData.length;
-      document.getElementById('sumTidakHadir').textContent = sakit + izin + alfa + jaga;
-      document.getElementById('sumSakit').textContent = sakit;
-      document.getElementById('sumIzin').textContent = izin;
-      document.getElementById('sumAlfa').textContent = alfa;
-      document.getElementById('sumJaga').textContent = jaga;
-    }
+    window.markAllHadir = function() {
+      Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
+    };
 
-    /* ── SIMPAN ── */
-    window.simpanAbsensi = async function() {
-      if (!currentHalaqohId) { showToast('error', 'Pilih halaqoh dulu'); return; }
-      if (!santriData.length) { showToast('error', 'Tidak ada santri'); return; }
+    // ═══ SIMPAN ABSENSI ═══
+    async function simpanAbsensi() {
+      if (isSaving) return;
+      if (Object.keys(absensiState).length === 0) { showToast('Tidak ada anggota', 'error'); return; }
 
-      // ⬇️ GUNAKAN TANGGAL DARI INPUT
-      const selectedDate = document.getElementById('tanggalAbsensi').value || getTodayStr();
-
+      isSaving = true;
       const btn = document.getElementById('btnSimpan');
-      const orig = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
-        // Hapus existing untuk tanggal ini
-        const existingSnap = await db.collection('absensiHalaqoh')
-          .where('halaqohId', '==', currentHalaqohId)
-          .where('tanggal', '==', selectedDate)
-          .get();
-
+        const today = new Date().toISOString().split('T')[0];
         const batch = db.batch();
-        existingSnap.docs.forEach(d => batch.delete(d.ref));
-        santriData.forEach(s => {
-          const ref = db.collection('absensiHalaqoh').doc();
-          batch.set(ref, {
-            mahasiswaId: s.id,
-            musyrifId: user.uid,
-            halaqohId: currentHalaqohId,
-            status: s.status || 'hadir',
-            tanggal: selectedDate,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        });
-        await batch.commit();
 
-        const th = santriData.filter(s => s.status).length;
-        showToast('success', 'Absensi berhasil disimpan', `${santriData.length} santri · ${th} tidak hadir`);
+        for (const [mhsId, status] of Object.entries(absensiState)) {
+          // Cek existing absensi hari ini
+          const existingSnap = await db.collection('absensiHalaqoh')
+            .where('mahasiswaId', '==', mhsId)
+            .where('halaqohId', '==', halaqohId)
+            .where('tanggal', '==', today)
+            .get();
+
+          if (!existingSnap.empty) {
+            existingSnap.docs.forEach(d => batch.update(d.ref, { 
+              status, 
+              musyrifId: user.uid,
+              isPengganti: isPengganti,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+            }));
+          } else {
+            const ref = db.collection('absensiHalaqoh').doc();
+            batch.set(ref, {
+              mahasiswaId: mhsId,
+              halaqohId,
+              halaqohNama: halaqohData?.nama || '',
+              musyrifId: user.uid,
+              musyrifNama: user.nama || '',
+              isPengganti: isPengganti,
+              status,
+              tanggal: today,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
+        }
+
+        await batch.commit();
+        const roleLabel = isPengganti ? ' (Pengganti)' : '';
+        showToast(`✅ Absensi tersimpan!${roleLabel}`, 'success');
       } catch(e) {
-        showToast('error', 'Gagal menyimpan', e.message);
+        showToast('❌ Gagal: ' + e.message, 'error');
       } finally {
+        isSaving = false;
         btn.disabled = false;
-        btn.innerHTML = orig;
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Simpan Absensi';
+      }
+    }
+
+    // ═══ INIT ═══
+    async function init() {
+      const container = document.getElementById('mainContent');
+      container.innerHTML = '<p style="text-align:center;">Mencari halaqoh...</p>';
+
+      try {
+        // 1. Cari sebagai musyrif tetap
+        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
+
+        // 2. Jika tidak ada → cek sebagai pengganti
+        if (hSnap.empty) {
+          const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
+          
+          if (!penggantiSnap.empty) {
+            // Tampilkan pilihan halaqoh
+            isPengganti = true;
+            let html = `
+              <div class="info-box">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk mengisi absensi:</span>
+              </div>`;
+
+            penggantiSnap.forEach(d => {
+              const hData = d.data();
+              html += `
+                <div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
+                  <h4>🕌 ${hData.nama} <span class="badge badge-pengganti">Pengganti</span></h4>
+                  <p>👤 Musyrif tetap: ${hData.musyrifNama || '-'}</p>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('headerTitle').textContent = 'Absensi Halaqoh';
+            document.getElementById('headerSub').textContent = 'Pilih halaqoh';
+            return;
+          }
+
+          container.innerHTML = `
+            <div class="warning-box">
+              <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+              <strong>Anda belum memiliki Halaqoh.</strong>
+              <p style="margin-top:8px;font-size:13px;">Hubungi Operator Halaqoh.</p>
+            </div>`;
+          return;
+        }
+
+        // 3. Musyrif tetap
+        isPengganti = false;
+        halaqohId = hSnap.docs[0].id;
+        halaqohData = hSnap.docs[0].data();
+        await loadAnggota(container);
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
+      }
+    }
+
+    // ═══ PILIH HALAQOH (PENGGANTI) ═══
+    window.pilihHalaqoh = async function(hId) {
+      const container = document.getElementById('mainContent');
+      container.innerHTML = '<p style="text-align:center;">Memuat anggota...</p>';
+
+      try {
+        const hDoc = await db.collection('halaqoh').doc(hId).get();
+        if (!hDoc.exists) { container.innerHTML = '<div class="warning-box">Halaqoh tidak ditemukan</div>'; return; }
+
+        halaqohId = hId;
+        halaqohData = hDoc.data();
+        await loadAnggota(container);
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
       }
     };
 
-    loadSetting();
-    loadFilterHalaqoh();
+    // ═══ LOAD ANGGOTA ═══
+    async function loadAnggota(container) {
+      const today = new Date().toISOString().split('T')[0];
+
+      try {
+        // Ambil anggota halaqoh
+        const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
+        const mhsIds = pSnap.docs.map(d => d.data().mahasiswaId);
+
+        if (mhsIds.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">Belum ada anggota di halaqoh ini.</p>';
+          return;
+        }
+
+        // Ambil data mahasiswa
+        const mhsList = [];
+        for (const id of mhsIds) {
+          const doc = await db.collection('mahasiswa').doc(id).get();
+          if (doc.exists) mhsList.push({ id, ...doc.data() });
+        }
+        mhsList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        anggotaList = mhsList;
+
+        // Cek absensi hari ini
+        const absensiSnap = await db.collection('absensiHalaqoh')
+          .where('halaqohId', '==', halaqohId)
+          .where('tanggal', '==', today)
+          .get();
+        const existingMap = {};
+        absensiSnap.forEach(d => {
+          const data = d.data();
+          if (data.mahasiswaId) existingMap[data.mahasiswaId] = data.status;
+        });
+
+        // Set state
+        mhsList.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
+
+        // Hitung summary
+        const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
+        Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
+
+        const roleLabel = isPengganti ? 'Pengganti' : 'Tetap';
+        const roleBadge = isPengganti ? 'badge-pengganti' : 'badge-tetap';
+
+        document.getElementById('headerTitle').textContent = halaqohData.nama || 'Absensi Halaqoh';
+        document.getElementById('headerSub').textContent = `${anggotaList.length} anggota · ${today}`;
+
+        // Render list
+        let listHtml = '';
+        mhsList.forEach((m, i) => {
+          const status = absensiState[m.id];
+          listHtml += `<div class="santri-row">
+            <div class="santri-num">${i+1}</div>
+            <div class="santri-nama">${m.nama}</div>
+            <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
+              <option value="hadir" ${status==='hadir'?'selected':''}>✓ Hadir</option>
+              <option value="sakit" ${status==='sakit'?'selected':''}>🤒 Sakit</option>
+              <option value="izin" ${status==='izin'?'selected':''}>📝 Izin</option>
+              <option value="alfa" ${status==='alfa'?'selected':''}>❌ Alfa</option>
+              <option value="jaga" ${status==='jaga'?'selected':''}>🛡️ Jaga</option>
+            </select>
+          </div>`;
+        });
+
+        container.innerHTML = `
+          <div class="info-card">
+            <div class="halaqoh-nama">🕌 ${halaqohData.nama}</div>
+            <div class="info-row">
+              <div class="info-chip"><span class="badge ${roleBadge}">${roleLabel}</span></div>
+              ${halaqohData.musyrifNama ? `<div class="info-chip"><i class="fa-solid fa-user"></i> ${halaqohData.musyrifNama}</div>` : ''}
+              <div class="info-chip"><i class="fa-solid fa-users"></i> ${anggotaList.length} anggota</div>
+              <div class="info-chip"><i class="fa-solid fa-calendar-day"></i> ${today}</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-item"><div class="summary-val" id="sumHadir">${counts.hadir}</div><div class="summary-lbl">Hadir</div></div>
+            <div class="summary-item"><div class="summary-val" id="sumSakit" style="color:#d97706;">${counts.sakit}</div><div class="summary-lbl">Sakit</div></div>
+            <div class="summary-item"><div class="summary-val" id="sumIzin" style="color:#2563eb;">${counts.izin}</div><div class="summary-lbl">Izin</div></div>
+            <div class="summary-item"><div class="summary-val" id="sumAlfa" style="color:#e53935;">${counts.alfa}</div><div class="summary-lbl">Alfa</div></div>
+          </div>
+          <div class="list-header">
+            <span>📋 ${anggotaList.length} Anggota</span>
+            <button class="mark-all-btn" onclick="markAllHadir()">✅ Semua Hadir</button>
+          </div>
+          <div class="santri-list">${listHtml}</div>`;
+
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
+      }
+    }
+
+    // Expose simpanAbsensi ke global
+    window.simpanAbsensi = simpanAbsensi;
+
+    init();
   </script>
 </body>
 </html>
