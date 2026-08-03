@@ -30,8 +30,9 @@
     .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
     .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .header-info { flex: 1; }
-    .header-info h3 { font-size: 15px; font-weight: 700; }
+    .header-info h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .header-info .sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
+    .lock-icon { font-size: 14px; }
 
     .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
@@ -56,7 +57,6 @@
 
     .list-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; margin-bottom: 4px; }
     .list-header span { font-size: 12px; font-weight: 700; color: var(--green-dark); }
-    .mark-all-btn { font-size: 11px; color: var(--green-mid); font-weight: 600; background: var(--green-light); border: none; cursor: pointer; padding: 4px 10px; border-radius: 20px; }
 
     .santri-list { display: flex; flex-direction: column; gap: 6px; }
     .santri-row {
@@ -69,11 +69,24 @@
     .santri-kelas { font-size: 9px; color: var(--gray-600); margin-left: 4px; }
 
     .status-select { padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; outline: none; }
+    .status-select:disabled { opacity: 0.7; cursor: not-allowed; }
     .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
     .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
     .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
     .status-select.alfa { border-color: #ef4444; background: #fce4ec; color: #991b1b; }
     .status-select.jaga { border-color: #8b5cf6; background: #ede9fe; color: #6d28d9; }
+
+    /* Locked overlay */
+    .locked-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #e8f5e9; color: #1b5e20; padding: 5px 12px;
+      border-radius: 20px; font-size: 10px; font-weight: 600;
+    }
+    .btn-edit {
+      background: var(--amber); color: white; border: none;
+      padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
 
     .btn-simpan {
       width: 100%; padding: 13px; border: none; border-radius: 40px;
@@ -110,7 +123,7 @@
   <header class="app-header">
     <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
     <div class="header-info">
-      <h3 id="headerTitle">Absensi Kelas</h3>
+      <h3 id="headerTitle">Absensi Kelas <span class="lock-icon" id="lockIcon"></span></h3>
       <div class="sub" id="headerSub">Memuat...</div>
     </div>
   </header>
@@ -119,8 +132,8 @@
     <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
-  <!-- Bottom Simpan -->
-  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
+  <!-- Bottom Action -->
+  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;display:flex;flex-direction:column;gap:8px;" id="bottomAction">
     <button class="btn-simpan" id="btnSimpan"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>
   </div>
 
@@ -152,6 +165,7 @@
 
     const absensiState = {};
     let isSaving = false;
+    let isLocked = false;        // ⬅️ STATUS KUNCI
     let pertemuanKe = 1;
     let allKelasIds = [];
     let currentJamKe = 1;
@@ -162,6 +176,35 @@
       el.textContent = msg; el.className = `toast ${type} show`;
       setTimeout(() => { el.className = 'toast'; }, 3000);
     }
+
+    function updateLockUI() {
+      const icon = document.getElementById('lockIcon');
+      const btnArea = document.getElementById('bottomAction');
+      
+      if (isLocked) {
+        icon.innerHTML = '🔒';
+        // Ganti tombol simpan dengan tombol edit
+        btnArea.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <span class="locked-badge"><i class="fa-solid fa-lock"></i> Absensi Terkunci</span>
+            <button class="btn-edit" onclick="unlockForm()"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+          </div>`;
+        // Disable semua dropdown
+        document.querySelectorAll('.status-select').forEach(sel => sel.disabled = true);
+      } else {
+        icon.innerHTML = '🔓';
+        btnArea.innerHTML = '<button class="btn-simpan" id="btnSimpan" onclick="simpanAbsensi()"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>';
+        // Enable semua dropdown
+        document.querySelectorAll('.status-select').forEach(sel => sel.disabled = false);
+      }
+    }
+
+    window.unlockForm = function() {
+      if (confirm('Buka kunci absensi untuk mengedit?')) {
+        isLocked = false;
+        updateLockUI();
+      }
+    };
 
     function updateSummary() {
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
@@ -177,6 +220,7 @@
     }
 
     window.setStatus = function(mhsId, status) {
+      if (isLocked) return; // ⬅️ JANGAN IZINKAN EDIT JIKA TERKUNCI
       absensiState[mhsId] = status;
       const sel = document.getElementById(`sel_${mhsId}`);
       if (sel) {
@@ -187,11 +231,12 @@
     };
 
     window.markAllHadir = function() {
+      if (isLocked) return;
       Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
     };
 
-    // ═══ SIMPAN — DENGAN jamKe AGAR JP TIDAK TIMPA ═══
-    document.getElementById('btnSimpan').addEventListener('click', async function() {
+    // ═══ SIMPAN ═══
+    window.simpanAbsensi = async function() {
       if (isSaving) return;
       if (Object.keys(absensiState).length === 0) { showToast('Tidak ada mahasiswa', 'error'); return; }
 
@@ -204,37 +249,23 @@
         const batch = db.batch();
 
         for (const [mhsId, status] of Object.entries(absensiState)) {
-          // ⬇️ QUERY: mahasiswaId + jadwalId + tanggal, lalu filter jamKe di JS
           const existingSnap = await db.collection('absensi')
             .where('mahasiswaId', '==', mhsId)
             .where('jadwalId', '==', jadwalId)
             .where('tanggal', '==', today)
             .get();
 
-          // Filter manual by jamKe (hindari composite index)
           const existingDocs = existingSnap.docs.filter(d => d.data().jamKe === currentJamKe);
 
           if (existingDocs.length > 0) {
-            // Update absensi yang sudah ada untuk JP ini
-            existingDocs.forEach(d => batch.update(d.ref, { 
-              status, 
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-            }));
+            existingDocs.forEach(d => batch.update(d.ref, { status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }));
           } else {
-            // Buat data baru untuk JP ini
             const ref = db.collection('absensi').doc();
             batch.set(ref, {
-              mahasiswaId: mhsId,
-              kelasId: kelasId,
-              mapelId: mapelId,
-              jadwalId: jadwalId,
-              dosenId: user.uid,
-              status: status,
-              tanggal: today,
-              pertemuanKe: pertemuanKe,
-              jamKe: currentJamKe,       // ⬅️ SIMPAN jamKe
-              mkNama: jadwalData.mkNama || '',
-              kelasNama: jadwalData.kelasNama || '',
+              mahasiswaId: mhsId, kelasId, mapelId, jadwalId,
+              dosenId: user.uid, status, tanggal: today,
+              pertemuanKe, jamKe: currentJamKe,
+              mkNama: jadwalData.mkNama || '', kelasNama: jadwalData.kelasNama || '',
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
           }
@@ -243,24 +274,15 @@
         await batch.commit();
         showToast(`✅ JP ${currentJamKe} · Pertemuan ke-${pertemuanKe} tersimpan!`, 'success');
         
-        // Reset form untuk JP berikutnya (jika ada)
-        setTimeout(() => {
-          // Cek apakah ada JP berikutnya di hari yang sama
-          const nextJP = currentJamKe + 1;
-          const hasNext = allKelasIds.length > 0; // Bisa di-improve lebih lanjut
-          if (hasNext) {
-            // Reset absensiState ke hadir semua untuk JP berikutnya
-            Object.keys(absensiState).forEach(id => { absensiState[id] = 'hadir'; });
-          }
-        }, 1500);
+        // ⬇️ KUNCI FORM SETELAH SIMPAN
+        isLocked = true;
+        updateLockUI();
       } catch(e) {
         showToast('❌ Gagal: ' + e.message, 'error');
       } finally {
         isSaving = false;
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Simpan Absensi';
       }
-    });
+    };
 
     async function init() {
       if (!jadwalId || !kelasId || !mapelId) {
@@ -273,11 +295,10 @@
         jadwalData = jDoc.exists ? jDoc.data() : {};
         currentJamKe = jadwalData.jamKe || 1;
 
-        // Dapatkan semua kelas (gabungan)
         allKelasIds = jadwalData.kelasIds || [kelasId];
         if (!allKelasIds.includes(kelasId)) allKelasIds.push(kelasId);
 
-        // Hitung pertemuan ke-
+        // Hitung pertemuan
         const absensiSnap = await db.collection('absensi').where('jadwalId', '==', jadwalId).get();
         const tanggalUnik = new Set(absensiSnap.docs.map(d => d.data().tanggal).filter(Boolean));
         const todayStr = new Date().toISOString().split('T')[0];
@@ -290,16 +311,15 @@
         }
         if (pertemuanKe <= 0) pertemuanKe = 1;
 
-        document.getElementById('headerTitle').textContent = jadwalData.mkNama || 'Absensi';
+        document.getElementById('headerTitle').innerHTML = `${jadwalData.mkNama || 'Absensi'} <span class="lock-icon" id="lockIcon"></span>`;
         document.getElementById('headerSub').textContent = `${jadwalData.kelasNama || ''} · JP ${currentJamKe} · Pertemuan ke-${pertemuanKe}`;
 
-        // Ambil mahasiswa dari semua kelas (gabungan)
+        // Ambil mahasiswa
         let allMhs = [];
         for (const kid of allKelasIds) {
           const mSnap = await db.collection('mahasiswa').where('kelasId', '==', kid).get();
           mSnap.forEach(d => { allMhs.push({ id: d.id, ...d.data() }); });
         }
-        // Hapus duplikat
         allMhs = [...new Map(allMhs.map(m => [m.id, m])).values()];
         allMhs.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
@@ -308,7 +328,7 @@
           return;
         }
 
-        // Existing absensi hari ini untuk JP ini
+        // Cek existing absensi untuk JP ini
         const existingSnap = await db.collection('absensi')
           .where('dosenId', '==', user.uid)
           .where('jadwalId', '==', jadwalId)
@@ -316,15 +336,18 @@
           .get();
         
         const existingMap = {};
+        let hasExisting = false;
         existingSnap.forEach(d => {
           const data = d.data();
-          // Hanya ambil yang jamKe-nya cocok
           if (data.mahasiswaId && data.jamKe === currentJamKe) {
             existingMap[data.mahasiswaId] = data.status;
+            hasExisting = true;
           }
         });
 
-        // Set default state
+        // ⬇️ JIKA SUDAH ADA DATA, KUNCI FORM
+        isLocked = hasExisting;
+
         allMhs.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
 
         // Render
@@ -335,7 +358,7 @@
           listHtml += `<div class="santri-row">
             <div class="santri-num">${i+1}</div>
             <div class="santri-nama">${m.nama}${kelasMhs ? `<span class="santri-kelas">(${kelasMhs})</span>` : ''}</div>
-            <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
+            <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)" ${isLocked ? 'disabled' : ''}>
               <option value="hadir" ${status==='hadir'?'selected':''}>✓ Hadir</option>
               <option value="sakit" ${status==='sakit'?'selected':''}>🤒 Sakit</option>
               <option value="izin" ${status==='izin'?'selected':''}>📝 Izin</option>
@@ -355,6 +378,7 @@
               <div class="info-chip"><i class="fa-solid fa-users"></i> ${jadwalData.kelasNama || allKelasIds.length+' kelas'}</div>
               <div class="info-chip"><i class="fa-solid fa-clock"></i> JP ${currentJamKe} · ${jadwalData.waktu || ''}</div>
               <div class="info-chip"><i class="fa-solid fa-calendar-check"></i> Pertemuan ke-${pertemuanKe}</div>
+              ${isLocked ? '<div class="info-chip" style="background:#e8f5e9;color:#1b5e20;">🔒 Terkunci</div>' : ''}
             </div>
           </div>
           <div class="summary-card">
@@ -365,10 +389,12 @@
           </div>
           <div class="list-header">
             <span>📋 ${allMhs.length} Mahasiswa</span>
-            <button class="mark-all-btn" onclick="markAllHadir()">✅ Semua Hadir</button>
+            ${!isLocked ? '<button class="mark-all-btn" onclick="markAllHadir()">✅ Semua Hadir</button>' : ''}
           </div>
           <div class="santri-list">${listHtml}</div>`;
 
+        // Update UI kunci
+        updateLockUI();
       } catch(e) {
         document.getElementById('mainContent').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
       }
