@@ -6,7 +6,7 @@
   <title>Anggota Halaqohku - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -16,6 +16,8 @@
       --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
       --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
       --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --purple:#7c3aed;--purple-light:#ede9fe;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;--header-height:56px;
     }
@@ -27,21 +29,11 @@
       -webkit-tap-highlight-color: transparent; min-height: 100vh;
     }
 
-    .app-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
-      color: white; padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 4px 20px rgba(0,61,51,0.35);
-    }
-    .btn-back {
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
-      color: white; font-size: 16px; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
 
-    .content { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
     .card {
       background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
@@ -49,17 +41,10 @@
       padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
       box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
     }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
-    .info-row {
-      display: flex; align-items: center; padding: 10px 8px;
-      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); margin-bottom: 6px;
-      gap: 10px;
-    }
-    .avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--green-light); display: flex; align-items: center; justify-content: center;
-      color: var(--green-dark); font-weight: 700; font-size: 16px; flex-shrink: 0;
-    }
+    .info-row { display: flex; align-items: center; padding: 10px; background: rgba(255,255,255,0.5); border-radius: var(--radius-sm); margin-bottom: 6px; gap: 10px; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 15px; flex-shrink: 0; }
     .detail { flex: 1; min-width: 0; }
     .detail strong { display: block; font-size: 13px; }
     .detail span { font-size: 10px; color: var(--gray-600); }
@@ -76,27 +61,42 @@
     .btn-sm { padding: 5px 10px; font-size: 10px; }
 
     .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 10px; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 120px; flex: 1; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 110px; flex: 1; }
     .form-group label { font-size: 10px; font-weight: 600; color: var(--gray-600); }
     .form-group select { padding: 8px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white; }
-    .form-group select:focus { border-color: var(--green); }
 
     .checkbox-list { max-height: 200px; overflow-y: auto; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); padding: 8px; background: white; }
-    .checkbox-list label { display: flex; align-items: center; gap: 6px; padding: 5px 4px; font-size: 12px; cursor: pointer; border-radius: 4px; transition: var(--transition); }
+    .checkbox-list label { display: flex; align-items: center; gap: 6px; padding: 5px 4px; font-size: 12px; cursor: pointer; border-radius: 4px; }
     .checkbox-list label:hover { background: var(--green-light); }
     .checkbox-list input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
 
-    .empty-state { text-align: center; padding: 30px; color: var(--gray-600); }
-    .empty-state i { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.5; }
     .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+    .info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 12px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+    .info-box.purple { background: var(--purple-light); color: var(--purple); }
+
+    .halaqoh-card {
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
+      padding: 14px; border: 1px solid rgba(255,255,255,0.5);
+      cursor: pointer; transition: var(--transition); margin-bottom: 8px;
+    }
+    .halaqoh-card:active { background: rgba(255,255,255,0.9); transform: scale(0.98); }
+    .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+    .badge-pengganti { background: var(--orange-light); color: var(--orange); }
+    .badge-tetap { background: var(--green-light); color: var(--green-dark); }
+    .badge-purple { background: var(--purple-light); color: var(--purple); }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--gray-600); }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
       background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
-      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
     .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
@@ -107,6 +107,7 @@
   </style>
 </head>
 <body>
+
   <header class="app-header">
     <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
     <h3>🕌 Anggota Halaqohku</h3>
@@ -137,25 +138,55 @@
     let halaqohId = null, halaqohData = null;
     let anggotaList = [], allMahasiswa = [], allKelas = [];
     let availableList = [];
+    let isPengganti = false;
+    let accessibleHalaqoh = [];
 
     async function loadAll() {
       const container = document.getElementById('mainContent');
       container.innerHTML = '<p style="text-align:center;">Mencari halaqoh Anda...</p>';
 
       try {
-        // Cari halaqoh musyrif ini
+        // 1. Cari halaqoh tetap (musyrifId)
         let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
         if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
 
+        // 2. Cek sebagai musyrif pengganti
         if (hSnap.empty) {
-          container.innerHTML = `<div class="warning-box"><i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i><strong>Anda belum memiliki Halaqoh.</strong><p style="margin-top:8px;font-size:13px;">Hubungi Operator Halaqoh.</p></div>`;
+          const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
+          
+          if (!penggantiSnap.empty) {
+            // Ditemukan sebagai pengganti
+            await loadSebagaiPengganti(container, penggantiSnap);
+            return;
+          }
+
+          // Cek dari riwayat absensi
+          const absenSnap = await db.collection('absensiHalaqoh').where('musyrifId', '==', user.uid).limit(1).get();
+          if (!absenSnap.empty) {
+            const halaqohIds = [...new Set(absenSnap.docs.map(d => d.data().halaqohId).filter(Boolean))];
+            const hDocs = await Promise.all(halaqohIds.map(id => db.collection('halaqoh').doc(id).get()));
+            const penggantiDocs = hDocs.filter(d => d.exists).map(d => ({ docs: [d], forEach: (fn) => fn(d) }));
+            
+            if (penggantiDocs.length > 0) {
+              await loadSebagaiPengganti(container, { docs: penggantiDocs.map(d => d.docs[0]), forEach: (fn) => penggantiDocs.forEach(d => fn(d.docs[0])) });
+              return;
+            }
+          }
+
+          container.innerHTML = `
+            <div class="warning-box">
+              <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+              <strong>Anda belum memiliki Halaqoh.</strong>
+              <p style="margin-top:8px;font-size:13px;">Hubungi Operator Halaqoh untuk mendaftarkan Anda.</p>
+            </div>`;
           return;
         }
 
+        // 3. Musyrif tetap
+        isPengganti = false;
         halaqohId = hSnap.docs[0].id;
         halaqohData = hSnap.docs[0].data();
 
-        // Load semua data
         const [aSnap, mSnap, pSnap, kSnap] = await Promise.all([
           db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get(),
           db.collection('mahasiswa').get(),
@@ -168,71 +199,111 @@
 
         allMahasiswa = mSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
         allKelas = kSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
-        
         anggotaList = allMahasiswa.filter(m => anggotaIds.has(m.id));
         availableList = allMahasiswa.filter(m => !semuaIds.has(m.id));
 
-        renderUI();
+        renderUITetap(container);
       } catch(e) {
         container.innerHTML = `<div class="warning-box"><strong>Gagal memuat</strong><p>${e.message}</p></div>`;
       }
     }
 
-    function renderUI() {
+    async function loadSebagaiPengganti(container, penggantiSnap) {
+      isPengganti = true;
+      accessibleHalaqoh = [];
+
+      penggantiSnap.forEach(async (d) => {
+        const hData = d.data();
+        const anggotaSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', d.id).get();
+        accessibleHalaqoh.push({
+          id: d.id, nama: hData.nama, musyrifNama: hData.musyrifNama || '-',
+          anggotaCount: anggotaSnap.size
+        });
+      });
+
+      // Tunggu semua async selesai (sedikit delay)
+      setTimeout(() => {
+        let html = `
+          <div class="info-box purple">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk melihat anggota:</span>
+          </div>`;
+
+        accessibleHalaqoh.forEach((h, i) => {
+          html += `
+            <div class="halaqoh-card" onclick="pilihHalaqohPengganti('${h.id}')">
+              <h4>🕌 ${h.nama} <span class="badge badge-pengganti">Pengganti</span></h4>
+              <p>👤 Musyrif tetap: ${h.musyrifNama} · 👥 ${h.anggotaCount} anggota</p>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+      }, 500);
+    }
+
+    // ═══ PILIH HALAQOH PENGGANTI ═══
+    window.pilihHalaqohPengganti = async function(hId) {
       const container = document.getElementById('mainContent');
-      
-      // Kumpulkan angkatan & kelas unik dari available
+      container.innerHTML = '<p style="text-align:center;">Memuat anggota...</p>';
+
+      try {
+        const hDoc = await db.collection('halaqoh').doc(hId).get();
+        if (!hDoc.exists) { container.innerHTML = '<div class="warning-box">Halaqoh tidak ditemukan</div>'; return; }
+
+        halaqohId = hId;
+        halaqohData = hDoc.data();
+
+        const [aSnap, mSnap, pSnap, kSnap] = await Promise.all([
+          db.collection('pembagianHalaqoh').where('halaqohId', '==', hId).get(),
+          db.collection('mahasiswa').get(),
+          db.collection('pembagianHalaqoh').get(),
+          db.collection('kelas').get()
+        ]);
+
+        const anggotaIds = new Set(aSnap.docs.map(d => d.data().mahasiswaId));
+        const semuaIds = new Set(pSnap.docs.map(d => d.data().mahasiswaId));
+
+        allMahasiswa = mSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        allKelas = kSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        anggotaList = allMahasiswa.filter(m => anggotaIds.has(m.id));
+        availableList = allMahasiswa.filter(m => !semuaIds.has(m.id));
+
+        renderUITetap(container);
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
+      }
+    };
+
+    // ═══ RENDER UI ═══
+    function renderUITetap(container) {
       const angkatanSet = new Set(availableList.map(m => m.angkatan).filter(Boolean));
-      const kelasSet = new Set(availableList.map(m => m.kelasNama || m.kelasId).filter(Boolean));
-      
       const angkatanOptions = [...angkatanSet].sort().map(a => `<option value="${a}">${a}</option>`).join('');
       const kelasOptions = allKelas.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
 
       let html = `
         <div class="card">
           <h3 style="margin-bottom:4px;">🕌 ${halaqohData.nama}</h3>
-          <p style="color:var(--gray-600);font-size:13px;">Musyrif: <strong>${halaqohData.musyrifNama || 'Anda'}</strong> · Anggota: <strong>${anggotaList.length}</strong> orang</p>
+          <p style="color:var(--gray-600);font-size:13px;">
+            <span class="badge ${isPengganti ? 'badge-pengganti' : 'badge-tetap'}">${isPengganti ? 'Pengganti' : 'Musyrif Tetap'}</span>
+            ${halaqohData.musyrifNama ? ` · ${halaqohData.musyrifNama}` : ''} · Anggota: <strong>${anggotaList.length}</strong> orang
+          </p>
           ${anggotaList.length > 0 ? `<button class="btn btn-danger btn-sm" style="margin-top:8px;" onclick="keluarkanSemua()"><i class="fa-solid fa-trash-can"></i> Keluarkan Semua</button>` : ''}
         </div>
 
-        <!-- TAMBAH ANGGOTA -->
         <div class="card">
           <h4 style="margin-bottom:10px;">➕ Tambah Anggota</h4>
           <div class="filter-row">
-            <div class="form-group">
-              <label>👤 Gender</label>
-              <select id="filterJK" onchange="renderAvailable()">
-                <option value="">Semua</option>
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>📅 Angkatan</label>
-              <select id="filterAngkatan" onchange="renderAvailable()">
-                <option value="">Semua</option>
-                ${angkatanOptions}
-              </select>
-            </div>
-            <div class="form-group">
-              <label>🏫 Kelas</label>
-              <select id="filterKelas" onchange="renderAvailable()">
-                <option value="">Semua</option>
-                ${kelasOptions}
-              </select>
-            </div>
+            <div class="form-group"><label>👤 Gender</label><select id="filterJK" onchange="renderAvailable()"><option value="">Semua</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+            <div class="form-group"><label>📅 Angkatan</label><select id="filterAngkatan" onchange="renderAvailable()"><option value="">Semua</option>${angkatanOptions}</select></div>
+            <div class="form-group"><label>🏫 Kelas</label><select id="filterKelas" onchange="renderAvailable()"><option value="">Semua</option>${kelasOptions}</select></div>
           </div>
-
-          <div class="checkbox-list" id="availableList">
-            ${renderCheckboxList(getFilteredAvailable())}
-          </div>
+          <div class="checkbox-list" id="availableList">${renderCheckboxList(getFilteredAvailable())}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
             <span style="font-size:11px;color:var(--gray-600);">Terpilih: <strong id="countSelected">0</strong></span>
             <button class="btn btn-primary btn-sm" onclick="tambahAnggota()"><i class="fa-solid fa-user-plus"></i> Tambah</button>
           </div>
         </div>
 
-        <!-- DAFTAR ANGGOTA -->
         <div class="card">
           <h4 style="margin-bottom:12px;">📋 Daftar Anggota (${anggotaList.length})</h4>`;
 
@@ -260,82 +331,53 @@
       const jk = document.getElementById('filterJK')?.value || '';
       const angkatan = document.getElementById('filterAngkatan')?.value || '';
       const kelasId = document.getElementById('filterKelas')?.value || '';
-      
       let filtered = [...availableList];
       if (jk) filtered = filtered.filter(m => m.jk === jk);
       if (angkatan) filtered = filtered.filter(m => String(m.angkatan) === angkatan);
       if (kelasId) filtered = filtered.filter(m => m.kelasId === kelasId);
-      
       return filtered.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
     }
 
     function renderCheckboxList(list) {
-      if (list.length === 0) {
-        return '<div style="text-align:center;padding:10px;color:var(--gray-400);">Tidak ada mahasiswa tersedia</div>';
-      }
-      return list.map(m => `
-        <label>
-          <input type="checkbox" value="${m.id}" class="mhs-check" onchange="updateCount()">
-          ${m.nama||'-'} <span style="color:var(--gray-400);font-size:10px;">${m.nim||''} · ${m.kelasNama||''}</span>
-        </label>
-      `).join('');
+      if (list.length === 0) return '<div style="text-align:center;padding:10px;color:var(--gray-400);">Tidak ada mahasiswa tersedia</div>';
+      return list.map(m => `<label><input type="checkbox" value="${m.id}" class="mhs-check" onchange="updateCount()"> ${m.nama||'-'} <span style="color:var(--gray-400);font-size:10px;">${m.nim||''}</span></label>`).join('');
     }
 
     window.renderAvailable = function() {
-      const list = getFilteredAvailable();
-      document.getElementById('availableList').innerHTML = renderCheckboxList(list);
+      document.getElementById('availableList').innerHTML = renderCheckboxList(getFilteredAvailable());
       document.getElementById('countSelected').textContent = '0';
     };
-
     window.updateCount = function() {
-      const count = document.querySelectorAll('.mhs-check:checked').length;
-      document.getElementById('countSelected').textContent = count;
+      document.getElementById('countSelected').textContent = document.querySelectorAll('.mhs-check:checked').length;
     };
 
     window.tambahAnggota = async function() {
       const checkedIds = [...document.querySelectorAll('.mhs-check:checked')].map(cb => cb.value);
       if (checkedIds.length === 0) { alert('Pilih minimal 1 mahasiswa!'); return; }
       if (!confirm(`Tambah ${checkedIds.length} mahasiswa ke halaqoh ini?`)) return;
-
       const batch = db.batch();
       for (const mhsId of checkedIds) {
         const ref = db.collection('pembagianHalaqoh').doc();
-        batch.set(ref, {
-          halaqohId, halaqohNama: halaqohData.nama || '',
-          mahasiswaId: mhsId,
-          musyrifId: user.uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        batch.set(ref, { halaqohId, halaqohNama: halaqohData.nama || '', mahasiswaId: mhsId, musyrifId: user.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       }
-
-      try {
-        await batch.commit();
-        alert(`✅ ${checkedIds.length} anggota ditambahkan!`);
-        loadAll();
-      } catch(e) { alert('❌ Gagal: ' + e.message); }
+      await batch.commit();
+      alert(`✅ ${checkedIds.length} anggota ditambahkan!`);
+      loadAll();
     };
 
     window.hapusAnggota = async function(mhsId) {
       if (!confirm('Keluarkan mahasiswa ini?')) return;
-      try {
-        const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).where('mahasiswaId','==',mhsId).get();
-        const batch = db.batch(); snap.forEach(d => batch.delete(d.ref));
-        await batch.commit();
-        alert('✅ Anggota dikeluarkan!');
-        loadAll();
-      } catch(e) { alert('❌ Gagal: ' + e.message); }
+      const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).where('mahasiswaId','==',mhsId).get();
+      const batch = db.batch(); snap.forEach(d => batch.delete(d.ref)); await batch.commit();
+      alert('✅ Anggota dikeluarkan!'); loadAll();
     };
 
     window.keluarkanSemua = async function() {
       if (anggotaList.length === 0) return;
-      if (!confirm(`⚠️ Keluarkan SEMUA ${anggotaList.length} anggota?\nIni tidak bisa dibatalkan!`)) return;
-      try {
-        const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
-        const batch = db.batch(); snap.forEach(d => batch.delete(d.ref));
-        await batch.commit();
-        alert(`✅ ${snap.size} anggota dikeluarkan!`);
-        loadAll();
-      } catch(e) { alert('❌ Gagal: ' + e.message); }
+      if (!confirm(`⚠️ Keluarkan SEMUA ${anggotaList.length} anggota?`)) return;
+      const snap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
+      const batch = db.batch(); snap.forEach(d => batch.delete(d.ref)); await batch.commit();
+      alert(`✅ ${snap.size} anggota dikeluarkan!`); loadAll();
     };
 
     loadAll();
