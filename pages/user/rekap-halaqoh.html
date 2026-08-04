@@ -8,16 +8,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
       --green-light:#e8f5e9;--green-pale:#f0faf5;
-      --gold:#f5c842;--gold-light:#fffbee;
-      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
-      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
+      --gold:#f5c842;--white:#ffffff;
+      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
+      --gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
       --orange:#f57c00;--orange-light:#fff3e0;
-      --purple:#7b1fa2;--purple-light:#f3e5f5;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;--header-height:56px;
     }
@@ -33,13 +33,13 @@
     .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
 
-    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .content { padding: 14px; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
     .card {
       background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
       padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06); overflow-x: auto;
     }
 
     .tabs { display: flex; gap: 0; margin-bottom: 12px; border-radius: 40px; overflow: hidden; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.3); }
@@ -55,10 +55,14 @@
     .halaqoh-detail h4 { font-size: 14px; font-weight: 700; }
     .halaqoh-detail p { font-size: 11px; color: var(--gray-600); }
 
-    table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    thead th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
+    .jp-input { width: 50px; padding: 4px 6px; text-align: center; border: 1.5px solid var(--gray-200); border-radius: 4px; font-size: 11px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .jp-input:focus { border-color: var(--green); outline: none; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 600px; }
+    thead th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
     tbody td { padding: 7px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
     .text-left { text-align: left; }
+    tbody tr:hover { background: var(--gray-50); }
 
     .badge { padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; }
     .badge-hadir { background: var(--green-light); color: #1b5e20; }
@@ -66,13 +70,20 @@
     .badge-izin { background: #e3f2fd; color: #0d47a1; }
     .badge-alfa { background: #fce4ec; color: #b71c1c; }
     .badge-jaga { background: #f3e5f5; color: #6a1b9a; }
-    .badge-mumtaz { background: #e8f5e9; color: #1b5e20; }
-    .badge-jj { background: #e3f2fd; color: #0d47a1; }
-    .badge-jayyid { background: #fff3e0; color: #e65100; }
-    .badge-maqbul { background: #fce4ec; color: #880e4f; }
-    .badge-rasib { background: #ffebee; color: #b71c1c; }
+    .badge-high { background: var(--green-light); color: #1b5e20; }
+    .badge-mid { background: #fff3e0; color: #e65100; }
+    .badge-low { background: #fce4ec; color: #b71c1c; }
+
+    .progress-bar-wrap { width: 100%; height: 5px; background: var(--gray-200); border-radius: 3px; overflow: hidden; margin-top: 2px; }
+    .progress-bar-fill { height: 100%; border-radius: 3px; }
+    .bar-high { background: var(--green); } .bar-mid { background: var(--orange); } .bar-low { background: var(--red); }
 
     .empty-state { text-align: center; padding: 30px; color: var(--gray-400); font-size: 13px; }
+
+    .btn { padding: 8px 16px; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; background: var(--green-dark); color: white; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 5px 10px; font-size: 10px; }
+    .action-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -88,8 +99,6 @@
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
     .nav-item.active i { color: var(--green); }
     .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
-
-    .grade-arabic { font-family: 'Noto Sans Arabic', sans-serif; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -121,11 +130,17 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
+    function getLocalDate() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
     let halaqohData = null, anggotaList = [], absensiList = [], hafalanList = [], ujianList = [];
     let currentTab = 'absensi';
-
-    const GRADE_CLASS = { 'Mumtaz':'badge-mumtaz', 'Jayyid Jiddan':'badge-jj', 'Jayyid':'badge-jayyid', 'Maqbul':'badge-maqbul', 'Rasib':'badge-rasib' };
-    const GRADE_ARAB = { 'Mumtaz':'ممتاز', 'Jayyid Jiddan':'جيد جداً', 'Jayyid':'جيد', 'Maqbul':'مقبول', 'Rasib':'راسب' };
+    let totalPertemuan = 16;
 
     async function loadAll() {
       const container = document.getElementById('mainContent');
@@ -135,13 +150,12 @@
         let hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
         if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId','==',user.uid).get();
         if (hSnap.empty) {
-          container.innerHTML = '<div class="empty-state">⚠️ Anda belum memiliki Halaqoh.<br>Hubungi Operator Halaqoh.</div>';
+          container.innerHTML = '<div class="empty-state">⚠️ Anda belum memiliki Halaqoh.</div>';
           return;
         }
 
         halaqohData = { id: hSnap.docs[0].id, ...hSnap.docs[0].data() };
 
-        // Ambil anggota
         const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohData.id).get();
         const mhsIds = pSnap.docs.map(d => d.data().mahasiswaId).filter(Boolean);
         anggotaList = [];
@@ -151,17 +165,18 @@
         }
         anggotaList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
-        // Ambil absensi
         const aSnap = await db.collection('absensiHalaqoh').where('halaqohId','==',halaqohData.id).get();
         absensiList = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-        // Ambil hafalan
         const hSnap2 = await db.collection('hafalan').get();
         hafalanList = hSnap2.docs.map(d => ({ id: d.id, ...d.data() })).filter(h => mhsIds.includes(h.mahasiswaId));
 
-        // Ambil ujian quran
         const uSnap = await db.collection('ujianQuran').get();
         ujianList = uSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => mhsIds.includes(u.mahasiswaId));
+
+        // Hitung total pertemuan dari tanggal unik
+        const tanggalUnik = new Set(absensiList.map(a => a.tanggal).filter(Boolean));
+        totalPertemuan = tanggalUnik.size || 16;
 
         renderAll(container);
       } catch(e) {
@@ -171,7 +186,7 @@
 
     function getNama(id) {
       const m = anggotaList.find(a => a.id === id);
-      return m?.nama || '-';
+      return m?.nama || id;
     }
 
     function renderAll(container) {
@@ -201,36 +216,81 @@
     function renderTab() {
       const el = document.getElementById('tabContent');
       if (!el) return;
-
       if (currentTab === 'absensi') renderAbsensi(el);
       else if (currentTab === 'hafalan') renderHafalan(el);
       else renderUjian(el);
     }
 
-    // ═══ ABSENSI ═══
+    // ═══ ABSENSI (SEPERTI REKAP KELAS) ═══
     function renderAbsensi(el) {
-      if (absensiList.length === 0) {
-        el.innerHTML = '<div class="empty-state">📭 Belum ada data absensi</div>';
+      if (anggotaList.length === 0) {
+        el.innerHTML = '<div class="empty-state">📭 Belum ada anggota</div>';
         return;
       }
 
-      const grouped = {};
-      absensiList.forEach(a => { const k = a.tanggal||'-'; if(!grouped[k]) grouped[k]=[]; grouped[k].push(a); });
-
-      let html = '';
-      Object.entries(grouped).sort((a,b)=>b[0].localeCompare(a[0])).forEach(([tgl, data]) => {
-        html += `<div class="card"><strong style="font-size:12px;">📅 ${tgl}</strong>`;
-        html += '<table><thead><tr><th>Nama</th><th>Status</th></tr></thead><tbody>';
-        data.forEach(d => {
-          const s = d.status||'hadir';
-          const badge = s==='hadir'?'badge-hadir':s==='sakit'?'badge-sakit':s==='izin'?'badge-izin':s==='jaga'?'badge-jaga':'badge-alfa';
-          const label = s==='hadir'?'Hadir':s==='sakit'?'Sakit':s==='izin'?'Izin':s==='jaga'?'Jaga':'Alfa';
-          html += `<tr><td class="text-left">${getNama(d.mahasiswaId)}</td><td><span class="badge ${badge}">${label}</span></td></tr>`;
-        });
-        html += '</tbody></table></div>';
+      // Hitung per mahasiswa
+      const rekap = {};
+      anggotaList.forEach(m => { rekap[m.id] = { sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 }; });
+      
+      absensiList.forEach(a => {
+        const mhsId = a.mahasiswaId;
+        if (!mhsId || !rekap[mhsId]) return;
+        rekap[mhsId].total++;
+        if (a.status && a.status !== 'hadir') {
+          rekap[mhsId][a.status] = (rekap[mhsId][a.status] || 0) + 1;
+        }
       });
-      el.innerHTML = html;
+
+      const arr = anggotaList.map(m => {
+        const r = rekap[m.id];
+        const totalTidakHadir = r.sakit + r.izin + r.alfa + r.jaga;
+        const hadir = Math.max(0, totalPertemuan - totalTidakHadir);
+        const persentase = totalPertemuan > 0 ? Math.round((hadir / totalPertemuan) * 100) : 0;
+        return { nama: m.nama, nim: m.nim, hadir, sakit: r.sakit, izin: r.izin, alfa: r.alfa, jaga: r.jaga, persentase };
+      });
+
+      arr.sort((a,b) => a.nama.localeCompare(b.nama));
+
+      let html = `<div class="action-row">
+        <label style="font-size:11px;">Total Pertemuan:</label>
+        <input class="jp-input" id="totalPertemuan" value="${totalPertemuan}" onchange="updateTotalPertemuan(this.value)">
+        <span style="font-size:10px;color:var(--gray-600);">${absensiList.length} catatan</span>
+        <button class="btn btn-outline btn-sm" onclick="exportExcel()" style="margin-left:auto;"><i class="fa-solid fa-file-excel"></i> Excel</button>
+      </div>`;
+
+      html += '<table><thead><tr><th>No</th><th>Nama</th><th>NIM</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th><th>%</th></tr></thead><tbody>';
+
+      if (arr.length === 0) {
+        html += '<tr><td colspan="9">Belum ada data</td></tr>';
+      } else {
+        arr.forEach((r, i) => {
+          const barClass = r.persentase >= 80 ? 'bar-high' : r.persentase >= 60 ? 'bar-mid' : 'bar-low';
+          const badgeClass = r.persentase >= 80 ? 'badge-high' : r.persentase >= 60 ? 'badge-mid' : 'badge-low';
+          html += `<tr>
+            <td>${i+1}</td>
+            <td class="text-left"><strong>${r.nama}</strong></td>
+            <td>${r.nim||'-'}</td>
+            <td><span class="badge badge-hadir">${r.hadir}</span></td>
+            <td><span class="badge badge-sakit">${r.sakit}</span></td>
+            <td><span class="badge badge-izin">${r.izin}</span></td>
+            <td><span class="badge badge-alfa">${r.alfa}</span></td>
+            <td><span class="badge badge-jaga">${r.jaga}</span></td>
+            <td>
+              <span class="badge ${badgeClass}">${r.persentase}%</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill ${barClass}" style="width:${r.persentase}%"></div></div>
+            </td>
+          </tr>`;
+        });
+      }
+      html += '</tbody></table>';
+
+      el.innerHTML = `<div class="card">${html}</div>`;
     }
+
+    window.updateTotalPertemuan = function(val) {
+      totalPertemuan = parseInt(val) || 16;
+      renderAbsensi(document.getElementById('tabContent'));
+    };
 
     // ═══ SETORAN HAFALAN ═══
     function renderHafalan(el) {
@@ -266,22 +326,45 @@
         return;
       }
 
-      let html = '<table><thead><tr><th>Nama</th><th>Ujian Ke</th><th>Bulan</th><th>Nilai</th><th>Predikat</th></tr></thead><tbody>';
+      let html = '<div class="card"><table><thead><tr><th>Nama</th><th>Ujian Ke</th><th>Bulan</th><th>Nilai</th><th>Predikat</th></tr></thead><tbody>';
       ujianList.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0)).forEach(u => {
-        const grade = u.predikat || '-';
-        const arab = GRADE_ARAB[grade] || '';
         html += `<tr>
           <td class="text-left">${getNama(u.mahasiswaId)}</td>
-          <td>Ujian ${u.ujianKe||'-'}</td>
-          <td>${u.bulan||'-'}</td>
+          <td>Ujian ${u.ujianKe||'-'}</td><td>${u.bulan||'-'}</td>
           <td><strong>${u.nilaiAkhir||'-'}</strong></td>
-          <td><span class="badge ${GRADE_CLASS[grade]||''}">${grade} <span class="grade-arabic">${arab}</span></span></td>
+          <td>${u.predikat||'-'}</td>
         </tr>`;
       });
-      html += '</tbody></table>';
-
-      el.innerHTML = `<div class="card">${html}</div>`;
+      html += '</tbody></table></div>';
+      el.innerHTML = html;
     }
+
+    window.exportExcel = function() {
+      const rekap = {};
+      anggotaList.forEach(m => { rekap[m.id] = { sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 }; });
+      absensiList.forEach(a => {
+        const mhsId = a.mahasiswaId;
+        if (!mhsId || !rekap[mhsId]) return;
+        rekap[mhsId].total++;
+        if (a.status && a.status !== 'hadir') rekap[mhsId][a.status] = (rekap[mhsId][a.status] || 0) + 1;
+      });
+
+      const data = anggotaList.map((m, i) => {
+        const r = rekap[m.id];
+        const totalTidakHadir = r.sakit + r.izin + r.alfa + r.jaga;
+        const hadir = Math.max(0, totalPertemuan - totalTidakHadir);
+        const pct = totalPertemuan > 0 ? Math.round((hadir / totalPertemuan) * 100) : 0;
+        return {
+          No: i+1, Nama: m.nama, NIM: m.nim||'-',
+          Hadir: hadir, Sakit: r.sakit, Izin: r.izin, Alfa: r.alfa, Jaga: r.jaga,
+          Persentase: pct + '%'
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Rekap Halaqoh');
+      XLSX.writeFile(wb, 'rekap-halaqoh.xlsx');
+    };
 
     loadAll();
   </script>
