@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
@@ -26,27 +29,22 @@
     .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
     .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
     .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
-    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
-    .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; } .sidebar-brand span { font-size: 10px; color: rgba(255,255,255,0.6); }
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
-    .nav-section { margin-bottom: 8px; }
-    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
+    .nav-section { margin-bottom: 8px; } .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); padding: 12px 12px 8px; }
     .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
-    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
-    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; } .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
     .nav-item i { width: 20px; text-align: center; font-size: 14px; }
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
     .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
-    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
-    .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+    .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; } .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
 
     .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
-    .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); } .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
     .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
     .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
-    .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
+    .btn-danger { background: var(--red); color: white; } .btn-danger:hover { background: #c62828; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
@@ -58,25 +56,29 @@
     .filter-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
-    .form-group select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; transition: var(--transition); background: white; min-width: 180px; }
-    .form-group select:focus { border-color: var(--green); }
+    .form-group select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; min-width: 180px; }
+
+    .ai-box { background: linear-gradient(135deg, #e3f2fd, #f3e5f5); border: 2px dashed #7c4dff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+    .ai-box textarea { width: 100%; border: 1.5px solid #b39ddb; border-radius: var(--radius-sm); padding: 10px; font-size: 12px; font-family: 'Poppins', sans-serif; resize: vertical; min-height: 60px; }
+    .ai-preview { background: white; border-radius: var(--radius-sm); padding: 12px; margin-top: 10px; max-height: 250px; overflow-y: auto; font-size: 11px; }
+    .ai-preview .match { color: #1b5e20; font-weight: 600; } .ai-preview .no-match { color: #b71c1c; }
 
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
     thead th { background: var(--gray-100); padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
     tbody td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); }
-    tbody tr:hover { background: var(--gray-50); }
-    tbody tr.anggota-row { background: var(--green-light); }
+    tbody tr:hover { background: var(--gray-50); } tbody tr.anggota-row { background: var(--green-light); }
     .checkbox-lg { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
 
     .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; }
-    .alert-error { background: var(--red-light); color: #b71c1c; }
+    .alert-success { background: var(--green-light); color: #1b5e20; } .alert-error { background: var(--red-light); color: #b71c1c; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); text-align: center; }
+    .stat-card .value { font-size: 24px; font-weight: 700; color: var(--green-dark); } .stat-card .label { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
 
     .info-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600; background: var(--blue-light); color: var(--blue); margin-left: 6px; }
-    .text-muted { color: var(--gray-400); font-size: 11px; }
-    .highlight { background: #fffde7; }
 
-    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 16px 12px; } .form-group select { min-width: 140px; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
@@ -95,6 +97,7 @@
         <a href="generate-jadwal.html" class="nav-item"><i class="fa-solid fa-shuffle"></i> Generate Jadwal</a>
         <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
         <a href="pembagian-kelas.html" class="nav-item active"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
+        <a href="pembagian-pa.html" class="nav-item"><i class="fa-solid fa-user-tie"></i> Pembagian PA</a>
       </div>
       <div class="nav-section"><div class="nav-section-title">Akademik</div>
         <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
@@ -107,8 +110,19 @@
   </aside>
 
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>🔀 Pembagian Kelas</h1><p>Assign mahasiswa ke kelas · Filter Angkatan</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar"><div class="page-title"><h1>🔀 Pembagian Kelas</h1><p>Assign mahasiswa ke kelas · AI Parse · Export</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
     <div id="alertSuccess" class="alert alert-success"></div><div id="alertError" class="alert alert-error"></div>
+
+    <!-- AI Parse -->
+    <div class="ai-box">
+      <h4 style="color:#4a148c;margin-bottom:6px;font-size:13px;">🤖 AI Parse Nama — Copas Nama Langsung</h4>
+      <textarea id="aiInput" placeholder="Copas nama-nama mahasiswa...&#10;Bisa pakai koma, newline, atau spasi.&#10;Contoh: Aldi, Fahmi, Ahmad Iqbal"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary btn-sm" onclick="aiParse()"><i class="fa-solid fa-magnifying-glass"></i> Deteksi Nama</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('aiInput').value='';document.getElementById('aiResult').innerHTML='';">Clear</button>
+      </div>
+      <div class="ai-preview" id="aiResult"></div>
+    </div>
 
     <!-- Filter -->
     <div class="card">
@@ -116,32 +130,43 @@
       <div class="card-body">
         <div class="filter-row">
           <div class="form-group"><label>🏫 Kelas Tujuan</label><select id="filterKelas" onchange="loadPembagian()"><option value="">Pilih Kelas...</option></select></div>
-          <div class="form-group"><label>👤 Jenis Kelamin</label><select id="filterJK" onchange="loadPembagian()"><option value="">Semua</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
-          <div class="form-group"><label>📅 Angkatan</label><select id="filterAngkatan" onchange="loadPembagian()"><option value="">Semua Angkatan</option></select></div>
-          <div class="form-group" style="margin-left:auto;">
-            <label>&nbsp;</label>
-            <button class="btn btn-outline btn-sm" onclick="loadPembagian()"><i class="fa-solid fa-sync"></i> Refresh</button>
-          </div>
+          <div class="form-group"><label>👤 Gender</label><select id="filterJK" onchange="loadPembagian()"><option value="">Semua</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+          <div class="form-group"><label>📅 Angkatan</label><select id="filterAngkatan" onchange="loadPembagian()"><option value="">Semua</option></select></div>
         </div>
       </div>
     </div>
 
-    <!-- Mahasiswa Belum Terbagi -->
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid" style="display:none;">
+      <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total Mahasiswa</div></div>
+      <div class="stat-card"><div class="value" id="statSudah">0</div><div class="label">Sudah Punya Kelas</div></div>
+      <div class="stat-card"><div class="value" id="statBelum">0</div><div class="label">Belum Punya Kelas</div></div>
+      <div class="stat-card"><div class="value" id="statAnggota">0</div><div class="label">Di Kelas Ini</div></div>
+    </div>
+
+    <!-- Action -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="btn btn-outline btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
+      <button class="btn btn-outline btn-sm" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+      <button class="btn btn-outline btn-sm" onclick="loadPembagian()"><i class="fa-solid fa-sync"></i> Refresh</button>
+    </div>
+
+    <!-- Tambah -->
     <div class="card" id="cardTambah" style="display:none;">
-      <div class="card-header">
-        <h3><i class="fa-solid fa-user-plus"></i> Mahasiswa Belum Terbagi</h3>
-        <span id="labelKelasTujuan"></span>
-      </div>
+      <div class="card-header"><h3><i class="fa-solid fa-user-plus"></i> Mahasiswa Belum Terbagi <span id="labelKelasTujuan"></span></h3></div>
       <div class="card-body">
-        <div id="listTambah"><p class="text-muted" style="text-align:center;padding:20px;">Pilih kelas tujuan terlebih dahulu</p></div>
-        <button class="btn btn-primary" style="margin-top:12px;" id="btnSimpan" onclick="simpanPembagian()"><i class="fa-solid fa-save"></i> Simpan ke Kelas (<span id="countSelected">0</span>)</button>
+        <div id="listTambah"><p style="color:var(--gray-400);">Pilih kelas</p></div>
+        <button class="btn btn-primary" style="margin-top:12px;" id="btnSimpan" onclick="simpanPembagian()"><i class="fa-solid fa-save"></i> Simpan (<span id="countSelected">0</span>)</button>
       </div>
     </div>
 
-    <!-- Anggota Saat Ini -->
+    <!-- Anggota -->
     <div class="card" id="cardAnggota" style="display:none;">
-      <div class="card-header"><h3><i class="fa-solid fa-users"></i> Anggota Kelas (<span id="totalAnggota">0</span>)</h3></div>
-      <div class="card-body" id="tableAnggota"><p class="text-muted" style="text-align:center;padding:20px;">Pilih kelas untuk melihat anggota</p></div>
+      <div class="card-header">
+        <h3><i class="fa-solid fa-users"></i> Anggota Kelas (<span id="totalAnggota">0</span>)</h3>
+        <button class="btn btn-danger btn-sm" onclick="keluarkanSemua()"><i class="fa-solid fa-trash-can"></i> Keluarkan Semua</button>
+      </div>
+      <div class="card-body" id="tableAnggota"><p style="color:var(--gray-400);">Pilih kelas</p></div>
     </div>
   </main>
 
@@ -158,6 +183,9 @@
     
     let selectedCheckboxes = new Set();
     let allMahasiswaData = [];
+    let currentAnggota = [];
+    let currentAvailable = [];
+    let currentKelasNama = '';
 
     function showAlert(type, text) { 
       const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1)); 
@@ -166,7 +194,6 @@
 
     async function loadOptions() {
       try {
-        // Load kelas
         const kelasSnap = await db.collection('kelas').get();
         const kelasSel = document.getElementById('filterKelas');
         kelasSel.innerHTML = '<option value="">Pilih Kelas...</option>';
@@ -175,38 +202,20 @@
           return (o[a.data().semester]??99) - (o[b.data().semester]??99) || (a.data().nama||'').localeCompare(b.data().nama||'');
         });
         kelasDocs.forEach(d => { 
-          const o = document.createElement('option'); 
-          o.value = d.id; 
+          const o = document.createElement('option'); o.value = d.id; 
           o.textContent = `${d.data().nama} (${d.data().semester==='idad'?"I'dad":'Sem '+d.data().semester})`; 
           kelasSel.appendChild(o); 
         });
 
-        // Load semua mahasiswa
         const mhsSnap = await db.collection('mahasiswa').get();
         allMahasiswaData = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        console.log('✅ Total mahasiswa loaded:', allMahasiswaData.length);
-        
-        // Kumpulkan angkatan unik (support number & string)
         const angkatanSet = new Set();
-        allMahasiswaData.forEach(m => {
-          const a = m.angkatan;
-          if (a !== undefined && a !== null && a !== '') {
-            angkatanSet.add(String(a));
-          }
-        });
-        
-        console.log('📅 Angkatan found:', [...angkatanSet]);
-        
+        allMahasiswaData.forEach(m => { if (m.angkatan) angkatanSet.add(String(m.angkatan)); });
         const angkatanSel = document.getElementById('filterAngkatan');
-        angkatanSel.innerHTML = '<option value="">Semua Angkatan</option>';
-        [...angkatanSet].sort().forEach(a => {
-          const o = document.createElement('option');
-          o.value = a;
-          o.textContent = 'Angkatan ' + a;
-          angkatanSel.appendChild(o);
-        });
-      } catch(e) { console.error('loadOptions error:', e); }
+        angkatanSel.innerHTML = '<option value="">Semua</option>';
+        [...angkatanSet].sort().forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; angkatanSel.appendChild(o); });
+      } catch(e) { console.error(e); }
     }
 
     async function loadPembagian() {
@@ -214,41 +223,32 @@
       const jkFilter = document.getElementById('filterJK').value;
       const angkatanFilter = document.getElementById('filterAngkatan').value;
       
-      console.log('🔍 Filter:', { kelasId, jkFilter, angkatanFilter });
-      
       if (!kelasId) {
         document.getElementById('cardTambah').style.display = 'none';
         document.getElementById('cardAnggota').style.display = 'none';
+        document.getElementById('statsGrid').style.display = 'none';
         return;
       }
       
-      // Label kelas
       const kelasSel = document.getElementById('filterKelas');
-      const kelasNama = kelasSel.options[kelasSel.selectedIndex]?.text || '';
-      document.getElementById('labelKelasTujuan').innerHTML = `<span class="info-badge">➡️ ${kelasNama}</span>`;
+      currentKelasNama = kelasSel.options[kelasSel.selectedIndex]?.text || '';
+      document.getElementById('labelKelasTujuan').innerHTML = `<span class="info-badge">➡️ ${currentKelasNama}</span>`;
       
       document.getElementById('cardTambah').style.display = 'block';
       document.getElementById('cardAnggota').style.display = 'block';
+      document.getElementById('statsGrid').style.display = 'grid';
 
-      // Filter anggota kelas
       let anggotaKelas = allMahasiswaData.filter(d => d.kelasId === kelasId);
-      
-      // Filter yang BELUM punya kelas
       let available = allMahasiswaData.filter(d => !d.kelasId || d.kelasId === '');
+      if (jkFilter) { anggotaKelas = anggotaKelas.filter(d => d.jk === jkFilter); available = available.filter(d => d.jk === jkFilter); }
+      if (angkatanFilter) { anggotaKelas = anggotaKelas.filter(d => String(d.angkatan) === angkatanFilter); available = available.filter(d => String(d.angkatan) === angkatanFilter); }
 
-      // Filter JK
-      if (jkFilter) {
-        anggotaKelas = anggotaKelas.filter(d => d.jk === jkFilter);
-        available = available.filter(d => d.jk === jkFilter);
-      }
-      
-      // Filter Angkatan (konversi ke string untuk perbandingan)
-      if (angkatanFilter) {
-        anggotaKelas = anggotaKelas.filter(d => String(d.angkatan) === angkatanFilter);
-        available = available.filter(d => String(d.angkatan) === angkatanFilter);
-      }
+      currentAnggota = anggotaKelas; currentAvailable = available;
 
-      console.log('📊 Anggota:', anggotaKelas.length, '| Available:', available.length);
+      document.getElementById('statTotal').textContent = allMahasiswaData.length;
+      document.getElementById('statSudah').textContent = allMahasiswaData.filter(m => m.kelasId && m.kelasId !== '').length;
+      document.getElementById('statBelum').textContent = available.length;
+      document.getElementById('statAnggota').textContent = anggotaKelas.length;
 
       selectedCheckboxes.clear();
       renderAvailable(available);
@@ -257,19 +257,12 @@
     }
 
     function renderAvailable(data) {
-      let html = '<table><thead><tr><th><input type="checkbox" id="checkAll" onchange="toggleAll(this)" title="Pilih Semua"></th><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th></tr></thead><tbody>';
+      let html = '<table><thead><tr><th><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th></tr></thead><tbody>';
       if (data.length === 0) {
         html += '<tr><td colspan="6" style="text-align:center;padding:20px;">✅ Semua mahasiswa sudah memiliki kelas</td></tr>';
       } else {
         data.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach((d, i) => {
-          html += `<tr>
-            <td><input type="checkbox" class="checkbox-lg mhs-check" value="${d.id}" onchange="toggleCheck('${d.id}', this.checked)"></td>
-            <td>${i+1}</td>
-            <td>${d.nim||'-'}</td>
-            <td><strong>${d.nama||'-'}</strong></td>
-            <td>${d.jk || '-'}</td>
-            <td>${d.angkatan !== undefined && d.angkatan !== null ? d.angkatan : '-'}</td>
-          </tr>`;
+          html += `<tr><td><input type="checkbox" class="checkbox-lg mhs-check" value="${d.id}" onchange="toggleCheck('${d.id}', this.checked)"></td><td>${i+1}</td><td>${d.nim||'-'}</td><td><strong>${d.nama||'-'}</strong></td><td>${d.jk||'-'}</td><td>${d.angkatan||'-'}</td></tr>`;
         });
       }
       html += '</tbody></table>';
@@ -280,17 +273,10 @@
       document.getElementById('totalAnggota').textContent = data.length;
       let html = '<table><thead><tr><th>No</th><th>NIM</th><th>Nama</th><th>JK</th><th>Angkatan</th><th>Aksi</th></tr></thead><tbody>';
       if (data.length === 0) {
-        html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Belum ada anggota di kelas ini</td></tr>';
+        html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Belum ada anggota</td></tr>';
       } else {
         data.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach((d, i) => {
-          html += `<tr class="anggota-row">
-            <td>${i+1}</td>
-            <td>${d.nim||'-'}</td>
-            <td><strong>${d.nama||'-'}</strong></td>
-            <td>${d.jk || '-'}</td>
-            <td>${d.angkatan !== undefined && d.angkatan !== null ? d.angkatan : '-'}</td>
-            <td><button class="btn btn-danger btn-sm" onclick="hapusAnggota('${d.id}')"><i class="fa-solid fa-trash"></i> Keluarkan</button></td>
-          </tr>`;
+          html += `<tr class="anggota-row"><td>${i+1}</td><td>${d.nim||'-'}</td><td><strong>${d.nama||'-'}</strong></td><td>${d.jk||'-'}</td><td>${d.angkatan||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="hapusAnggota('${d.id}')"><i class="fa-solid fa-trash"></i> Keluarkan</button></td></tr>`;
         });
       }
       html += '</tbody></table>';
@@ -300,77 +286,136 @@
     window.toggleAll = function(el) {
       document.querySelectorAll('.mhs-check').forEach(cb => {
         cb.checked = el.checked;
-        if (el.checked) selectedCheckboxes.add(cb.value);
-        else selectedCheckboxes.delete(cb.value);
+        if (el.checked) selectedCheckboxes.add(cb.value); else selectedCheckboxes.delete(cb.value);
       });
       document.getElementById('countSelected').textContent = selectedCheckboxes.size;
     };
 
     window.toggleCheck = function(id, checked) {
-      if (checked) selectedCheckboxes.add(id); 
-      else selectedCheckboxes.delete(id);
+      if (checked) selectedCheckboxes.add(id); else selectedCheckboxes.delete(id);
       document.getElementById('countSelected').textContent = selectedCheckboxes.size;
-      
-      // Update checkAll state
-      const allCbs = document.querySelectorAll('.mhs-check');
-      const checkAll = document.getElementById('checkAll');
-      if (checkAll) checkAll.checked = selectedCheckboxes.size === allCbs.length;
     };
 
     async function simpanPembagian() {
       const kelasId = document.getElementById('filterKelas').value;
-      if (!kelasId) { showAlert('error', 'Pilih kelas tujuan!'); return; }
-      if (selectedCheckboxes.size === 0) { showAlert('error', 'Pilih minimal 1 mahasiswa!'); return; }
+      if (!kelasId) { showAlert('error', 'Pilih kelas!'); return; }
+      if (selectedCheckboxes.size === 0) { showAlert('error', 'Pilih mahasiswa!'); return; }
       
       const btn = document.getElementById('btnSimpan');
-      btn.disabled = true; 
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan ' + selectedCheckboxes.size + ' mhs...';
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
       try {
         const batch = db.batch();
         for (const mhsId of selectedCheckboxes) {
-          batch.update(db.collection('mahasiswa').doc(mhsId), { 
-            kelasId: kelasId,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          batch.update(db.collection('mahasiswa').doc(mhsId), { kelasId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         }
         await batch.commit();
-        showAlert('success', `✅ ${selectedCheckboxes.size} mahasiswa berhasil ditambahkan!`);
+        showAlert('success', `✅ ${selectedCheckboxes.size} mahasiswa ditambahkan!`);
         loadPembagian();
-      } catch(e) { 
-        console.error('Simpan error:', e);
-        showAlert('error', 'Gagal: ' + e.message); 
-      }
-      finally { 
-        btn.disabled = false; 
-        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan ke Kelas (<span id="countSelected">0</span>)'; 
-      }
+      } catch(e) { showAlert('error', e.message); }
+      finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan (<span id="countSelected">0</span>)'; }
     }
 
     window.hapusAnggota = async function(mhsId) {
-      if (!confirm('Keluarkan mahasiswa dari kelas ini?')) return;
-      try {
-        await db.collection('mahasiswa').doc(mhsId).update({ 
-          kelasId: '',
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showAlert('success', 'Mahasiswa dikeluarkan dari kelas!');
-        loadPembagian();
-      } catch(e) {
-        showAlert('error', 'Gagal: ' + e.message);
-      }
+      if (!confirm('Keluarkan mahasiswa dari kelas?')) return;
+      await db.collection('mahasiswa').doc(mhsId).update({ kelasId: '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      showAlert('success', 'Dikeluarkan!');
+      loadPembagian();
     };
 
-    window.logout = function() { 
-      if (confirm('Keluar?')) { 
-        auth.signOut().then(() => { 
-          localStorage.removeItem('user'); 
-          window.location.href = '../../index.html'; 
-        }); 
-      } 
+    window.keluarkanSemua = async function() {
+      if (currentAnggota.length === 0) return;
+      if (!confirm(`⚠️ Keluarkan SEMUA ${currentAnggota.length} mahasiswa?`)) return;
+      const batch = db.batch();
+      currentAnggota.forEach(m => batch.update(db.collection('mahasiswa').doc(m.id), { kelasId: '' }));
+      await batch.commit();
+      showAlert('success', `${currentAnggota.length} mahasiswa dikeluarkan!`);
+      loadPembagian();
     };
 
-    // Init
+    // ═══ AI PARSE ═══
+    function fuzzyFind(name) {
+      const clean = name.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+      if (!clean || clean.length < 2) return null;
+      const exact = currentAvailable.find(m => (m.nama||'').toLowerCase().replace(/[^a-z\s]/g,'').trim() === clean);
+      if (exact) return exact;
+      const partial = currentAvailable.find(m => (m.nama||'').toLowerCase().includes(clean));
+      if (partial) return partial;
+      const words = clean.split(/\s+/).filter(w => w.length >= 3);
+      for (const m of currentAvailable) { const nl = (m.nama||'').toLowerCase(); for (const w of words) { if (nl.includes(w)) return m; } }
+      return null;
+    }
+
+    window.aiParse = function() {
+      const input = document.getElementById('aiInput').value.trim();
+      if (!input) { showAlert('error', 'Masukkan nama!'); return; }
+      const names = input.split(/[\n,;]+/).map(n => n.trim()).filter(n => n.length >= 2);
+      
+      let html = '<table><thead><tr><th><input type="checkbox" id="aiCheckAll" onchange="aiToggleAll(this)" checked></th><th>Input</th><th>Match</th><th>NIM</th></tr></thead><tbody>';
+      let matchCount = 0;
+      
+      names.forEach(name => {
+        const matched = fuzzyFind(name);
+        if (matched) {
+          matchCount++;
+          html += `<tr><td><input type="checkbox" class="ai-check" value="${matched.id}" checked onchange="aiUpdateCount()"></td><td>${name}</td><td class="match">✅ ${matched.nama}</td><td>${matched.nim||'-'}</td></tr>`;
+        } else {
+          html += `<tr><td><input type="checkbox" disabled></td><td>${name}</td><td class="no-match">❌ Tidak ditemukan</td><td>-</td></tr>`;
+        }
+      });
+      
+      html += '</tbody></table>';
+      html += `<p style="margin-top:8px;"><strong>🎯 ${matchCount}/${names.length} cocok</strong> · <span id="aiCount">${matchCount}</span> dipilih</p>`;
+      if (matchCount > 0) html += `<button class="btn btn-primary btn-sm" onclick="aiKonfirmasi()">✅ Tambah ${matchCount} ke Kelas</button>`;
+      document.getElementById('aiResult').innerHTML = html;
+    };
+
+    window.aiToggleAll = function(el) { document.querySelectorAll('.ai-check').forEach(cb => { cb.checked = el.checked; }); aiUpdateCount(); };
+    window.aiUpdateCount = function() {
+      const count = document.querySelectorAll('.ai-check:checked').length;
+      document.getElementById('aiCount').textContent = count;
+      const btn = document.querySelector('.ai-preview .btn-primary');
+      if (btn) btn.innerHTML = `✅ Tambah ${count} ke Kelas`;
+    };
+
+    window.aiKonfirmasi = async function() {
+      const kelasId = document.getElementById('filterKelas').value;
+      if (!kelasId) { showAlert('error', 'Pilih kelas dulu!'); return; }
+      const checkedIds = [...document.querySelectorAll('.ai-check:checked')].map(cb => cb.value);
+      if (checkedIds.length === 0) { showAlert('error', 'Centang minimal 1!'); return; }
+      if (!confirm(`Tambah ${checkedIds.length} mahasiswa?`)) return;
+      
+      const batch = db.batch();
+      checkedIds.forEach(id => batch.update(db.collection('mahasiswa').doc(id), { kelasId }));
+      await batch.commit();
+      showAlert('success', `✅ ${checkedIds.length} mahasiswa ditambahkan!`);
+      document.getElementById('aiInput').value = '';
+      document.getElementById('aiResult').innerHTML = '';
+      loadPembagian();
+    };
+
+    // ═══ EXPORT ═══
+    function exportExcel() {
+      if (currentAnggota.length === 0) { alert('Tidak ada data!'); return; }
+      const data = currentAnggota.map((m,i) => ({ No:i+1, NIM:m.nim||'', Nama:m.nama||'', JK:m.jk||'-', Angkatan:m.angkatan||'-', Kelas:currentKelasNama }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Pembagian Kelas');
+      XLSX.writeFile(wb, 'pembagian-kelas.xlsx');
+    }
+
+    function exportPDF() {
+      if (currentAnggota.length === 0) { alert('Tidak ada data!'); return; }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(14); doc.text('Pembagian Kelas', 14, 18);
+      doc.setFontSize(9); doc.text(`Kelas: ${currentKelasNama} · ${currentAnggota.length} mahasiswa`, 14, 24);
+      const head = [['No','NIM','Nama','JK','Angkatan']];
+      const body = currentAnggota.map((m,i) => [i+1, m.nim||'', m.nama||'', m.jk||'-', m.angkatan||'-']);
+      doc.autoTable({ head, body, startY: 28, styles: { fontSize: 9 }, headStyles: { fillColor: [0,77,64] } });
+      doc.save('pembagian-kelas.pdf');
+    }
+
+    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
     loadOptions();
   </script>
 </body>
