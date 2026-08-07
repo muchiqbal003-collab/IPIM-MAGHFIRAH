@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>Menu Cepat - IPIM</title>
+  <title>IPIM - Menu Cepat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +36,11 @@
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
+    }
+    
+    body.lang-ar {
+      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+      direction: rtl;
     }
     
     /* Animated Background Ornaments */
@@ -71,7 +76,7 @@
       66% { transform: translate(-20px, 20px) rotate(240deg); }
     }
 
-    /* Header - DISAMAKAN dengan Menu Halaqoh & Akademik */
+    /* Header */
     .app-header { 
       position: fixed; 
       top: 0; left: 0; right: 0; z-index: 1000; 
@@ -94,21 +99,6 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn-back::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s ease;
-    }
-    
-    .btn-back:hover::before {
-      left: 100%;
     }
     
     .btn-back:hover {
@@ -119,6 +109,23 @@
     .app-header h3 { 
       font-size: 16px; font-weight: 700; flex: 1;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .btn-lang {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
     }
 
     .content { 
@@ -132,7 +139,7 @@
       z-index: 1;
     }
 
-    /* Search - Ultra Premium */
+    /* Search */
     .search-wrap { 
       position: relative; 
       margin-bottom: 4px;
@@ -140,14 +147,18 @@
     }
     
     @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    body.lang-ar .search-wrap input {
+      padding: 14px 50px 14px 20px;
+      text-align: right;
+    }
+    
+    body.lang-ar .search-wrap i {
+      left: auto;
+      right: 20px;
     }
     
     .search-wrap input {
@@ -161,10 +172,9 @@
       border: 1.5px solid rgba(255, 255, 255, 0.6);
       box-shadow: 
         0 8px 32px rgba(0, 61, 51, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
       font-size: 14px; 
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: inherit;
       font-weight: 500;
       color: var(--gray-800); 
       outline: none; 
@@ -177,7 +187,6 @@
         0 8px 40px rgba(0, 168, 89, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.9),
         0 0 0 4px rgba(0, 168, 89, 0.1);
-      transform: translateY(-2px);
     }
     
     .search-wrap i { 
@@ -193,7 +202,7 @@
       transform: translateY(-50%) scale(1.2);
     }
 
-    /* Search Results Dropdown */
+    /* Search Results */
     .search-results {
       display: none;
       position: absolute;
@@ -205,9 +214,7 @@
       -webkit-backdrop-filter: blur(30px) saturate(200%);
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 
-        0 16px 48px rgba(0, 61, 51, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 48px rgba(0, 61, 51, 0.15);
       max-height: 400px;
       overflow-y: auto;
       z-index: 50;
@@ -228,65 +235,35 @@
       border-bottom: 1px solid rgba(0, 61, 51, 0.05);
     }
     
-    .search-result-item:last-child {
-      border-bottom: none;
-    }
-    
-    .search-result-item:hover {
-      background: rgba(0, 168, 89, 0.05);
-    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: rgba(0, 168, 89, 0.05); }
     
     .search-result-item .result-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
     }
     
-    .search-result-item .result-info {
-      flex: 1;
-    }
+    .search-result-item .result-info { flex: 1; }
     
     .search-result-item .result-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1a3c34;
+      font-size: 13px; font-weight: 700; color: #1a3c34;
     }
     
     .search-result-item .result-category {
-      font-size: 10px;
-      color: var(--gray-600);
-      margin-top: 2px;
-    }
-    
-    .search-result-item .result-arrow {
-      color: var(--gray-600);
-      font-size: 14px;
+      font-size: 10px; color: var(--gray-600); margin-top: 2px;
     }
     
     .no-results {
-      padding: 20px;
-      text-align: center;
-      color: var(--gray-600);
-      font-size: 13px;
+      padding: 20px; text-align: center; color: var(--gray-600); font-size: 13px;
     }
 
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 3 Icon Umum - Glass Cards (DISAMAKAN) */
+    /* Icon Cards */
     .icon-row { 
       display: flex; gap: 12px;
       animation: fadeInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s both;
@@ -313,10 +290,7 @@
     .icon-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
+      top: 0; left: 0; right: 0; height: 50%;
       background: linear-gradient(180deg, 
         rgba(255, 255, 255, 0.3) 0%, 
         rgba(255, 255, 255, 0) 100%);
@@ -359,27 +333,14 @@
       box-shadow: 0 6px 20px rgba(0, 61, 51, 0.12);
     }
     
-    .icn.blue { 
-      background: rgba(21, 101, 192, 0.1); 
-      color: var(--blue);
-      border-color: rgba(21, 101, 192, 0.2);
-    }
-    .icn.green { 
-      background: rgba(0, 168, 89, 0.1); 
-      color: #1b5e20;
-      border-color: rgba(0, 168, 89, 0.2);
-    }
-    .icn.orange { 
-      background: rgba(230, 81, 0, 0.1); 
-      color: var(--orange);
-      border-color: rgba(230, 81, 0, 0.2);
-    }
+    .icn.blue { background: rgba(21, 101, 192, 0.1); color: var(--blue); border-color: rgba(21, 101, 192, 0.2); }
+    .icn.green { background: rgba(0, 168, 89, 0.1); color: #1b5e20; border-color: rgba(0, 168, 89, 0.2); }
+    .icn.orange { background: rgba(230, 81, 0, 0.1); color: var(--orange); border-color: rgba(230, 81, 0, 0.2); }
     
     .icon-card .lbl { 
       font-size: 13px; font-weight: 700; 
       color: #1a3c34;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
       margin-bottom: 3px;
     }
@@ -387,11 +348,10 @@
       font-size: 10px; 
       color: var(--gray-600);
       opacity: 0.7;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
 
-    /* 2 Card Besar - DISAMAKAN dengan style menu card */
+    /* Big Cards */
     .big-card-row { 
       display: flex; flex-direction: column; gap: 12px;
       animation: fadeInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
@@ -417,10 +377,7 @@
     .big-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
+      top: 0; left: 0; right: 0; height: 50%;
       background: linear-gradient(180deg, 
         rgba(255, 255, 255, 0.3) 0%, 
         rgba(255, 255, 255, 0) 100%);
@@ -441,20 +398,23 @@
       transition: all 0.15s ease;
     }
     
-    .big-card.akademik { 
-      border-left: 4px solid rgba(0, 168, 89, 0.4);
-    }
+    .big-card.akademik { border-left: 4px solid rgba(0, 168, 89, 0.4); }
+    .big-card.halaqoh { border-left: 4px solid rgba(230, 81, 0, 0.4); }
     
-    .big-card.halaqoh { 
-      border-left: 4px solid rgba(230, 81, 0, 0.4);
+    body.lang-ar .big-card.akademik { 
+      border-left: none;
+      border-right: 4px solid rgba(0, 168, 89, 0.4);
+    }
+    body.lang-ar .big-card.halaqoh { 
+      border-left: none;
+      border-right: 4px solid rgba(230, 81, 0, 0.4);
     }
     
     .big-icon {
       width: 64px; height: 64px; border-radius: 20px;
       display: flex; align-items: center; justify-content: center; 
       font-size: 28px; flex-shrink: 0;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -468,16 +428,8 @@
       box-shadow: 0 6px 20px rgba(0, 61, 51, 0.12);
     }
     
-    .big-icon.akademik { 
-      background: rgba(0, 168, 89, 0.1); 
-      color: #1b5e20;
-      border-color: rgba(0, 168, 89, 0.2);
-    }
-    .big-icon.halaqoh { 
-      background: rgba(230, 81, 0, 0.1); 
-      color: var(--orange);
-      border-color: rgba(230, 81, 0, 0.2);
-    }
+    .big-icon.akademik { background: rgba(0, 168, 89, 0.1); color: #1b5e20; border-color: rgba(0, 168, 89, 0.2); }
+    .big-icon.halaqoh { background: rgba(230, 81, 0, 0.1); color: var(--orange); border-color: rgba(230, 81, 0, 0.2); }
     
     .big-info { flex: 1; position: relative; z-index: 1; }
     .big-info h4 { 
@@ -496,8 +448,7 @@
     .big-arrow { 
       font-size: 18px; 
       color: var(--gray-600);
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
@@ -505,8 +456,12 @@
       transform: translateX(4px);
       color: var(--green);
     }
+    
+    body.lang-ar .big-card:hover .big-arrow {
+      transform: translateX(-4px);
+    }
 
-    /* Bottom Nav - DISAMAKAN dengan Menu Halaqoh & Akademik */
+    /* Bottom Nav */
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
@@ -542,20 +497,6 @@
       background: var(--green); border-radius: 0 0 4px 4px; 
     }
 
-    /* Scrollbar Styling */
-    .search-results::-webkit-scrollbar {
-      width: 4px;
-    }
-    
-    .search-results::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-    .search-results::-webkit-scrollbar-thumb {
-      background: rgba(0, 168, 89, 0.2);
-      border-radius: 10px;
-    }
-
     /* Responsive */
     @media (min-width: 768px) {
       .content { max-width: 600px; }
@@ -574,14 +515,17 @@
     <button class="btn-back" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
-    <h3>⚡ Menu Cepat</h3>
+    <h3 data-lang="menuCepat">⚡ Menu Cepat</h3>
+    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
+      <span id="langIndicator">🌐</span>
+    </button>
   </header>
 
   <div class="content">
     <!-- Search Bar -->
     <div class="search-wrap" id="searchWrap">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" placeholder="🔍 Cari menu apa saja..." onkeyup="filterMenu()" onfocus="showResults()" autocomplete="off">
+      <input type="text" id="searchInput" data-lang-placeholder="cariMenu" placeholder="🔍 Cari menu apa saja..." onkeyup="filterMenu()" onfocus="showResults()" autocomplete="off">
       <div class="search-results" id="searchResults"></div>
     </div>
 
@@ -589,18 +533,18 @@
     <div class="icon-row">
       <div class="icon-card" onclick="goTo('absensi.html')">
         <div class="icn blue"><i class="fa-solid fa-mosque"></i></div>
-        <div class="lbl">Absensi Sholat</div>
-        <div class="sub">Catat sholat wajib</div>
+        <div class="lbl" data-lang="absensiSholat">Absensi Sholat</div>
+        <div class="sub" data-lang="absensiSholatSub">Catat sholat wajib</div>
       </div>
       <div class="icon-card" onclick="goTo('kinerja.html')">
         <div class="icn green"><i class="fa-solid fa-clipboard-list"></i></div>
-        <div class="lbl">Kinerjaku</div>
-        <div class="sub">Lihat statistik</div>
+        <div class="lbl" data-lang="kinerjaku">Kinerjaku</div>
+        <div class="sub" data-lang="kinerjakuSub">Lihat statistik</div>
       </div>
       <div class="icon-card" onclick="goTo('rekap-tidak-hadir-kelas.html')">
         <div class="icn orange"><i class="fa-solid fa-user-xmark"></i></div>
-        <div class="lbl">Tidak Hadir</div>
-        <div class="sub">Rekap harian</div>
+        <div class="lbl" data-lang="tidakHadir">Tidak Hadir</div>
+        <div class="sub" data-lang="tidakHadirSub">Rekap harian</div>
       </div>
     </div>
 
@@ -612,8 +556,8 @@
           <i class="fa-solid fa-book-open"></i>
         </div>
         <div class="big-info">
-          <h4>📚 Akademik</h4>
-          <p>Jadwal, absensi kelas, nilai, mahasiswa PA, silabus & pencapaian</p>
+          <h4 data-lang="akademik">📚 Akademik</h4>
+          <p data-lang="akademikSub">Jadwal, absensi kelas, nilai, mahasiswa PA, silabus & pencapaian</p>
         </div>
         <i class="fa-solid fa-chevron-right big-arrow"></i>
       </div>
@@ -624,38 +568,39 @@
           <i class="fa-solid fa-mosque"></i>
         </div>
         <div class="big-info">
-          <h4>🕌 Halaqoh & Tahfidz</h4>
-          <p>Anggota, absensi, setoran hafalan, ujian Quran & rekap progress</p>
+          <h4 data-lang="halaqohTahfidz">🕌 Halaqoh & Tahfidz</h4>
+          <p data-lang="halaqohTahfidzSub">Anggota, absensi, setoran hafalan, ujian Quran & rekap progress</p>
         </div>
         <i class="fa-solid fa-chevron-right big-arrow"></i>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation - DISAMAKAN -->
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-house"></i>
-      <span>Home</span>
+      <span data-lang="home">Home</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
       <i class="fa-solid fa-calendar-days"></i>
-      <span>Kalender</span>
+      <span data-lang="kalender">Kalender</span>
     </div>
     <div class="nav-item active" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-grip"></i>
-      <span>Menu</span>
+      <span data-lang="menu">Menu</span>
     </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
       <i class="fa-solid fa-chart-simple"></i>
-      <span>Rekap</span>
+      <span data-lang="rekap">Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
       <i class="fa-solid fa-circle-user"></i>
-      <span>Profil</span>
+      <span data-lang="profil">Profil</span>
     </div>
   </nav>
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -667,33 +612,56 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    // ALL MENU DATA - Mencakup menu dari halaqoh dan akademik
+    // ═══ MULTI LANGUAGE ═══
+    function cycleLang() {
+      const langs = ['id', 'en', 'ar'];
+      const current = getLang();
+      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
+      setLang(langs[nextIndex]);
+      updateLangIndicator();
+      // Re-run search if active
+      if (document.getElementById('searchInput').value.trim() !== '') {
+        filterMenu();
+      }
+    }
+    
+    function updateLangIndicator() {
+      const lang = getLang();
+      const indicator = document.getElementById('langIndicator');
+      if (lang === 'id') indicator.textContent = '🇮🇩';
+      else if (lang === 'en') indicator.textContent = '🇬🇧';
+      else if (lang === 'ar') indicator.textContent = '🇸🇦';
+    }
+    
+    updateLangIndicator();
+
+    // ═══ ALL MENU DATA ═══
     const allMenus = [
       // Menu Umum
-      { name: 'Absensi Sholat', category: 'Umum', icon: 'fa-mosque', color: 'blue', url: 'absensi.html' },
-      { name: 'Kinerjaku', category: 'Umum', icon: 'fa-clipboard-list', color: 'green', url: 'kinerja.html' },
-      { name: 'Rekap Tidak Hadir', category: 'Umum', icon: 'fa-user-xmark', color: 'orange', url: 'rekap-tidak-hadir-kelas.html' },
+      { nameKey: 'absensiSholat', categoryKey: 'menuUmum', icon: 'fa-mosque', color: 'blue', url: 'absensi.html' },
+      { nameKey: 'kinerjaku', categoryKey: 'menuUmum', icon: 'fa-clipboard-list', color: 'green', url: 'kinerja.html' },
+      { nameKey: 'tidakHadir', categoryKey: 'menuUmum', icon: 'fa-user-xmark', color: 'orange', url: 'rekap-tidak-hadir-kelas.html' },
       
       // Menu Akademik
-      { name: 'Jadwal Saya', category: 'Akademik', icon: 'fa-calendar-alt', color: 'blue', url: 'jadwal-saya.html' },
-      { name: 'Rekap Absensi Kelas', category: 'Akademik', icon: 'fa-clipboard-check', color: 'teal', url: 'rekap-absensi-kelas.html' },
-      { name: 'Input Nilai', category: 'Akademik', icon: 'fa-star', color: 'orange', url: 'nilai.html' },
-      { name: 'Rekap Nilai', category: 'Akademik', icon: 'fa-chart-line', color: 'purple', url: 'rekap-nilai-matkul.html' },
-      { name: 'Mahasiswa PA', category: 'Akademik', icon: 'fa-user-graduate', color: 'green', url: 'mahasiswa-bimbingan.html' },
-      { name: 'RPS', category: 'Akademik', icon: 'fa-file-alt', color: 'teal', url: 'silabus.html' },
-      { name: 'Pencapaian', category: 'Akademik', icon: 'fa-pen-to-square', color: 'gold', url: 'pencapaian.html' },
-      { name: 'Izin Dosen', category: 'Akademik', icon: 'fa-calendar-xmark', color: 'red', url: 'izin-dosen.html' },
+      { nameKey: 'jadwalSaya', categoryKey: 'akademik', icon: 'fa-calendar-alt', color: 'blue', url: 'jadwal-saya.html' },
+      { nameKey: 'absensiMK', categoryKey: 'akademik', icon: 'fa-clipboard-check', color: 'teal', url: 'rekap-absensi-kelas.html' },
+      { nameKey: 'inputNilai', categoryKey: 'akademik', icon: 'fa-star', color: 'orange', url: 'nilai.html' },
+      { nameKey: 'rekapNilai', categoryKey: 'akademik', icon: 'fa-chart-line', color: 'purple', url: 'rekap-nilai-matkul.html' },
+      { nameKey: 'mahasiswaPA', categoryKey: 'akademik', icon: 'fa-user-graduate', color: 'green', url: 'mahasiswa-bimbingan.html' },
+      { nameKey: 'silabus', categoryKey: 'akademik', icon: 'fa-file-alt', color: 'teal', url: 'silabus.html' },
+      { nameKey: 'pencapaian', categoryKey: 'akademik', icon: 'fa-pen-to-square', color: 'gold', url: 'pencapaian.html' },
+      { nameKey: 'izinDosen', categoryKey: 'akademik', icon: 'fa-calendar-xmark', color: 'red', url: 'izin-dosen.html' },
       
       // Menu Halaqoh
-      { name: 'Anggota Halaqoh', category: 'Halaqoh', icon: 'fa-users', color: 'orange', url: 'anggota-halaqohku.html' },
-      { name: 'Absensi Halaqoh', category: 'Halaqoh', icon: 'fa-clipboard-check', color: 'green', url: 'absensi-halaqoh.html' },
-      { name: 'Izin Tidak Hadir Halaqoh', category: 'Halaqoh', icon: 'fa-clock', color: 'red', url: 'izin-musyrif.html' },
-      { name: 'Setoran Hafalan', category: 'Halaqoh', icon: 'fa-book-open', color: 'purple', url: 'hafalan.html' },
-      { name: 'Ujian Quran', category: 'Halaqoh', icon: 'fa-quran', color: 'blue', url: 'ujian-quran.html' },
-      { name: 'Rekap Halaqoh', category: 'Halaqoh', icon: 'fa-chart-simple', color: 'gold', url: 'rekap-halaqoh.html' }
+      { nameKey: 'anggotaHalaqoh', categoryKey: 'halaqohTahfidz', icon: 'fa-users', color: 'orange', url: 'anggota-halaqohku.html' },
+      { nameKey: 'absensiHalaqoh', categoryKey: 'halaqohTahfidz', icon: 'fa-clipboard-check', color: 'green', url: 'absensi-halaqoh.html' },
+      { nameKey: 'izinHalaqoh', categoryKey: 'halaqohTahfidz', icon: 'fa-clock', color: 'red', url: 'izin-musyrif.html' },
+      { nameKey: 'setoranHafalan', categoryKey: 'halaqohTahfidz', icon: 'fa-book-open', color: 'purple', url: 'hafalan.html' },
+      { nameKey: 'ujianQuran', categoryKey: 'halaqohTahfidz', icon: 'fa-quran', color: 'blue', url: 'ujian-quran.html' },
+      { nameKey: 'rekapHalaqoh', categoryKey: 'halaqohTahfidz', icon: 'fa-chart-simple', color: 'gold', url: 'rekap-halaqoh.html' }
     ];
 
-    // Search Function dengan dropdown results
+    // ═══ SEARCH FUNCTION ═══
     window.filterMenu = function() {
       const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
       const resultsContainer = document.getElementById('searchResults');
@@ -704,13 +672,14 @@
         return;
       }
       
-      const filtered = allMenus.filter(menu => 
-        menu.name.toLowerCase().includes(searchTerm) || 
-        menu.category.toLowerCase().includes(searchTerm)
-      );
+      const filtered = allMenus.filter(menu => {
+        const name = t(menu.nameKey).toLowerCase();
+        const category = t(menu.categoryKey).toLowerCase();
+        return name.includes(searchTerm) || category.includes(searchTerm);
+      });
       
       if (filtered.length === 0) {
-        resultsContainer.innerHTML = '<div class="no-results">😔 Tidak ada menu ditemukan untuk "' + searchTerm + '"</div>';
+        resultsContainer.innerHTML = '<div class="no-results" data-lang="noMenuFound">😔 ' + t('noMenuFound') + ' "' + searchTerm + '"</div>';
       } else {
         resultsContainer.innerHTML = filtered.map(menu => `
           <div class="search-result-item" onclick="goTo('${menu.url}')">
@@ -718,8 +687,8 @@
               <i class="fa-solid ${menu.icon}"></i>
             </div>
             <div class="result-info">
-              <div class="result-name">${menu.name}</div>
-              <div class="result-category">📁 ${menu.category}</div>
+              <div class="result-name">${t(menu.nameKey)}</div>
+              <div class="result-category">📁 ${t(menu.categoryKey)}</div>
             </div>
             <i class="fa-solid fa-chevron-right result-arrow"></i>
           </div>
@@ -765,13 +734,12 @@
     // Close search results when clicking outside
     document.addEventListener('click', function(e) {
       const searchWrap = document.getElementById('searchWrap');
-      const resultsContainer = document.getElementById('searchResults');
       if (!searchWrap.contains(e.target)) {
-        resultsContainer.classList.remove('show');
+        document.getElementById('searchResults').classList.remove('show');
       }
     });
 
-    // Multi-bahasa
+    // Multi-bahasa initialization
     if (typeof applyLang === 'function') setTimeout(applyLang, 200);
   </script>
 </body>
