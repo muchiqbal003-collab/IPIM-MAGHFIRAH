@@ -15,7 +15,7 @@
       --gold:#f5c842;--gold-light:#fffbee;
       --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
       --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--orange:#f57c00;
+      --red:#e53935;--orange:#f57c00;--blue:#1565c0;--purple:#7b1fa2;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;
       --header-max-height:185px;--header-min-height:60px;
@@ -52,17 +52,23 @@
     .sholat-mini-right{font-size:10px;opacity:0.7;display:flex;align-items:center;gap:4px;}
 
     .shortcut-row{display:flex;gap:8px;}
-    .shortcut-item{flex:1;background:var(--white);border-radius:var(--radius-lg);padding:12px;border:0.5px solid var(--gray-200);display:flex;align-items:center;gap:10px;cursor:pointer;}
+    .shortcut-item{flex:1;background:var(--white);border-radius:var(--radius-lg);padding:12px;border:0.5px solid var(--gray-200);display:flex;align-items:center;gap:10px;cursor:pointer;transition:var(--transition);}
+    .shortcut-item:hover{box-shadow:0 2px 8px rgba(0,0,0,0.08);transform:translateY(-1px);}
+    .shortcut-item:active{transform:scale(0.98);}
     .shortcut-icon{width:38px;height:38px;border-radius:10px;background:var(--green-light);color:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
     .shortcut-icon.dzikir-icon{background:var(--gold-light);color:#a08000;}
     .shortcut-icon.red-icon{background:#fce4ec;color:#c62828;}
     .shortcut-icon.orange-icon{background:#fff3e0;color:#e65100;}
+    .shortcut-icon.blue-icon{background:#e3f2fd;color:#0d47a1;}
+    .shortcut-icon.purple-icon{background:#f3e5f5;color:#6a1b9a;}
     .shortcut-text{flex:1;min-width:0;}
     .shortcut-title{font-size:12px;font-weight:700;color:var(--gray-800);}
     .shortcut-badge{font-size:10px;color:var(--green-mid);font-weight:600;margin-top:1px;}
     .shortcut-badge.dzikir-badge{color:#a08000;}
     .shortcut-badge.red-badge{color:#c62828;}
     .shortcut-badge.orange-badge{color:#e65100;}
+    .shortcut-badge.blue-badge{color:#0d47a1;}
+    .shortcut-badge.purple-badge{color:#6a1b9a;}
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -212,6 +218,24 @@
         <div class="shortcut-text">
           <div class="shortcut-title">Rekap Tidak Hadir</div>
           <div class="shortcut-badge orange-badge">Halaqoh</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shortcut: Izin Dosen & Jadwal Saya -->
+    <div class="shortcut-row">
+      <div class="shortcut-item" onclick="goTo('izin-dosen.html')" style="border-left:3px solid var(--blue);">
+        <div class="shortcut-icon blue-icon"><i class="fa-solid fa-calendar-xmark"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title">Izin Dosen</div>
+          <div class="shortcut-badge blue-badge">Tidak Masuk</div>
+        </div>
+      </div>
+      <div class="shortcut-item" onclick="goTo('jadwal-saya.html')" style="border-left:3px solid var(--purple);">
+        <div class="shortcut-icon purple-icon"><i class="fa-solid fa-calendar-days"></i></div>
+        <div class="shortcut-text">
+          <div class="shortcut-title">Jadwal Saya</div>
+          <div class="shortcut-badge purple-badge">Lihat & Atur</div>
         </div>
       </div>
     </div>
