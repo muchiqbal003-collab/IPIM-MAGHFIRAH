@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Izin Dosen - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--white:#ffffff;
+      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
+      --gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--amber:#d97706;--blue:#2563eb;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    .jadwal-item {
+      display: flex; align-items: center; gap: 10px; padding: 12px;
+      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.5); margin-bottom: 8px;
+    }
+    .jadwal-time { font-size: 10px; font-weight: 700; background: var(--green-light); color: var(--green-dark); padding: 4px 10px; border-radius: 12px; white-space: nowrap; }
+    .jadwal-info { flex: 1; }
+    .jadwal-info strong { font-size: 13px; display: block; }
+    .jadwal-info span { font-size: 10px; color: var(--gray-600); }
+
+    .btn { padding: 9px 16px; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn-primary { background: linear-gradient(135deg, #004d40, #006644); color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 5px 10px; font-size: 10px; }
+    .btn-warning { background: #f59e0b; color: white; }
+
+    .form-group { margin-bottom: 10px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+
+    .badge { padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+    .badge-pending { background: #fff3e0; color: #e65100; }
+    .badge-disetujui { background: #e8f5e9; color: #1b5e20; }
+    .badge-ditolak { background: #fce4ec; color: #b71c1c; }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--gray-400); }
+
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; }
+    .toast.show { opacity: 1; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📝 Izin Dosen</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    function getLocalDate() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.className = 'toast show';
+      setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    async function loadData() {
+  const container = document.getElementById('mainContent');
+  const today = getLocalDate();
+  const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][new Date().getDay()];
+
+  try {
+    const jSnap = await db.collection('jadwal').where('dosenId','==',user.uid).where('hari','==',hari).get();
+    const jadwalHariIni = jSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.jamKe||0)-(b.jamKe||0));
+
+    const iSnap = await db.collection('izinDosen').where('dosenId','==',user.uid).where('tanggal','==',today).get();
+    const izinHariIni = iSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    let html = `<div class="card"><div class="card-title"><i class="fa-solid fa-calendar-day"></i> Jadwal Hari Ini — ${hari}, ${today}</div>`;
+
+    if (jadwalHariIni.length === 0) {
+      html += '<div class="empty-state">📭 Tidak ada jadwal hari ini</div>';
+    } else {
+      jadwalHariIni.forEach(j => {
+        const sudahIzin = izinHariIni.find(i => i.jadwalId === j.id);
+        html += `<div class="jadwal-item">
+          <div class="jadwal-time">JP ${j.jamKe||'-'}<br>${j.waktu||''}</div>
+          <div class="jadwal-info"><strong>${j.mkNama||'-'}</strong><span>${j.kelasNama||'-'}</span></div>`;
+        
+        if (sudahIzin) {
+          html += `<span class="badge badge-${sudahIzin.status}">${sudahIzin.status==='pending'?'⏳ Pending':sudahIzin.status==='disetujui'?'✅ Disetujui':'❌ Ditolak'}</span>`;
+        } else {
+          html += `<button class="btn btn-warning btn-sm" onclick="ajukanIzin('${j.id}','${j.mkNama||''}','${j.waktu||''}')">📝 Izin</button>`;
+        }
+        html += '</div>';
+      });
+    }
+    html += '</div>';
+
+    // ⬇️ RIWAYAT — FILTER MANUAL (HINDARI COMPOSITE INDEX)
+    const riwayatSnap = await db.collection('izinDosen').where('dosenId','==',user.uid).get();
+    const riwayatList = riwayatSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0))
+      .slice(0, 10);
+
+    if (riwayatList.length > 0) {
+      html += `<div class="card"><div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Izin</div>`;
+      riwayatList.forEach(iz => {
+        const badge = iz.status === 'pending' ? 'badge-pending' : iz.status === 'disetujui' ? 'badge-disetujui' : 'badge-ditolak';
+        html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12px;">
+          <div><strong>${iz.mkNama||'-'}</strong><br><small>${iz.tanggal} · JP ${iz.jamKe} · ${iz.alasan||'-'}</small></div>
+          <span class="badge ${badge}">${iz.status}</span>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state">❌ Gagal: ${e.message}</div>`;
+  }
+}
+    window.ajukanIzin = function(jadwalId, mkNama, waktu) {
+      const container = document.getElementById('mainContent');
+      const today = getLocalDate();
+
+      // Ambil daftar dosen pengganti
+      db.collection('users').where('role','in',['dosen','dosen-musyrif']).get().then(snap => {
+        const dosenOptions = snap.docs.filter(d => d.id !== user.uid).map(d => 
+          `<option value="${d.id}">${d.data().nama||d.data().email}</option>`
+        ).join('');
+
+        container.innerHTML = `
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-pen-to-square"></i> Ajukan Izin</div>
+            <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;">${mkNama} · ${waktu} · ${today}</p>
+            <div class="form-group"><label>Alasan</label><textarea id="alasanIzin" placeholder="Tulis alasan izin..."></textarea></div>
+            <div class="form-group"><label>Dosen Pengganti (opsional)</label><select id="penggantiId"><option value="">Tidak ada</option>${dosenOptions}</select></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline" onclick="loadData()" style="flex:1;">Batal</button>
+              <button class="btn btn-primary" onclick="simpanIzin('${jadwalId}','${mkNama}','${today}')" style="flex:1;">Kirim Izin</button>
+            </div>
+          </div>`;
+      });
+    };
+
+    window.simpanIzin = async function(jadwalId, mkNama, tanggal) {
+      const alasan = document.getElementById('alasanIzin').value.trim();
+      const penggantiId = document.getElementById('penggantiId').value;
+      if (!alasan) { showToast('Alasan wajib diisi!'); return; }
+
+      try {
+        // Ambil data jadwal untuk jamKe
+        const jDoc = await db.collection('jadwal').doc(jadwalId).get();
+        const jData = jDoc.exists ? jDoc.data() : {};
+
+        await db.collection('izinDosen').add({
+          dosenId: user.uid,
+          dosenNama: user.nama || '-',
+          jadwalId, mkNama, tanggal,
+          jamKe: jData.jamKe || 1,
+          waktu: jData.waktu || '',
+          alasan, penggantiId,
+          status: 'pending',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('✅ Izin berhasil diajukan!');
+        loadData();
+      } catch(e) { showToast('❌ Gagal: ' + e.message); }
+    };
+
+    loadData();
+  </script>
+</body>
+</html>
