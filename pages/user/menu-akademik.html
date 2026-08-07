@@ -6,7 +6,7 @@
   <title>Menu Akademik - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root { 
@@ -31,6 +31,11 @@
       padding-bottom: 100px; 
       -webkit-tap-highlight-color: transparent; 
       min-height: 100vh;
+    }
+    
+    body.lang-ar {
+      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+      direction: rtl;
     }
 
     .app-header { 
@@ -57,6 +62,21 @@
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
     }
+    .btn-lang {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+    }
     .app-header h3 { 
       font-size: 16px; font-weight: 700; flex: 1;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -67,7 +87,6 @@
       display: flex; flex-direction: column; gap: 14px; 
     }
 
-    /* Hero Card dengan Glass Effect */
     .hero-card {
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(20px) saturate(180%);
@@ -130,7 +149,6 @@
       line-height: 1.5;
     }
 
-    /* Menu Grid - Glass Cards */
     .menu-grid { 
       display: grid; 
       grid-template-columns: repeat(2, 1fr); 
@@ -250,7 +268,6 @@
       z-index: 1;
     }
 
-    /* Bottom Nav - Glass Morphism (DISAMAKAN) */
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
@@ -286,7 +303,6 @@
       background: var(--green); border-radius: 0 0 4px 4px; 
     }
 
-    /* Responsive */
     @media (min-width: 768px) {
       .content { max-width: 600px; }
       .menu-grid { gap: 12px; }
@@ -299,106 +315,106 @@
     <button class="btn-back" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
-    <h3>Menu Akademik</h3>
+    <h3 data-lang="akademikCenter">Akademik Center</h3>
+    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
+      <span id="langIndicator">🌐</span>
+    </button>
   </header>
 
   <div class="content">
-    <!-- Hero Card dengan Glass Effect -->
     <div class="hero-card">
-      <div class="icon"></div>
-      <h2>Akademik Center</h2>
-      <p>Kelola perkuliahan, absensi, nilai, & mahasiswa bimbingan dengan mudah</p>
+      <div class="icon"><i class="fa-solid fa-book-open"></i></div>
+      <h2 data-lang="akademikCenter">Akademik Center</h2>
+      <p data-lang="akademikCenterSub">Kelola perkuliahan, absensi, nilai, & mahasiswa bimbingan dengan mudah</p>
     </div>
 
-    <!-- Menu Grid - Glass Cards -->
     <div class="menu-grid">
       <div class="menu-card" onclick="goTo('jadwal-saya.html')">
         <div class="m-icon blue">
           <i class="fa-solid fa-calendar-alt"></i>
         </div>
-        <div class="m-label">Jadwal Saya</div>
-        <div class="m-sub">Lihat & atur jadwal</div>
+        <div class="m-label" data-lang="jadwalSaya">Jadwal Saya</div>
+        <div class="m-sub" data-lang="jadwalSayaSub">Lihat & atur jadwal</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-absensi-kelas.html')">
         <div class="m-icon teal">
           <i class="fa-solid fa-clipboard-check"></i>
         </div>
-        <div class="m-label">Rekap Absensi</div>
-        <div class="m-sub">Rekap absensi MK</div>
+        <div class="m-label" data-lang="absensiMK">Rekap Absensi</div>
+        <div class="m-sub" data-lang="absensiMKSub">Rekap absensi MK</div>
       </div>
       
       <div class="menu-card" onclick="goTo('nilai.html')">
         <div class="m-icon orange">
           <i class="fa-solid fa-star"></i>
         </div>
-        <div class="m-label">Input Nilai</div>
-        <div class="m-sub">Nilai mahasiswa</div>
+        <div class="m-label" data-lang="inputNilai">Input Nilai</div>
+        <div class="m-sub" data-lang="inputNilaiSub">Nilai mahasiswa</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-nilai-matkul.html')">
         <div class="m-icon purple">
           <i class="fa-solid fa-chart-line"></i>
         </div>
-        <div class="m-label">Rekap Nilai</div>
-        <div class="m-sub">Lihat rekap nilai</div>
+        <div class="m-label" data-lang="rekapNilai">Rekap Nilai</div>
+        <div class="m-sub" data-lang="rekapNilaiSub">Lihat rekap nilai</div>
       </div>
       
       <div class="menu-card" onclick="goTo('mahasiswa-bimbingan.html')">
         <div class="m-icon green">
           <i class="fa-solid fa-user-graduate"></i>
         </div>
-        <div class="m-label">Mahasiswa PA</div>
-        <div class="m-sub">Bimbingan akademik</div>
+        <div class="m-label" data-lang="mahasiswaPA">Mahasiswa PA</div>
+        <div class="m-sub" data-lang="mahasiswaPASub">Bimbingan akademik</div>
       </div>
       
       <div class="menu-card" onclick="goTo('silabus.html')">
         <div class="m-icon teal">
           <i class="fa-solid fa-file-alt"></i>
         </div>
-        <div class="m-label">RPS</div>
-        <div class="m-sub">RPS & materi</div>
+        <div class="m-label" data-lang="silabus">RPS</div>
+        <div class="m-sub" data-lang="silabusSub">RPS & materi</div>
       </div>
       
       <div class="menu-card" onclick="goTo('pencapaian.html')">
         <div class="m-icon gold">
           <i class="fa-solid fa-pen-to-square"></i>
         </div>
-        <div class="m-label">Pencapaian</div>
-        <div class="m-sub">Input capaian</div>
+        <div class="m-label" data-lang="pencapaian">Pencapaian</div>
+        <div class="m-sub" data-lang="pencapaianSub">Input capaian</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-tidak-hadir-kelas.html')">
         <div class="m-icon orange">
           <i class="fa-solid fa-user-xmark"></i>
         </div>
-        <div class="m-label">Tidak Hadir</div>
-        <div class="m-sub">Rekap ketidakhadiran</div>
+        <div class="m-label" data-lang="tidakHadir">Tidak Hadir</div>
+        <div class="m-sub" data-lang="tidakHadirSub">Rekap ketidakhadiran</div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation - DISAMAKAN -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-house"></i>
-      <span>Home</span>
+      <span data-lang="home">Home</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
       <i class="fa-solid fa-calendar-days"></i>
-      <span>Kalender</span>
+      <span data-lang="kalender">Kalender</span>
     </div>
     <div class="nav-item active" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-grip"></i>
-      <span>Menu</span>
+      <span data-lang="menu">Menu</span>
     </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
       <i class="fa-solid fa-chart-simple"></i>
-      <span>Rekap</span>
+      <span data-lang="rekap">Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
       <i class="fa-solid fa-circle-user"></i>
-      <span>Profil</span>
+      <span data-lang="profil">Profil</span>
     </div>
   </nav>
 
@@ -407,10 +423,30 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
+
+    function cycleLang() {
+      const langs = ['id', 'en', 'ar'];
+      const current = getLang();
+      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
+      setLang(langs[nextIndex]);
+      updateLangIndicator();
+    }
+    
+    function updateLangIndicator() {
+      const lang = getLang();
+      const indicator = document.getElementById('langIndicator');
+      if (lang === 'id') indicator.textContent = '🇮🇩';
+      else if (lang === 'en') indicator.textContent = '🇬🇧';
+      else if (lang === 'ar') indicator.textContent = '🇸🇦';
+    }
+    
+    updateLangIndicator();
+    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
   </script>
 </body>
 </html>
