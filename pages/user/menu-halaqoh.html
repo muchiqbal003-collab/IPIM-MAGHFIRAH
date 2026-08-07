@@ -6,7 +6,7 @@
   <title>Menu Halaqoh - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root { 
@@ -31,6 +31,11 @@
       padding-bottom: 100px; 
       -webkit-tap-highlight-color: transparent; 
       min-height: 100vh;
+    }
+    
+    body.lang-ar {
+      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+      direction: rtl;
     }
 
     .app-header { 
@@ -57,6 +62,21 @@
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
     }
+    .btn-lang {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+    }
     .app-header h3 { 
       font-size: 16px; font-weight: 700; flex: 1;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -67,7 +87,6 @@
       display: flex; flex-direction: column; gap: 14px; 
     }
 
-    /* Hero Card dengan Glass Effect */
     .hero-card {
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(20px) saturate(180%);
@@ -130,7 +149,6 @@
       line-height: 1.5;
     }
 
-    /* Menu Grid - Glass Cards */
     .menu-grid { 
       display: grid; 
       grid-template-columns: repeat(2, 1fr); 
@@ -250,7 +268,6 @@
       z-index: 1;
     }
 
-    /* Bottom Nav - Glass Morphism */
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
@@ -286,7 +303,6 @@
       background: var(--green); border-radius: 0 0 4px 4px; 
     }
 
-    /* Responsive */
     @media (min-width: 768px) {
       .content { max-width: 600px; }
       .menu-grid { gap: 12px; }
@@ -296,93 +312,93 @@
 <body>
 
   <header class="app-header">
-    <button class="btn-back" onclick="goTo('dashboard.html')">
+    <button class="btn-back" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
-    <h3>🕌 Menu Halaqoh</h3>
+    <h3 data-lang="halaqohCenter">Halaqoh & Tahfidz Center</h3>
+    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
+      <span id="langIndicator">🌐</span>
+    </button>
   </header>
 
   <div class="content">
-    <!-- Hero Card dengan Glass Effect -->
     <div class="hero-card">
-      <div class="icon"></div>
-      <h2>Halaqoh & Tahfidz Center</h2>
-      <p>Kelola halaqoh, absensi, hafalan, izin, & ujian Quran dengan mudah dan terstruktur</p>
+      <div class="icon"><i class="fa-solid fa-mosque"></i></div>
+      <h2 data-lang="halaqohCenter">Halaqoh & Tahfidz Center</h2>
+      <p data-lang="halaqohCenterSub">Kelola halaqoh, absensi, hafalan, izin, & ujian Quran dengan mudah dan terstruktur</p>
     </div>
 
-    <!-- Menu Grid - Glass Cards (Tanpa Laporan Kinerja & Rekap Tidak Hadir) -->
     <div class="menu-grid">
       <div class="menu-card" onclick="goTo('anggota-halaqohku.html')">
         <div class="m-icon orange">
           <i class="fa-solid fa-users"></i>
         </div>
-        <div class="m-label">Anggota Halaqoh</div>
-        <div class="m-sub">Lihat & kelola anggota</div>
+        <div class="m-label" data-lang="anggotaHalaqoh">Anggota Halaqoh</div>
+        <div class="m-sub" data-lang="anggotaHalaqohSub">Lihat & kelola anggota</div>
       </div>
       
       <div class="menu-card" onclick="goTo('absensi-halaqoh.html')">
         <div class="m-icon green">
           <i class="fa-solid fa-clipboard-check"></i>
         </div>
-        <div class="m-label">Absensi Halaqoh</div>
-        <div class="m-sub">Catat kehadiran santri</div>
+        <div class="m-label" data-lang="absensiHalaqoh">Absensi Halaqoh</div>
+        <div class="m-sub" data-lang="absensiHalaqohSub">Catat kehadiran santri</div>
       </div>
       
       <div class="menu-card" onclick="goTo('izin-musyrif.html')">
         <div class="m-icon red">
           <i class="fa-solid fa-clock"></i>
         </div>
-        <div class="m-label">Izin Tidak Hadir</div>
-        <div class="m-sub">Ajukan izin berhalangan</div>
+        <div class="m-label" data-lang="izinHalaqoh">Izin Tidak Hadir</div>
+        <div class="m-sub" data-lang="izinHalaqohSub">Ajukan izin berhalangan</div>
       </div>
       
       <div class="menu-card" onclick="goTo('hafalan.html')">
         <div class="m-icon purple">
           <i class="fa-solid fa-book-open"></i>
         </div>
-        <div class="m-label">Setoran Hafalan</div>
-        <div class="m-sub">Input & tracking hafalan</div>
+        <div class="m-label" data-lang="setoranHafalan">Setoran Hafalan</div>
+        <div class="m-sub" data-lang="setoranHafalanSub">Input & tracking hafalan</div>
       </div>
       
       <div class="menu-card" onclick="goTo('ujian-quran.html')">
         <div class="m-icon blue">
           <i class="fa-solid fa-quran"></i>
         </div>
-        <div class="m-label">Ujian Quran</div>
-        <div class="m-sub">Penilaian ujian Quran</div>
+        <div class="m-label" data-lang="ujianQuran">Ujian Quran</div>
+        <div class="m-sub" data-lang="ujianQuranSub">Penilaian ujian Quran</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-halaqoh.html')">
         <div class="m-icon gold">
           <i class="fa-solid fa-chart-simple"></i>
         </div>
-        <div class="m-label">Rekap Halaqoh</div>
-        <div class="m-sub">Progress & statistik</div>
+        <div class="m-label" data-lang="rekapHalaqoh">Rekap Halaqoh</div>
+        <div class="m-sub" data-lang="rekapHalaqohSub">Progress & statistik</div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-house"></i>
-      <span>Home</span>
+      <span data-lang="home">Home</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
       <i class="fa-solid fa-calendar-days"></i>
-      <span>Kalender</span>
+      <span data-lang="kalender">Kalender</span>
     </div>
-
-    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span></div>
-    
-
+    <div class="nav-item active" onclick="goTo('menu-cepat.html')">
+      <i class="fa-solid fa-grip"></i>
+      <span data-lang="menu">Menu</span>
+    </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
       <i class="fa-solid fa-chart-simple"></i>
-      <span>Rekap</span>
+      <span data-lang="rekap">Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
       <i class="fa-solid fa-circle-user"></i>
-      <span>Profil</span>
+      <span data-lang="profil">Profil</span>
     </div>
   </nav>
 
@@ -391,10 +407,30 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['musyrif', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
+
+    function cycleLang() {
+      const langs = ['id', 'en', 'ar'];
+      const current = getLang();
+      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
+      setLang(langs[nextIndex]);
+      updateLangIndicator();
+    }
+    
+    function updateLangIndicator() {
+      const lang = getLang();
+      const indicator = document.getElementById('langIndicator');
+      if (lang === 'id') indicator.textContent = '🇮🇩';
+      else if (lang === 'en') indicator.textContent = '🇬🇧';
+      else if (lang === 'ar') indicator.textContent = '🇸🇦';
+    }
+    
+    updateLangIndicator();
+    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
   </script>
 </body>
 </html>
