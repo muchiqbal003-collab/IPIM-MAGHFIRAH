@@ -143,9 +143,8 @@
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
     <div class="nav-item active" onclick="goTo('absensi-halaqoh.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')">
-      <i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span>
-    </div><div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
     <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
   </nav>
 
@@ -167,6 +166,14 @@
     let isPengganti = false;
     let anggotaList = [];
 
+    // ═══ HELPER: Tanggal WIB (hindari timezone UTC) ═══
+    function getLocalDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formatter = new Intl.DateTimeFormat('en-CA', options);
+      return formatter.format(now);
+    }
+
     function showToast(msg, type = '') {
       const el = document.getElementById('toast');
       el.textContent = msg; el.className = `toast ${type} show`;
@@ -176,10 +183,14 @@
     function updateSummary() {
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
       Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
-      document.getElementById('sumHadir').textContent = counts.hadir;
-      document.getElementById('sumSakit').textContent = counts.sakit;
-      document.getElementById('sumIzin').textContent = counts.izin;
-      document.getElementById('sumAlfa').textContent = counts.alfa;
+      const elHadir = document.getElementById('sumHadir');
+      const elSakit = document.getElementById('sumSakit');
+      const elIzin = document.getElementById('sumIzin');
+      const elAlfa = document.getElementById('sumAlfa');
+      if (elHadir) elHadir.textContent = counts.hadir;
+      if (elSakit) elSakit.textContent = counts.sakit;
+      if (elIzin) elIzin.textContent = counts.izin;
+      if (elAlfa) elAlfa.textContent = counts.alfa;
     }
 
     window.setStatus = function(mhsId, status) {
@@ -203,11 +214,10 @@
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDate();
         const batch = db.batch();
 
         for (const [mhsId, status] of Object.entries(absensiState)) {
-          // Cek existing absensi hari ini
           const existingSnap = await db.collection('absensiHalaqoh')
             .where('mahasiswaId', '==', mhsId)
             .where('halaqohId', '==', halaqohId)
@@ -255,16 +265,13 @@
       container.innerHTML = '<p style="text-align:center;">Mencari halaqoh...</p>';
 
       try {
-        // 1. Cari sebagai musyrif tetap
         let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
         if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
 
-        // 2. Jika tidak ada → cek sebagai pengganti
         if (hSnap.empty) {
           const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
           
           if (!penggantiSnap.empty) {
-            // Tampilkan pilihan halaqoh
             isPengganti = true;
             let html = `
               <div class="info-box">
@@ -296,7 +303,6 @@
           return;
         }
 
-        // 3. Musyrif tetap
         isPengganti = false;
         halaqohId = hSnap.docs[0].id;
         halaqohData = hSnap.docs[0].data();
@@ -306,7 +312,6 @@
       }
     }
 
-    // ═══ PILIH HALAQOH (PENGGANTI) ═══
     window.pilihHalaqoh = async function(hId) {
       const container = document.getElementById('mainContent');
       container.innerHTML = '<p style="text-align:center;">Memuat anggota...</p>';
@@ -323,12 +328,10 @@
       }
     };
 
-    // ═══ LOAD ANGGOTA ═══
     async function loadAnggota(container) {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDate();
 
       try {
-        // Ambil anggota halaqoh
         const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
         const mhsIds = pSnap.docs.map(d => d.data().mahasiswaId);
 
@@ -337,7 +340,6 @@
           return;
         }
 
-        // Ambil data mahasiswa
         const mhsList = [];
         for (const id of mhsIds) {
           const doc = await db.collection('mahasiswa').doc(id).get();
@@ -346,7 +348,6 @@
         mhsList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
         anggotaList = mhsList;
 
-        // Cek absensi hari ini
         const absensiSnap = await db.collection('absensiHalaqoh')
           .where('halaqohId', '==', halaqohId)
           .where('tanggal', '==', today)
@@ -357,10 +358,8 @@
           if (data.mahasiswaId) existingMap[data.mahasiswaId] = data.status;
         });
 
-        // Set state
         mhsList.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
 
-        // Hitung summary
         const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
         Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
 
@@ -370,7 +369,6 @@
         document.getElementById('headerTitle').textContent = halaqohData.nama || 'Absensi Halaqoh';
         document.getElementById('headerSub').textContent = `${anggotaList.length} anggota · ${today}`;
 
-        // Render list
         let listHtml = '';
         mhsList.forEach((m, i) => {
           const status = absensiState[m.id];
@@ -414,7 +412,6 @@
       }
     }
 
-    // Expose simpanAbsensi ke global
     window.simpanAbsensi = simpanAbsensi;
 
     init();
