@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Izin Tidak Hadir - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;--orange:#f57c00;--orange-light:#fff3e0;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px; -webkit-tap-highlight-color: transparent; min-height: 100vh; }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+    .content { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+    .card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg); padding: 18px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06); }
+    .info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 12px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }
+    .btn-primary { background: linear-gradient(135deg, #004d40, #006644); color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-danger { background: var(--red); color: white; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 5px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--green); }
+    .izin-item { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .izin-item .tgl { font-weight: 700; color: var(--orange); }
+    .izin-item .ket { color: var(--gray-600); font-size: 11px; }
+    .bottom-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 420px; height: 64px; background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; } .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📝 Izin Tidak Hadir</h3>
+  </header>
+
+  <div class="content">
+    <div class="info-box">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Jika berhalangan hadir, isi izin di sini. Operator akan melihatnya.</span>
+    </div>
+
+    <!-- Form Izin -->
+    <div class="card">
+      <h4 style="margin-bottom:12px;font-size:14px;">➕ Tambah Izin</h4>
+      <div class="form-group"><label>📅 Tanggal</label><input type="date" id="izinTanggal"></div>
+      <div class="form-group"><label>📝 Keterangan</label><textarea id="izinKet" placeholder="Alasan tidak hadir..."></textarea></div>
+      <button class="btn btn-primary" onclick="simpanIzin()"><i class="fa-solid fa-paper-plane"></i> Kirim Izin</button>
+    </div>
+
+    <!-- Riwayat Izin -->
+    <div class="card">
+      <h4 style="margin-bottom:12px;font-size:14px;">📋 Riwayat Izin Saya</h4>
+      <div id="riwayatIzin"><p style="color:var(--gray-600);font-size:13px;">Memuat...</p></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
+    <div class="nav-item active" onclick="goTo('izin-musyrif.html')"><i class="fa-solid fa-clock"></i><span>Izin</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['musyrif', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    document.getElementById('izinTanggal').value = new Date().toISOString().split('T')[0];
+
+    async function loadIzin() {
+      try {
+        const snap = await db.collection('izinMusyrif')
+          .where('musyrifId', '==', user.uid)
+          .orderBy('tanggal', 'desc')
+          .get();
+        
+        const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const container = document.getElementById('riwayatIzin');
+        
+        if (data.length === 0) {
+          container.innerHTML = '<p style="color:var(--gray-600);font-size:13px;">Belum ada riwayat izin</p>';
+          return;
+        }
+
+        container.innerHTML = data.map(d => `
+          <div class="izin-item">
+            <div>
+              <span class="tgl">📅 ${d.tanggal}</span>
+              <div class="ket">${d.keterangan || '-'}</div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="color:var(--red);" onclick="hapusIzin('${d.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `).join('');
+      } catch(e) { console.error(e); }
+    }
+
+    window.simpanIzin = async () => {
+      const tanggal = document.getElementById('izinTanggal').value;
+      const keterangan = document.getElementById('izinKet').value.trim();
+      
+      if (!tanggal) { alert('⚠️ Pilih tanggal!'); return; }
+      if (!keterangan) { alert('⚠️ Isi keterangan!'); return; }
+
+      // Cek apakah sudah ada izin di tanggal yang sama
+      const existingSnap = await db.collection('izinMusyrif')
+        .where('musyrifId', '==', user.uid)
+        .where('tanggal', '==', tanggal)
+        .get();
+      
+      if (!existingSnap.empty) {
+        alert('⚠️ Anda sudah mengajukan izin di tanggal ini!');
+        return;
+      }
+
+      try {
+        await db.collection('izinMusyrif').add({
+          musyrifId: user.uid,
+          musyrifNama: user.nama || '-',
+          tanggal,
+          keterangan,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert('✅ Izin berhasil dikirim!');
+        document.getElementById('izinKet').value = '';
+        await loadIzin();
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    window.hapusIzin = async (id) => {
+      if (!confirm('Hapus izin ini?')) return;
+      await db.collection('izinMusyrif').doc(id).delete();
+      alert('🗑️ Dihapus!');
+      await loadIzin();
+    };
+
+    loadIzin();
+  </script>
+</body>
+</html>
