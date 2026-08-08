@@ -15,9 +15,10 @@
       --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
       --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
       --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
+      --blue: #1e88e5; --blue-light: #e3f2fd; --orange: #f57c00;
       --sidebar-width: 260px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
@@ -39,7 +40,7 @@
     .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
     .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
 
-    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 28px; }
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
     .page-title h1 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
     .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
@@ -47,13 +48,43 @@
     .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
     .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-info { background: var(--blue-light); color: var(--blue); }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
     .action-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-    .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 20px; }
+    .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; }
     .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .card-header h3 { font-size: 14px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
     .card-body { padding: 20px; overflow-x: auto; }
+
+    /* Dashboard */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: white; border-radius: var(--radius-lg); padding: 18px; border: 1px solid var(--gray-200); text-align: center; transition: var(--transition); }
+    .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .stat-card .val { font-size: 28px; font-weight: 800; color: var(--green-dark); }
+    .stat-card .lbl { font-size: 11px; color: var(--gray-600); margin-top: 4px; }
+    .stat-card .sub { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+
+    /* Kelas Cards */
+    .kelas-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .kelas-card-item {
+      background: white; border-radius: var(--radius-lg); padding: 16px;
+      border: 1px solid var(--gray-200); transition: var(--transition);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .kelas-card-item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--green); }
+    .kelas-card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
+    .kelas-card-icon.green { background: var(--green-light); color: var(--green-dark); }
+    .kelas-card-icon.gold { background: var(--gold-light); color: #8d6e00; }
+    .kelas-card-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .kelas-card-icon.orange { background: #fff3e0; color: var(--orange); }
+    .kelas-card-info { flex: 1; }
+    .kelas-card-info .nama { font-weight: 700; font-size: 14px; }
+    .kelas-card-info .detail { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+    .kelas-card-info .count { font-size: 20px; font-weight: 800; color: var(--green-dark); margin-top: 4px; }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -70,20 +101,16 @@
     .alert-success { background: var(--green-light); color: #1b5e20; }
     .alert-error { background: var(--red-light); color: #b71c1c; }
 
-    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 16px 12px; } .form-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .kelas-cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } .form-grid { grid-template-columns: 1fr 1fr; } .kelas-cards { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div>
-    </div>
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
     <nav class="sidebar-nav">
-      <div class="nav-section"><div class="nav-section-title">Utama</div>
-        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a>
-      </div>
+      <div class="nav-section"><div class="nav-section-title">Utama</div><a href="dashboard.html" class="nav-item"><i class="fa-solid fa-grid-2"></i> Home</a></div>
       <div class="nav-section"><div class="nav-section-title">Master Data</div>
         <a href="dosen.html" class="nav-item"><i class="fa-solid fa-chalkboard-user"></i> Data Dosen</a>
         <a href="mahasiswa.html" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Data Mahasiswa</a>
@@ -91,51 +118,54 @@
         <a href="matakuliah.html" class="nav-item"><i class="fa-solid fa-book"></i> Data Matakuliah</a>
         <a href="kelas.html" class="nav-item active"><i class="fa-solid fa-school"></i> Data Kelas</a>
         <a href="jadwal.html" class="nav-item"><i class="fa-solid fa-clock"></i> Data Jadwal</a>
+        <a href="generate-jadwal.html" class="nav-item"><i class="fa-solid fa-shuffle"></i> Generate Jadwal</a>
         <a href="jadwal-tabel.html" class="nav-item"><i class="fa-solid fa-table"></i> Tabel Jadwal</a>
         <a href="pembagian-kelas.html" class="nav-item"><i class="fa-solid fa-people-arrows"></i> Pembagian Kelas</a>
-     
       </div>
       <div class="nav-section"><div class="nav-section-title">Akademik</div>
         <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
         <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Nilai</a>
-           
         <a href="rekap-laporan.html" class="nav-item"><i class="fa-solid fa-file-lines"></i> Rekap Laporan Dosen</a>
         <a href="kalender.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Kalender Akademik</a>
       </div>
     </nav>
-    <div class="sidebar-footer">
-      <div class="user-avatar" id="avatarLetter">A</div>
-      <div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div>
-    </div>
+    <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
   </aside>
 
-
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>🏫 Data Kelas</h1><p>Kelola kelas / rombongan belajar</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar"><div class="page-title"><h1>🏫 Data Kelas</h1><p>Dashboard · Jumlah Mahasiswa · Share WA</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
     <div id="alertSuccess" class="alert alert-success"></div>
     <div id="alertError" class="alert alert-error"></div>
 
+    <!-- DASHBOARD STATS -->
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <!-- KELAS CARDS -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-layer-group"></i> Jumlah Mahasiswa per Kelas</h3>
+        <button class="btn btn-info btn-sm" onclick="shareWA()"><i class="fa-brands fa-whatsapp"></i> Share WA</button>
+      </div>
+      <div class="card-body">
+        <div class="kelas-cards" id="kelasCards"></div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
     <div class="action-bar">
       <button class="btn btn-primary btn-sm" onclick="showForm()"><i class="fa-solid fa-plus"></i> Tambah</button>
       <button class="btn btn-outline btn-sm" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       <input type="text" id="searchInput" placeholder="🔍 Cari..." style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;margin-left:auto;max-width:200px;" onkeyup="filterTable()">
     </div>
 
+    <!-- FORM -->
     <div class="card" id="formCard" style="display:none;">
       <div class="card-header"><h3 id="formTitle"><i class="fa-solid fa-plus-circle"></i> Tambah Kelas</h3></div>
       <div class="card-body">
         <form id="kelasForm">
           <div class="form-grid">
             <div class="form-group"><label>Nama Kelas</label><input type="text" id="nama" placeholder="7A" required></div>
-            <div class="form-group">
-              <label>Semester</label>
-              <select id="semester" required>
-                <option value="">Pilih Semester...</option>
-                <option value="idad">I'dad</option>
-                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
-              </select>
-            </div>
+            <div class="form-group"><label>Semester</label><select id="semester" required><option value="">Pilih...</option><option value="idad">I'dad</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div>
             <div class="form-group"><label>Prodi</label><select id="prodiId" required><option value="">Pilih Prodi...</option></select></div>
             <div class="form-group"><label>Wali Kelas (Dosen)</label><select id="waliDosenId"><option value="">Pilih Dosen...</option></select></div>
             <div class="form-group"><label>&nbsp;</label><div style="display:flex;gap:8px;"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Simpan</button><button type="button" class="btn btn-outline btn-sm" onclick="hideForm()">Batal</button></div></div>
@@ -145,6 +175,7 @@
       </div>
     </div>
 
+    <!-- TABEL -->
     <div class="card">
       <div class="card-header"><h3><i class="fa-solid fa-list"></i> Daftar Kelas (<span id="totalData">0</span>)</h3></div>
       <div class="card-body" id="tableContainer"><p style="text-align:center;color:var(--gray-400);">Memuat data...</p></div>
@@ -163,30 +194,86 @@
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
     let allData = [];
-    function showAlert(type, text) { const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1)); el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 4000); }
+    let mhsCountMap = {};
+    let totalMhs = 0;
+
+    function showAlert(type, text) { const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1)); if(el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 4000); } }
     function showForm() { document.getElementById('formCard').style.display = 'block'; document.getElementById('formCard').scrollIntoView({behavior:'smooth'}); }
     function hideForm() { document.getElementById('formCard').style.display = 'none'; resetForm(); }
     function resetForm() { document.getElementById('kelasForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-plus-circle"></i> Tambah Kelas'; }
 
     async function loadOptions() {
-      const [prodiSnap, dosenSnap] = await Promise.all([db.collection('prodi').orderBy('nama').get(), db.collection('dosen').get()]);
+      const [prodiSnap, usersSnap] = await Promise.all([
+        db.collection('prodi').orderBy('nama').get(),
+        db.collection('users').where('role', 'in', ['dosen', 'dosen-musyrif']).get()
+      ]);
       const prodiSel = document.getElementById('prodiId'); prodiSel.innerHTML = '<option value="">Pilih Prodi...</option>';
       prodiSnap.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; prodiSel.appendChild(o); });
       const dosenSel = document.getElementById('waliDosenId'); dosenSel.innerHTML = '<option value="">Pilih Dosen...</option>';
-      dosenSnap.docs.sort((a,b) => (a.data().nama||'').localeCompare(b.data().nama||'')).forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; dosenSel.appendChild(o); });
+      usersSnap.docs.sort((a,b) => (a.data().nama||'').localeCompare(b.data().nama||'')).forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; dosenSel.appendChild(o); });
     }
 
     async function loadData() {
-      const snap = await db.collection('kelas').get();
-      allData = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => { const o = {idad:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8}; return (o[a.semester]??99) - (o[b.semester]??99) || (a.nama||'').localeCompare(b.nama||''); });
-      document.getElementById('totalData').textContent = allData.length;
-      renderTable(allData);
+      try {
+        const [kelasSnap, mhsSnap] = await Promise.all([
+          db.collection('kelas').get(),
+          db.collection('mahasiswa').get()
+        ]);
+
+        // Hitung jumlah mahasiswa per kelas
+        mhsCountMap = {};
+        totalMhs = 0;
+        mhsSnap.forEach(d => {
+          const mhs = d.data();
+          if (mhs.kelasId) {
+            mhsCountMap[mhs.kelasId] = (mhsCountMap[mhs.kelasId] || 0) + 1;
+            totalMhs++;
+          }
+        });
+
+        allData = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const semOrder = {idad:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8};
+        allData.sort((a,b) => (semOrder[a.semester]??99) - (semOrder[b.semester]??99) || (a.nama||'').localeCompare(b.nama||''));
+
+        // Stats
+        const totalKelas = allData.length;
+        const kelasTerisi = allData.filter(k => (mhsCountMap[k.id] || 0) > 0).length;
+        const rataMhs = totalKelas > 0 ? Math.round(totalMhs / totalKelas) : 0;
+
+        document.getElementById('statsGrid').innerHTML = `
+          <div class="stat-card"><div class="val">${totalKelas}</div><div class="lbl">Total Kelas</div></div>
+          <div class="stat-card"><div class="val">${totalMhs}</div><div class="lbl">Total Mahasiswa</div><div class="sub">di semua kelas</div></div>
+          <div class="stat-card"><div class="val">${kelasTerisi}</div><div class="lbl">Kelas Terisi</div><div class="sub">memiliki mahasiswa</div></div>
+          <div class="stat-card"><div class="val">${rataMhs}</div><div class="lbl">Rata² Mhs/Kelas</div></div>
+        `;
+
+        // Kelas Cards
+        const iconColors = ['green', 'gold', 'blue', 'orange'];
+        document.getElementById('kelasCards').innerHTML = allData.map((k, i) => {
+          const count = mhsCountMap[k.id] || 0;
+          const iconClass = iconColors[i % iconColors.length];
+          return `<div class="kelas-card-item">
+            <div class="kelas-card-icon ${iconClass}"><i class="fa-solid fa-users"></i></div>
+            <div class="kelas-card-info">
+              <div class="nama">${k.nama}</div>
+              <div class="detail">${k.semester==='idad'?"I'dad":'Semester '+k.semester} · ${k.prodiNama||'-'}</div>
+              <div class="count">${count} <span style="font-size:11px;font-weight:400;">mhs</span></div>
+            </div>
+          </div>`;
+        }).join('') || '<p style="text-align:center;padding:20px;">Belum ada kelas</p>';
+
+        document.getElementById('totalData').textContent = allData.length;
+        renderTable(allData);
+      } catch(e) { console.error(e); }
     }
 
     function renderTable(data) {
-      let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Semester</th><th>Prodi</th><th>Wali Kelas</th><th>Aksi</th></tr></thead><tbody>';
-      if (data.length === 0) html += '<tr><td colspan="6" style="text-align:center;padding:20px;">Tidak ada data</td></tr>';
-      else data.forEach((d, i) => { html += `<tr><td>${i+1}</td><td><strong>${d.nama}</strong></td><td>${d.semester==='idad'?"I'dad":d.semester}</td><td>${d.prodiNama||'-'}</td><td>${d.waliDosenNama||'-'}</td><td><button class="btn btn-primary btn-sm" onclick="editKelas('${d.id}')"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusKelas('${d.id}','${d.nama}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+      let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Semester</th><th>Prodi</th><th>Wali Kelas</th><th>Mhs</th><th>Aksi</th></tr></thead><tbody>';
+      if (data.length === 0) html += '<tr><td colspan="7" style="text-align:center;padding:20px;">Tidak ada data</td></tr>';
+      else data.forEach((d, i) => {
+        const count = mhsCountMap[d.id] || 0;
+        html += `<tr><td>${i+1}</td><td><strong>${d.nama}</strong></td><td>${d.semester==='idad'?"I'dad":d.semester}</td><td>${d.prodiNama||'-'}</td><td>${d.waliDosenNama||'-'}</td><td><strong>${count}</strong></td><td><button class="btn btn-primary btn-sm" onclick="editKelas('${d.id}')"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusKelas('${d.id}','${d.nama}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+      });
       html += '</tbody></table>'; document.getElementById('tableContainer').innerHTML = html;
     }
 
@@ -202,7 +289,7 @@
       if (!nama || !semester || !prodiId) { showAlert('error', 'Nama, Semester, dan Prodi wajib!'); return; }
       let prodiNama = '-', waliDosenNama = '-';
       try { const p = await db.collection('prodi').doc(prodiId).get(); if(p.exists) prodiNama = p.data().nama; } catch(e) {}
-      if (waliDosenId) { try { const d = await db.collection('dosen').doc(waliDosenId).get(); if(d.exists) waliDosenNama = d.data().nama; } catch(e) {} }
+      if (waliDosenId) { try { const d = await db.collection('users').doc(waliDosenId).get(); if(d.exists) waliDosenNama = d.data().nama; } catch(e) {} }
       const btn = this.querySelector('button[type="submit"]'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       try {
         const data = { nama, semester, prodiId, prodiNama, waliDosenId, waliDosenNama, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
@@ -216,7 +303,24 @@
     window.editKelas = async function(id) { const doc = await db.collection('kelas').doc(id).get(); if(!doc.exists) return; const d = doc.data(); document.getElementById('nama').value = d.nama; document.getElementById('semester').value = d.semester; document.getElementById('prodiId').value = d.prodiId; document.getElementById('waliDosenId').value = d.waliDosenId||''; document.getElementById('editId').value = id; document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Kelas'; showForm(); };
     window.hapusKelas = async function(id, nama) { if(!confirm(`Hapus ${nama}?`)) return; await db.collection('kelas').doc(id).delete(); showAlert('success', 'Dihapus!'); loadData(); };
 
-    function exportCSV() { if (allData.length === 0) { alert('Tidak ada data!'); return; } let csv = 'Nama,Semester,Prodi,Wali Kelas\n'; allData.forEach(d => { csv += `"${d.nama}","${d.semester}","${d.prodiNama}","${d.waliDosenNama}"\n`; }); const blob = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data-kelas.csv'; a.click(); }
+    // ═══ SHARE WA ═══
+    window.shareWA = function() {
+      const totalKelas = allData.length;
+      let text = `🏫 *DATA KELAS IPIM*\n━━━━━━━━━━━━━━━━\n`;
+      text += `📋 Total Kelas: *${totalKelas}*\n`;
+      text += `👨‍🎓 Total Mahasiswa: *${totalMhs}*\n\n`;
+      text += `📊 *JUMLAH MAHASISWA PER KELAS:*\n`;
+      
+      allData.forEach((k, i) => {
+        const count = mhsCountMap[k.id] || 0;
+        text += `${i+1}. *${k.nama}* (${k.semester==='idad'?"I'dad":'Sem '+k.semester}): *${count} mhs*\n`;
+      });
+      
+      text += `\n━━━━━━━━━━━━━━━━\n© IPIM Maghfirah`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    };
+
+    function exportCSV() { if (allData.length === 0) { alert('Tidak ada data!'); return; } let csv = 'Nama,Semester,Prodi,Wali Kelas,Jumlah Mhs\n'; allData.forEach(d => { csv += `"${d.nama}","${d.semester}","${d.prodiNama}","${d.waliDosenNama}","${mhsCountMap[d.id]||0}"\n`; }); const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data-kelas.csv'; a.click(); }
     window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
 
     loadOptions(); loadData();
