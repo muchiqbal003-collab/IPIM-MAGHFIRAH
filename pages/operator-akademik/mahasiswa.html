@@ -33,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* ─── MOBILE MENU TOGGLE ─── */
     .mobile-menu-toggle {
       display: none;
       position: fixed;
@@ -53,7 +52,6 @@
       justify-content: center;
     }
 
-    /* ─── SIDEBAR OVERLAY ─── */
     .sidebar-overlay {
       display: none;
       position: fixed;
@@ -68,7 +66,6 @@
       opacity: 1;
     }
 
-    /* ─── SIDEBAR ─── */
     .sidebar {
       width: var(--sidebar-width);
       background: var(--green-dark);
@@ -131,7 +128,6 @@
     .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
     .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
 
-    /* ─── MAIN CONTENT ─── */
     .main-content {
       margin-left: var(--sidebar-width);
       flex: 1;
@@ -141,7 +137,6 @@
       transition: margin-left 0.3s ease, max-width 0.3s ease;
     }
 
-    /* ─── TOPBAR ─── */
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -176,7 +171,6 @@
       padding-left: 50px;
     }
 
-    /* ─── BUTTONS ─── */
     .btn {
       padding: 9px 16px;
       border: none;
@@ -205,7 +199,6 @@
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
     .btn-outline:hover { border-color: var(--gray-300); background: var(--gray-50); }
 
-    /* ─── STATS GRID ─── */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -258,7 +251,6 @@
     }
     .stat-label { font-size: 11px; color: var(--gray-400); }
 
-    /* ─── CARD ─── */
     .card {
       background: var(--white);
       border-radius: var(--radius-lg);
@@ -285,7 +277,6 @@
     .card-header h3 i { color: var(--green); }
     .card-body { padding: 20px; }
 
-    /* ─── FORM ─── */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -323,7 +314,6 @@
     }
     .form-group input::placeholder { color: var(--gray-400); }
 
-    /* ─── FILTER ─── */
     .filter-row {
       display: flex;
       gap: 12px;
@@ -331,7 +321,7 @@
       align-items: flex-end;
     }
     .filter-row .form-group {
-      min-width: 150px;
+      min-width: 140px;
       flex: 1;
     }
     .search-wrap { position: relative; }
@@ -345,7 +335,6 @@
     }
     .search-wrap input { padding-left: 34px !important; }
 
-    /* ─── ACTION BAR ─── */
     .action-bar {
       display: flex;
       gap: 10px;
@@ -360,7 +349,6 @@
       margin: 0 4px;
     }
 
-    /* ─── TABLE ─── */
     .table-responsive {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -397,7 +385,6 @@
     .cell-name { font-weight: 600; color: var(--gray-800); }
     .cell-num { color: var(--gray-400); font-size: 12px; text-align: center; }
 
-    /* ─── BADGE ─── */
     .badge {
       padding: 4px 10px;
       border-radius: 20px;
@@ -421,7 +408,6 @@
     .badge-lulus { background: var(--blue-light); color: #0d47a1; }
     .badge-lulus::before { background: var(--blue); }
 
-    /* ─── ALERT ─── */
     .alert {
       padding: 12px 18px;
       border-radius: var(--radius-sm);
@@ -437,7 +423,6 @@
     .alert-success { background: var(--green-light); color: #1b5e20; border-color: var(--green); }
     .alert-error { background: var(--red-light); color: #b71c1c; border-color: var(--red); }
 
-    /* ─── MODAL ─── */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -528,7 +513,6 @@
     }
     .modal-warning i { margin-top: 2px; flex-shrink: 0; }
 
-    /* ─── EMPTY STATE ─── */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -541,7 +525,6 @@
     }
     .empty-state p { color: var(--gray-400); font-size: 14px; }
 
-    /* ─── JK CHIP ─── */
     .jk-chip {
       display: inline-flex;
       align-items: center;
@@ -561,7 +544,6 @@
     .jk-chip.L .dot { background: var(--blue-light); color: #0d47a1; }
     .jk-chip.P .dot { background: var(--red-light); color: #880e4f; }
 
-    /* ─── RESPONSIVE ─── */
     @media (max-width: 1200px) {
       .main-content { padding: 24px 20px; }
       .form-grid { grid-template-columns: repeat(3, 1fr); }
@@ -616,15 +598,12 @@
 </head>
 <body>
 
-  <!-- MOBILE MENU TOGGLE -->
   <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
     <i class="fa-solid fa-bars"></i>
   </button>
 
-  <!-- SIDEBAR OVERLAY -->
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
@@ -664,10 +643,8 @@
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content" id="mainContent">
 
-    <!-- TOPBAR -->
     <div class="topbar">
       <div class="page-title">
         <h1><span class="icon-badge"><i class="fa-solid fa-user-graduate"></i></span> Data Mahasiswa</h1>
@@ -676,11 +653,9 @@
       <button class="btn btn-outline btn-sm" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     </div>
 
-    <!-- ALERT -->
     <div id="alertSuccess" class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <span id="alertSuccessMsg"></span></div>
     <div id="alertError" class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <span id="alertErrorMsg"></span></div>
 
-    <!-- STATS -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-card-header"><span>Total</span><div class="stat-icon green"><i class="fa-solid fa-users"></i></div></div>
@@ -719,6 +694,12 @@
             <label>Status</label>
             <select id="filterStatus" onchange="renderTable()">
               <option value="">Semua</option><option value="aktif">Aktif</option><option value="nonaktif">Non-Aktif</option><option value="lulus">Lulus</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Angkatan</label>
+            <select id="filterAngkatan" onchange="renderTable()">
+              <option value="">Semua Angkatan</option>
             </select>
           </div>
           <div class="form-group">
@@ -812,7 +793,6 @@
   <script src="../../js/app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    // ─── SIDEBAR TOGGLE ───
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
@@ -893,6 +873,20 @@
           kelasSel.appendChild(o);
           kelasMap[d.id] = d.data().nama;
         });
+
+        // Populate Angkatan
+        const angkatanSet = new Set();
+        allData.forEach(d => {
+          if (d.angkatan) angkatanSet.add(String(d.angkatan));
+        });
+        const angkatanSel = document.getElementById('filterAngkatan');
+        angkatanSel.innerHTML = '<option value="">Semua Angkatan</option>';
+        [...angkatanSet].sort().forEach(a => {
+          const o = document.createElement('option');
+          o.value = a;
+          o.textContent = 'Angkatan ' + a;
+          angkatanSel.appendChild(o);
+        });
       } catch(e) { console.error(e); }
     }
 
@@ -902,6 +896,8 @@
         allData = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
         updateStats();
         renderTable();
+        // Reload options untuk populate angkatan
+        await loadOptions();
       } catch(e) {
         console.error(e);
         showAlert('error', 'Gagal memuat data: ' + e.message);
@@ -919,12 +915,14 @@
       const kelasFilter = document.getElementById('filterKelas').value;
       const jkFilter = document.getElementById('filterJK').value;
       const statusFilter = document.getElementById('filterStatus').value;
+      const angkatanFilter = document.getElementById('filterAngkatan')?.value || '';
       const search = document.getElementById('searchInput').value.toLowerCase();
 
       let filtered = [...allData];
       if (kelasFilter) filtered = filtered.filter(d => d.kelasId === kelasFilter);
       if (jkFilter) filtered = filtered.filter(d => d.jk === jkFilter);
       if (statusFilter) filtered = filtered.filter(d => d.status === statusFilter);
+      if (angkatanFilter) filtered = filtered.filter(d => String(d.angkatan) === angkatanFilter);
       if (search) filtered = filtered.filter(d => (d.nim||'').toLowerCase().includes(search) || (d.nama||'').toLowerCase().includes(search));
 
       document.getElementById('totalData').textContent = filtered.length;
@@ -1192,7 +1190,6 @@
       }
     };
 
-    loadOptions();
     loadData();
   </script>
 </body>
