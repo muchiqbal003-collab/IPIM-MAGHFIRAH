@@ -54,7 +54,7 @@
     thead th { background: var(--gray-50); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
     tbody td { padding: 7px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
     tbody tr.highlight { background: #fce4ec; }
-    tbody td:first-child { text-align: left; }
+    tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
 
     .badge { padding: 3px 10px; border-radius: 12px; font-size: 9px; font-weight: 600; }
     .badge-red { background: var(--red-light); color: #b71c1c; }
@@ -63,6 +63,7 @@
     .badge-sakit { background: #fef3c7; color: #92400e; }
     .badge-izin { background: #dbeafe; color: #1e40af; }
     .badge-alfa { background: #fce4ec; color: #991b1b; }
+    .badge-hari { background: #fce4ec; color: #b71c1c; font-weight: 700; }
 
     .top-list { display: flex; flex-direction: column; gap: 6px; }
     .top-item { display: flex; align-items: center; gap: 10px; padding: 8px; background: var(--gray-50); border-radius: var(--radius-sm); }
@@ -90,7 +91,7 @@
 
   <main class="main-content">
     <div class="topbar">
-      <div class="page-title"><h1>📊 Rekap Absensi Pekanan</h1><p>Filter tanggal · Share WA · Top Jarang Hadir</p></div>
+      <div class="page-title"><h1>📊 Rekap Absensi Pekanan</h1><p>Filter tanggal · Hari & JP · Share WA</p></div>
       <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     </div>
 
@@ -125,11 +126,19 @@
       <div class="widget-body"><div class="top-list" id="topTidakHadir"></div></div>
     </div>
 
-    <!-- Detail Tidak Hadir per Tanggal -->
+    <!-- Tabel Detail -->
     <div class="widget">
-      <div class="widget-header"><i class="fa-solid fa-table"></i> 📋 Mahasiswa Tidak Hadir (Filter Tanggal)</div>
+      <div class="widget-header"><i class="fa-solid fa-table"></i> 📋 Detail Tidak Hadir — Hari & JP</div>
       <div class="widget-body" style="overflow-x:auto;">
-        <div id="tidakHadirList"><p style="text-align:center;color:var(--gray-400);">Memuat...</p></div>
+        <table id="tableDetail">
+          <thead><tr>
+            <th>No</th><th>Nama</th><th>Kelas</th><th>MK</th>
+            <th>Hari Tidak Hadir</th><th>Total JP</th>
+            <th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th>
+            <th>% Hadir</th>
+          </tr></thead>
+          <tbody><tr><td colspan="11">Memuat...</td></tr></tbody>
+        </table>
       </div>
     </div>
   </main>
@@ -250,13 +259,14 @@
           options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // ═══ TOP JARANG HADIR (group by mahasiswa) ═══
+        // ═══ TOP JARANG HADIR ═══
         const mhsGroup = {};
         absensiList.filter(a => a.status && a.status !== 'hadir').forEach(a => {
           const key = a.mahasiswaId;
-          if (!mhsGroup[key]) mhsGroup[key] = { sakit:0, izin:0, alfa:0, jaga:0, total:0, kelasId: a.kelasId, mkMap: {} };
+          if (!mhsGroup[key]) mhsGroup[key] = { sakit:0, izin:0, alfa:0, jaga:0, total:0, kelasId: a.kelasId, mkMap: {}, hariSet: new Set() };
           mhsGroup[key][a.status] = (mhsGroup[key][a.status]||0)+1;
           mhsGroup[key].total++;
+          mhsGroup[key].hariSet.add(a.tanggal);
           const mkId = a.mapelId || a.mkId;
           mhsGroup[key].mkMap[mkId] = (mhsGroup[key].mkMap[mkId]||0)+1;
         });
@@ -273,35 +283,51 @@
           if(d.jaga>0) statusStr.push(`🛡️${d.jaga}`);
           return `<div class="top-item">
             <div class="top-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-rest'}">${i+1}</div>
-            <div style="flex:1;"><strong>${m.nama||id}</strong><br><small>${m.kelasNama||'-'} · ${mkStr}</small></div>
+            <div style="flex:1;"><strong>${m.nama||id}</strong><br><small>${m.kelasNama||'-'} · ${d.hariSet.size} hari · ${mkStr}</small></div>
             <div style="display:flex;gap:3px;flex-wrap:wrap;">${statusStr.map(s=>`<span class="badge badge-${s.includes('🤒')?'sakit':s.includes('📝')?'izin':s.includes('❌')?'alfa':'sakit'}">${s}</span>`).join('')}</div>
-            <span class="badge badge-red">${d.total}x</span>
+            <span class="badge badge-red">${d.total} JP</span>
           </div>`;
         }).join('') || '<p style="text-align:center;">✅ Tidak ada mahasiswa tidak hadir</p>';
 
-        // ═══ DAFTAR TIDAK HADIR PER TANGGAL (grup by mahasiswa + matkul) ═══
+        // ═══ TABEL DETAIL: HARI & JP ═══
         const detailMap = {};
         absensiList.filter(a => a.status && a.status !== 'hadir').forEach(a => {
           const key = `${a.mahasiswaId}_${a.mapelId||a.mkId}`;
-          if (!detailMap[key]) detailMap[key] = { mahasiswaId: a.mahasiswaId, mkId: a.mapelId||a.mkId, kelasId: a.kelasId, sakit:0, izin:0, alfa:0, jaga:0, total:0 };
+          if (!detailMap[key]) {
+            detailMap[key] = { 
+              mahasiswaId: a.mahasiswaId, mkId: a.mapelId||a.mkId, kelasId: a.kelasId,
+              sakit:0, izin:0, alfa:0, jaga:0, totalTidak:0, hariSet: new Set() 
+            };
+          }
           detailMap[key][a.status] = (detailMap[key][a.status]||0)+1;
-          detailMap[key].total++;
+          detailMap[key].totalTidak++;
+          detailMap[key].hariSet.add(a.tanggal);
         });
 
-        globalTidakHadirList = Object.values(detailMap).sort((a,b) => b.total-a.total);
+        globalTidakHadirList = Object.values(detailMap).map(d => {
+          const totalTidak = d.sakit + d.izin + d.alfa + (d.jaga||0);
+          const totalJPSemua = absensiList.filter(a => 
+            a.mahasiswaId === d.mahasiswaId && (a.mapelId||a.mkId) === d.mkId
+          ).length;
+          const hadir = Math.max(0, totalJPSemua - totalTidak);
+          const pct = totalJPSemua > 0 ? Math.round((hadir/totalJPSemua)*100) : 0;
+          return { ...d, hadir, totalTidak, pct, hariTidakHadir: d.hariSet.size, totalJP: totalTidak, totalJPSemua };
+        }).sort((a,b) => b.hariTidakHadir - a.hariTidakHadir || b.totalJP - a.totalJP).slice(0, 30);
 
-        document.getElementById('tidakHadirList').innerHTML = globalTidakHadirList.length === 0
-          ? '<p style="text-align:center;">✅ Tidak ada mahasiswa tidak hadir dalam rentang tanggal ini</p>'
-          : `<table><thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Matakuliah</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th><th>Total</th></tr></thead><tbody>
-          ${globalTidakHadirList.map((d,i) => {
-            const m = mhsMapGlobal[d.mahasiswaId] || {};
-            const mk = mkMapGlobal[d.mkId] || {};
-            return `<tr>
-              <td>${i+1}</td><td style="text-align:left;"><strong>${m.nama||'-'}</strong></td><td>${m.kelasNama||'-'}</td><td>${mk.nama||'-'}</td>
-              <td>${d.sakit||0}</td><td>${d.izin||0}</td><td>${d.alfa||0}</td><td>${d.jaga||0}</td>
-              <td><strong>${d.total}</strong></td>
-            </tr>`;
-          }).join('')}</tbody></table>`;
+        document.querySelector('#tableDetail tbody').innerHTML = globalTidakHadirList.map((d, i) => {
+          const m = mhsMapGlobal[d.mahasiswaId] || {};
+          const mk = mkMapGlobal[d.mkId] || {};
+          return `<tr class="${d.pct < 60 ? 'highlight' : ''}">
+            <td>${i+1}</td>
+            <td><strong>${m.nama||'-'}</strong></td>
+            <td>${m.kelasNama||'-'}</td>
+            <td>${mk.nama||'-'}</td>
+            <td><span class="badge badge-hari">${d.hariTidakHadir} hari</span></td>
+            <td><strong>${d.totalJP} JP</strong></td>
+            <td>${d.sakit||0}</td><td>${d.izin||0}</td><td>${d.alfa||0}</td><td>${d.jaga||0}</td>
+            <td><span class="badge ${d.pct>=80?'badge-green':d.pct>=60?'badge-orange':'badge-red'}">${d.pct}%</span></td>
+          </tr>`;
+        }).join('') || '<tr><td colspan="11">Tidak ada data</td></tr>';
 
       } catch(e) { console.error(e); }
     }
@@ -309,15 +335,11 @@
     // ═══ SHARE WA ═══
     window.shareWA = function() {
       const { totalAbsensi, totalMhs, persenHadir, mhsTidakHadirCount, start, end } = currentStats;
-      
       let text = `📊 *REKAP ABSENSI*\n📅 ${start} s/d ${end}\n━━━━━━━━━━━━━━━━\n`;
-      text += `📋 Total Absensi: *${totalAbsensi}*\n`;
-      text += `👨‍🎓 Mahasiswa: *${totalMhs}*\n`;
-      text += `✅ Kehadiran: *${persenHadir}%*\n`;
-      text += `👤 Mhs Tidak Hadir: *${mhsTidakHadirCount} orang*\n\n`;
+      text += `📋 Total Absensi: *${totalAbsensi}*\n👨‍🎓 Mahasiswa: *${totalMhs}*\n✅ Kehadiran: *${persenHadir}%*\n👤 Mhs Tidak Hadir: *${mhsTidakHadirCount} orang*\n\n`;
 
       if (globalTidakHadirList.length > 0) {
-        text += `📋 *DAFTAR TIDAK HADIR:*\n`;
+        text += `📋 *DAFTAR TIDAK HADIR (Hari & JP):*\n`;
         globalTidakHadirList.forEach((d, i) => {
           const m = mhsMapGlobal[d.mahasiswaId] || {};
           const mk = mkMapGlobal[d.mkId] || {};
@@ -326,15 +348,9 @@
           if(d.izin>0) statusStr.push(`Izin:${d.izin}`);
           if(d.alfa>0) statusStr.push(`Alfa:${d.alfa}`);
           if(d.jaga>0) statusStr.push(`Jaga:${d.jaga}`);
-          
-          text += `${i+1}. *${m.nama||'-'}* - ${m.kelasNama||'-'}\n`;
-          text += `   📚 ${mk.nama||'-'}\n`;
-          text += `   ${statusStr.join(' | ')}\n`;
+          text += `${i+1}. *${m.nama||'-'}* - ${m.kelasNama||'-'}\n   📚 ${mk.nama||'-'} | ${d.hariTidakHadir} hari | ${d.totalJP} JP\n   ${statusStr.join(' | ')}\n`;
         });
-      } else {
-        text += `✅ Semua mahasiswa hadir!\n`;
-      }
-
+      } else { text += `✅ Semua mahasiswa hadir!\n`; }
       text += `\n━━━━━━━━━━━━━━━━\n© IPIM Maghfirah`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
@@ -345,7 +361,9 @@
         const mk = mkMapGlobal[d.mkId] || {};
         return {
           Nama: m.nama||'-', Kelas: m.kelasNama||'-', MK: mk.nama||'-',
-          Sakit: d.sakit||0, Izin: d.izin||0, Alfa: d.alfa||0, Jaga: d.jaga||0, Total: d.total
+          HariTidakHadir: d.hariTidakHadir, TotalJP: d.totalJP,
+          Sakit: d.sakit||0, Izin: d.izin||0, Alfa: d.alfa||0, Jaga: d.jaga||0,
+          Persentase: d.pct+'%'
         };
       });
       const ws = XLSX.utils.json_to_sheet(data);
