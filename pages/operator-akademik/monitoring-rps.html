@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring RPS - Operator Akademik IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --red-light: #fce4ec; --blue: #1565c0; --blue-light: #e3f2fd; --sidebar-width: 260px; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: #f0f4f3; color: var(--gray-800); display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; } .sidebar-brand span { font-size: 10px; opacity: 0.6; }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; } .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; }
+    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .page-title h1 { font-size: 22px; font-weight: 700; } .page-title p { font-size: 13px; color: var(--gray-600); }
+    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); } .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+    .card-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px; overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: var(--gray-50); padding: 10px; text-align: left; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
+    tbody td { padding: 10px; border-bottom: 1px solid var(--gray-100); }
+    tbody tr:hover { background: var(--gray-50); cursor: pointer; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+    .badge-green { background: var(--green-light); color: #1b5e20; }
+    .badge-yellow { background: #fff3e0; color: #e65100; }
+    .badge-red { background: var(--red-light); color: #b71c1c; }
+    .badge-blue { background: var(--blue-light); color: var(--blue); }
+
+    .progress-bar { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+    .progress-fill { height: 100%; border-radius: 4px; }
+    .fill-green { background: var(--green); } .fill-yellow { background: #f59e0b; } .fill-red { background: var(--red); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section"><div class="nav-section-title">Akademik</div>
+        <a href="monitoring-rps.html" class="nav-item active"><i class="fa-solid fa-book-open"></i> Monitoring RPS</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar"><div class="page-title"><h1>📊 Monitoring RPS</h1><p>Pantau RPS yang dibuat oleh dosen</p></div><button class="btn btn-outline" onclick="logout()">🚪 Keluar</button></div>
+
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-list"></i> Daftar RPS Dosen</h3></div>
+      <div class="card-body">
+        <div style="margin-bottom:12px;display:flex;gap:8px;">
+          <span style="font-size:11px;"><span class="badge badge-green">Lengkap</span> ≥80%</span>
+          <span style="font-size:11px;"><span class="badge badge-yellow">Proses</span> 30-79%</span>
+          <span style="font-size:11px;"><span class="badge badge-red">Kosong</span> &lt;30%</span>
+        </div>
+        <table id="tableRPS">
+          <thead><tr><th>No</th><th>Dosen</th><th>Matakuliah</th><th>Kode</th><th>Semester</th><th>Terisi</th><th>Total</th><th>Progress</th><th>Status</th></tr></thead>
+          <tbody><tr><td colspan="9">Memuat...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Detail RPS -->
+    <div class="card" id="detailCard" style="display:none;">
+      <div class="card-header"><h3 id="detailTitle"><i class="fa-solid fa-eye"></i> Detail RPS</h3><button class="btn btn-outline btn-sm" onclick="tutupDetail()">← Tutup</button></div>
+      <div class="card-body" id="detailContent"></div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['operator-akademik', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+    document.getElementById('sidebarName').textContent = user.nama || 'Operator';
+    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
+
+    let allRPS = [];
+
+    async function loadData() {
+      const snap = await db.collection('rps').get();
+      allRPS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector('#tableRPS tbody');
+      if (allRPS.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada RPS</td></tr>';
+        return;
+      }
+
+      allRPS.sort((a,b) => (a.dosenNama||'').localeCompare(b.dosenNama||''));
+
+      tbody.innerHTML = allRPS.map((r, i) => {
+        const total = r.totalPertemuan || 16;
+        const terisi = (r.pertemuan || []).filter(p => p.materi && p.materi.trim()).length;
+        const pct = Math.round((terisi/total)*100);
+        const badge = pct >= 80 ? 'badge-green' : pct >= 30 ? 'badge-yellow' : 'badge-red';
+        const status = pct >= 80 ? 'Lengkap' : pct >= 30 ? 'Proses' : 'Kosong';
+        const fill = pct >= 80 ? 'fill-green' : pct >= 30 ? 'fill-yellow' : 'fill-red';
+
+        return `<tr onclick="lihatDetail('${r.id}')">
+          <td>${i+1}</td>
+          <td><strong>${r.dosenNama||'-'}</strong></td>
+          <td>${r.mkNama||'-'}</td>
+          <td>${r.mkKode||'-'}</td>
+          <td>${r.semester||'-'}</td>
+          <td>${terisi}</td>
+          <td>${total}</td>
+          <td><div class="progress-bar"><div class="progress-fill ${fill}" style="width:${pct}%"></div></div><small>${pct}%</small></td>
+          <td><span class="badge ${badge}">${status}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    window.lihatDetail = function(rpsId) {
+      const rps = allRPS.find(r => r.id === rpsId);
+      if (!rps) return;
+
+      document.getElementById('detailTitle').innerHTML = `<i class="fa-solid fa-eye"></i> RPS: ${rps.mkNama} - ${rps.dosenNama}`;
+      document.getElementById('detailContent').innerHTML = `
+        <p style="margin-bottom:8px;"><strong>📅 Semester:</strong> ${rps.semester||'-'} · <strong>Total:</strong> ${rps.totalPertemuan} pertemuan</p>
+        <table><thead><tr><th>No</th><th>Materi</th><th>Indikator</th><th>Status</th></tr></thead><tbody>
+          ${(rps.pertemuan||[]).map(p => `
+            <tr><td>${p.ke}</td><td>${p.materi||'<span style="color:var(--red);">Kosong</span>'}</td><td>${p.indikator||'-'}</td><td>${p.materi?'<span class="badge badge-green">✅</span>':'<span class="badge badge-red">❌</span>'}</td></tr>
+          `).join('')}
+        </tbody></table>`;
+      document.getElementById('detailCard').style.display = 'block';
+      document.getElementById('detailCard').scrollIntoView({behavior:'smooth'});
+    };
+
+    window.tutupDetail = function() {
+      document.getElementById('detailCard').style.display = 'none';
+    };
+
+    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    loadData();
+  </script>
+</body>
+</html>
