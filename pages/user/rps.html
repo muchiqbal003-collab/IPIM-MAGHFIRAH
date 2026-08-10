@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>RPS - Rencana Pembelajaran Semester - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--white:#ffffff;
+      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
+      --gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --purple:#6a1b9a;--purple-light:#f3e5f5;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.2s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 15px; font-weight: 700; flex: 1; }
+    .content { padding: 14px; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .card { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg); padding: 16px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 2px 12px rgba(0,61,51,0.06); }
+    .btn { padding: 10px 20px; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }
+    .btn-primary { background: linear-gradient(135deg, #004d40, #006644); color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+    .btn-danger { background: var(--red); color: white; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--gray-600); margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+
+    .rps-list { display: flex; flex-direction: column; gap: 8px; }
+    .rps-item { padding: 12px 14px; background: rgba(255,255,255,0.5); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.5); cursor: pointer; transition: var(--transition); }
+    .rps-item:active { transform: scale(0.98); }
+    .rps-item h4 { font-size: 13px; font-weight: 700; color: var(--green-dark); }
+    .rps-item .meta { font-size: 10px; color: var(--gray-600); margin-top: 3px; }
+    .rps-item .progress { margin-top: 6px; height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+    .rps-item .progress-fill { height: 100%; border-radius: 3px; background: var(--green); }
+
+    .pertemuan-list { display: flex; flex-direction: column; gap: 8px; }
+    .pertemuan-item { padding: 10px 12px; background: var(--gray-50); border-radius: var(--radius-sm); border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+    .pertemuan-item .p-num { font-weight: 700; color: var(--green-dark); min-width: 80px; }
+    .pertemuan-item .p-materi { flex: 1; font-size: 12px; }
+
+    .bottom-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 420px; height: 64px; background: rgba(255,255,255,0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.7); border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100; box-shadow: 0 8px 32px rgba(0,61,51,0.1); padding: 0 8px; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); }
+
+    @media (max-width: 480px) { .content { padding: 10px; } }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📖 RPS - Rencana Pembelajaran</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
+    <div class="nav-item active" onclick="goTo('rps.html')"><i class="fa-solid fa-book-open"></i><span>RPS</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    let rpsList = [], mkMap = {};
+
+    async function loadData() {
+      try {
+        // Load matakuliah
+        const mkSnap = await db.collection('matakuliah').get();
+        mkMap = {};
+        mkSnap.forEach(d => { mkMap[d.id] = d.data(); });
+
+        // Load RPS milik dosen ini
+        const rpsSnap = await db.collection('rps').where('dosenId','==',user.uid).get();
+        rpsList = rpsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        
+        renderMain();
+      } catch(e) { console.error(e); }
+    }
+
+    function renderMain() {
+      const container = document.getElementById('mainContent');
+      
+      // Cari matakuliah yang belum ada RPS-nya
+      const sudahDibuat = new Set(rpsList.map(r => r.mkId));
+      
+      let html = `
+        <div class="card">
+          <h4 style="margin-bottom:10px;font-size:14px;">➕ Buat RPS Baru</h4>
+          <div class="form-group"><label>📚 Matakuliah</label>
+            <select id="mkId" onchange="cekRPS()">
+              <option value="">Pilih Matakuliah...</option>
+              ${Object.entries(mkMap).sort((a,b)=>a[1].nama.localeCompare(b[1].nama)).map(([id,m]) => 
+                `<option value="${id}" ${sudahDibuat.has(id)?'disabled':''}>${m.kode||''} - ${m.nama} ${sudahDibuat.has(id)?'(Sudah ada)':''}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="form-group"><label>🔢 Jumlah Pertemuan</label><input type="number" id="totalPertemuan" value="16" min="1" max="30"></div>
+          <div class="form-group"><label>📅 Semester</label><input type="text" id="semester" placeholder="Ganjil 2026/2027"></div>
+          <button class="btn btn-primary" onclick="buatRPS()"><i class="fa-solid fa-plus"></i> Buat RPS</button>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:10px;font-size:14px;">📋 Daftar RPS Saya</h4>
+          <div class="rps-list">
+            ${rpsList.length === 0 ? '<p style="text-align:center;color:var(--gray-600);">Belum ada RPS</p>' : 
+              rpsList.map(r => {
+                const mk = mkMap[r.mkId] || {};
+                const total = r.totalPertemuan || 16;
+                const terisi = (r.pertemuan || []).filter(p => p.materi && p.materi.trim()).length;
+                const pct = Math.round((terisi/total)*100);
+                return `<div class="rps-item" onclick="bukaRPS('${r.id}')">
+                  <h4>📖 ${mk.nama||'Matakuliah'} (${mk.kode||''})</h4>
+                  <div class="meta">📅 ${r.semester||'-'} · ${terisi}/${total} pertemuan terisi</div>
+                  <div class="progress"><div class="progress-fill" style="width:${pct}%"></div></div>
+                </div>`;
+              }).join('')
+            }
+          </div>
+        </div>`;
+
+      container.innerHTML = html;
+    }
+
+    window.cekRPS = function() {
+      // Cuma info aja, sudah di-handle oleh disabled option
+    };
+
+    window.buatRPS = async function() {
+      const mkId = document.getElementById('mkId').value;
+      const totalPertemuan = parseInt(document.getElementById('totalPertemuan').value);
+      const semester = document.getElementById('semester').value.trim();
+      
+      if (!mkId) { alert('Pilih matakuliah!'); return; }
+      if (!semester) { alert('Isi semester!'); return; }
+
+      const mk = mkMap[mkId];
+      
+      // Buat array pertemuan kosong
+      const pertemuan = [];
+      for (let i = 1; i <= totalPertemuan; i++) {
+        pertemuan.push({ ke: i, materi: '', indikator: '', tanggal: '' });
+      }
+
+      try {
+        await db.collection('rps').add({
+          dosenId: user.uid,
+          dosenNama: user.nama || '-',
+          mkId,
+          mkNama: mk.nama || '-',
+          mkKode: mk.kode || '',
+          semester,
+          totalPertemuan,
+          pertemuan,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert('✅ RPS berhasil dibuat!');
+        await loadData();
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    // ═══ BUKA DETAIL RPS ═══
+    window.bukaRPS = function(rpsId) {
+      const rps = rpsList.find(r => r.id === rpsId);
+      if (!rps) return;
+
+      const mk = mkMap[rps.mkId] || {};
+      const pertemuan = rps.pertemuan || [];
+      const terisi = pertemuan.filter(p => p.materi && p.materi.trim()).length;
+
+      let html = `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <h4 style="font-size:14px;">📖 ${mk.nama} (${mk.kode||''})</h4>
+            <button class="btn btn-outline btn-sm" onclick="renderMain()">← Kembali</button>
+          </div>
+          <p style="font-size:11px;color:var(--gray-600);">📅 Semester: ${rps.semester||'-'} · ${terisi}/${rps.totalPertemuan} terisi</p>
+          
+          <div class="pertemuan-list" style="margin-top:12px;">
+            ${pertemuan.map((p, i) => `
+              <div class="pertemuan-item">
+                <div class="p-num">📌 Pertemuan ${p.ke}</div>
+                <div class="p-materi">
+                  <input type="text" id="materi_${i}" value="${p.materi||''}" placeholder="Materi pertemuan ${p.ke}..." style="width:100%;padding:6px 10px;border:1px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                  <input type="text" id="indikator_${i}" value="${p.indikator||''}" placeholder="Indikator/capaian..." style="width:100%;padding:6px 10px;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;margin-top:4px;">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
+            <button class="btn btn-danger btn-sm" onclick="hapusRPS('${rps.id}')">🗑️ Hapus</button>
+            <button class="btn btn-primary btn-sm" onclick="simpanRPS('${rps.id}', ${rps.totalPertemuan})">💾 Simpan</button>
+          </div>
+        </div>`;
+
+      document.getElementById('mainContent').innerHTML = html;
+    };
+
+    // ═══ SIMPAN RPS ═══
+    window.simpanRPS = async function(rpsId, totalPertemuan) {
+      const pertemuan = [];
+      for (let i = 0; i < totalPertemuan; i++) {
+        pertemuan.push({
+          ke: i+1,
+          materi: document.getElementById(`materi_${i}`)?.value || '',
+          indikator: document.getElementById(`indikator_${i}`)?.value || ''
+        });
+      }
+
+      try {
+        await db.collection('rps').doc(rpsId).update({
+          pertemuan,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert('✅ RPS disimpan!');
+        await loadData();
+        // Buka kembali detail
+        setTimeout(() => bukaRPS(rpsId), 500);
+      } catch(e) { alert('❌ Gagal: ' + e.message); }
+    };
+
+    window.hapusRPS = async function(rpsId) {
+      if (!confirm('Hapus RPS ini?')) return;
+      await db.collection('rps').doc(rpsId).delete();
+      alert('🗑️ Dihapus!');
+      await loadData();
+    };
+
+    loadData();
+  </script>
+</body>
+</html>
