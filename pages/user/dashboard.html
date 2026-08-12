@@ -17,136 +17,293 @@
       --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
       --red:#e53935;--orange:#f57c00;--blue:#1565c0;--purple:#7b1fa2;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
-      --transition:all 0.3s ease;
       --header-max-height:185px;--header-min-height:60px;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--green-pale);color:var(--gray-800);padding-top:var(--header-max-height);padding-bottom:100px;transition:padding-top 0.3s ease;-webkit-tap-highlight-color:transparent;}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:#f0faf5;
+      color:var(--gray-800);
+      padding-top:var(--header-max-height);
+      padding-bottom:100px;
+      transition:padding-top 0.3s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
     body.scrolled{padding-top:var(--header-min-height);}
-    body.lang-ar{font-family:'Noto Sans Arabic','Plus Jakarta Sans',sans-serif;}
+    body.lang-ar{
+      font-family:'Noto Sans Arabic','Plus Jakarta Sans',sans-serif;
+      direction:rtl;
+    }
 
-    .app-header{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(135deg,#003d33 0%,#006644 100%);color:white;box-shadow:0 4px 20px rgba(0,61,51,0.35);transition:all 0.3s ease;overflow:hidden;height:var(--header-max-height);}
+    .app-header{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      background:rgba(0,61,51,0.85);
+      backdrop-filter:blur(20px) saturate(180%);
+      -webkit-backdrop-filter:blur(20px) saturate(180%);
+      color:white;
+      box-shadow:0 4px 30px rgba(0,61,51,0.2);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      transition:all 0.3s ease;
+      overflow:hidden;
+      height:var(--header-max-height);
+    }
     .app-header.scrolled{height:var(--header-min-height);}
-    .header-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;height:58px;}
+    .header-top{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 16px;height:58px;
+    }
     .header-logo{display:flex;align-items:center;gap:9px;}
-    .logo-icon-wrap{width:34px;height:34px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+    .logo-icon-wrap{
+      width:34px;height:34px;
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:9px;
+      display:flex;align-items:center;justify-content:center;
+    }
     .logo-icon-wrap i{font-size:16px;color:var(--gold);}
     .header-logo span{font-size:13px;font-weight:700;color:#fff;}
     .header-actions{display:flex;align-items:center;gap:10px;}
-    .icon-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:white;font-size:16px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .header-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--green-dark);font-weight:800;font-size:14px;cursor:pointer;border:2px solid rgba(255,255,255,0.45);overflow:hidden;}
+    .icon-btn{
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.18);
+      color:white;font-size:16px;
+      width:36px;height:36px;border-radius:50%;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+    }
+    .header-avatar{
+      width:36px;height:36px;border-radius:50%;
+      background:var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--green-dark);font-weight:800;font-size:14px;
+      cursor:pointer;border:2px solid rgba(255,255,255,0.45);
+      overflow:hidden;
+    }
     .header-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-    .header-info{padding:2px 16px 14px;transition:all 0.3s ease;opacity:1;max-height:130px;}
+    .header-info{
+      padding:2px 16px 14px;
+      transition:all 0.3s ease;opacity:1;max-height:130px;
+    }
     .app-header.scrolled .header-info{opacity:0;max-height:0;padding:0;}
     .header-greeting h2{font-size:17px;font-weight:700;line-height:1.25;}
     .header-greeting h2 span{color:var(--gold);}
     .header-greeting p{font-size:11px;opacity:0.75;margin-top:3px;}
     .header-date{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
-    .date-pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:4px 10px;font-size:10px;color:rgba(255,255,255,0.9);}
-    .date-pill.hijri{background:rgba(245,200,66,0.18);border-color:rgba(245,200,66,0.35);color:#fde992;}
-    .sholat-mini{display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:9px 12px;cursor:pointer;}
+    .date-pill{
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:20px;padding:4px 10px;
+      font-size:10px;color:rgba(255,255,255,0.9);
+    }
+    .date-pill.hijri{
+      background:rgba(245,200,66,0.18);
+      border-color:rgba(245,200,66,0.35);
+      color:#fde992;
+    }
+    .sholat-mini{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:10px;
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.16);
+      border-radius:12px;padding:9px 12px;
+      cursor:pointer;
+    }
     .sholat-mini-left{display:flex;align-items:center;gap:8px;}
     .sholat-mini-icon{font-size:15px;color:var(--gold);}
     .sholat-mini-name{font-size:12px;font-weight:700;}
     .sholat-mini-time{font-size:10.5px;opacity:0.75;margin-inline-start:4px;}
     .sholat-mini-right{font-size:10px;opacity:0.7;display:flex;align-items:center;gap:4px;}
 
-    .shortcut-row{display:flex;gap:8px;}
-    .shortcut-item{flex:1;background:var(--white);border-radius:var(--radius-lg);padding:12px;border:0.5px solid var(--gray-200);display:flex;align-items:center;gap:10px;cursor:pointer;transition:var(--transition);}
-    .shortcut-item:hover{box-shadow:0 2px 8px rgba(0,0,0,0.08);transform:translateY(-1px);}
-    .shortcut-item:active{transform:scale(0.98);}
-    .shortcut-icon{width:38px;height:38px;border-radius:10px;background:var(--green-light);color:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-    .shortcut-icon.dzikir-icon{background:var(--gold-light);color:#a08000;}
-    .shortcut-icon.red-icon{background:#fce4ec;color:#c62828;}
-    .shortcut-icon.orange-icon{background:#fff3e0;color:#e65100;}
-    .shortcut-icon.blue-icon{background:#e3f2fd;color:#0d47a1;}
-    .shortcut-icon.purple-icon{background:#f3e5f5;color:#6a1b9a;}
-    .shortcut-text{flex:1;min-width:0;}
-    .shortcut-title{font-size:12px;font-weight:700;color:var(--gray-800);}
-    .shortcut-badge{font-size:10px;color:var(--green-mid);font-weight:600;margin-top:1px;}
-    .shortcut-badge.dzikir-badge{color:#a08000;}
-    .shortcut-badge.red-badge{color:#c62828;}
-    .shortcut-badge.orange-badge{color:#e65100;}
-    .shortcut-badge.blue-badge{color:#0d47a1;}
-    .shortcut-badge.purple-badge{color:#6a1b9a;}
-
-    .bottom-nav {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 32px); max-width: 420px; height: 64px;
-      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
-      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    /* ═══ SHORTCUT CAROUSEL ═══ */
+    .shortcut-section{margin-bottom:4px;}
+    .shortcut-section-label{
+      font-size:11px;font-weight:700;
+      background:linear-gradient(135deg,#003d33,#006644);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      text-transform:uppercase;letter-spacing:1px;
+      padding:0 14px;margin-bottom:10px;
     }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
-    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
-    .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
-    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+    .shortcut-carousel{
+      display:flex;gap:10px;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scroll-behavior:smooth;
+      padding:4px 14px 10px;
+      -ms-overflow-style:none;
+      scrollbar-width:none;
+    }
+    .shortcut-carousel::-webkit-scrollbar{display:none;}
+    
+    .shortcut-item{
+      flex:0 0 auto;width:145px;
+      scroll-snap-align:start;
+      background:var(--white);
+      border-radius:var(--radius-lg);
+      padding:16px 12px;
+      border:1px solid var(--gray-200);
+      display:flex;flex-direction:column;align-items:center;gap:10px;
+      cursor:pointer;
+      text-align:center;
+      box-shadow:0 1px 4px rgba(0,61,51,0.04);
+    }
+    .shortcut-item:active{transform:scale(0.96);background:var(--gray-50);}
+    .shortcut-item .shortcut-icon-wrap{
+      width:44px;height:44px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;flex-shrink:0;
+    }
+    .shortcut-icon-wrap.green{background:var(--green-light);color:var(--green-mid);}
+    .shortcut-icon-wrap.gold{background:var(--gold-light);color:#a08000;}
+    .shortcut-icon-wrap.red{background:#fce4ec;color:#c62828;}
+    .shortcut-icon-wrap.orange{background:#fff3e0;color:#e65100;}
+    .shortcut-icon-wrap.blue{background:#e3f2fd;color:#0d47a1;}
+    .shortcut-icon-wrap.purple{background:#f3e5f5;color:#6a1b9a;}
+    .shortcut-icon-wrap.teal{background:#e0f2f1;color:#00695c;}
+    
+    .shortcut-item .shortcut-label{
+      font-size:11px;font-weight:700;color:var(--gray-800);line-height:1.2;
+    }
+    .shortcut-item .shortcut-sub{
+      font-size:9px;font-weight:500;color:var(--gray-600);
+    }
 
-    .main-content{padding:14px;display:flex;flex-direction:column;gap:12px;}
-    .card{background:var(--white);border-radius:var(--radius-lg);padding:15px;border:0.5px solid var(--gray-200);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
-    .card-title{font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+    .carousel-dots{
+      display:flex;justify-content:center;gap:6px;
+      margin-top:6px;padding-bottom:4px;
+    }
+    .carousel-dots .dot{
+      width:5px;height:5px;border-radius:50%;
+      background:var(--gray-300);
+      transition:all 0.3s ease;
+    }
+    .carousel-dots .dot.active{
+      background:var(--green);width:16px;border-radius:3px;
+    }
+
+    /* ═══ MAIN CONTENT ═══ */
+    .main-content{padding:14px;display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto;}
+
+    .card{
+      background:var(--white);
+      border-radius:var(--radius-lg);
+      padding:16px;
+      border:1px solid var(--gray-200);
+      box-shadow:0 1px 4px rgba(0,61,51,0.04);
+    }
+    .card-title{
+      font-size:13px;font-weight:700;color:var(--green-dark);
+      margin-bottom:14px;display:flex;align-items:center;gap:7px;
+    }
     .card-title i{font-size:15px;color:var(--green);}
 
-    .sholat-progress{margin-bottom:12px;}
-    .sholat-progress:last-of-type{margin-bottom:0;}
-    .progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;}
-    .progress-label span:first-child{font-weight:600;color:#333;}
-    .progress-label span:last-child{font-weight:700;color:var(--green-mid);}
-    .progress-bar{width:100%;height:9px;background:var(--green-light);border-radius:9px;overflow:hidden;}
-    .progress-fill{height:100%;border-radius:9px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}
-    .progress-fill.high{background:linear-gradient(90deg,#00a859,#00d46a);}
-    .progress-fill.mid{background:linear-gradient(90deg,#f5a623,#f7c550);}
-    .progress-fill.low{background:linear-gradient(90deg,#e53935,#ef5350);}
-    .progress-sub{font-size:10px;color:var(--gray-600);margin-top:3px;}
-    .absensi-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:13px;padding:11px;background:linear-gradient(135deg,var(--green-mid),var(--green));color:white;border-radius:var(--radius-sm);text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 3px 10px rgba(0,166,89,0.3);}
+    /* ═══ JADWAL CARD ═══ */
+    .jadwal-list{display:flex;flex-direction:column;gap:8px;}
+    .jadwal-item{
+      display:flex;align-items:center;gap:12px;
+      padding:12px;
+      background:var(--gray-50);
+      border-radius:var(--radius-sm);
+      border:1px solid var(--gray-100);
+    }
+    .jadwal-jp{
+      width:42px;height:42px;border-radius:12px;
+      background:var(--green-mid);color:white;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-size:9px;font-weight:700;flex-shrink:0;
+    }
+    .jadwal-jp .jp-num{font-size:14px;line-height:1;}
+    .jadwal-info{flex:1;min-width:0;}
+    .jadwal-mk{
+      font-size:13px;font-weight:700;color:#222;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .jadwal-kls{
+      font-size:10px;color:var(--gray-600);margin-top:2px;
+    }
+    .jadwal-waktu{
+      font-size:10px;color:var(--green-mid);font-weight:600;
+      background:var(--green-light);
+      padding:3px 8px;border-radius:12px;
+      white-space:nowrap;
+    }
+    .btn-absensi{
+      background:var(--green-mid);color:white;
+      border:none;padding:7px 12px;border-radius:20px;
+      font-size:10px;font-family:inherit;font-weight:600;
+      cursor:pointer;white-space:nowrap;text-decoration:none;
+    }
 
-    .jadwal-list{display:flex;flex-direction:column;}
-    .jadwal-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--gray-100);}
-    .jadwal-item:last-child{border-bottom:none;padding-bottom:0;}
-    .jadwal-time{background:var(--green-light);color:var(--green-mid);font-size:10px;font-weight:700;border-radius:7px;padding:4px 8px;white-space:nowrap;}
-    .jadwal-info{flex:1;}
-    .jadwal-mk{font-size:12px;font-weight:700;color:#222;}
-    .jadwal-kls{font-size:10px;color:var(--gray-600);margin-top:1px;}
-    .btn-absensi{background:var(--green-mid);color:white;border:none;padding:6px 11px;border-radius:20px;font-size:10px;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;}
-
-    .card-motivasi{background:linear-gradient(135deg,#003d33,#005a47);border:none;}
+    /* ═══ MOTIVASI ═══ */
+    .card-motivasi{
+      background:linear-gradient(135deg,#003d33,#005a47);
+      border:none;color:white;
+    }
     .card-motivasi .card-title{color:rgba(255,255,255,0.85);}
     .card-motivasi .card-title i{color:var(--gold);}
-    .motivation-scroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:6px;}
-    .motivation-scroll::-webkit-scrollbar{display:none;}
-    .motivation-card{min-width:220px;max-width:260px;border-radius:var(--radius);padding:14px 16px;flex-shrink:0;scroll-snap-align:start;display:flex;flex-direction:column;}
-    .motiv-icon{font-size:20px;margin-bottom:8px;opacity:0.6;}
-    .motivation-card .quote-text{font-size:12px;line-height:1.7;font-style:italic;flex:1;}
-    .motivation-card .quote-source{font-size:10px;margin-top:8px;font-weight:700;opacity:0.75;}
-    .motivation-card .quote-number{font-size:10px;margin-top:4px;opacity:0.5;}
-    .theme-1{background:linear-gradient(135deg,#fffbee,#fff8e1);border:1px solid #f0d96a;}
-    .theme-1 .quote-text,.theme-1 .quote-source{color:#7a6000;}
-    .theme-2{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1px solid #a5d6a7;}
-    .theme-2 .quote-text,.theme-2 .quote-source{color:#1b5e20;}
-    .theme-3{background:linear-gradient(135deg,#e3f2fd,#bbdefb);border:1px solid #90caf9;}
-    .theme-3 .quote-text,.theme-3 .quote-source{color:#0d47a1;}
-    .theme-4{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:1px solid #ffcc80;}
-    .theme-4 .quote-text,.theme-4 .quote-source{color:#bf360c;}
-    .theme-5{background:linear-gradient(135deg,#f3e5f5,#e1bee7);border:1px solid #ce93d8;}
-    .theme-5 .quote-text,.theme-5 .quote-source{color:#6a1b9a;}
-    .theme-6{background:linear-gradient(135deg,#e0f2f1,#b2dfdb);border:1px solid #80cbc4;}
-    .theme-6 .quote-text,.theme-6 .quote-source{color:#004d40;}
-    .scroll-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;}
-    .scroll-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s;}
-    .scroll-dot.active{background:var(--gold);width:16px;border-radius:3px;}
 
-    .visi-box{background:var(--green-pale);border-radius:var(--radius-sm);padding:13px;margin-bottom:12px;border-inline-start:3px solid var(--green);}
-    .visi-label{font-size:10px;font-weight:800;color:var(--green-mid);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;}
-    .visi-text{font-size:12.5px;color:var(--gray-800);line-height:1.7;}
-    .misi-list{display:flex;flex-direction:column;gap:8px;}
-    .misi-item{display:flex;gap:10px;align-items:flex-start;}
-    .misi-num{width:22px;height:22px;border-radius:50%;background:var(--green);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-    .misi-judul{font-size:12px;font-weight:700;color:var(--green-dark);}
-    .misi-teks{font-size:11.5px;color:var(--gray-600);line-height:1.6;margin-top:2px;}
-    .pengumuman-box{border-radius:var(--radius-sm);padding:14px;}
+    .motivasi-single{
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:var(--radius);
+      padding:18px 16px;text-align:center;
+    }
+    .motivasi-quote-icon{
+      font-size:28px;color:var(--gold);margin-bottom:10px;opacity:0.8;
+    }
+    .motivasi-text{
+      font-size:13px;line-height:1.8;font-style:italic;
+      color:rgba(255,255,255,0.9);margin-bottom:10px;
+    }
+    .motivasi-source{
+      font-size:10px;color:var(--gold);font-weight:600;
+    }
+    .motivasi-navigation{
+      display:flex;align-items:center;justify-content:center;
+      gap:10px;margin-top:10px;
+    }
+    .motivasi-nav-btn{
+      width:30px;height:30px;border-radius:50%;
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.3);
+      color:white;display:flex;align-items:center;justify-content:center;
+      cursor:pointer;font-size:13px;
+    }
+    .motivasi-dots{display:flex;gap:5px;}
+    .motivasi-dot{
+      width:5px;height:5px;border-radius:50%;
+      background:rgba(255,255,255,0.3);cursor:pointer;
+      transition:all 0.3s ease;
+    }
+    .motivasi-dot.active{background:var(--gold);width:14px;border-radius:3px;}
+
+    /* ═══ BOTTOM NAV ═══ */
+    .bottom-nav{
+      position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+      width:calc(100% - 32px);max-width:420px;height:64px;
+      background:rgba(255,255,255,0.72);backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.7);
+      border-radius:24px;display:flex;align-items:center;justify-content:space-around;
+      z-index:100;
+      box-shadow:0 8px 32px rgba(0,61,51,0.1),0 2px 8px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8);
+      padding:0 8px;padding-bottom:env(safe-area-inset-bottom);
+    }
+    .nav-item{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:2px;font-size:10px;font-weight:500;color:var(--gray-600);
+      cursor:pointer;text-decoration:none;padding:8px 0;flex:1;
+      border-radius:18px;transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+      position:relative;
+    }
+    .nav-item i{font-size:20px;}
+    .nav-item.active{color:var(--green-dark);font-weight:700;}
+    .nav-item.active i{color:var(--green);filter:drop-shadow(0 2px 4px rgba(0,168,89,0.3));}
+    .nav-item.active::before{
+      content:'';position:absolute;top:2px;width:28px;height:3px;
+      background:var(--green);border-radius:0 0 4px 4px;
+    }
 
     @media(min-width:768px){.main-content{max-width:600px;margin:0 auto;}}
   </style>
@@ -166,7 +323,7 @@
     </div>
     <div class="header-info">
       <div class="header-greeting">
-        <h2 id="greetingText">Assalamu'alaikum, <span id="greetingName">...</span> 👋</h2>
+        <h2 id="greetingText">Assalamu'alaikum, <span id="greetingName">...</span></h2>
         <p id="greetingSub">Semoga aktivitas hari ini dimudahkan Alloh</p>
       </div>
       <div class="header-date">
@@ -186,126 +343,129 @@
 
   <main class="main-content">
 
-    <!-- Shortcut: Al-Quran & Dzikir -->
-    <div class="shortcut-row">
-      <div class="shortcut-item" onclick="goTo('quran.html')">
-        <div class="shortcut-icon"><i class="fa-solid fa-book-quran"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title" id="lblQuran">Al-Qur'an</div>
-          <div class="shortcut-badge" id="tilawahBadge">Tilawahku: 0 hlm</div>
+    <!-- ═══ SHORTCUT CAROUSEL ═══ -->
+    <div class="shortcut-section">
+      <div class="shortcut-section-label">Menu Cepat</div>
+      <div class="shortcut-carousel" id="shortcutCarousel">
+        
+        <div class="shortcut-item" onclick="goTo('quran.html')">
+          <div class="shortcut-icon-wrap green"><i class="fa-solid fa-book-quran"></i></div>
+          <div class="shortcut-label" id="lblQuran">Al-Qur'an</div>
+          <div class="shortcut-sub" id="tilawahBadge">Tilawah: 0 hlm</div>
         </div>
-      </div>
-      <div class="shortcut-item" onclick="goTo('dzikir.html')">
-        <div class="shortcut-icon dzikir-icon" id="dzikirIcon"><i class="fa-solid fa-sun"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title" id="dzikirTitle">Dzikir Pagi</div>
-          <div class="shortcut-badge dzikir-badge" id="dzikirBadge">0 selesai</div>
+
+        <div class="shortcut-item" onclick="goTo('dzikir.html')">
+          <div class="shortcut-icon-wrap gold"><i class="fa-solid fa-sun"></i></div>
+          <div class="shortcut-label" id="dzikirTitle">Dzikir Pagi</div>
+          <div class="shortcut-sub" id="dzikirBadge">0 selesai</div>
         </div>
+
+        <div class="shortcut-item" onclick="goTo('absensi.html')">
+          <div class="shortcut-icon-wrap blue"><i class="fa-solid fa-mosque"></i></div>
+          <div class="shortcut-label">Absensi Sholat</div>
+          <div class="shortcut-sub">Catat sholat</div>
+        </div>
+
+        <div class="shortcut-item" onclick="goTo('kinerja.html')">
+          <div class="shortcut-icon-wrap purple"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div class="shortcut-label">Kinerja</div>
+          <div class="shortcut-sub">Laporan</div>
+        </div>
+
+        <div class="shortcut-item" onclick="goTo('menu-cepat.html')">
+          <div class="shortcut-icon-wrap teal"><i class="fa-solid fa-grid-2"></i></div>
+          <div class="shortcut-label">Menu Cepat</div>
+          <div class="shortcut-sub">Lihat semua</div>
+        </div>
+
       </div>
+      <div class="carousel-dots" id="carouselDots"></div>
     </div>
 
-    <!-- Shortcut: Rekap Ketidakhadiran -->
-    <div class="shortcut-row">
-      <div class="shortcut-item" onclick="goTo('rekap-tidak-hadir-kelas.html')" style="border-left:3px solid var(--red);">
-        <div class="shortcut-icon red-icon"><i class="fa-solid fa-user-xmark"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title">Rekap Tidak Hadir</div>
-          <div class="shortcut-badge red-badge">Kelas</div>
-        </div>
-      </div>
-      <div class="shortcut-item" onclick="goTo('rekap-tidak-hadir-halaqoh.html')" style="border-left:3px solid var(--orange);">
-        <div class="shortcut-icon orange-icon"><i class="fa-solid fa-mosque"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title">Rekap Tidak Hadir</div>
-          <div class="shortcut-badge orange-badge">Halaqoh</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Shortcut: Izin Dosen & Jadwal Saya -->
-    <div class="shortcut-row">
-      <div class="shortcut-item" onclick="goTo('izin-dosen.html')" style="border-left:3px solid var(--blue);">
-        <div class="shortcut-icon blue-icon"><i class="fa-solid fa-calendar-xmark"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title">Izin Dosen</div>
-          <div class="shortcut-badge blue-badge">Tidak Masuk</div>
-        </div>
-      </div>
-      <div class="shortcut-item" onclick="goTo('jadwal-saya.html')" style="border-left:3px solid var(--purple);">
-        <div class="shortcut-icon purple-icon"><i class="fa-solid fa-calendar-days"></i></div>
-        <div class="shortcut-text">
-          <div class="shortcut-title">Jadwal Saya</div>
-          <div class="shortcut-badge purple-badge">Lihat & Atur</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card Sholat -->
+    <!-- ═══ JADWAL HARI INI ═══ -->
     <div class="card">
-      <div class="card-title"><i class="fa-solid fa-mosque"></i> <span id="lblRekapSholat">Rekap Sholat Berjamaah</span></div>
-      <div id="sholatProgressContainer"><p style="text-align:center;color:var(--gray-600);font-size:13px;" id="lblMemuatSholat">Memuat data sholat...</p></div>
-      <a href="absensi.html" class="absensi-btn"><i class="fa-solid fa-check-circle"></i> <span id="lblIsiAbsensi">Isi Absensi Sholat Hari Ini</span></a>
+      <div class="card-title">
+        <i class="fa-solid fa-calendar-day"></i> 
+        <span id="lblJadwal">Jadwal Hari Ini</span>
+        <span style="margin-inline-start:auto;font-size:10px;color:var(--gray-600);" id="hariIniLabel"></span>
+      </div>
+      <div class="jadwal-list" id="jadwalList">
+        <p style="font-size:12px;color:var(--gray-600);text-align:center;">Memuat jadwal...</p>
+      </div>
     </div>
 
-    <!-- Card Jadwal -->
-    <div class="card">
-      <div class="card-title"><i class="fa-solid fa-calendar-day"></i> <span id="lblJadwal">Jadwalku Hari Ini</span></div>
-      <div class="jadwal-list" id="jadwalList"><p style="font-size:12px;color:var(--gray-600);">...</p></div>
-    </div>
-
-    <!-- Card Motivasi -->
+    <!-- ═══ MOTIVASI ═══ -->
     <div class="card card-motivasi">
       <div class="card-title"><i class="fa-solid fa-star-and-crescent"></i> <span id="lblMotivasi">Motivasi</span></div>
-      <div class="motivation-scroll" id="motivationScroll">
-        <div class="motivation-card theme-1"><div class="motiv-icon"><i class="fa-solid fa-quote-left"></i></div><div class="quote-text">Memuat...</div></div>
+      <div class="motivasi-single" id="motivasiSingle">
+        <div class="motivasi-quote-icon"><i class="fa-solid fa-quote-right"></i></div>
+        <div class="motivasi-text" id="motivasiText">Memuat motivasi...</div>
+        <div class="motivasi-source" id="motivasiSource"></div>
       </div>
-      <div class="scroll-dots" id="motivDots"></div>
+      <div class="motivasi-navigation">
+        <button class="motivasi-nav-btn" id="prevMotivasi"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="motivasi-dots" id="motivasiDots"></div>
+        <button class="motivasi-nav-btn" id="nextMotivasi"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
     </div>
 
-    <!-- Card Visi Misi -->
+    <!-- ═══ VISI MISI ═══ -->
     <div class="card" id="visiMisiCard" style="display:none;">
-      <div class="card-title"><i class="fa-solid fa-bullseye"></i> <span id="lblVisiMisi">Visi &amp; Misi</span></div>
+      <div class="card-title"><i class="fa-solid fa-bullseye"></i> <span id="lblVisiMisi">Visi & Misi</span></div>
       <div id="visiMisiContainer"></div>
     </div>
 
-    <!-- Card Pengumuman -->
+    <!-- ═══ PENGUMUMAN ═══ -->
     <div class="card" id="pengumumanCard" style="display:none;">
       <div id="pengumumanContent"></div>
     </div>
 
   </main>
 
-  <!-- Bottom Nav -->
+  <!-- ═══ BOTTOM NAV ═══ -->
   <nav class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('dashboard.html')">
-      <i class="fa-solid fa-house"></i><span id="navHome">Home</span>
-    </div>
-    <div class="nav-item" onclick="goTo('kalender.html')">
-      <i class="fa-solid fa-calendar-days"></i><span id="navKalender">Kalender</span>
-    </div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')">
-      <i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span>
-    </div>
-    <div class="nav-item" onclick="goTo('rekap.html')">
-      <i class="fa-solid fa-chart-simple"></i><span id="navRekap">Rekap</span>
-    </div>
-    <div class="nav-item" onclick="goTo('profil.html')">
-      <i class="fa-solid fa-circle-user"></i><span id="navProfil">Profil</span>
-    </div>
+    <div class="nav-item active" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span id="navHome">Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span id="navKalender">Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span id="navMenu">Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span id="navRekap">Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span id="navProfil">Profil</span></div>
   </nav>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script> 
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/lang.js"></script>
-  <script src="../../js/fcm.js"></script>
   <script>
     const user = checkRole(['dosen','musyrif','dosen-musyrif','umum']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
+
+    // ═══ CAROUSEL DOTS ═══
+    (function initCarouselDots() {
+      const carousel = document.getElementById('shortcutCarousel');
+      const dotsContainer = document.getElementById('carouselDots');
+      const items = carousel.querySelectorAll('.shortcut-item');
+      
+      items.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = dotsContainer.querySelectorAll('.dot');
+      
+      carousel.addEventListener('scroll', () => {
+        const scrollLeft = carousel.scrollLeft;
+        const itemWidth = items[0].offsetWidth + 10;
+        const activeIndex = Math.round(scrollLeft / itemWidth);
+        
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === activeIndex);
+        });
+      });
+    })();
 
     function applyLang() {
       const lang = getLang();
@@ -315,9 +475,6 @@
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
       set('greetingSub', t('greetingSub'));
       set('lblQuran', t('quran'));
-      set('lblRekapSholat', t('rekapSholat'));
-      set('lblMemuatSholat', t('memuatSholat'));
-      set('lblIsiAbsensi', t('isiAbsensi'));
       set('lblJadwal', t('jadwalHariIni'));
       set('lblMotivasi', t('motivasi'));
       set('lblVisiMisi', t('visiMisi'));
@@ -337,6 +494,7 @@
       document.body.classList.toggle('scrolled', scrolled);
     });
 
+    // ═══ INIT HEADER ═══
     (function initHeader() {
       document.getElementById('greetingName').textContent = user.nama || 'User';
       const savedFoto = localStorage.getItem('fotoProfil_' + user.uid);
@@ -358,81 +516,132 @@
       } catch(e) { return '1 Muharram 1448 H'; }
     }
 
-    // Sholat
-    async function renderSholatCard() {
-      const container = document.getElementById('sholatProgressContainer');
-      try {
-        const now = new Date(), today = now.toISOString().split('T')[0];
-        const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-6);
-        const weekAgoStr = weekAgo.toISOString().split('T')[0];
-        const snap = await db.collection('absensiSholat').where('userId','==',user.uid).get();
-        if (snap.empty) {
-          container.innerHTML = '<p style="text-align:center;color:var(--gray-600);font-size:12px;">' + t('belumAdaSholat') + ' <a href="absensi.html" style="color:var(--green);">' + t('isiSekarang') + '</a></p>';
-          return;
-        }
-        const docs = snap.docs.map(d => d.data());
-        const todayCount = docs.filter(d => d.tanggal === today).length;
-        const weekCount = docs.filter(d => d.tanggal >= weekAgoStr && d.tanggal <= today).length;
-        const targetH = 5, targetP = 35;
-        const pctH = Math.round((todayCount/targetH)*100);
-        const pctP = Math.round((weekCount/targetP)*100);
-        const getColor = p => p >= 80 ? 'high' : p >= 50 ? 'mid' : 'low';
-        container.innerHTML =
-          '<div class="sholat-progress"><div class="progress-label"><span>' + t('hariIni') + '</span><span>' + todayCount + '/' + targetH + '</span></div><div class="progress-bar"><div class="progress-fill ' + getColor(pctH) + '" style="width:' + pctH + '%;"></div></div><div class="progress-sub">' + pctH + '% ' + t('berjamaah') + '</div></div>' +
-          '<div class="sholat-progress"><div class="progress-label"><span>' + t('pekanIni') + '</span><span>' + weekCount + '/' + targetP + '</span></div><div class="progress-bar"><div class="progress-fill ' + getColor(pctP) + '" style="width:' + pctP + '%;"></div></div><div class="progress-sub">' + pctP + '% ' + t('berjamaah') + '</div></div>';
-      } catch(e) { container.innerHTML = '<p style="color:red;font-size:12px;">' + t('gagalMemuat') + '</p>'; }
-    }
-    renderSholatCard();
+    // ═══ JADWAL HARI INI ═══
+    const JP_WAKTU = {
+      1: '07:15-08:05', 2: '08:10-09:00', 3: '09:05-09:55',
+      4: '10:10-11:00', 5: '11:05-11:55'
+    };
 
-    // Jadwal
     (async function loadJadwalHariIni() {
       const list = document.getElementById('jadwalList');
+      const hariLabel = document.getElementById('hariIniLabel');
       try {
         const today = new Date();
         const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
-        if (hari === 'Jumat') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('libur') + '</p>'; return; }
-        if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('tidakAdaJadwal') + '</p>'; return; }
+        hariLabel.textContent = hari;
+        
+        if (hari === 'Jumat') { 
+          list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);text-align:center;">' + t('libur') + '</p>'; 
+          return; 
+        }
+        if (user.role !== 'dosen' && user.role !== 'dosen-musyrif') { 
+          list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);text-align:center;">' + t('tidakAdaJadwal') + '</p>'; 
+          return; 
+        }
         const snap = await db.collection('jadwal').where('dosenId','==',user.uid).get();
         const jadwalHariIni = snap.docs.map(d => ({id:d.id,...d.data()})).filter(j => j.hari === hari);
         jadwalHariIni.sort((a,b) => (a.jamKe||0)-(b.jamKe||0));
-        if (!jadwalHariIni.length) { list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);">' + t('tidakAdaJadwalHariIni') + '</p>'; return; }
-        list.innerHTML = jadwalHariIni.map(j =>
-          '<div class="jadwal-item"><div class="jadwal-time">' + j.waktu + '</div><div class="jadwal-info"><div class="jadwal-mk">' + j.mkNama + '</div><div class="jadwal-kls">' + j.kelasNama + '</div></div><a href="absensi-kelas.html?jadwalId=' + j.id + '&kelasId=' + j.kelasId + '&mapelId=' + j.mkId + '" class="btn-absensi">' + t('absensi') + '</a></div>'
-        ).join('');
-      } catch(e) { list.innerHTML = '<p style="font-size:12px;color:red;">' + t('gagalMemuat') + '</p>'; }
-    })();
-
-    // Motivasi
-    (async function loadMotivasi() {
-      const container = document.getElementById('motivationScroll');
-      const dotsEl = document.getElementById('motivDots');
-      const defaults = [{teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},{teks:"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.",sumber:'HR. Bukhari'}];
-      try {
-        const doc = await db.collection('pengaturan').doc('app').get();
-        const data = doc.exists ? doc.data() : {};
-        let list = [];
-        if (data.motivasi?.length) list = data.motivasi;
-        else if (data.motivasiList?.length) list = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
-        else if (data.artikelMotivasi?.length) list = data.artikelMotivasi.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
-        else list = defaults;
-        container.innerHTML = list.map((m,i) => {
-          const theme = (i%6)+1;
-          const teks = typeof m==='string' ? m : (m.teks||'');
-          const src = typeof m==='object' ? (m.sumber||'') : '';
-          return '<div class="motivation-card theme-' + theme + '"><div class="motiv-icon"><i class="fa-solid fa-quote-left"></i></div><div class="quote-text">"' + teks + '"</div>' + (src?'<div class="quote-source">— '+src+'</div>':'') + '<div class="quote-number">'+(i+1)+'/'+list.length+'</div></div>';
+        
+        if (!jadwalHariIni.length) { 
+          list.innerHTML = '<p style="font-size:12px;color:var(--gray-600);text-align:center;">' + t('tidakAdaJadwalHariIni') + '</p>'; 
+          return; 
+        }
+        
+        list.innerHTML = jadwalHariIni.map(j => {
+          const jp = j.jamKe || 1;
+          const waktu = JP_WAKTU[jp] || '';
+          return `
+          <div class="jadwal-item">
+            <div class="jadwal-jp">
+              <span class="jp-num">JP${jp}</span>
+              <span>${waktu.split('-')[0]}</span>
+            </div>
+            <div class="jadwal-info">
+              <div class="jadwal-mk">${j.mkNama || '-'}</div>
+              <div class="jadwal-kls">${j.kelasNama || '-'}</div>
+            </div>
+            <div class="jadwal-waktu">${waktu}</div>
+            <a href="absensi-kelas.html?jadwalId=${j.id}&kelasId=${j.kelasId}&mapelId=${j.mkId}" class="btn-absensi">${t('absensi')}</a>
+          </div>`;
         }).join('');
-        dotsEl.innerHTML = list.map((_,i) => '<div class="scroll-dot'+(i===0?' active':'')+'"></div>').join('');
-        container.addEventListener('scroll', () => {
-          const cardW = container.querySelector('.motivation-card')?.offsetWidth || 230;
-          const idx = Math.round(container.scrollLeft/(cardW+10));
-          dotsEl.querySelectorAll('.scroll-dot').forEach((d,i) => d.classList.toggle('active',i===idx));
-        });
-      } catch(e) {
-        container.innerHTML = defaults.map((m,i) => '<div class="motivation-card theme-'+(i+1)+'"><div class="motiv-icon"><i class="fa-solid fa-quote-left"></i></div><div class="quote-text">"'+m.teks+'"</div><div class="quote-source">— '+m.sumber+'</div></div>').join('');
+        
+      } catch(e) { 
+        list.innerHTML = '<p style="font-size:12px;color:red;text-align:center;">' + t('gagalMemuat') + '</p>'; 
       }
     })();
 
-    // Visi Misi
+    // ═══ MOTIVASI ═══
+    (async function loadMotivasi() {
+      const textEl = document.getElementById('motivasiText');
+      const sourceEl = document.getElementById('motivasiSource');
+      const dotsEl = document.getElementById('motivasiDots');
+      const defaults = [
+        {teks:'Barangsiapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.',sumber:'HR. Muslim'},
+        {teks:"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.",sumber:'HR. Bukhari'}
+      ];
+      
+      let motivasiList = [];
+      let currentIndex = 0;
+      
+      try {
+        const doc = await db.collection('pengaturan').doc('app').get();
+        const data = doc.exists ? doc.data() : {};
+        if (data.motivasi?.length) motivasiList = data.motivasi;
+        else if (data.motivasiList?.length) motivasiList = data.motivasiList.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
+        else if (data.artikelMotivasi?.length) motivasiList = data.artikelMotivasi.map(m => typeof m==='string'?{teks:m,sumber:''}:m);
+        else motivasiList = defaults;
+      } catch(e) { motivasiList = defaults; }
+      
+      motivasiList.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'motivasi-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => showMotivasi(i);
+        dotsEl.appendChild(dot);
+      });
+      
+      function showMotivasi(index) {
+        currentIndex = index;
+        const m = motivasiList[index];
+        const teks = typeof m === 'string' ? m : (m.teks || '');
+        const src = typeof m === 'object' ? (m.sumber || '') : '';
+        
+        textEl.style.opacity = '0';
+        sourceEl.style.opacity = '0';
+        
+        setTimeout(() => {
+          textEl.textContent = '"' + teks + '"';
+          sourceEl.textContent = src ? '— ' + src : '';
+          textEl.style.opacity = '1';
+          sourceEl.style.opacity = '1';
+        }, 300);
+        
+        document.querySelectorAll('.motivasi-dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      }
+      
+      textEl.style.transition = 'opacity 0.3s ease';
+      sourceEl.style.transition = 'opacity 0.3s ease';
+      
+      document.getElementById('prevMotivasi').onclick = () => {
+        const newIndex = currentIndex > 0 ? currentIndex - 1 : motivasiList.length - 1;
+        showMotivasi(newIndex);
+      };
+      
+      document.getElementById('nextMotivasi').onclick = () => {
+        const newIndex = currentIndex < motivasiList.length - 1 ? currentIndex + 1 : 0;
+        showMotivasi(newIndex);
+      };
+      
+      showMotivasi(0);
+      
+      setInterval(() => {
+        const newIndex = (currentIndex + 1) % motivasiList.length;
+        showMotivasi(newIndex);
+      }, 8000);
+    })();
+
+    // ═══ VISI MISI ═══
     (async function loadVisiMisi() {
       try {
         const doc = await db.collection('pengaturan').doc('app').get();
@@ -441,17 +650,16 @@
         if (!data.visi && !data.misi?.length) return;
         document.getElementById('visiMisiCard').style.display = 'block';
         let html = '';
-        if (data.visi) html += '<div class="visi-box"><div class="visi-label"><i class="fa-solid fa-eye"></i> '+t('visi')+'</div><div class="visi-text">'+data.visi+'</div></div>';
+        if (data.visi) html += '<div style="background:var(--green-pale);border-radius:var(--radius-sm);padding:13px;margin-bottom:12px;border-inline-start:3px solid var(--green);"><strong>' + t('visi') + ':</strong> ' + data.visi + '</div>';
         if (data.misi?.length) {
-          html += '<div class="visi-label" style="margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> '+t('misi')+'</div><div class="misi-list">';
-          html += data.misi.map((m,i) => '<div class="misi-item"><div class="misi-num">'+(i+1)+'</div><div>'+(m.judul?'<div class="misi-judul">'+m.judul+'</div>':'')+'<div class="misi-teks">'+(m.teks||m)+'</div></div></div>').join('');
-          html += '</div>';
+          html += '<strong>' + t('misi') + ':</strong><br>';
+          html += data.misi.map((m,i) => '<div style="margin-top:6px;font-size:12px;">' + (i+1) + '. ' + (m.teks||m) + '</div>').join('');
         }
         document.getElementById('visiMisiContainer').innerHTML = html;
       } catch(e) {}
     })();
 
-    // Pengumuman
+    // ═══ PENGUMUMAN ═══
     (async function loadPengumuman() {
       try {
         const doc = await db.collection('pengaturan').doc('app').get();
@@ -468,11 +676,11 @@
         };
         const w = warnaMap[data.pengumumanWarna] || warnaMap.green;
         document.getElementById('pengumumanCard').style.display = 'block';
-        document.getElementById('pengumumanContent').innerHTML = '<div class="pengumuman-box" style="background:'+w.bg+';border-inline-start:4px solid '+w.border+';"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fa-solid '+w.icon+'" style="color:'+w.text+';font-size:16px;"></i><strong style="color:'+w.text+';font-size:13px;">'+(data.pengumumanJudul||'Pengumuman')+'</strong></div><p style="color:'+w.text+';font-size:12px;line-height:1.5;opacity:0.85;">'+(data.pengumumanIsi||'')+'</p></div>';
+        document.getElementById('pengumumanContent').innerHTML = '<div style="padding:14px;border-radius:var(--radius-sm);background:'+w.bg+';border-inline-start:4px solid '+w.border+';"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><i class="fa-solid '+w.icon+'" style="color:'+w.text+';font-size:16px;"></i><strong style="color:'+w.text+';font-size:13px;">'+(data.pengumumanJudul||'Pengumuman')+'</strong></div><p style="color:'+w.text+';font-size:12px;line-height:1.5;opacity:0.85;">'+(data.pengumumanIsi||'')+'</p></div>';
       } catch(e) {}
     })();
 
-    // Sholat Mini
+    // ═══ SHOLAT MINI ═══
     const ORDER_MINI = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
     const PRAYER_NAMES = {Fajr:'Subuh',Sunrise:'Terbit',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
     async function loadSholatMini() {
@@ -514,39 +722,33 @@
     }
     loadSholatMini();
 
-    // Badge Tilawah
+    // ═══ BADGE TILAWAH ═══
     function loadTilawahBadge() {
       try {
         const saved = localStorage.getItem('tilawahProgress_'+user.uid);
         const progress = saved ? JSON.parse(saved) : {halamanDibaca:{}};
         const todayKey = new Date().toISOString().split('T')[0];
         const hlm = (progress.halamanDibaca?.[todayKey]||[]).length;
-        document.getElementById('tilawahBadge').textContent = t('tilawahBadge')+': '+hlm+' '+t('hlm');
+        document.getElementById('tilawahBadge').textContent = 'Tilawah: '+hlm+' hlm';
       } catch(e) {}
     }
     loadTilawahBadge();
 
-    // Badge Dzikir
+    // ═══ BADGE DZIKIR ═══
     function loadDzikirBadge() {
       try {
         const hour = new Date().getHours();
         const isPetang = hour >= 12 && hour < 19;
         const waktu = isPetang ? 'petang' : 'pagi';
-        document.getElementById('dzikirTitle').textContent = isPetang ? t('dzikirPetang') : t('dzikirPagi');
-        document.getElementById('dzikirIcon').innerHTML = isPetang ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+        document.getElementById('dzikirTitle').textContent = isPetang ? 'Dzikir Petang' : 'Dzikir Pagi';
         const todayKey = new Date().toISOString().split('T')[0];
         const saved = localStorage.getItem('dzikirProgress_'+user.uid+'_'+todayKey);
         const state = saved ? JSON.parse(saved) : {};
         const doneCount = Object.keys(state).filter(k => k.startsWith(waktu) && state[k]?.done).length;
-        document.getElementById('dzikirBadge').textContent = doneCount+' '+t('selesai');
+        document.getElementById('dzikirBadge').textContent = doneCount+' selesai';
       } catch(e) {}
     }
     loadDzikirBadge();
-
-    // FCM
-    setupFCM().then(function(success) {
-      if (success) console.log('✅ Notifikasi push siap');
-    });
   </script>
 </body>
 </html>
