@@ -6,7 +6,7 @@
   <title>Absensi Kelas - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -16,134 +16,278 @@
       --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
       --gray-600:#666666;--gray-800:#222222;
       --red:#e53935;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
+      --orange:#f57c00;--orange-light:#fff3e0;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
-      --transition:all 0.2s ease;--header-height:56px;
+      --header-height:56px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
-      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
-      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+      background: #f0faf5;
+      color: var(--gray-800); 
+      padding-top: var(--header-height); 
+      padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; 
+      min-height: 100vh;
+    }
+    
+    body.lang-ar {
+      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+      direction: rtl;
     }
 
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
-    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header { 
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+      background: rgba(0, 61, 51, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      color: white; padding: 12px 16px; 
+      display: flex; align-items: center; gap: 12px; 
+      box-shadow: 0 4px 30px rgba(0,61,51,0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-back { 
+      background: rgba(255,255,255,0.12); 
+      border: 1px solid rgba(255,255,255,0.2); 
+      color: white; font-size: 16px; 
+      width: 36px; height: 36px; border-radius: 50%; 
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-lang {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+    }
     .header-info { flex: 1; }
-    .header-info h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .header-info h3 { font-size: 15px; font-weight: 700; }
     .header-info .sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
-    .lock-icon { font-size: 14px; }
 
-    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .content { 
+      padding: 14px; max-width: 600px; margin: 0 auto; 
+      display: flex; flex-direction: column; gap: 10px; 
+    }
 
     .info-card {
-      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
-      padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px; 
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 1px 4px rgba(0,61,51,0.04);
     }
-    .info-card .mk-nama { font-size: 16px; font-weight: 800; color: var(--green-dark); }
-    .info-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-    .info-chip { display: flex; align-items: center; gap: 5px; background: var(--green-light); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--green-dark); }
-
-    .summary-card {
-      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
-      border-radius: var(--radius-lg); padding: 12px 16px;
-      display: flex; gap: 0; border: 1px solid rgba(255,255,255,0.6);
+    .info-card .mk-nama { 
+      font-size: 16px; font-weight: 800; 
+      color: var(--green-dark); 
+      margin-bottom: 6px;
     }
-    .summary-item { flex: 1; text-align: center; }
-    .summary-val { font-size: 20px; font-weight: 800; color: var(--green-dark); }
-    .summary-lbl { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
+    .info-row { 
+      display: flex; gap: 8px; flex-wrap: wrap; 
+    }
+    .info-chip { 
+      display: flex; align-items: center; gap: 5px; 
+      background: var(--green-light); 
+      border-radius: 20px; padding: 4px 10px; 
+      font-size: 10px; font-weight: 600; 
+      color: var(--green-dark); 
+    }
+    .info-chip i { font-size: 10px; }
 
-    .list-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; margin-bottom: 4px; }
-    .list-header span { font-size: 12px; font-weight: 700; color: var(--green-dark); }
+    .jp-selector {
+      display: flex; gap: 6px; margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .jp-chip {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 10px; font-weight: 600;
+      cursor: pointer;
+      color: var(--gray-600);
+    }
+    .jp-chip.active {
+      background: var(--green-mid);
+      color: white;
+      border-color: var(--green-mid);
+    }
 
-    .santri-list { display: flex; flex-direction: column; gap: 6px; }
+    .list-header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      padding: 0 2px; 
+    }
+    .list-header span { 
+      font-size: 12px; font-weight: 700; 
+      color: var(--green-dark); 
+    }
+    .mark-all-btn { 
+      font-size: 11px; color: var(--green-mid); 
+      font-weight: 600; background: var(--green-light); 
+      border: none; cursor: pointer; 
+      padding: 5px 12px; border-radius: 20px; 
+    }
+
+    .santri-list { 
+      display: flex; flex-direction: column; gap: 6px; 
+    }
     .santri-row {
-      background: rgba(255, 255, 255, 0.7); border-radius: var(--radius);
-      padding: 10px 14px; border: 1px solid rgba(255, 255, 255, 0.6);
-      display: flex; align-items: center; gap: 10px; transition: var(--transition);
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px; 
+      border: 1px solid var(--gray-200);
+      display: flex; align-items: center; gap: 10px; 
     }
-    .santri-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-light); color: var(--green-mid); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .santri-nama { flex: 1; font-size: 13px; font-weight: 600; }
-    .santri-kelas { font-size: 9px; color: var(--gray-600); margin-left: 4px; }
+    .santri-num { 
+      width: 28px; height: 28px; border-radius: 50%; 
+      background: var(--green-light); 
+      color: var(--green-mid); 
+      font-size: 11px; font-weight: 700; 
+      display: flex; align-items: center; justify-content: center; 
+      flex-shrink: 0; 
+    }
+    .santri-nama { 
+      flex: 1; font-size: 13px; font-weight: 600; 
+    }
+    .santri-kelas { 
+      font-size: 9px; color: var(--gray-600); 
+      margin-inline-start: 4px; 
+    }
 
-    .status-select { padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; outline: none; }
-    .status-select:disabled { opacity: 0.7; cursor: not-allowed; }
+    .status-select { 
+      padding: 6px 10px; border-radius: 20px; 
+      font-size: 11px; font-weight: 600; 
+      font-family: inherit; 
+      border: 1.5px solid var(--gray-200); 
+      background: white; cursor: pointer; outline: none; 
+    }
     .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
     .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
     .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
     .status-select.alfa { border-color: #ef4444; background: #fce4ec; color: #991b1b; }
     .status-select.jaga { border-color: #8b5cf6; background: #ede9fe; color: #6d28d9; }
 
-    /* Locked overlay */
-    .locked-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #e8f5e9; color: #1b5e20; padding: 5px 12px;
-      border-radius: 20px; font-size: 10px; font-weight: 600;
+    .summary-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      display: flex; gap: 0; 
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 1px 4px rgba(0,61,51,0.04);
     }
-    .btn-edit {
-      background: var(--amber); color: white; border: none;
-      padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;
-      cursor: pointer; font-family: inherit;
+    .summary-item { flex: 1; text-align: center; }
+    .summary-val { 
+      font-size: 20px; font-weight: 800; 
+      color: var(--green-dark); 
+    }
+    .summary-lbl { 
+      font-size: 10px; color: var(--gray-600); 
+      margin-top: 2px; 
     }
 
     .btn-simpan {
       width: 100%; padding: 13px; border: none; border-radius: 40px;
       background: linear-gradient(135deg, #004d40, #006644); color: white;
-      font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 14px; font-weight: 700; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; display: flex; align-items: center; 
+      justify-content: center; gap: 8px;
       box-shadow: 0 4px 12px rgba(0,61,51,0.3);
     }
     .btn-simpan:disabled { opacity: 0.6; }
 
-    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
+    .toast { 
+      position: fixed; bottom: 100px; left: 50%; 
+      transform: translateX(-50%); 
+      background: var(--gray-800); color: white; 
+      border-radius: 20px; padding: 10px 20px; 
+      font-size: 13px; font-weight: 600; 
+      z-index: 200; opacity: 0; 
+      transition: opacity 0.3s; white-space: nowrap; 
+      pointer-events: none; 
+    }
     .toast.show { opacity: 1; }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
       background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
-      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      -webkit-backdrop-filter: blur(20px); 
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px; display: flex; align-items: center; 
+      justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 
+                  0 2px 8px rgba(0, 0, 0, 0.06), 
+                  inset 0 1px 0 rgba(255, 255, 255, 0.8);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item { 
+      display: flex; flex-direction: column; align-items: center; 
+      justify-content: center; gap: 2px; font-size: 10px; 
+      font-weight: 500; color: var(--gray-600); 
+      cursor: pointer; text-decoration: none; padding: 8px 0; 
+      flex: 1; border-radius: 18px; 
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      position: relative; 
+    }
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
-    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+    .nav-item.active i { 
+      color: var(--green); 
+      filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); 
+    }
+    .nav-item.active::before { 
+      content: ''; position: absolute; top: 2px; 
+      width: 28px; height: 3px; background: var(--green); 
+      border-radius: 0 0 4px 4px; 
+    }
 
-    @media (max-width: 480px) { .content { padding: 10px; } }
+    @media (max-width: 480px) { 
+      .content { padding: 10px; } 
+    }
   </style>
 </head>
 <body>
 
   <header class="app-header">
-    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <button class="btn-back" onclick="history.back()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
     <div class="header-info">
-      <h3 id="headerTitle">Absensi Kelas <span class="lock-icon" id="lockIcon"></span></h3>
+      <h3 id="headerTitle">Absensi Kelas</h3>
       <div class="sub" id="headerSub">Memuat...</div>
     </div>
+    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
+      <span id="langIndicator">🌐</span>
+    </button>
   </header>
 
   <div class="content" id="mainContent">
     <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
-  <!-- Bottom Action -->
-  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;display:flex;flex-direction:column;gap:8px;" id="bottomAction">
-    <button class="btn-simpan" id="btnSimpan"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>
+  <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
+    <button class="btn-simpan" id="btnSimpan">
+      <i class="fa-solid fa-circle-check"></i> <span data-lang="simpanAbsensi">Simpan Absensi</span>
+    </button>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-    <div class="nav-item active" onclick="goTo('absensi-kelas.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
-    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+    <div class="nav-item" onclick="goTo('dashboard.html')">
+      <i class="fa-solid fa-house"></i><span data-lang="home">Home</span>
+    </div>
+    <div class="nav-item active" onclick="goTo('absensi-kelas.html')">
+      <i class="fa-solid fa-clipboard-check"></i><span data-lang="absensi">Absensi</span>
+    </div>
+    <div class="nav-item" onclick="goTo('kalender.html')">
+      <i class="fa-solid fa-calendar-days"></i><span data-lang="kalender">Kalender</span>
+    </div>
+    <div class="nav-item" onclick="goTo('rekap.html')">
+      <i class="fa-solid fa-chart-simple"></i><span data-lang="rekap">Rekap</span>
+    </div>
+    <div class="nav-item" onclick="goTo('profil.html')">
+      <i class="fa-solid fa-circle-user"></i><span data-lang="profil">Profil</span>
+    </div>
   </nav>
 
   <div class="toast" id="toast"></div>
@@ -153,11 +297,34 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
+    // ═══ MULTI LANGUAGE ═══
+    function cycleLang() {
+      const langs = ['id', 'en', 'ar'];
+      const current = getLang();
+      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
+      setLang(langs[nextIndex]);
+      updateLangIndicator();
+      renderList();
+    }
+    
+    function updateLangIndicator() {
+      const lang = getLang();
+      const indicator = document.getElementById('langIndicator');
+      if (lang === 'id') indicator.textContent = '🇮🇩';
+      else if (lang === 'en') indicator.textContent = '🇬🇧';
+      else if (lang === 'ar') indicator.textContent = '🇸🇦';
+    }
+    
+    updateLangIndicator();
+    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
+
+    // ═══ MAIN LOGIC ═══
     const params = new URLSearchParams(window.location.search);
     const jadwalId = params.get('jadwalId');
     const kelasId = params.get('kelasId');
@@ -165,87 +332,222 @@
 
     const absensiState = {};
     let isSaving = false;
-    let isLocked = false;        // ⬅️ STATUS KUNCI
-    let pertemuanKe = 1;
+    let pekanKe = 1;
     let allKelasIds = [];
     let currentJamKe = 1;
     let jadwalData = {};
+    let allMhsGlobal = [];
+    let absensiPertamaTanggal = null;
 
-    function showToast(msg, type = '') {
+    const JP_WAKTU = {
+      1: '07:15-08:05', 2: '08:10-09:00', 3: '09:05-09:55',
+      4: '10:10-11:00', 5: '11:05-11:55'
+    };
+    const MAX_JP = 5;
+
+    const STATUS_LABELS = {
+      id: { hadir: 'Hadir', sakit: 'Sakit', izin: 'Izin', alfa: 'Alfa', jaga: 'Jaga' },
+      en: { hadir: 'Present', sakit: 'Sick', izin: 'Permit', alfa: 'Absent', jaga: 'Guard' },
+      ar: { hadir: 'حاضر', sakit: 'مريض', izin: 'إذن', alfa: 'غائب', jaga: 'حارس' }
+    };
+
+    function getStatusLabel(status) {
+      const lang = getLang();
+      return STATUS_LABELS[lang]?.[status] || STATUS_LABELS['id'][status] || status;
+    }
+
+    function getLocalDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    }
+
+    function showToast(msg) {
       const el = document.getElementById('toast');
-      el.textContent = msg; el.className = `toast ${type} show`;
+      el.textContent = msg; 
+      el.className = 'toast show';
       setTimeout(() => { el.className = 'toast'; }, 3000);
     }
 
-    function updateLockUI() {
-      const icon = document.getElementById('lockIcon');
-      const btnArea = document.getElementById('bottomAction');
-      
-      if (isLocked) {
-        icon.innerHTML = '🔒';
-        // Ganti tombol simpan dengan tombol edit
-        btnArea.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
-            <span class="locked-badge"><i class="fa-solid fa-lock"></i> Absensi Terkunci</span>
-            <button class="btn-edit" onclick="unlockForm()"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
-          </div>`;
-        // Disable semua dropdown
-        document.querySelectorAll('.status-select').forEach(sel => sel.disabled = true);
-      } else {
-        icon.innerHTML = '🔓';
-        btnArea.innerHTML = '<button class="btn-simpan" id="btnSimpan" onclick="simpanAbsensi()"><i class="fa-solid fa-circle-check"></i> Simpan Absensi</button>';
-        // Enable semua dropdown
-        document.querySelectorAll('.status-select').forEach(sel => sel.disabled = false);
-      }
-    }
-
-    window.unlockForm = function() {
-      if (confirm('Buka kunci absensi untuk mengedit?')) {
-        isLocked = false;
-        updateLockUI();
-      }
-    };
-
     function updateSummary() {
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
-      Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
-      const elHadir = document.getElementById('sumHadir');
-      const elSakit = document.getElementById('sumSakit');
-      const elIzin = document.getElementById('sumIzin');
-      const elAlfa = document.getElementById('sumAlfa');
-      if (elHadir) elHadir.textContent = counts.hadir;
-      if (elSakit) elSakit.textContent = counts.sakit;
-      if (elIzin) elIzin.textContent = counts.izin;
-      if (elAlfa) elAlfa.textContent = counts.alfa;
+      Object.values(absensiState).forEach(s => { 
+        if (counts[s] !== undefined) counts[s]++; 
+      });
+      ['sumHadir','sumSakit','sumIzin','sumAlfa'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const key = id.replace('sum','').toLowerCase();
+          el.textContent = counts[key] || 0;
+        }
+      });
     }
 
     window.setStatus = function(mhsId, status) {
-      if (isLocked) return; // ⬅️ JANGAN IZINKAN EDIT JIKA TERKUNCI
       absensiState[mhsId] = status;
       const sel = document.getElementById(`sel_${mhsId}`);
-      if (sel) {
-        sel.className = `status-select ${status}`;
-        sel.value = status;
+      if (sel) { 
+        sel.className = `status-select ${status}`; 
+        sel.value = status; 
       }
       updateSummary();
     };
 
     window.markAllHadir = function() {
-      if (isLocked) return;
       Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
     };
 
-    // ═══ SIMPAN ═══
-    window.simpanAbsensi = async function() {
+    window.pindahJP = async function(jamKeBaru) {
+      if (isSaving) { 
+        showToast(t('tungguMenyimpan') || 'Tunggu, sedang menyimpan...'); 
+        return; 
+      }
+      
+      currentJamKe = jamKeBaru;
+      await loadAbsensiUntukJP();
+      renderList();
+      updateSaveButton();
+    };
+
+    function updateSaveButton() {
+      const btn = document.getElementById('btnSimpan');
+      const label = t('simpanAbsensi') || 'Simpan Absensi';
+      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${label} JP ${currentJamKe}`;
+    }
+
+    async function loadAbsensiUntukJP() {
+      const today = getLocalDate();
+      
+      // Reset semua ke hadir dulu
+      allMhsGlobal.forEach(m => { absensiState[m.id] = 'hadir'; });
+
+      try {
+        const existingSnap = await db.collection('absensi')
+          .where('dosenId', '==', user.uid)
+          .where('jadwalId', '==', jadwalId)
+          .where('tanggal', '==', today)
+          .get();
+        
+        existingSnap.forEach(d => {
+          const data = d.data();
+          if (data.mahasiswaId && data.jamKe === currentJamKe) {
+            absensiState[data.mahasiswaId] = data.status;
+          }
+        });
+      } catch(e) {
+        console.error('Load absensi error:', e);
+      }
+    }
+
+    function hitungPekanKe() {
+      if (!absensiPertamaTanggal) return 1;
+      
+      const today = new Date();
+      const mulai = new Date(absensiPertamaTanggal);
+      const diffTime = today.getTime() - mulai.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const pekan = Math.floor(diffDays / 7) + 1;
+      
+      return pekan > 0 ? pekan : 1;
+    }
+
+    function renderList() {
+      pekanKe = hitungPekanKe();
+      const lang = getLang();
+      
+      let listHtml = '';
+      allMhsGlobal.forEach((m, i) => {
+        const status = absensiState[m.id] || 'hadir';
+        const kelasMhs = m.kelasNama || '';
+        listHtml += `<div class="santri-row">
+          <div class="santri-num">${i+1}</div>
+          <div class="santri-nama">${m.nama}${kelasMhs ? `<span class="santri-kelas">(${kelasMhs})</span>` : ''}</div>
+          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
+            <option value="hadir" ${status==='hadir'?'selected':''}>${getStatusLabel('hadir')}</option>
+            <option value="sakit" ${status==='sakit'?'selected':''}>${getStatusLabel('sakit')}</option>
+            <option value="izin" ${status==='izin'?'selected':''}>${getStatusLabel('izin')}</option>
+            <option value="alfa" ${status==='alfa'?'selected':''}>${getStatusLabel('alfa')}</option>
+            <option value="jaga" ${status==='jaga'?'selected':''}>${getStatusLabel('jaga')}</option>
+          </select>
+        </div>`;
+      });
+
+      const counts = { hadir:0, sakit:0, izin:0, alfa:0, jaga:0 };
+      Object.values(absensiState).forEach(s => { 
+        if(counts[s]!==undefined) counts[s]++; 
+      });
+
+      let jpChips = '';
+      for (let j = 1; j <= MAX_JP; j++) {
+        const active = j === currentJamKe;
+        jpChips += `<div class="jp-chip ${active ? 'active' : ''}" onclick="pindahJP(${j})">
+          JP ${j} · ${JP_WAKTU[j] || ''}
+        </div>`;
+      }
+
+      const labelPekan = t('pekanKe') || 'Pekan ke-';
+      const labelMahasiswa = t('mahasiswa') || 'Mahasiswa';
+      const labelSemuaHadir = t('semuaHadir') || 'Semua Hadir';
+      const labelHadir = t('hadir') || 'Hadir';
+      const labelSakit = t('sakit') || 'Sakit';
+      const labelIzin = t('izin') || 'Izin';
+      const labelAlfa = t('alfa') || 'Alfa';
+
+      document.getElementById('mainContent').innerHTML = `
+        <div class="info-card">
+          <div class="mk-nama">${jadwalData.mkNama || '-'}</div>
+          <div class="info-row">
+            <div class="info-chip">
+              <i class="fa-solid fa-users"></i> ${jadwalData.kelasNama || allKelasIds.length+' kelas'}
+            </div>
+            <div class="info-chip">
+              <i class="fa-solid fa-calendar-check"></i> ${labelPekan} ${pekanKe}
+            </div>
+          </div>
+          <div class="jp-selector">${jpChips}</div>
+        </div>
+        
+        <div class="list-header">
+          <span>${allMhsGlobal.length} ${labelMahasiswa}</span>
+          <button class="mark-all-btn" onclick="markAllHadir()">${labelSemuaHadir}</button>
+        </div>
+        
+        <div class="santri-list">${listHtml}</div>
+        
+        <div class="summary-card">
+          <div class="summary-item">
+            <div class="summary-val" id="sumHadir">${counts.hadir}</div>
+            <div class="summary-lbl">${labelHadir}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumSakit" style="color:#d97706;">${counts.sakit}</div>
+            <div class="summary-lbl">${labelSakit}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumIzin" style="color:#2563eb;">${counts.izin}</div>
+            <div class="summary-lbl">${labelIzin}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumAlfa" style="color:#e53935;">${counts.alfa}</div>
+            <div class="summary-lbl">${labelAlfa}</div>
+          </div>
+        </div>`;
+    }
+
+    document.getElementById('btnSimpan').addEventListener('click', async function() {
       if (isSaving) return;
-      if (Object.keys(absensiState).length === 0) { showToast('Tidak ada mahasiswa', 'error'); return; }
+      if (Object.keys(absensiState).length === 0) { 
+        showToast(t('tidakAdaMahasiswa') || 'Tidak ada mahasiswa'); 
+        return; 
+      }
 
       isSaving = true;
       const btn = document.getElementById('btnSimpan');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+      btn.disabled = true; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (t('menyimpan') || 'Menyimpan...');
 
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDate();
         const batch = db.batch();
 
         for (const [mhsId, status] of Object.entries(absensiState)) {
@@ -258,39 +560,54 @@
           const existingDocs = existingSnap.docs.filter(d => d.data().jamKe === currentJamKe);
 
           if (existingDocs.length > 0) {
-            existingDocs.forEach(d => batch.update(d.ref, { status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }));
+            existingDocs.forEach(d => batch.update(d.ref, { 
+              status, 
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+            }));
           } else {
             const ref = db.collection('absensi').doc();
             batch.set(ref, {
-              mahasiswaId: mhsId, kelasId, mapelId, jadwalId,
-              dosenId: user.uid, status, tanggal: today,
-              pertemuanKe, jamKe: currentJamKe,
-              mkNama: jadwalData.mkNama || '', kelasNama: jadwalData.kelasNama || '',
+              mahasiswaId: mhsId,
+              kelasId: kelasId,
+              mapelId: mapelId,
+              jadwalId: jadwalId,
+              dosenId: user.uid,
+              status: status,
+              tanggal: today,
+              pekanKe: pekanKe,
+              jamKe: currentJamKe,
+              mkNama: jadwalData.mkNama || '',
+              kelasNama: jadwalData.kelasNama || '',
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
           }
         }
 
         await batch.commit();
-        showToast(`✅ JP ${currentJamKe} · Pertemuan ke-${pertemuanKe} tersimpan!`, 'success');
+        const suksesMsg = (t('absensiTersimpan') || 'Absensi tersimpan').replace('{jp}', currentJamKe).replace('{pekan}', pekanKe);
+        showToast(`JP ${currentJamKe} · ${t('pekanKe') || 'Pekan ke-'}${pekanKe} ${t('tersimpan') || 'tersimpan'}!`);
         
-        // ⬇️ KUNCI FORM SETELAH SIMPAN
-        isLocked = true;
-        updateLockUI();
+        if (currentJamKe < MAX_JP) {
+          setTimeout(() => pindahJP(currentJamKe + 1), 800);
+        }
       } catch(e) {
-        showToast('❌ Gagal: ' + e.message, 'error');
+        showToast((t('gagal') || 'Gagal') + ': ' + e.message);
       } finally {
         isSaving = false;
+        btn.disabled = false;
+        updateSaveButton();
       }
-    };
+    });
 
     async function init() {
       if (!jadwalId || !kelasId || !mapelId) {
-        document.getElementById('mainContent').innerHTML = '<p style="text-align:center;">Parameter tidak lengkap.</p>';
+        document.getElementById('mainContent').innerHTML = 
+          '<p style="text-align:center;">' + (t('parameterTidakLengkap') || 'Parameter tidak lengkap.') + '</p>';
         return;
       }
 
       try {
+        // Load jadwal
         const jDoc = await db.collection('jadwal').doc(jadwalId).get();
         jadwalData = jDoc.exists ? jDoc.data() : {};
         currentJamKe = jadwalData.jamKe || 1;
@@ -298,105 +615,51 @@
         allKelasIds = jadwalData.kelasIds || [kelasId];
         if (!allKelasIds.includes(kelasId)) allKelasIds.push(kelasId);
 
-        // Hitung pertemuan
-        const absensiSnap = await db.collection('absensi').where('jadwalId', '==', jadwalId).get();
-        const tanggalUnik = new Set(absensiSnap.docs.map(d => d.data().tanggal).filter(Boolean));
-        const todayStr = new Date().toISOString().split('T')[0];
+        // Cari absensi pertama dosen ini (hanya by dosenId + tanggal, tanpa jadwalId filter)
+        // Ini menggunakan index: dosenId Ascending, tanggal Ascending
+        const firstAbsenSnap = await db.collection('absensi')
+          .where('dosenId', '==', user.uid)
+          .orderBy('tanggal', 'asc')
+          .limit(1)
+          .get();
         
-        if (!tanggalUnik.has(todayStr)) {
-          pertemuanKe = tanggalUnik.size + 1;
+        if (!firstAbsenSnap.empty) {
+          absensiPertamaTanggal = firstAbsenSnap.docs[0].data().tanggal;
         } else {
-          const sorted = [...tanggalUnik].sort();
-          pertemuanKe = sorted.indexOf(todayStr) + 1;
+          absensiPertamaTanggal = getLocalDate();
         }
-        if (pertemuanKe <= 0) pertemuanKe = 1;
 
-        document.getElementById('headerTitle').innerHTML = `${jadwalData.mkNama || 'Absensi'} <span class="lock-icon" id="lockIcon"></span>`;
-        document.getElementById('headerSub').textContent = `${jadwalData.kelasNama || ''} · JP ${currentJamKe} · Pertemuan ke-${pertemuanKe}`;
-
-        // Ambil mahasiswa
+        // Load mahasiswa
         let allMhs = [];
         for (const kid of allKelasIds) {
           const mSnap = await db.collection('mahasiswa').where('kelasId', '==', kid).get();
           mSnap.forEach(d => { allMhs.push({ id: d.id, ...d.data() }); });
         }
+        
         allMhs = [...new Map(allMhs.map(m => [m.id, m])).values()];
         allMhs.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        allMhsGlobal = allMhs;
 
         if (allMhs.length === 0) {
-          document.getElementById('mainContent').innerHTML = '<p style="text-align:center;">Tidak ada mahasiswa di kelas ini.</p>';
+          document.getElementById('mainContent').innerHTML = 
+            '<p style="text-align:center;">' + (t('tidakAdaMahasiswaKelas') || 'Tidak ada mahasiswa di kelas ini.') + '</p>';
           return;
         }
 
-        // Cek existing absensi untuk JP ini
-        const existingSnap = await db.collection('absensi')
-          .where('dosenId', '==', user.uid)
-          .where('jadwalId', '==', jadwalId)
-          .where('tanggal', '==', todayStr)
-          .get();
+        document.getElementById('headerTitle').textContent = jadwalData.mkNama || (t('absensi') || 'Absensi');
         
-        const existingMap = {};
-        let hasExisting = false;
-        existingSnap.forEach(d => {
-          const data = d.data();
-          if (data.mahasiswaId && data.jamKe === currentJamKe) {
-            existingMap[data.mahasiswaId] = data.status;
-            hasExisting = true;
-          }
-        });
+        pekanKe = hitungPekanKe();
+        const labelPekan = t('pekanKe') || 'Pekan ke-';
+        document.getElementById('headerSub').textContent = 
+          `${jadwalData.kelasNama || ''} · ${labelPekan} ${pekanKe}`;
 
-        // ⬇️ JIKA SUDAH ADA DATA, KUNCI FORM
-        isLocked = hasExisting;
+        await loadAbsensiUntukJP();
+        renderList();
+        updateSaveButton();
 
-        allMhs.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
-
-        // Render
-        let listHtml = '';
-        allMhs.forEach((m, i) => {
-          const status = absensiState[m.id];
-          const kelasMhs = m.kelasNama || '';
-          listHtml += `<div class="santri-row">
-            <div class="santri-num">${i+1}</div>
-            <div class="santri-nama">${m.nama}${kelasMhs ? `<span class="santri-kelas">(${kelasMhs})</span>` : ''}</div>
-            <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)" ${isLocked ? 'disabled' : ''}>
-              <option value="hadir" ${status==='hadir'?'selected':''}>✓ Hadir</option>
-              <option value="sakit" ${status==='sakit'?'selected':''}>🤒 Sakit</option>
-              <option value="izin" ${status==='izin'?'selected':''}>📝 Izin</option>
-              <option value="alfa" ${status==='alfa'?'selected':''}>❌ Alfa</option>
-              <option value="jaga" ${status==='jaga'?'selected':''}>🛡️ Jaga</option>
-            </select>
-          </div>`;
-        });
-
-        const counts = { hadir:0, sakit:0, izin:0, alfa:0, jaga:0 };
-        Object.values(absensiState).forEach(s => { if(counts[s]!==undefined) counts[s]++; });
-
-        document.getElementById('mainContent').innerHTML = `
-          <div class="info-card">
-            <div class="mk-nama">${jadwalData.mkNama || '-'}</div>
-            <div class="info-row">
-              <div class="info-chip"><i class="fa-solid fa-users"></i> ${jadwalData.kelasNama || allKelasIds.length+' kelas'}</div>
-              <div class="info-chip"><i class="fa-solid fa-clock"></i> JP ${currentJamKe} · ${jadwalData.waktu || ''}</div>
-              <div class="info-chip"><i class="fa-solid fa-calendar-check"></i> Pertemuan ke-${pertemuanKe}</div>
-              ${isLocked ? '<div class="info-chip" style="background:#e8f5e9;color:#1b5e20;">🔒 Terkunci</div>' : ''}
-            </div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-item"><div class="summary-val" id="sumHadir">${counts.hadir}</div><div class="summary-lbl">Hadir</div></div>
-            <div class="summary-item"><div class="summary-val" id="sumSakit" style="color:#d97706;">${counts.sakit}</div><div class="summary-lbl">Sakit</div></div>
-            <div class="summary-item"><div class="summary-val" id="sumIzin" style="color:#2563eb;">${counts.izin}</div><div class="summary-lbl">Izin</div></div>
-            <div class="summary-item"><div class="summary-val" id="sumAlfa" style="color:#e53935;">${counts.alfa}</div><div class="summary-lbl">Alfa</div></div>
-          </div>
-          <div class="list-header">
-            <span>📋 ${allMhs.length} Mahasiswa</span>
-            ${!isLocked ? '<button class="mark-all-btn" onclick="markAllHadir()">✅ Semua Hadir</button>' : ''}
-          </div>
-          <div class="santri-list">${listHtml}</div>`;
-
-        // Update UI kunci
-        updateLockUI();
       } catch(e) {
-        document.getElementById('mainContent').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
+        document.getElementById('mainContent').innerHTML = 
+          `<p style="color:red;">Error: ${e.message}</p>`;
       }
     }
 
