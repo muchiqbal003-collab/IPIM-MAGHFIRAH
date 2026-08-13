@@ -15,7 +15,8 @@
       --gold:#f5c842;--white:#ffffff;
       --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
       --gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
+      --red:#e53935;--red-light:#fce4ec;
+      --blue:#1565c0;--blue-light:#e3f2fd;
       --orange:#f57c00;--orange-light:#fff3e0;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --header-height:56px;
@@ -62,7 +63,6 @@
       display: flex; flex-direction: column; gap: 10px; 
     }
 
-    /* Info Card - Mata Kuliah & JP sesuai jadwal */
     .info-card {
       background: var(--white);
       border-radius: var(--radius-lg);
@@ -76,7 +76,7 @@
       margin-bottom: 6px;
     }
     .info-row { 
-      display: flex; gap: 8px; flex-wrap: wrap; 
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
     }
     .info-chip { 
       display: flex; align-items: center; gap: 5px; 
@@ -86,8 +86,10 @@
       color: var(--green-dark); 
     }
     .info-chip i { font-size: 10px; }
+    .info-chip.orange { background: var(--orange-light); color: var(--orange); }
+    .info-chip.blue { background: var(--blue-light); color: var(--blue); }
 
-    /* JP Selector - HANYA sesuai jadwal */
+    /* JP Selector */
     .jp-selector {
       display: flex; gap: 6px; margin-top: 10px;
       flex-wrap: wrap;
@@ -101,27 +103,71 @@
       cursor: pointer;
       color: var(--gray-600);
       transition: all 0.15s ease;
+      font-family: inherit;
     }
     .jp-chip.active {
       background: var(--green-mid);
       color: white;
       border-color: var(--green-mid);
     }
-
-    /* Info JP sebelum & sesudah */
-    .jp-neighbor {
-      display: flex; gap: 6px; margin-top: 8px;
-      font-size: 9px; color: var(--gray-600);
-      flex-wrap: wrap;
+    .jp-chip.locked {
+      background: var(--gray-200);
+      color: var(--gray-600);
+      cursor: not-allowed;
+      opacity: 0.6;
     }
-    .jp-neighbor-item {
-      display: flex; align-items: center; gap: 4px;
+
+    /* Info jadwal kelas hari ini */
+    .jadwal-kelas-info {
+      margin-top: 10px;
+      padding: 10px;
       background: var(--gray-50);
-      border-radius: 12px; padding: 3px 8px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--gray-100);
     }
-    .jp-neighbor-item.prev { color: var(--blue); }
-    .jp-neighbor-item.next { color: var(--orange); }
+    .jadwal-kelas-info .label {
+      font-size: 9px; font-weight: 700; 
+      color: var(--gray-600); 
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .jadwal-kelas-list {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .jadwal-kelas-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; color: var(--gray-800);
+      padding: 5px 8px;
+      border-radius: 8px;
+    }
+    .jadwal-kelas-row.is-me { 
+      background: var(--green-light); 
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+    .jadwal-kelas-row.other {
+      background: var(--blue-light);
+    }
+    .jadwal-kelas-row .jp-badge {
+      width: 30px; height: 24px; 
+      border-radius: 8px; 
+      background: var(--green-light);
+      color: var(--green-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .jadwal-kelas-row.is-me .jp-badge {
+      background: var(--green-mid);
+      color: white;
+    }
+    .jadwal-kelas-row.other .jp-badge {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+    .jadwal-kelas-row .nama-dosen {
+      font-size: 8px; color: var(--gray-600);
+    }
 
     .list-header { 
       display: flex; align-items: center; justify-content: space-between; 
@@ -136,6 +182,7 @@
       font-weight: 600; background: var(--green-light); 
       border: none; cursor: pointer; 
       padding: 5px 12px; border-radius: 20px; 
+      font-family: inherit;
     }
 
     .santri-list { 
@@ -167,6 +214,7 @@
       border: 1.5px solid var(--gray-200); 
       background: white; cursor: pointer; outline: none; 
     }
+    .status-select:disabled { opacity: 0.6; cursor: not-allowed; }
     .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
     .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
     .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
@@ -191,6 +239,29 @@
       margin-top: 2px; 
     }
 
+    .lock-btn {
+      background: var(--red-light);
+      color: #b71c1c;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 10px; font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .unlock-btn {
+      background: var(--orange-light);
+      color: var(--orange);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 10px; font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex; align-items: center; gap: 5px;
+    }
+
     .btn-simpan {
       width: 100%; padding: 13px; border: none; border-radius: 40px;
       background: linear-gradient(135deg, #004d40, #006644); color: white;
@@ -200,7 +271,7 @@
       justify-content: center; gap: 8px;
       box-shadow: 0 4px 12px rgba(0,61,51,0.3);
     }
-    .btn-simpan:disabled { opacity: 0.6; }
+    .btn-simpan:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .toast { 
       position: fixed; bottom: 100px; left: 50%; 
@@ -316,7 +387,11 @@
     let currentJamKe = 1;
     let jadwalData = {};
     let allMhsGlobal = [];
-    let semuaJadwalHariIni = []; // Semua jadwal dosen di hari yang sama
+    let semuaJadwalKelasIni = []; // SEMUA jadwal di kelas ini (semua dosen)
+    let dosenMap = {}; // Map dosenId -> nama
+    let lockedJPs = new Set();
+    let isLocked = false;
+    let absensiDocIds = {};
 
     const JP_WAKTU = {
       1: '07:15-08:05', 2: '08:10-09:00', 3: '09:05-09:55',
@@ -351,6 +426,7 @@
     }
 
     window.setStatus = function(mhsId, status) {
+      if (isLocked) return;
       absensiState[mhsId] = status;
       const sel = document.getElementById(`sel_${mhsId}`);
       if (sel) { 
@@ -361,30 +437,53 @@
     };
 
     window.markAllHadir = function() {
+      if (isLocked) return;
       Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
     };
 
     window.pindahJP = async function(jamKeBaru) {
-      if (isSaving) { 
-        showToast('Tunggu, sedang menyimpan...'); 
-        return; 
+      if (isSaving) { showToast('Tunggu...'); return; }
+      if (lockedJPs.has(jamKeBaru) && jamKeBaru !== currentJamKe) {
+        showToast('JP sudah dikunci. Buka kunci dulu.');
+        return;
       }
-      
       currentJamKe = jamKeBaru;
       await loadAbsensiUntukJP();
       renderList();
       updateSaveButton();
     };
 
+    window.toggleKunci = function() {
+      if (isLocked) {
+        isLocked = false;
+        lockedJPs.delete(currentJamKe);
+        renderList();
+        updateSaveButton();
+        showToast('Kunci dibuka.');
+      } else {
+        isLocked = true;
+        lockedJPs.add(currentJamKe);
+        renderList();
+        updateSaveButton();
+        showToast('JP dikunci.');
+      }
+    };
+
     function updateSaveButton() {
       const btn = document.getElementById('btnSimpan');
-      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Simpan Absensi JP ${currentJamKe}`;
+      if (isLocked) {
+        btn.innerHTML = `<i class="fa-solid fa-lock"></i> JP ${currentJamKe} Terkunci`;
+        btn.disabled = true;
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Simpan JP ${currentJamKe}`;
+        btn.disabled = false;
+      }
     }
 
     async function loadAbsensiUntukJP() {
       const today = getLocalDate();
-      
       allMhsGlobal.forEach(m => { absensiState[m.id] = 'hadir'; });
+      absensiDocIds = {};
 
       try {
         const existingSnap = await db.collection('absensi')
@@ -397,8 +496,12 @@
           const data = d.data();
           if (data.mahasiswaId && data.jamKe === currentJamKe) {
             absensiState[data.mahasiswaId] = data.status;
+            absensiDocIds[data.mahasiswaId] = d.id;
           }
         });
+        
+        isLocked = existingSnap.docs.some(d => d.data().jamKe === currentJamKe);
+        if (isLocked) lockedJPs.add(currentJamKe);
       } catch(e) {
         console.error('Load absensi error:', e);
       }
@@ -410,53 +513,57 @@
         if(counts[s]!==undefined) counts[s]++; 
       });
 
-      // Build JP chips hanya untuk JP yang ada di jadwal ini
-      let jpChips = '';
+      // JP chips untuk jadwal INI saja
       const jpList = jadwalData.jamKeList || [jadwalData.jamKe || 1];
-      
+      let jpChips = '';
       jpList.forEach(jp => {
         const active = jp === currentJamKe;
-        jpChips += `<div class="jp-chip ${active ? 'active' : ''}" onclick="pindahJP(${jp})">
-          JP ${jp} · ${JP_WAKTU[jp] || ''}
-        </div>`;
+        const locked = lockedJPs.has(jp);
+        jpChips += `<button class="jp-chip ${active ? 'active' : ''} ${locked && !active ? 'locked' : ''}" 
+          onclick="${locked && !active ? '' : `pindahJP(${jp})`}"
+          style="${locked && !active ? 'cursor:not-allowed;' : ''}">
+          JP ${jp} · ${JP_WAKTU[jp] || ''} ${locked ? '<i class="fa-solid fa-lock"></i>' : ''}
+        </button>`;
       });
 
-      // Info JP sebelum & sesudah
-      let neighborHtml = '';
-      
-      // Cari JP sebelumnya di jadwal hari ini
-      const idxCurrent = jpList.indexOf(currentJamKe);
-      const prevJP = idxCurrent > 0 ? jpList[idxCurrent - 1] : null;
-      const nextJP = idxCurrent < jpList.length - 1 ? jpList[idxCurrent + 1] : null;
-      
-      // Cari semua jadwal dosen di hari yang sama untuk info konteks
-      const today = new Date();
-      const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
-      const jadwalDosenHariIni = semuaJadwalHariIni.filter(j => j.hari === hari);
-      
-      // Info sebelum
-      if (prevJP) {
-        const jadwalPrev = jadwalDosenHariIni.find(j => (j.jamKeList || [j.jamKe]).includes(prevJP));
-        neighborHtml += `<span class="jp-neighbor-item prev">
-          <i class="fa-solid fa-arrow-left"></i> Sebelum: ${jadwalPrev ? jadwalPrev.mkNama : 'JP ' + prevJP}
-        </span>`;
-      }
-      
-      // Info sesudah
-      if (nextJP) {
-        const jadwalNext = jadwalDosenHariIni.find(j => (j.jamKeList || [j.jamKe]).includes(nextJP));
-        neighborHtml += `<span class="jp-neighbor-item next">
-          Sesudah: ${jadwalNext ? jadwalNext.mkNama : 'JP ' + nextJP} <i class="fa-solid fa-arrow-right"></i>
-        </span>`;
-      }
+      // Info jadwal SEMUA dosen di kelas ini
+      const jadwalKelas = semuaJadwalKelasIni
+        .filter(j => (j.kelasIds || [j.kelasId]).includes(kelasId))
+        .sort((a,b) => {
+          const jpA = a.jamKeList ? Math.min(...a.jamKeList) : a.jamKe;
+          const jpB = b.jamKeList ? Math.min(...b.jamKeList) : b.jamKe;
+          return jpA - jpB;
+        });
 
+      let jadwalKelasHtml = '';
+      jadwalKelas.forEach(j => {
+        const jpListJ = j.jamKeList || [j.jamKe || 1];
+        const isMe = j.dosenId === user.uid;
+        const firstJP = Math.min(...jpListJ);
+        const lastJP = Math.max(...jpListJ);
+        const jpLabel = jpListJ.length > 1 ? `JP ${firstJP}-${lastJP}` : `JP ${firstJP}`;
+        const namaDosen = isMe ? 'Anda' : (dosenMap[j.dosenId] || 'Dosen lain');
+        
+        jadwalKelasHtml += `
+          <div class="jadwal-kelas-row ${isMe ? 'is-me' : 'other'}">
+            <span class="jp-badge">${jpLabel}</span>
+            <span style="flex:1;">
+              ${j.mkNama || '-'} 
+              <span class="nama-dosen">· ${namaDosen}</span>
+            </span>
+            <span style="font-size:9px;color:var(--gray-600);">${JP_WAKTU[firstJP]?.split('-')[0] || ''}</span>
+          </div>`;
+      });
+
+      // List mahasiswa
       let listHtml = '';
       allMhsGlobal.forEach((m, i) => {
         const status = absensiState[m.id] || 'hadir';
         listHtml += `<div class="santri-row">
           <div class="santri-num">${i+1}</div>
           <div class="santri-nama">${m.nama}</div>
-          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
+          <select class="status-select ${status}" id="sel_${m.id}" 
+            onchange="setStatus('${m.id}', this.value)" ${isLocked ? 'disabled' : ''}>
             <option value="hadir" ${status==='hadir'?'selected':''}>Hadir</option>
             <option value="sakit" ${status==='sakit'?'selected':''}>Sakit</option>
             <option value="izin" ${status==='izin'?'selected':''}>Izin</option>
@@ -476,14 +583,21 @@
             <div class="info-chip">
               <i class="fa-solid fa-clock"></i> ${JP_WAKTU[currentJamKe] || ''}
             </div>
+            <button class="${isLocked ? 'unlock-btn' : 'lock-btn'}" onclick="toggleKunci()">
+              <i class="fa-solid ${isLocked ? 'fa-unlock' : 'fa-lock'}"></i>
+              ${isLocked ? 'Buka Kunci' : 'Kunci'}
+            </button>
           </div>
           <div class="jp-selector">${jpChips}</div>
-          ${neighborHtml ? `<div class="jp-neighbor">${neighborHtml}</div>` : ''}
+          <div class="jadwal-kelas-info">
+            <div class="label">Jadwal Hari Ini di Kelas ${jadwalData.kelasNama || ''}</div>
+            <div class="jadwal-kelas-list">${jadwalKelasHtml || '<p style="font-size:10px;color:var(--gray-600);">Tidak ada jadwal.</p>'}</div>
+          </div>
         </div>
         
         <div class="list-header">
           <span>${allMhsGlobal.length} Mahasiswa</span>
-          <button class="mark-all-btn" onclick="markAllHadir()">Semua Hadir</button>
+          <button class="mark-all-btn" onclick="markAllHadir()" ${isLocked ? 'disabled style="opacity:0.5;"' : ''}>Semua Hadir</button>
         </div>
         
         <div class="santri-list">${listHtml}</div>
@@ -510,10 +624,8 @@
 
     document.getElementById('btnSimpan').addEventListener('click', async function() {
       if (isSaving) return;
-      if (Object.keys(absensiState).length === 0) { 
-        showToast('Tidak ada mahasiswa'); 
-        return; 
-      }
+      if (isLocked) { showToast('Buka kunci dulu.'); return; }
+      if (Object.keys(absensiState).length === 0) { showToast('Tidak ada mahasiswa'); return; }
 
       isSaving = true;
       const btn = document.getElementById('btnSimpan');
@@ -525,19 +637,12 @@
         const batch = db.batch();
 
         for (const [mhsId, status] of Object.entries(absensiState)) {
-          const existingSnap = await db.collection('absensi')
-            .where('mahasiswaId', '==', mhsId)
-            .where('jadwalId', '==', jadwalId)
-            .where('tanggal', '==', today)
-            .get();
-
-          const existingDocs = existingSnap.docs.filter(d => d.data().jamKe === currentJamKe);
-
-          if (existingDocs.length > 0) {
-            existingDocs.forEach(d => batch.update(d.ref, { 
+          const existingDocId = absensiDocIds[mhsId];
+          if (existingDocId) {
+            batch.update(db.collection('absensi').doc(existingDocId), { 
               status, 
               updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-            }));
+            });
           } else {
             const ref = db.collection('absensi').doc();
             batch.set(ref, {
@@ -557,56 +662,77 @@
         }
 
         await batch.commit();
-        showToast(`JP ${currentJamKe} tersimpan!`);
-        
-        // Auto pindah ke JP berikutnya
-        const jpList = jadwalData.jamKeList || [jadwalData.jamKe || 1];
-        const idxCurrent = jpList.indexOf(currentJamKe);
-        if (idxCurrent >= 0 && idxCurrent < jpList.length - 1) {
-          setTimeout(() => pindahJP(jpList[idxCurrent + 1]), 600);
-        }
+        isLocked = true;
+        lockedJPs.add(currentJamKe);
+        showToast(`JP ${currentJamKe} tersimpan & dikunci!`);
+        renderList();
+        updateSaveButton();
       } catch(e) {
         showToast('Gagal: ' + e.message);
       } finally {
         isSaving = false;
-        btn.disabled = false;
-        updateSaveButton();
+        btn.disabled = isLocked;
       }
     });
 
     async function init() {
       if (!jadwalId || !kelasId || !mapelId) {
-        document.getElementById('mainContent').innerHTML = 
-          '<p style="text-align:center;">Parameter tidak lengkap.</p>';
+        document.getElementById('mainContent').innerHTML = '<p style="text-align:center;">Parameter tidak lengkap.</p>';
         return;
       }
 
       try {
         const jDoc = await db.collection('jadwal').doc(jadwalId).get();
         jadwalData = jDoc.exists ? jDoc.data() : {};
-        
-        // Dapatkan jamKeList dari jadwal
-        if (!jadwalData.jamKeList) {
-          jadwalData.jamKeList = [jadwalData.jamKe || 1];
-        }
+        if (!jadwalData.jamKeList) jadwalData.jamKeList = [jadwalData.jamKe || 1];
         currentJamKe = jadwalData.jamKe || 1;
 
         allKelasIds = jadwalData.kelasIds || [kelasId];
         if (!allKelasIds.includes(kelasId)) allKelasIds.push(kelasId);
 
-        // Load SEMUA jadwal dosen (untuk info JP sebelum/sesudah)
+        // Load SEMUA jadwal di KELAS ini (semua dosen)
         const today = new Date();
         const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
-        const semuaSnap = await db.collection('jadwal')
-          .where('dosenId', '==', user.uid)
+        
+        const kelasSnap = await db.collection('jadwal')
+          .where('kelasIds', 'array-contains', kelasId)
           .where('hari', '==', hari)
           .get();
-        semuaJadwalHariIni = semuaSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        // Normalize jamKeList untuk semua jadwal
-        semuaJadwalHariIni.forEach(j => {
+        if (kelasSnap.empty) {
+          // Fallback: cari dengan kelasId langsung
+          const kelasSnap2 = await db.collection('jadwal')
+            .where('kelasId', '==', kelasId)
+            .where('hari', '==', hari)
+            .get();
+          semuaJadwalKelasIni = kelasSnap2.docs.map(d => ({ id: d.id, ...d.data() }));
+        } else {
+          semuaJadwalKelasIni = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+        
+        semuaJadwalKelasIni.forEach(j => {
           if (!j.jamKeList) j.jamKeList = [j.jamKe || 1];
         });
+
+        // Load nama dosen untuk semua jadwal
+        const dosenIds = [...new Set(semuaJadwalKelasIni.map(j => j.dosenId).filter(Boolean))];
+        for (const did of dosenIds) {
+          if (did === user.uid) {
+            dosenMap[did] = user.nama || 'Anda';
+          } else {
+            try {
+              const dDoc = await db.collection('dosen').doc(did).get();
+              if (dDoc.exists) {
+                dosenMap[did] = dDoc.data().nama || 'Dosen';
+              } else {
+                const uDoc = await db.collection('users').doc(did).get();
+                if (uDoc.exists) dosenMap[did] = uDoc.data().nama || 'Dosen';
+              }
+            } catch(e) {
+              dosenMap[did] = 'Dosen';
+            }
+          }
+        }
 
         // Load mahasiswa
         let allMhs = [];
@@ -614,28 +740,24 @@
           const mSnap = await db.collection('mahasiswa').where('kelasId', '==', kid).get();
           mSnap.forEach(d => { allMhs.push({ id: d.id, ...d.data() }); });
         }
-        
         allMhs = [...new Map(allMhs.map(m => [m.id, m])).values()];
         allMhs.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
         allMhsGlobal = allMhs;
 
         if (allMhs.length === 0) {
-          document.getElementById('mainContent').innerHTML = 
-            '<p style="text-align:center;">Tidak ada mahasiswa di kelas ini.</p>';
+          document.getElementById('mainContent').innerHTML = '<p style="text-align:center;">Tidak ada mahasiswa di kelas ini.</p>';
           return;
         }
 
         document.getElementById('headerTitle').textContent = jadwalData.mkNama || 'Absensi';
-        document.getElementById('headerSub').textContent = 
-          `${jadwalData.kelasNama || ''} · ${jadwalData.jamKeList.length} JP`;
+        document.getElementById('headerSub').textContent = `${jadwalData.kelasNama || ''} · ${jadwalData.jamKeList.length} JP`;
 
         await loadAbsensiUntukJP();
         renderList();
         updateSaveButton();
 
       } catch(e) {
-        document.getElementById('mainContent').innerHTML = 
-          `<p style="color:red;">Error: ${e.message}</p>`;
+        document.getElementById('mainContent').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
       }
     }
 
