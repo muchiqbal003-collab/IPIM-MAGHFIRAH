@@ -53,14 +53,6 @@
       width: 36px; height: 36px; border-radius: 50%; 
       cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-    .btn-lang {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      width: 36px; height: 36px; border-radius: 50%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700;
-    }
     .header-info { flex: 1; }
     .header-info h3 { font-size: 15px; font-weight: 700; }
     .header-info .sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
@@ -70,6 +62,7 @@
       display: flex; flex-direction: column; gap: 10px; 
     }
 
+    /* Info Card - Mata Kuliah & JP sesuai jadwal */
     .info-card {
       background: var(--white);
       border-radius: var(--radius-lg);
@@ -94,6 +87,7 @@
     }
     .info-chip i { font-size: 10px; }
 
+    /* JP Selector - HANYA sesuai jadwal */
     .jp-selector {
       display: flex; gap: 6px; margin-top: 10px;
       flex-wrap: wrap;
@@ -102,16 +96,32 @@
       background: var(--gray-100);
       border: 1px solid var(--gray-200);
       border-radius: 20px;
-      padding: 5px 12px;
+      padding: 6px 14px;
       font-size: 10px; font-weight: 600;
       cursor: pointer;
       color: var(--gray-600);
+      transition: all 0.15s ease;
     }
     .jp-chip.active {
       background: var(--green-mid);
       color: white;
       border-color: var(--green-mid);
     }
+
+    /* Info JP sebelum & sesudah */
+    .jp-neighbor {
+      display: flex; gap: 6px; margin-top: 8px;
+      font-size: 9px; color: var(--gray-600);
+      flex-wrap: wrap;
+    }
+    .jp-neighbor-item {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--gray-50);
+      border-radius: 12px; padding: 3px 8px;
+      border: 1px solid var(--gray-100);
+    }
+    .jp-neighbor-item.prev { color: var(--blue); }
+    .jp-neighbor-item.next { color: var(--orange); }
 
     .list-header { 
       display: flex; align-items: center; justify-content: space-between; 
@@ -148,10 +158,6 @@
     }
     .santri-nama { 
       flex: 1; font-size: 13px; font-weight: 600; 
-    }
-    .santri-kelas { 
-      font-size: 9px; color: var(--gray-600); 
-      margin-inline-start: 4px; 
     }
 
     .status-select { 
@@ -257,9 +263,6 @@
       <h3 id="headerTitle">Absensi Kelas</h3>
       <div class="sub" id="headerSub">Memuat...</div>
     </div>
-    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
-      <span id="langIndicator">🌐</span>
-    </button>
   </header>
 
   <div class="content" id="mainContent">
@@ -268,25 +271,25 @@
 
   <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
     <button class="btn-simpan" id="btnSimpan">
-      <i class="fa-solid fa-circle-check"></i> <span data-lang="simpanAbsensi">Simpan Absensi</span>
+      <i class="fa-solid fa-circle-check"></i> Simpan Absensi
     </button>
   </div>
 
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')">
-      <i class="fa-solid fa-house"></i><span data-lang="home">Home</span>
+      <i class="fa-solid fa-house"></i><span>Home</span>
     </div>
     <div class="nav-item active" onclick="goTo('absensi-kelas.html')">
-      <i class="fa-solid fa-clipboard-check"></i><span data-lang="absensi">Absensi</span>
+      <i class="fa-solid fa-clipboard-check"></i><span>Absensi</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
-      <i class="fa-solid fa-calendar-days"></i><span data-lang="kalender">Kalender</span>
+      <i class="fa-solid fa-calendar-days"></i><span>Kalender</span>
     </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
-      <i class="fa-solid fa-chart-simple"></i><span data-lang="rekap">Rekap</span>
+      <i class="fa-solid fa-chart-simple"></i><span>Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
-      <i class="fa-solid fa-circle-user"></i><span data-lang="profil">Profil</span>
+      <i class="fa-solid fa-circle-user"></i><span>Profil</span>
     </div>
   </nav>
 
@@ -297,34 +300,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
-  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    // ═══ MULTI LANGUAGE ═══
-    function cycleLang() {
-      const langs = ['id', 'en', 'ar'];
-      const current = getLang();
-      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
-      setLang(langs[nextIndex]);
-      updateLangIndicator();
-      renderList();
-    }
-    
-    function updateLangIndicator() {
-      const lang = getLang();
-      const indicator = document.getElementById('langIndicator');
-      if (lang === 'id') indicator.textContent = '🇮🇩';
-      else if (lang === 'en') indicator.textContent = '🇬🇧';
-      else if (lang === 'ar') indicator.textContent = '🇸🇦';
-    }
-    
-    updateLangIndicator();
-    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
-
-    // ═══ MAIN LOGIC ═══
     const params = new URLSearchParams(window.location.search);
     const jadwalId = params.get('jadwalId');
     const kelasId = params.get('kelasId');
@@ -332,29 +312,16 @@
 
     const absensiState = {};
     let isSaving = false;
-    let pekanKe = 1;
     let allKelasIds = [];
     let currentJamKe = 1;
     let jadwalData = {};
     let allMhsGlobal = [];
-    let absensiPertamaTanggal = null;
+    let semuaJadwalHariIni = []; // Semua jadwal dosen di hari yang sama
 
     const JP_WAKTU = {
       1: '07:15-08:05', 2: '08:10-09:00', 3: '09:05-09:55',
       4: '10:10-11:00', 5: '11:05-11:55'
     };
-    const MAX_JP = 5;
-
-    const STATUS_LABELS = {
-      id: { hadir: 'Hadir', sakit: 'Sakit', izin: 'Izin', alfa: 'Alfa', jaga: 'Jaga' },
-      en: { hadir: 'Present', sakit: 'Sick', izin: 'Permit', alfa: 'Absent', jaga: 'Guard' },
-      ar: { hadir: 'حاضر', sakit: 'مريض', izin: 'إذن', alfa: 'غائب', jaga: 'حارس' }
-    };
-
-    function getStatusLabel(status) {
-      const lang = getLang();
-      return STATUS_LABELS[lang]?.[status] || STATUS_LABELS['id'][status] || status;
-    }
 
     function getLocalDate() {
       const now = new Date();
@@ -399,7 +366,7 @@
 
     window.pindahJP = async function(jamKeBaru) {
       if (isSaving) { 
-        showToast(t('tungguMenyimpan') || 'Tunggu, sedang menyimpan...'); 
+        showToast('Tunggu, sedang menyimpan...'); 
         return; 
       }
       
@@ -411,14 +378,12 @@
 
     function updateSaveButton() {
       const btn = document.getElementById('btnSimpan');
-      const label = t('simpanAbsensi') || 'Simpan Absensi';
-      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${label} JP ${currentJamKe}`;
+      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Simpan Absensi JP ${currentJamKe}`;
     }
 
     async function loadAbsensiUntukJP() {
       const today = getLocalDate();
       
-      // Reset semua ke hadir dulu
       allMhsGlobal.forEach(m => { absensiState[m.id] = 'hadir'; });
 
       try {
@@ -439,59 +404,67 @@
       }
     }
 
-    function hitungPekanKe() {
-      if (!absensiPertamaTanggal) return 1;
-      
-      const today = new Date();
-      const mulai = new Date(absensiPertamaTanggal);
-      const diffTime = today.getTime() - mulai.getTime();
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      const pekan = Math.floor(diffDays / 7) + 1;
-      
-      return pekan > 0 ? pekan : 1;
-    }
-
     function renderList() {
-      pekanKe = hitungPekanKe();
-      const lang = getLang();
-      
-      let listHtml = '';
-      allMhsGlobal.forEach((m, i) => {
-        const status = absensiState[m.id] || 'hadir';
-        const kelasMhs = m.kelasNama || '';
-        listHtml += `<div class="santri-row">
-          <div class="santri-num">${i+1}</div>
-          <div class="santri-nama">${m.nama}${kelasMhs ? `<span class="santri-kelas">(${kelasMhs})</span>` : ''}</div>
-          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
-            <option value="hadir" ${status==='hadir'?'selected':''}>${getStatusLabel('hadir')}</option>
-            <option value="sakit" ${status==='sakit'?'selected':''}>${getStatusLabel('sakit')}</option>
-            <option value="izin" ${status==='izin'?'selected':''}>${getStatusLabel('izin')}</option>
-            <option value="alfa" ${status==='alfa'?'selected':''}>${getStatusLabel('alfa')}</option>
-            <option value="jaga" ${status==='jaga'?'selected':''}>${getStatusLabel('jaga')}</option>
-          </select>
-        </div>`;
-      });
-
       const counts = { hadir:0, sakit:0, izin:0, alfa:0, jaga:0 };
       Object.values(absensiState).forEach(s => { 
         if(counts[s]!==undefined) counts[s]++; 
       });
 
+      // Build JP chips hanya untuk JP yang ada di jadwal ini
       let jpChips = '';
-      for (let j = 1; j <= MAX_JP; j++) {
-        const active = j === currentJamKe;
-        jpChips += `<div class="jp-chip ${active ? 'active' : ''}" onclick="pindahJP(${j})">
-          JP ${j} · ${JP_WAKTU[j] || ''}
+      const jpList = jadwalData.jamKeList || [jadwalData.jamKe || 1];
+      
+      jpList.forEach(jp => {
+        const active = jp === currentJamKe;
+        jpChips += `<div class="jp-chip ${active ? 'active' : ''}" onclick="pindahJP(${jp})">
+          JP ${jp} · ${JP_WAKTU[jp] || ''}
         </div>`;
+      });
+
+      // Info JP sebelum & sesudah
+      let neighborHtml = '';
+      
+      // Cari JP sebelumnya di jadwal hari ini
+      const idxCurrent = jpList.indexOf(currentJamKe);
+      const prevJP = idxCurrent > 0 ? jpList[idxCurrent - 1] : null;
+      const nextJP = idxCurrent < jpList.length - 1 ? jpList[idxCurrent + 1] : null;
+      
+      // Cari semua jadwal dosen di hari yang sama untuk info konteks
+      const today = new Date();
+      const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
+      const jadwalDosenHariIni = semuaJadwalHariIni.filter(j => j.hari === hari);
+      
+      // Info sebelum
+      if (prevJP) {
+        const jadwalPrev = jadwalDosenHariIni.find(j => (j.jamKeList || [j.jamKe]).includes(prevJP));
+        neighborHtml += `<span class="jp-neighbor-item prev">
+          <i class="fa-solid fa-arrow-left"></i> Sebelum: ${jadwalPrev ? jadwalPrev.mkNama : 'JP ' + prevJP}
+        </span>`;
+      }
+      
+      // Info sesudah
+      if (nextJP) {
+        const jadwalNext = jadwalDosenHariIni.find(j => (j.jamKeList || [j.jamKe]).includes(nextJP));
+        neighborHtml += `<span class="jp-neighbor-item next">
+          Sesudah: ${jadwalNext ? jadwalNext.mkNama : 'JP ' + nextJP} <i class="fa-solid fa-arrow-right"></i>
+        </span>`;
       }
 
-      const labelPekan = t('pekanKe') || 'Pekan ke-';
-      const labelMahasiswa = t('mahasiswa') || 'Mahasiswa';
-      const labelSemuaHadir = t('semuaHadir') || 'Semua Hadir';
-      const labelHadir = t('hadir') || 'Hadir';
-      const labelSakit = t('sakit') || 'Sakit';
-      const labelIzin = t('izin') || 'Izin';
-      const labelAlfa = t('alfa') || 'Alfa';
+      let listHtml = '';
+      allMhsGlobal.forEach((m, i) => {
+        const status = absensiState[m.id] || 'hadir';
+        listHtml += `<div class="santri-row">
+          <div class="santri-num">${i+1}</div>
+          <div class="santri-nama">${m.nama}</div>
+          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
+            <option value="hadir" ${status==='hadir'?'selected':''}>Hadir</option>
+            <option value="sakit" ${status==='sakit'?'selected':''}>Sakit</option>
+            <option value="izin" ${status==='izin'?'selected':''}>Izin</option>
+            <option value="alfa" ${status==='alfa'?'selected':''}>Alfa</option>
+            <option value="jaga" ${status==='jaga'?'selected':''}>Jaga</option>
+          </select>
+        </div>`;
+      });
 
       document.getElementById('mainContent').innerHTML = `
         <div class="info-card">
@@ -501,15 +474,16 @@
               <i class="fa-solid fa-users"></i> ${jadwalData.kelasNama || allKelasIds.length+' kelas'}
             </div>
             <div class="info-chip">
-              <i class="fa-solid fa-calendar-check"></i> ${labelPekan} ${pekanKe}
+              <i class="fa-solid fa-clock"></i> ${JP_WAKTU[currentJamKe] || ''}
             </div>
           </div>
           <div class="jp-selector">${jpChips}</div>
+          ${neighborHtml ? `<div class="jp-neighbor">${neighborHtml}</div>` : ''}
         </div>
         
         <div class="list-header">
-          <span>${allMhsGlobal.length} ${labelMahasiswa}</span>
-          <button class="mark-all-btn" onclick="markAllHadir()">${labelSemuaHadir}</button>
+          <span>${allMhsGlobal.length} Mahasiswa</span>
+          <button class="mark-all-btn" onclick="markAllHadir()">Semua Hadir</button>
         </div>
         
         <div class="santri-list">${listHtml}</div>
@@ -517,19 +491,19 @@
         <div class="summary-card">
           <div class="summary-item">
             <div class="summary-val" id="sumHadir">${counts.hadir}</div>
-            <div class="summary-lbl">${labelHadir}</div>
+            <div class="summary-lbl">Hadir</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumSakit" style="color:#d97706;">${counts.sakit}</div>
-            <div class="summary-lbl">${labelSakit}</div>
+            <div class="summary-lbl">Sakit</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumIzin" style="color:#2563eb;">${counts.izin}</div>
-            <div class="summary-lbl">${labelIzin}</div>
+            <div class="summary-lbl">Izin</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumAlfa" style="color:#e53935;">${counts.alfa}</div>
-            <div class="summary-lbl">${labelAlfa}</div>
+            <div class="summary-lbl">Alfa</div>
           </div>
         </div>`;
     }
@@ -537,14 +511,14 @@
     document.getElementById('btnSimpan').addEventListener('click', async function() {
       if (isSaving) return;
       if (Object.keys(absensiState).length === 0) { 
-        showToast(t('tidakAdaMahasiswa') || 'Tidak ada mahasiswa'); 
+        showToast('Tidak ada mahasiswa'); 
         return; 
       }
 
       isSaving = true;
       const btn = document.getElementById('btnSimpan');
       btn.disabled = true; 
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (t('menyimpan') || 'Menyimpan...');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
         const today = getLocalDate();
@@ -574,7 +548,6 @@
               dosenId: user.uid,
               status: status,
               tanggal: today,
-              pekanKe: pekanKe,
               jamKe: currentJamKe,
               mkNama: jadwalData.mkNama || '',
               kelasNama: jadwalData.kelasNama || '',
@@ -584,14 +557,16 @@
         }
 
         await batch.commit();
-        const suksesMsg = (t('absensiTersimpan') || 'Absensi tersimpan').replace('{jp}', currentJamKe).replace('{pekan}', pekanKe);
-        showToast(`JP ${currentJamKe} · ${t('pekanKe') || 'Pekan ke-'}${pekanKe} ${t('tersimpan') || 'tersimpan'}!`);
+        showToast(`JP ${currentJamKe} tersimpan!`);
         
-        if (currentJamKe < MAX_JP) {
-          setTimeout(() => pindahJP(currentJamKe + 1), 800);
+        // Auto pindah ke JP berikutnya
+        const jpList = jadwalData.jamKeList || [jadwalData.jamKe || 1];
+        const idxCurrent = jpList.indexOf(currentJamKe);
+        if (idxCurrent >= 0 && idxCurrent < jpList.length - 1) {
+          setTimeout(() => pindahJP(jpList[idxCurrent + 1]), 600);
         }
       } catch(e) {
-        showToast((t('gagal') || 'Gagal') + ': ' + e.message);
+        showToast('Gagal: ' + e.message);
       } finally {
         isSaving = false;
         btn.disabled = false;
@@ -602,32 +577,36 @@
     async function init() {
       if (!jadwalId || !kelasId || !mapelId) {
         document.getElementById('mainContent').innerHTML = 
-          '<p style="text-align:center;">' + (t('parameterTidakLengkap') || 'Parameter tidak lengkap.') + '</p>';
+          '<p style="text-align:center;">Parameter tidak lengkap.</p>';
         return;
       }
 
       try {
-        // Load jadwal
         const jDoc = await db.collection('jadwal').doc(jadwalId).get();
         jadwalData = jDoc.exists ? jDoc.data() : {};
+        
+        // Dapatkan jamKeList dari jadwal
+        if (!jadwalData.jamKeList) {
+          jadwalData.jamKeList = [jadwalData.jamKe || 1];
+        }
         currentJamKe = jadwalData.jamKe || 1;
 
         allKelasIds = jadwalData.kelasIds || [kelasId];
         if (!allKelasIds.includes(kelasId)) allKelasIds.push(kelasId);
 
-        // Cari absensi pertama dosen ini (hanya by dosenId + tanggal, tanpa jadwalId filter)
-        // Ini menggunakan index: dosenId Ascending, tanggal Ascending
-        const firstAbsenSnap = await db.collection('absensi')
+        // Load SEMUA jadwal dosen (untuk info JP sebelum/sesudah)
+        const today = new Date();
+        const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][today.getDay()];
+        const semuaSnap = await db.collection('jadwal')
           .where('dosenId', '==', user.uid)
-          .orderBy('tanggal', 'asc')
-          .limit(1)
+          .where('hari', '==', hari)
           .get();
+        semuaJadwalHariIni = semuaSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        if (!firstAbsenSnap.empty) {
-          absensiPertamaTanggal = firstAbsenSnap.docs[0].data().tanggal;
-        } else {
-          absensiPertamaTanggal = getLocalDate();
-        }
+        // Normalize jamKeList untuk semua jadwal
+        semuaJadwalHariIni.forEach(j => {
+          if (!j.jamKeList) j.jamKeList = [j.jamKe || 1];
+        });
 
         // Load mahasiswa
         let allMhs = [];
@@ -642,16 +621,13 @@
 
         if (allMhs.length === 0) {
           document.getElementById('mainContent').innerHTML = 
-            '<p style="text-align:center;">' + (t('tidakAdaMahasiswaKelas') || 'Tidak ada mahasiswa di kelas ini.') + '</p>';
+            '<p style="text-align:center;">Tidak ada mahasiswa di kelas ini.</p>';
           return;
         }
 
-        document.getElementById('headerTitle').textContent = jadwalData.mkNama || (t('absensi') || 'Absensi');
-        
-        pekanKe = hitungPekanKe();
-        const labelPekan = t('pekanKe') || 'Pekan ke-';
+        document.getElementById('headerTitle').textContent = jadwalData.mkNama || 'Absensi';
         document.getElementById('headerSub').textContent = 
-          `${jadwalData.kelasNama || ''} · ${labelPekan} ${pekanKe}`;
+          `${jadwalData.kelasNama || ''} · ${jadwalData.jamKeList.length} JP`;
 
         await loadAbsensiUntukJP();
         renderList();
