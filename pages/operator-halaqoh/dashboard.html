@@ -24,7 +24,18 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; min-height: 100vh; }
 
-    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    /* Hamburger Button */
+    .burger-btn {
+      display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+      width: 42px; height: 42px; border-radius: 50%; background: var(--green-dark);
+      border: none; cursor: pointer; color: white; font-size: 18px;
+      align-items: center; justify-content: center; box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+    .burger-btn:active { transform: scale(0.92); }
+
+    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s ease; }
+    .sidebar.open { transform: translateX(0); }
     .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
     .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
     .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; }
@@ -36,10 +47,13 @@
     .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
     .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
     .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-close-btn { display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer; margin-left: auto; }
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
     .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
     .user-info-sidebar .name { font-size: 13px; font-weight: 600; color: white; }
     .user-info-sidebar .role { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; }
 
     .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
@@ -50,14 +64,13 @@
     .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
     .stat-card { background: white; border-radius: var(--radius-lg); padding: 18px; border: 1px solid var(--gray-200); }
     .stat-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .stat-card-header span { font-size: 10px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; }
     .stat-icon { width: 34px; height: 34px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 15px; }
     .stat-icon.green { background: var(--green-light); color: var(--green-dark); }
     .stat-icon.gold { background: var(--gold-light); color: #8d6e00; }
-    .stat-icon.red { background: var(--red-light); color: var(--red); }
     .stat-icon.blue { background: var(--blue-light); color: var(--blue); }
     .stat-value { font-size: 26px; font-weight: 700; margin-bottom: 2px; }
     .stat-label { font-size: 10px; color: var(--gray-400); }
@@ -75,10 +88,6 @@
     .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
     .form-group input, .form-group select { padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; outline: none; }
 
-    .izin-card { background: var(--orange-light); border-left: 4px solid var(--orange); padding: 12px 14px; border-radius: var(--radius-sm); margin-bottom: 8px; font-size: 12px; }
-    .izin-card .musyrif-name { font-weight: 700; }
-    .izin-card .izin-date { font-size: 10px; color: var(--gray-600); }
-
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
     thead th { background: var(--gray-100); padding: 9px 10px; text-align: left; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
     tbody td { padding: 9px 10px; border-bottom: 1px solid var(--gray-100); }
@@ -87,20 +96,35 @@
     .badge-red { background: var(--red-light); color: #b71c1c; }
     .badge-orange { background: var(--orange-light); color: #e65100; }
     .badge-green { background: var(--green-light); color: #1b5e20; }
-    .badge-blue { background: var(--blue-light); color: var(--blue); }
-
-    .alert { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 12px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; }
-    .alert-error { background: var(--red-light); color: #b71c1c; }
 
     @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .chart-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px 12px; } }
+    @media (max-width: 768px) {
+      .burger-btn { display: flex; }
+      .sidebar-close-btn { display: block; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.active { display: block; }
+      .main-content { margin-left: 0; padding: 16px 14px; }
+      .topbar { margin-top: 50px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-value { font-size: 22px; }
+    }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar">
-    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Halaqoh</span></div></div>
+  <!-- Hamburger Button -->
+  <button class="burger-btn" id="burgerBtn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Halaqoh</span></div>
+      <button class="sidebar-close-btn" onclick="closeSidebar()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
     <nav class="sidebar-nav">
       <div class="nav-section"><div class="nav-section-title">Utama</div><a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-grid-2"></i> Home</a></div>
       <div class="nav-section"><div class="nav-section-title">Master Data</div>
@@ -130,30 +154,7 @@
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-card-header"><span>Musyrif</span><div class="stat-icon green"><i class="fa-solid fa-user-shield"></i></div></div><div class="stat-value" id="statMusyrif">0</div><div class="stat-label">Total musyrif</div></div>
       <div class="stat-card"><div class="stat-card-header"><span>Halaqoh</span><div class="stat-icon gold"><i class="fa-solid fa-mosque"></i></div></div><div class="stat-value" id="statHalaqoh">0</div><div class="stat-label">Kelompok halaqoh</div></div>
-      <div class="stat-card"><div class="stat-card-header"><span>Mahasiswa</span><div class="stat-icon green"><i class="fa-solid fa-user-graduate"></i></div></div><div class="stat-value" id="statMahasiswa">0</div><div class="stat-label">Terdaftar halaqoh</div></div>
-      <div class="stat-card"><div class="stat-card-header"><span>Izin Hari Ini</span><div class="stat-icon red"><i class="fa-solid fa-clock"></i></div></div><div class="stat-value" id="statIzin">0</div><div class="stat-label">Musyrif berhalangan</div></div>
-    </div>
-
-    <!-- IZIN MUSYRIF + GRAFIK -->
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fa-solid fa-user-clock"></i> Izin Musyrif Berhalangan</h3>
-        <button class="btn btn-primary btn-sm" onclick="showIzinForm()"><i class="fa-solid fa-plus"></i> Tambah Izin</button>
-      </div>
-      <div class="card-body" id="izinList"><p style="color:var(--gray-400);">Memuat...</p></div>
-    </div>
-
-    <!-- FORM IZIN (HIDDEN) -->
-    <div class="card" id="formIzinCard" style="display:none;">
-      <div class="card-header"><h3><i class="fa-solid fa-plus-circle"></i> Tambah Izin Musyrif</h3></div>
-      <div class="card-body">
-        <div class="filter-row">
-          <div class="form-group"><label>Musyrif</label><select id="izinMusyrif"><option value="">Pilih...</option></select></div>
-          <div class="form-group"><label>Tanggal</label><input type="date" id="izinTanggal"></div>
-          <div class="form-group"><label>Keterangan</label><input type="text" id="izinKet" placeholder="Alasan..."></div>
-          <div class="form-group"><label>&nbsp;</label><button class="btn btn-primary btn-sm" onclick="simpanIzin()">Simpan</button></div>
-        </div>
-      </div>
+      <div class="stat-card"><div class="stat-card-header"><span>Mahasiswa</span><div class="stat-icon blue"><i class="fa-solid fa-user-graduate"></i></div></div><div class="stat-value" id="statMahasiswa">0</div><div class="stat-label">Terdaftar halaqoh</div></div>
     </div>
 
     <!-- GRAFIK -->
@@ -188,11 +189,6 @@
     </div>
   </main>
 
-  <!-- MODAL IZIN DETAIL -->
-  <div class="modal-overlay" id="modalOverlay" style="display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
-    <div class="modal-box" id="modalContent" style="background:white;border-radius:var(--radius-lg);padding:22px;max-width:450px;width:90%;max-height:80vh;overflow-y:auto;"></div>
-  </div>
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -205,22 +201,39 @@
     document.getElementById('sidebarName').textContent = user.nama || 'Operator';
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
-    let chartGender = null, chartTrend = null;
-    let allMhs = [], allHalaqoh = [], allMusyrif = [], allIzin = [], allAbsensi = [];
+    // ═══ SIDEBAR TOGGLE ═══
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+    window.toggleSidebar = toggleSidebar;
+    window.closeSidebar = closeSidebar;
 
-    function showAlert(type, text) {
-      const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
-      if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+    // Tutup sidebar saat klik menu
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+    });
+
+    let chartGender = null, chartTrend = null;
+    let allMhs = [], allHalaqoh = [], allMusyrif = [], allAbsensi = [];
+
+    function getLocalDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
     }
 
     // ═══ LOAD ALL DATA ═══
     async function loadAll() {
       try {
-        const [mSnap, hSnap, uSnap, iSnap, aSnap, pSnap] = await Promise.all([
+        const [mSnap, hSnap, uSnap, aSnap, pSnap] = await Promise.all([
           db.collection('mahasiswa').get(),
           db.collection('halaqoh').get(),
           db.collection('musyrif').get(),
-          db.collection('izinMusyrif').get(),
           db.collection('absensiHalaqoh').get(),
           db.collection('pembagianHalaqoh').get()
         ]);
@@ -228,7 +241,6 @@
         allMhs = mSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         allHalaqoh = hSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         allMusyrif = uSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        allIzin = iSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         allAbsensi = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
         // Stats
@@ -239,69 +251,12 @@
         document.getElementById('statHalaqoh').textContent = allHalaqoh.length;
         document.getElementById('statMahasiswa').textContent = mhsDiHalaqoh.size;
 
-        // Izin hari ini
-        const today = new Date().toISOString().split('T')[0];
-        const izinToday = allIzin.filter(i => i.tanggal === today);
-        document.getElementById('statIzin').textContent = izinToday.length;
-
-        // Render
-        renderIzinList();
         renderCharts();
         renderJarangHadir();
         loadFilterOptions();
         loadTidakHadir();
       } catch(e) { console.error(e); }
     }
-
-    // ═══ IZIN MUSYRIF ═══
-    function renderIzinList() {
-      const today = new Date().toISOString().split('T')[0];
-      const weekLater = new Date(); weekLater.setDate(weekLater.getDate() + 7);
-      const upcoming = allIzin.filter(i => i.tanggal >= today && i.tanggal <= weekLater.toISOString().split('T')[0])
-        .sort((a,b) => a.tanggal.localeCompare(b.tanggal));
-
-      const container = document.getElementById('izinList');
-      if (upcoming.length === 0) {
-        container.innerHTML = '<p style="color:var(--gray-400);">✅ Tidak ada izin dalam 7 hari ke depan</p>';
-        return;
-      }
-      container.innerHTML = upcoming.map(i => {
-        const m = allMusyrif.find(x => x.id === i.musyrifId);
-        return `<div class="izin-card">
-          <span class="musyrif-name">${m?.nama || i.musyrifId}</span>
-          <span class="izin-date">📅 ${i.tanggal}</span>
-          <span style="margin-left:8px;">📝 ${i.keterangan || '-'}</span>
-          <button class="btn btn-sm" style="float:right;color:var(--red);" onclick="hapusIzin('${i.id}')">🗑️</button>
-        </div>`;
-      }).join('');
-    }
-
-    window.showIzinForm = () => {
-      document.getElementById('formIzinCard').style.display = 'block';
-      const sel = document.getElementById('izinMusyrif');
-      sel.innerHTML = '<option value="">Pilih Musyrif...</option>';
-      allMusyrif.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach(m => {
-        const o = document.createElement('option'); o.value = m.id; o.textContent = m.nama; sel.appendChild(o);
-      });
-      document.getElementById('izinTanggal').value = new Date().toISOString().split('T')[0];
-    };
-
-    window.simpanIzin = async () => {
-      const musyrifId = document.getElementById('izinMusyrif').value;
-      const tanggal = document.getElementById('izinTanggal').value;
-      const keterangan = document.getElementById('izinKet').value.trim();
-      if (!musyrifId || !tanggal) { alert('Lengkapi!'); return; }
-      await db.collection('izinMusyrif').add({ musyrifId, tanggal, keterangan, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-      document.getElementById('formIzinCard').style.display = 'none';
-      alert('✅ Izin disimpan!');
-      await loadAll();
-    };
-
-    window.hapusIzin = async (id) => {
-      if (!confirm('Hapus izin ini?')) return;
-      await db.collection('izinMusyrif').doc(id).delete();
-      await loadAll();
-    };
 
     // ═══ CHARTS ═══
     function renderCharts() {
@@ -322,16 +277,18 @@
         });
       }
 
-      // Trend 7 hari
+      // Trend 7 hari (pakai WIB)
       const days = [];
       for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        days.push(d.toISOString().split('T')[0]);
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const opts = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+        days.push(new Intl.DateTimeFormat('en-CA', opts).format(d));
       }
       const dayNames = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-      const labels = days.map(d => { const dt = new Date(d); return dayNames[dt.getDay()] + ' ' + dt.getDate(); });
-      const hadirData = days.map(d => allAbsensi.filter(a => a.tanggal === d && a.status === 'hadir').length);
-      const tidakData = days.map(d => allAbsensi.filter(a => a.tanggal === d && a.status !== 'hadir').length);
+      const labels = days.map(d => { const dt = new Date(d + 'T00:00:00'); return dayNames[dt.getDay()] + ' ' + dt.getDate(); });
+      const hadirData = days.map(d => allAbsensi.filter(a => a.tanggal === d && (!a.status || a.status === 'hadir')).length);
+      const tidakData = days.map(d => allAbsensi.filter(a => a.tanggal === d && a.status && a.status !== 'hadir').length);
 
       if (chartTrend) chartTrend.destroy();
       const ctx2 = document.getElementById('chartTrend');
@@ -357,11 +314,14 @@
       allHalaqoh.sort((a,b) => (a.nama||'').localeCompare(b.nama||'')).forEach(h => {
         const o = document.createElement('option'); o.value = h.id; o.textContent = h.nama; sel.appendChild(o);
       });
-      // Default: 7 hari terakhir
+      
+      // Default: 7 hari terakhir (WIB)
       const now = new Date();
-      document.getElementById('tglSampai').value = now.toISOString().split('T')[0];
+      const opts = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      const fmt = new Intl.DateTimeFormat('en-CA', opts);
+      document.getElementById('tglSampai').value = fmt.format(now);
       const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
-      document.getElementById('tglDari').value = weekAgo.toISOString().split('T')[0];
+      document.getElementById('tglDari').value = fmt.format(weekAgo);
     }
 
     async function loadTidakHadir() {
@@ -370,30 +330,37 @@
       const halaqohId = document.getElementById('filterHalaqohTidakHadir').value;
       if (!dari || !sampai) return;
 
-      let filtered = allAbsensi.filter(a => a.tanggal >= dari && a.tanggal <= sampai && a.status !== 'hadir');
+      let filtered = allAbsensi.filter(a => a.tanggal >= dari && a.tanggal <= sampai && a.status && a.status !== 'hadir');
       if (halaqohId) filtered = filtered.filter(a => a.halaqohId === halaqohId);
 
       // Group by mahasiswa
       const grouped = {};
       filtered.forEach(a => {
         const key = a.mahasiswaId;
-        if (!grouped[key]) grouped[key] = { id: key, count: 0, statuses: [] };
+        if (!grouped[key]) grouped[key] = { id: key, count: 0, statuses: {} };
         grouped[key].count++;
-        grouped[key].statuses.push(a.status);
+        grouped[key].statuses[a.status] = (grouped[key].statuses[a.status] || 0) + 1;
       });
 
       const list = Object.values(grouped).sort((a,b) => b.count - a.count);
       const container = document.getElementById('tidakHadirTable');
       if (list.length === 0) {
-        container.innerHTML = '<p style="color:var(--gray-400);">✅ Tidak ada mahasiswa tidak hadir</p>';
+        container.innerHTML = '<p style="color:var(--gray-400);padding:20px;text-align:center;">✅ Tidak ada mahasiswa tidak hadir</p>';
         return;
       }
 
-      let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Jumlah</th><th>Jenis</th></tr></thead><tbody>';
+      let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Jumlah</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th></tr></thead><tbody>';
       list.forEach((d, i) => {
         const m = allMhs.find(x => x.id === d.id);
-        const statusStr = [...new Set(d.statuses)].join(', ');
-        html += `<tr><td>${i+1}</td><td><strong>${m?.nama || d.id}</strong></td><td><span class="badge badge-red">${d.count}x</span></td><td>${statusStr}</td></tr>`;
+        html += `<tr>
+          <td>${i+1}</td>
+          <td><strong>${m?.nama || d.id}</strong></td>
+          <td><span class="badge badge-red">${d.count}x</span></td>
+          <td>${d.statuses['sakit'] || 0}</td>
+          <td>${d.statuses['izin'] || 0}</td>
+          <td>${d.statuses['alfa'] || 0}</td>
+          <td>${d.statuses['jaga'] || 0}</td>
+        </tr>`;
       });
       html += '</tbody></table>';
       container.innerHTML = html;
@@ -402,26 +369,31 @@
 
     // ═══ JARANG HADIR ═══
     function renderJarangHadir() {
-      // Ambil 30 hari terakhir
-      const now = new Date(); const monthAgo = new Date(); monthAgo.setDate(monthAgo.getDate() - 30);
-      const recent = allAbsensi.filter(a => a.tanggal >= monthAgo.toISOString().split('T')[0]);
+      const now = new Date();
+      const monthAgo = new Date();
+      monthAgo.setDate(monthAgo.getDate() - 30);
+      const opts = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      const fmt = new Intl.DateTimeFormat('en-CA', opts);
+      const startStr = fmt.format(monthAgo);
+
+      const recent = allAbsensi.filter(a => a.tanggal >= startStr);
 
       const grouped = {};
       recent.forEach(a => {
         if (!grouped[a.mahasiswaId]) grouped[a.mahasiswaId] = { total: 0, tidakHadir: 0 };
         grouped[a.mahasiswaId].total++;
-        if (a.status !== 'hadir') grouped[a.mahasiswaId].tidakHadir++;
+        if (a.status && a.status !== 'hadir') grouped[a.mahasiswaId].tidakHadir++;
       });
 
       const list = Object.entries(grouped)
-        .map(([id, data]) => ({ id, ...data, pct: Math.round((data.tidakHadir / data.total) * 100) }))
+        .map(([id, data]) => ({ id, ...data, pct: data.total > 0 ? Math.round((data.tidakHadir / data.total) * 100) : 0 }))
         .filter(d => d.tidakHadir > 0)
         .sort((a,b) => b.pct - a.pct)
         .slice(0, 10);
 
       const container = document.getElementById('jarangHadirTable');
       if (list.length === 0) {
-        container.innerHTML = '<p style="color:var(--gray-400);">✅ Semua mahasiswa rajin hadir</p>';
+        container.innerHTML = '<p style="color:var(--gray-400);padding:20px;text-align:center;">✅ Semua mahasiswa rajin hadir</p>';
         return;
       }
 
@@ -429,13 +401,20 @@
       list.forEach((d, i) => {
         const m = allMhs.find(x => x.id === d.id);
         const badgeClass = d.pct >= 50 ? 'badge-red' : d.pct >= 25 ? 'badge-orange' : 'badge-green';
-        html += `<tr><td>${i+1}</td><td><strong>${m?.nama || d.id}</strong></td><td>${d.total}</td><td>${d.tidakHadir}</td><td>${d.pct}%</td><td><span class="badge ${badgeClass}">${d.pct >= 50 ? '⚠️ Rawan' : d.pct >= 25 ? '⚡ Perhatian' : '✅ Aman'}</span></td></tr>`;
+        html += `<tr>
+          <td>${i+1}</td>
+          <td><strong>${m?.nama || d.id}</strong></td>
+          <td>${d.total}</td>
+          <td>${d.tidakHadir}</td>
+          <td>${d.pct}%</td>
+          <td><span class="badge ${badgeClass}">${d.pct >= 50 ? '⚠️ Rawan' : d.pct >= 25 ? '⚡ Perhatian' : '✅ Aman'}</span></td>
+        </tr>`;
       });
       html += '</tbody></table>';
       container.innerHTML = html;
     }
 
-    window.logout = () => { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    window.logout = () => { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); localStorage.removeItem('roleAktif'); window.location.href = '../../index.html'; }); } };
 
     loadAll();
   </script>
