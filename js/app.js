@@ -1,5 +1,6 @@
 // js/app.js
 // Global App Logic - IPIM Maghfirah
+// Multi-Role Support
 
 (function() {
   'use strict';
@@ -23,30 +24,54 @@
   window.getUser = function() {
     const data = localStorage.getItem('user');
     if (!data) return null;
+
     const parsed = JSON.parse(data);
+
+    // Jika uid tidak ada, coba ambil dari Firebase Auth
     if (!parsed.uid && firebase.auth().currentUser) {
       parsed.uid = firebase.auth().currentUser.uid;
       localStorage.setItem('user', JSON.stringify(parsed));
     }
+
     return parsed;
   };
 
   // Cek login
   window.checkAuth = function() {
     const user = getUser();
-    if (!user) { window.location.href = '../../index.html'; return null; }
+    if (!user) {
+      window.location.href = '../../index.html';
+      return null;
+    }
     return user;
   };
 
-  // Cek role akses
+  // ═══ CEK ROLE AKSES (MULTI-ROLE SUPPORT) ═══
   window.checkRole = function(allowedRoles) {
     const user = getUser();
-    if (!user) { window.location.href = '../../index.html'; return null; }
-    if (!allowedRoles.includes(user.role)) {
+    if (!user) {
+      window.location.href = '../../index.html';
+      return null;
+    }
+
+    // Cek role aktif dari localStorage
+    const roleAktif = localStorage.getItem('roleAktif');
+    const userRole = roleAktif || user.role || 'umum';
+
+    // Cek semua roles yang dimiliki user
+    const allRoles = user.roles || [user.role || 'umum'];
+
+    // Cek apakah user punya akses
+    const hasAccess = allRoles.some(r => allowedRoles.includes(r));
+
+    if (!hasAccess) {
       alert('Anda tidak memiliki akses ke halaman ini.');
       history.back();
       return null;
     }
+
+    // Update user.role ke role aktif
+    user.role = userRole;
     return user;
   };
 
@@ -55,6 +80,7 @@
     if (confirm('Apakah Anda yakin ingin keluar?')) {
       auth.signOut().then(() => {
         localStorage.removeItem('user');
+        localStorage.removeItem('roleAktif');
         window.location.href = '../../index.html';
       });
     }
@@ -103,26 +129,21 @@
   // MULTI-BAHASA (FIX)
   // ============================================
 
-  // Fungsi ganti bahasa — simpan + reload
   window.changeLanguage = function(lang) {
     localStorage.setItem('appLang', lang);
-    // Reload halaman agar semua teks berubah
     window.location.reload();
   };
 
-  // Dapatkan bahasa saat ini
   window.getCurrentLang = function() {
     return localStorage.getItem('appLang') || 'id';
   };
 
-  // Init bahasa saat halaman load
   function initLanguage() {
     const lang = localStorage.getItem('appLang') || 'id';
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.body.classList.toggle('lang-ar', lang === 'ar');
     
-    // Jalankan applyLang dari lang.js jika ada
     if (typeof applyLang === 'function') {
       setTimeout(applyLang, 100);
     }
@@ -139,7 +160,24 @@
   // ============================================
   // LOAD PIM-BOT AI
   // ============================================
-
+  (function loadPimBot() {
+    const path = window.location.pathname;
+    const script = document.createElement('script');
+    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    
+    if (isLocal) {
+      const depth = (path.match(/\//g) || []).length - 1;
+      if (depth === 0) script.src = 'js/pim-bot.js';
+      else if (depth === 1) script.src = '../js/pim-bot.js';
+      else script.src = '../../js/pim-bot.js';
+    } else {
+      script.src = '/IPIM-MAGHFIRAH/js/pim-bot.js';
+    }
+    
+    script.onload = () => console.log('🤖 PIM-Bot loaded!');
+    script.onerror = () => console.warn('⚠️ PIM-Bot gagal dimuat');
+    document.body.appendChild(script);
+  })();
 
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
