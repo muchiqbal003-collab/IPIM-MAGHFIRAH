@@ -1,5 +1,6 @@
 // js/auth.js
 // Logika Login - IPIM Maghfirah
+// Multi-Role Support
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -70,15 +71,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // ═══════════════════════════════════════
-      // SIMPAN LOG LOGIN
-      // ═══════════════════════════════════════
+      // ═══ SIMPAN LOG LOGIN ═══
       try {
         await db.collection('loginLogs').add({
           uid: user.uid,
           nama: userData.nama || email,
           email: email,
           role: userData.role || 'unknown',
+          roles: userData.roles || [userData.role || 'unknown'],
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
         console.log('✅ Login log tersimpan');
@@ -86,11 +86,20 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('⚠️ Gagal simpan login log:', logError.message);
       }
 
-      // Simpan ke localStorage (TERMASUK UID)
+      // ═══ MULTI-ROLE SUPPORT ═══
+      const defaultRole = userData.role || 'umum';
+      const roles = userData.roles || [defaultRole];
+      const uniqueRoles = [...new Set(roles)];
+      
+      // Hapus roleAktif lama
+      localStorage.removeItem('roleAktif');
+
+      // Simpan ke localStorage (TERMASUK UID + ROLES)
       localStorage.setItem('user', JSON.stringify({
         uid: user.uid,
         email: user.email,
-        role: userData.role,
+        role: defaultRole,
+        roles: uniqueRoles,
         nama: userData.nama || 'Pengguna',
         jabatan: userData.jabatan || '',
         foto: userData.foto || ''
@@ -98,9 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
       showMessage('✅ Login berhasil! Mengalihkan...', 'success');
 
-      // Redirect sesuai role
+      // Redirect sesuai role(s)
       setTimeout(() => {
-        redirectByRole(userData.role);
+        redirectByRole(uniqueRoles);
       }, 800);
 
     } catch (error) {
@@ -131,43 +140,53 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Fungsi redirect berdasarkan role
-  function redirectByRole(role) {
-    let targetPage = '';
-
-    switch (role) {
-      case 'pusat-data':
-        targetPage = 'pages/pusat-data/dashboard.html';
-        break;
-      case 'operator-akademik':
-        targetPage = 'pages/operator-akademik/dashboard.html';
-        break;
-      case 'operator-halaqoh':
-        targetPage = 'pages/operator-halaqoh/dashboard.html';
-        break;
-      case 'operator-bahasa':
-        targetPage = 'pages/operator-bahasa/dashboard.html';
-        break;
-      case 'operator-pengasuhan':
-        targetPage = 'pages/operator-pengasuhan/dashboard.html';
-        break;
-      case 'dosen':
-      case 'musyrif':
-      case 'dosen-musyrif':
-      case 'umum':
-        targetPage = 'pages/user/dashboard.html';
-        break;
-      default:
-        targetPage = 'index.html';
+  // ═══ FUNGSI REDIRECT (MULTI-ROLE SUPPORT) ═══
+  function redirectByRole(roles) {
+    const uniqueRoles = [...new Set(roles || [])];
+    
+    if (uniqueRoles.length === 0) {
+      window.location.href = 'index.html';
+      return;
     }
-
-    window.location.href = targetPage;
+    
+    if (uniqueRoles.length > 1) {
+      // Multi-role → buka halaman pilih role
+      window.location.href = 'pages/pilih-role.html';
+    } else {
+      // 1 role → langsung masuk
+      const rolePages = {
+        'pusat-data': 'pages/pusat-data/dashboard.html',
+        'operator-akademik': 'pages/operator-akademik/dashboard.html',
+        'operator-halaqoh': 'pages/operator-halaqoh/dashboard.html',
+        'operator-bahasa': 'pages/operator-bahasa/dashboard.html',
+        'operator-pengasuhan': 'pages/operator-pengasuhan/dashboard.html',
+        'dosen': 'pages/user/dashboard.html',
+        'musyrif': 'pages/user/dashboard.html',
+        'dosen-musyrif': 'pages/user/dashboard.html',
+        'umum': 'pages/user/dashboard.html'
+      };
+      
+      window.location.href = rolePages[uniqueRoles[0]] || 'pages/user/dashboard.html';
+    }
   }
 
   // Cek jika sudah login
   auth.onAuthStateChanged(function(user) {
     if (user) {
       console.log('✅ User sudah login:', user.email);
+      
+      // Jika ada user di localStorage tapi belum redirect
+      const storedUser = localStorage.getItem('user');
+      if (storedUser && !window.location.pathname.includes('pilih-role.html')) {
+        const parsedUser = JSON.parse(storedUser);
+        const path = window.location.pathname;
+        
+        // Hanya redirect kalau masih di halaman login (index.html)
+        if (path.endsWith('index.html') || path.endsWith('/')) {
+          const roles = parsedUser.roles || [parsedUser.role || 'umum'];
+          redirectByRole(roles);
+        }
+      }
     }
   });
 
