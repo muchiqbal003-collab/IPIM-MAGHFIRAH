@@ -1,357 +1,300 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Pusat Data - IPIM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Dashboard Operator Bahasa • IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
-      --gold: #d4a843; --gold-light: #fdf6e3;
-      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
-      --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
-      --gray-800: #333333; --red: #e53935; --blue: #1e88e5; --blue-light: #e3f2fd;
-      --purple: #7b1fa2; --purple-light: #f3e5f5;
-      --orange: #f57c00; --orange-light: #fff3e0;
-      --sidebar-width: 270px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
-      --transition: all 0.3s ease;
+      --primary: #004d40; --primary-dark: #00332b; --primary-light: #00695c;
+      --accent: #d4a843; --accent-dark: #b8860b; --accent-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b; --gray-600: #475569;
+      --gray-700: #334155; --gray-800: #1e293b; --red: #ef4444; --red-light: #fef2f2;
+      --green-success: #10b981; --green-light: #ecfdf5; --blue: #3b82f6; --blue-light: #eff6ff;
+      --orange: #f97316; --orange-light: #fff7ed; --purple: #7c3aed; --purple-light: #ede9fe;
+      --bg-primary: #f0f4f0;
+      --surface-glass: rgba(255, 255, 255, 0.6);
+      --surface-glass-strong: rgba(255, 255, 255, 0.85);
+      --border-glass: rgba(0, 77, 64, 0.08);
+      --text-primary: var(--gray-800);
+      --text-secondary: var(--gray-600);
+      --text-muted: var(--gray-400);
+      --sidebar-bg: rgba(255, 255, 255, 0.7);
+      --nav-hover: rgba(0, 77, 64, 0.06);
+      --nav-active: rgba(212, 168, 67, 0.15);
+      --table-header-bg: rgba(248, 250, 252, 0.8);
+      --table-row-hover: rgba(0, 77, 64, 0.02);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.04), inset -2px -2px 5px rgba(255,255,255,0.8);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-2xl: 28px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628;
+      --surface-glass: rgba(19, 32, 51, 0.6);
+      --surface-glass-strong: rgba(19, 32, 51, 0.85);
+      --border-glass: rgba(255,255,255,0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --sidebar-bg: rgba(10, 22, 40, 0.75);
+      --nav-hover: rgba(212,168,67,0.08);
+      --nav-active: rgba(212,168,67,0.18);
+      --table-header-bg: rgba(19, 32, 51, 0.6);
+      --table-row-hover: rgba(212,168,67,0.04);
+      --input-bg: rgba(19, 32, 51, 0.8);
+      --gray-50: #1e293b; --gray-100: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.02);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: #f0f4f3; color: var(--gray-800); display: flex; min-height: 100vh; }
-
-    /* ═══ BURGER BUTTON ═══ */
-    .burger-btn {
-      display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
-      background: var(--green-dark); color: white; width: 42px; height: 42px;
-      border-radius: 50%; border: none; cursor: pointer; font-size: 20px;
-      box-shadow: var(--shadow-md); align-items: center; justify-content: center;
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-primary);
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(0,77,64,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 80%, rgba(212,168,67,0.05) 0%, transparent 50%);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
     }
-    .sidebar-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-      z-index: 99; opacity: 0; transition: opacity 0.3s;
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      padding: 28px 32px;
+      min-height: 100vh;
     }
-    .sidebar-overlay.active { display: block; opacity: 1; }
 
-    /* ═══ SIDEBAR ═══ */
-    .sidebar {
-      width: var(--sidebar-width); background: var(--green-dark); color: white;
-      height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column;
-      z-index: 100; transition: transform 0.3s ease;
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
     }
-    .sidebar-header { padding: 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-    .sidebar-logo { width: 42px; height: 42px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 20px; flex-shrink: 0; }
-    .sidebar-brand h2 { font-size: 16px; font-weight: 700; } .sidebar-brand span { font-size: 10px; opacity: 0.6; }
-    .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
-    .nav-section { margin-bottom: 8px; }
-    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; padding: 12px 12px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
-    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
-    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
-    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
-    .sidebar-footer { padding: 18px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 38px; height: 38px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 15px; flex-shrink: 0; }
+    .page-title h1 {
+      font-size: clamp(20px, 4vw, 26px); font-weight: 800;
+      color: var(--text-primary); letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .page-title p { font-size: 13px; color: var(--text-secondary); margin-top: 3px; font-weight: 500; }
 
-    /* ═══ MAIN ═══ */
-    .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; transition: margin-left 0.3s; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .page-title h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-    .page-title p { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
-    .btn { padding: 9px 18px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }
-    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-    .btn-sm { padding: 6px 12px; font-size: 11px; }
+    .btn {
+      padding: 10px 18px; border: none; border-radius: 40px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--transition); white-space: nowrap;
+      background: var(--surface-glass-strong); backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-md); color: var(--text-primary);
+    }
+    .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-outline { background: var(--surface-glass); }
 
-    /* ═══ STATS GRID ═══ */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
     .stat-card {
-      background: white; border-radius: var(--radius-lg); padding: 18px 20px;
-      border: 1px solid var(--gray-200); transition: var(--transition);
-      box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+      background: var(--surface-glass); backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 20px;
+      border: 1px solid var(--border-glass); transition: var(--transition);
     }
     .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-    .stat-card .stat-icon {
-      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center;
-      justify-content: center; font-size: 20px; margin-bottom: 12px;
+    .stat-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .stat-card-header span { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+    .stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
+    .stat-value { font-size: 28px; font-weight: 700; color: var(--text-primary); }
+    .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    .card {
+      background: var(--surface-glass); backdrop-filter: blur(28px);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden;
     }
-    .stat-card .stat-value { font-size: 28px; font-weight: 800; color: var(--gray-800); }
-    .stat-card .stat-label { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
-    .stat-card .stat-change { font-size: 11px; font-weight: 600; margin-top: 6px; }
-    .stat-card .stat-change.up { color: #1b5e20; } .stat-card .stat-change.down { color: #b71c1c; }
-
-    /* ═══ GRID ═══ */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-    .widget {
-      background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200);
-      overflow: hidden; box-shadow: var(--shadow-sm);
+    .card-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border-glass);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong);
     }
-    .widget-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
-    .widget-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .widget-body { padding: 16px 20px; }
-    .chart-wrap { position: relative; height: 250px; }
+    .card-header h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px 24px; }
 
-    /* ═══ TABLE ═══ */
-    .table-widget { grid-column: 1 / -1; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    thead th { background: var(--gray-50); padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
-    tbody td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); }
-    tbody tr:hover { background: var(--gray-50); }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    .menu-card {
+      background: var(--surface-glass); backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 16px;
+      border: 1px solid var(--border-glass); cursor: pointer; text-decoration: none;
+      color: inherit; display: flex; align-items: flex-start; gap: 12px;
+      transition: var(--transition);
+    }
+    .menu-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .menu-card-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .menu-card-info h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .menu-card-info p { font-size: 11px; color: var(--text-muted); }
 
-    /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .dashboard-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .card-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 768px) {
-      .burger-btn { display: flex; }
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0 !important; padding: 20px 14px; }
+      .main-content { padding: 16px 14px; }
+      .topbar { margin-top: 50px; flex-direction: column; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .stat-card { padding: 14px; }
-      .stat-card .stat-value { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .stat-value { font-size: 22px; }
     }
-    @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
   </style>
 </head>
-<body>
+<body data-page="dashboard">
 
-  <!-- ═══ BURGER BUTTON ═══ -->
-  <button class="burger-btn" id="burgerBtn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <!-- Sidebar Container (diisi oleh sidebar-bahasa.js) -->
+  <div id="sidebarContainer"></div>
 
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Pusat Data</span></div>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section"><div class="nav-section-title">Utama</div>
-        <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-grid-2"></i> Dashboard</a>
-        <a href="users.html" class="nav-item"><i class="fa-solid fa-users-gear"></i> Manajemen User</a>
-        <a href="pengaturan.html" class="nav-item"><i class="fa-solid fa-gear"></i> Pengaturan</a>
-      </div>
-      <div class="nav-section"><div class="nav-section-title">Monitoring Harian</div>
-        <a href="monitoring-absensi-kelas.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Absensi Kelas</a>
-        <a href="monitoring-absensi-halaqoh.html" class="nav-item"><i class="fa-solid fa-mosque"></i> Absensi Halaqoh</a>
-        <a href="monitoring-login.html" class="nav-item"><i class="fa-solid fa-right-to-bracket"></i> Login User</a>
-      </div>
-      <div class="nav-section"><div class="nav-section-title">Rekap Global</div>
-        <a href="rekap-akademik.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Rekap Akademik</a>
-        <a href="rekap-halaqoh.html" class="nav-item"><i class="fa-solid fa-book-quran"></i> Rekap Halaqoh</a>
-        <a href="rekap-bahasa.html" class="nav-item"><i class="fa-solid fa-language"></i> Rekap Bahasa</a>
-        <a href="rekap-pengasuhan.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i> Rekap Pengasuhan</a>
-        <a href="rekap-sholat.html" class="nav-item"><i class="fa-solid fa-mosque"></i> Rekap Sholat</a>
-        <a href="rekap-kinerja.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i> Rekap Kinerja</a>
-      </div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="user-avatar" id="avatarLetter">A</div>
-      <div class="user-info-sidebar"><div class="name" id="sidebarName">Admin</div><div class="role">Pusat Data</div></div>
-    </div>
-  </aside>
+  <!-- Burger & Theme Toggle -->
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
 
-  <!-- ═══ MAIN ═══ -->
+  <!-- Main Content -->
   <main class="main-content" id="mainContent">
     <div class="topbar">
-      <div class="page-title"><h1>📊 Dashboard Pusat Data</h1><p>Ringkasan seluruh sistem IPIM Maghfirah</p></div>
-      <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <div class="page-title">
+        <h1>🏠 Dashboard Bahasa</h1>
+        <p>Selamat datang, <strong id="greetingName">Operator</strong> — Ringkasan program & nilai bahasa</p>
+      </div>
+      <button class="btn btn-outline" onclick="logout()">
+        <svg><use href="#icon-logout"/></svg> Keluar
+      </button>
     </div>
 
-    <!-- ═══ STATS ═══ -->
-    <div class="stats-grid" id="statsGrid"></div>
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Total Mahasiswa</span><div class="stat-icon" style="background:var(--green-light);color:var(--primary);">👨‍🎓</div></div>
+        <div class="stat-value" id="statTotalMhs">0</div>
+        <div class="stat-label">Mahasiswa aktif</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>TOAFL Lulus</span><div class="stat-icon" style="background:var(--accent-light);color:var(--accent);">🏆</div></div>
+        <div class="stat-value" id="statToaflLulus">0%</div>
+        <div class="stat-label">Rata-rata kelulusan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Nilai Bulanan</span><div class="stat-icon" style="background:var(--orange-light);color:var(--orange);">⭐</div></div>
+        <div class="stat-value" id="statBulananRata">-</div>
+        <div class="stat-label">Rata-rata nilai</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span>Program Aktif</span><div class="stat-icon" style="background:var(--purple-light);color:var(--purple);">📋</div></div>
+        <div class="stat-value" id="statProgramAktif">0</div>
+        <div class="stat-label">Berjalan hari ini</div>
+      </div>
+    </div>
 
-    <!-- ═══ CHARTS ═══ -->
-    <div class="dashboard-grid">
-      <div class="widget">
-        <div class="widget-header"><h3><i class="fa-solid fa-chart-bar" style="color:var(--green);"></i> Absensi Kelas (7 Hari)</h3></div>
-        <div class="widget-body"><div class="chart-wrap"><canvas id="chartAbsensi"></canvas></div></div>
-      </div>
-      <div class="widget">
-        <div class="widget-header"><h3><i class="fa-solid fa-chart-pie" style="color:var(--gold);"></i> Distribusi Role</h3></div>
-        <div class="widget-body"><div class="chart-wrap"><canvas id="chartRole"></canvas></div></div>
-      </div>
-      <div class="widget">
-        <div class="widget-header"><h3><i class="fa-solid fa-chart-line" style="color:var(--blue);"></i> Sholat Jamaah (7 Hari)</h3></div>
-        <div class="widget-body"><div class="chart-wrap"><canvas id="chartSholat"></canvas></div></div>
-      </div>
-      <div class="widget">
-        <div class="widget-header"><h3><i class="fa-solid fa-ranking-star" style="color:var(--purple);"></i> Top Performers</h3></div>
-        <div class="widget-body" id="topPerformers"></div>
-      </div>
+    <!-- MENU CEPAT -->
+    <div class="card-grid">
+      <a href="nilai-toafl.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--accent-light);color:var(--accent);">📝</div>
+        <div class="menu-card-info"><h4>Nilai Semi TOAFL</h4><p>Input nilai ujian TOAFL</p></div>
+      </a>
+      <a href="nilai-bulanan.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--orange-light);color:var(--orange);">📅</div>
+        <div class="menu-card-info"><h4>Nilai Ujian Bulanan</h4><p>Input nilai ujian bulanan</p></div>
+      </a>
+      <a href="dashboard-nilai.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--blue-light);color:var(--blue);">📊</div>
+        <div class="menu-card-info"><h4>Dashboard Nilai</h4><p>Statistik nilai bulanan</p></div>
+      </a>
+      <a href="program-bahasa.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--purple-light);color:var(--purple);">✅</div>
+        <div class="menu-card-info"><h4>Program Bahasa</h4><p>Monitoring program</p></div>
+      </a>
+      <a href="rekap-nilai-toafl.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--green-light);color:var(--primary);">📈</div>
+        <div class="menu-card-info"><h4>Rekap Nilai TOAFL</h4><p>Lihat rekap nilai</p></div>
+      </a>
+      <a href="rekap-bahasa.html" class="menu-card">
+        <div class="menu-card-icon" style="background:var(--red-light);color:var(--red);">📋</div>
+        <div class="menu-card-info"><h4>Rekap Pelanggaran</h4><p>Laporan pelanggaran</p></div>
+      </a>
+    </div>
 
-      <!-- ═══ TABEL AKTIVITAS ═══ -->
-      <div class="widget table-widget">
-        <div class="widget-header"><h3><i class="fa-solid fa-clock-rotate-left"></i> Aktivitas Terbaru</h3></div>
-        <div class="widget-body" style="overflow-x:auto;">
-          <table id="tableAktivitas"><thead><tr><th>Waktu</th><th>User</th><th>Aktivitas</th><th>Detail</th></tr></thead><tbody></tbody></table>
-        </div>
+    <!-- INFO -->
+    <div class="card">
+      <div class="card-header"><h3>📌 Informasi</h3></div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+          Selamat datang di <strong>Dashboard Operator Bahasa</strong>. Gunakan menu di sidebar untuk mengakses fitur:
+        </p>
+        <ul style="font-size:13px;color:var(--text-secondary);margin-top:10px;padding-left:20px;line-height:2;">
+          <li>📝 <strong>Nilai</strong> — Input nilai Semi TOAFL dan Ujian Bulanan</li>
+          <li>📋 <strong>Program</strong> — Monitoring program harian/bulanan/semesteran</li>
+          <li>📊 <strong>Rekap</strong> — Lihat rekap nilai dan pelanggaran</li>
+          <li>⚠️ <strong>Pelanggaran</strong> — Input & rekap pelanggaran bahasa</li>
+        </ul>
       </div>
     </div>
   </main>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Scripts -->
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
   <script>
-    // ═══ SIDEBAR TOGGLE ═══
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('sidebarOverlay').classList.toggle('active');
-    }
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('sidebarOverlay').classList.remove('active');
-    }
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
-    });
+    // Ambil user dari checkRole
+    let user;
+    try { user = checkRole(['operator-bahasa', 'pusat-data']); } catch(e) {}
+    if (!user) user = { nama: 'Operator' };
+    document.getElementById('greetingName').textContent = user.nama || 'Operator';
 
-    const user = checkRole(['pusat-data']);
-    if (!user) window.location.href = '../../index.html';
-    document.getElementById('sidebarName').textContent = user.nama || 'Admin';
-    document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
-
-    let chartAbsensi, chartRole, chartSholat;
-
-    async function loadDashboard() {
+    // Load statistik
+    async function loadStats() {
       try {
-        const [usersSnap, absensiSnap, absensiHalaqohSnap, absensiSholatSnap, 
-               laporBahasaSnap, laporPengasuhanSnap, kinerjaSnap, loginLogsSnap] = await Promise.all([
-          db.collection('users').get(),
-          db.collection('absensi').get(),
-          db.collection('absensiHalaqoh').get(),
-          db.collection('absensiSholat').get(),
-          db.collection('laporBahasa').get(),
-          db.collection('laporPengasuhan').get(),
-          db.collection('laporanKinerja').get(),
-          db.collection('loginLogs').orderBy('timestamp','desc').limit(10).get()
-        ]);
+        // Total mahasiswa
+        const mhsSnap = await db.collection('mahasiswa').where('status', '==', 'aktif').get();
+        document.getElementById('statTotalMhs').textContent = mhsSnap.size;
 
-        const users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const dosenList = users.filter(u => u.role === 'dosen' || u.role === 'dosen-musyrif');
-        const musyrifList = users.filter(u => u.role === 'musyrif' || u.role === 'dosen-musyrif');
-        const mhsList = users.filter(u => u.role === 'mahasiswa' || !['pusat-data','operator-akademik','operator-halaqoh','operator-bahasa','operator-pengasuhan','dosen','musyrif','dosen-musyrif'].includes(u.role));
+        // Nilai TOAFL
+        const toaflSnap = await db.collection('nilaiTOAFL').get();
+        const toaflDocs = toaflSnap.docs.map(d => d.data());
+        const lulusCount = toaflDocs.filter(d => (d.total || 0) >= 240).length;
+        const lulusPct = toaflDocs.length > 0 ? Math.round((lulusCount / toaflDocs.length) * 100) : 0;
+        document.getElementById('statToaflLulus').textContent = lulusPct + '%';
 
-        // ═══ STATS ═══
+        // Nilai Bulanan
+        const bulananSnap = await db.collection('nilaiBulanan').get();
+        const bulananDocs = bulananSnap.docs.map(d => d.data());
+        const avgBulanan = bulananDocs.length > 0 ? Math.round(bulananDocs.reduce((s, d) => s + (d.nilai || 0), 0) / bulananDocs.length) : 0;
+        document.getElementById('statBulananRata').textContent = avgBulanan || '-';
+
+        // Program aktif hari ini
         const today = new Date().toISOString().split('T')[0];
-        const todayAbsensi = absensiSnap.docs.filter(d => d.data().tanggal === today).length;
-        const todaySholat = absensiSholatSnap.docs.filter(d => d.data().tanggal === today).length;
-
-        document.getElementById('statsGrid').innerHTML = `
-          <div class="stat-card">
-            <div class="stat-icon" style="background:var(--green-light);color:var(--green-dark);">👥</div>
-            <div class="stat-value">${users.length}</div>
-            <div class="stat-label">Total Users</div>
-            <div class="stat-change up">👨‍🏫 ${dosenList.length} Dosen · 👨‍🎓 ${mhsList.length} Mhs</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:var(--blue-light);color:var(--blue);">📋</div>
-            <div class="stat-value">${absensiSnap.size}</div>
-            <div class="stat-label">Total Absensi Kelas</div>
-            <div class="stat-change up">📅 ${todayAbsensi} hari ini</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:var(--orange-light);color:var(--orange);">🕌</div>
-            <div class="stat-value">${absensiSholatSnap.size}</div>
-            <div class="stat-label">Total Sholat Jamaah</div>
-            <div class="stat-change up">📅 ${todaySholat} hari ini</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:var(--purple-light);color:var(--purple);">📝</div>
-            <div class="stat-value">${kinerjaSnap.size}</div>
-            <div class="stat-label">Laporan Kinerja</div>
-            <div class="stat-change">🗣️ ${laporBahasaSnap.size} lapor bahasa</div>
-          </div>`;
-
-        // ═══ CHART ABSENSI (7 hari) ═══
-        const last7Days = [];
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date(); d.setDate(d.getDate() - i);
-          last7Days.push(d.toISOString().split('T')[0]);
-        }
-        const absensiCounts = last7Days.map(date => absensiSnap.docs.filter(d => d.data().tanggal === date).length);
-
-        if (chartAbsensi) chartAbsensi.destroy();
-        chartAbsensi = new Chart(document.getElementById('chartAbsensi'), {
-          type: 'bar',
-          data: {
-            labels: last7Days.map(d => new Date(d).toLocaleDateString('id-ID',{weekday:'short',day:'numeric'})),
-            datasets: [{ label: 'Absensi', data: absensiCounts, backgroundColor: 'rgba(0,168,89,0.6)', borderColor: '#00a859', borderWidth: 1, borderRadius: 6 }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-        });
-
-        // ═══ CHART ROLE ═══
-        const roleCounts = {
-          'Pusat Data': users.filter(u => u.role === 'pusat-data').length,
-          'Operator': users.filter(u => u.role?.startsWith('operator')).length,
-          'Dosen': dosenList.length,
-          'Musyrif': musyrifList.filter(u => u.role === 'musyrif').length,
-          'Mahasiswa': mhsList.length,
-        };
-        if (chartRole) chartRole.destroy();
-        chartRole = new Chart(document.getElementById('chartRole'), {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(roleCounts),
-            datasets: [{ data: Object.values(roleCounts), backgroundColor: ['#004d40','#00a859','#1e88e5','#f57c00','#7b1fa2'], borderWidth: 2, borderColor: '#fff' }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
-        });
-
-        // ═══ CHART SHOLAT ═══
-        const sholatCounts = last7Days.map(date => absensiSholatSnap.docs.filter(d => d.data().tanggal === date).length);
-        if (chartSholat) chartSholat.destroy();
-        chartSholat = new Chart(document.getElementById('chartSholat'), {
-          type: 'line',
-          data: {
-            labels: last7Days.map(d => new Date(d).toLocaleDateString('id-ID',{weekday:'short',day:'numeric'})),
-            datasets: [{ label: 'Sholat', data: sholatCounts, borderColor: '#1e88e5', backgroundColor: 'rgba(30,136,229,0.1)', fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#1e88e5' }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-        });
-
-        // ═══ TOP PERFORMERS ═══
-        const dosenPerf = dosenList.map(d => {
-          const absenCount = absensiSnap.docs.filter(a => a.data().dosenId === d.id).length;
-          return { nama: d.nama || d.email, count: absenCount };
-        }).sort((a,b) => b.count - a.count).slice(0, 5);
-
-        document.getElementById('topPerformers').innerHTML = dosenPerf.map((d, i) => `
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);">
-            <span style="font-weight:700;color:var(--green-dark);width:24px;">#${i+1}</span>
-            <div style="width:32px;height:32px;border-radius:50%;background:${i===0?'#ffd700':i===1?'#c0c0c0':i===2?'#cd7f32':'var(--gray-200)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">${i+1}</div>
-            <div style="flex:1;"><strong>${d.nama}</strong><br><small>${d.count} absensi</small></div>
-            <span style="font-weight:700;color:var(--green);">${d.count}</span>
-          </div>
-        `).join('');
-
-        // ═══ TABEL AKTIVITAS ═══
-        const logs = loginLogsSnap.docs.map(d => d.data());
-        document.querySelector('#tableAktivitas tbody').innerHTML = logs.map(l => `
-          <tr>
-            <td>${l.timestamp?.toDate?.().toLocaleString('id-ID') || '-'}</td>
-            <td><strong>${l.nama || l.email || '-'}</strong></td>
-            <td>🔐 Login</td>
-            <td>${l.role || '-'}</td>
-          </tr>
-        `).join('');
-
+        const progSnap = await db.collection('programBahasaChecklist').where('tanggal', '==', today).get();
+        const checkedCount = progSnap.docs.filter(d => d.data().checked).length;
+        document.getElementById('statProgramAktif').textContent = checkedCount;
       } catch(e) {
-        console.error('Dashboard error:', e);
+        console.error('Gagal load stats:', e);
       }
     }
 
-    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
-    loadDashboard();
+    window.logout = function() {
+      if (confirm('Keluar?')) {
+        try { auth.signOut(); } catch(e) {}
+        localStorage.removeItem('user');
+        window.location.href = '../../index.html';
+      }
+    };
+
+    loadStats();
   </script>
 </body>
 </html>
