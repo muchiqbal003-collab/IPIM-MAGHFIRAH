@@ -66,27 +66,28 @@
     /* GENDER COMPARISON */
     .gender-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .gender-card { background: var(--surface-glass); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border-glass); text-align: center; }
-    .gender-card .g-icon { font-size: 28px; }
+    .gender-card .g-icon { font-size: 30px; }
     .gender-card .g-total { font-size: 22px; font-weight: 800; margin-top: 4px; }
-    .gender-card .g-label { font-size: 10px; color: var(--text-muted); }
-    .gender-card .g-pct { font-size: 12px; font-weight: 700; margin-top: 4px; }
+    .gender-card .g-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .gender-card .g-pct { font-size: 14px; font-weight: 800; margin-top: 6px; }
+    .gender-card .g-bar-wrap { width: 100%; height: 8px; background: var(--gray-100, #f1f5f9); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+    .gender-card .g-bar { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
 
     /* WEEK COMPARISON */
-    .week-row { display: flex; gap: 10px; align-items: end; margin-top: 10px; }
-    .week-item { flex: 1; text-align: center; }
-    .week-bar { width: 100%; border-radius: 6px 6px 0 0; min-height: 8px; position: relative; }
-    .week-bar span { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; }
-    .week-label { font-size: 9px; color: var(--text-muted); margin-top: 4px; }
-    .bar-week1 { background: #3b82f6; }
-    .bar-week2 { background: #10b981; }
-    .bar-week3 { background: #f59e0b; }
-    .bar-week4 { background: #ef4444; }
+    .week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+    .week-card { background: var(--surface-glass); border-radius: var(--radius-md); padding: 12px; border: 1px solid var(--border-glass); text-align: center; }
+    .week-card .w-label { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .week-card .w-date { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+    .week-card .w-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 10px; }
+    .week-card .w-color { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .week-card .w-pct { font-weight: 700; }
 
     @media (max-width: 768px) {
       .main-content { padding: 14px 12px; }
       .topbar { margin-top: 50px; flex-direction: column; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .gender-grid { grid-template-columns: 1fr; }
+      .week-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -98,16 +99,16 @@
 
   <main class="main-content" id="mainContent">
     <div class="topbar">
-      <div class="page-title"><h1>📋 Rekap Pelanggaran</h1><p>Ringkasan pelanggaran bahasa</p></div>
+      <div class="page-title"><h1>📋 Rekap Pelanggaran</h1><p>Persentase mahasiswa berbahasa Arab baik</p></div>
       <button class="btn" onclick="logout()">🚪 Keluar</button>
     </div>
 
     <!-- STATS -->
     <div class="stats-grid" id="statsGrid"></div>
 
-    <!-- GENDER COMPARISON -->
+    <!-- GENDER COMPARISON (Persentase yang BAIK) -->
     <div class="card">
-      <div class="card-header"><h3>👥 Perbandingan Mahasiswa vs Mahasiswi</h3></div>
+      <div class="card-header"><h3>👥 Persentase Berbahasa Arab Baik</h3></div>
       <div class="card-body">
         <div class="gender-grid" id="genderGrid"></div>
       </div>
@@ -135,7 +136,6 @@
     </div>
   </main>
 
-  <!-- FIREBASE SDK HARUS DITAMBAHKAN -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -172,8 +172,7 @@
       updateWeekComparison();
       renderTable();
     } catch(e) {
-      console.error('Gagal load data:', e);
-      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center;color:var(--red);">Error: ' + e.message + '</p>';
+      console.error('Gagal load:', e);
     }
   }
 
@@ -182,48 +181,62 @@
     return allData.filter(d => d.tanggal >= start && d.tanggal <= end);
   }
 
-  function updateStats() {
-    const f = getFiltered();
-    const unique = new Set(f.map(d => d.mahasiswaId || d.namaPelapor)).size;
-    const totalMhs = allMahasiswa.length;
-    const pctTerlibat = totalMhs > 0 ? Math.round((unique / totalMhs) * 100) : 0;
-
-    document.getElementById('statsGrid').innerHTML = `
-      <div class="stat-card"><div class="stat-value">${f.length}</div><div class="stat-label">Total Pelanggaran</div></div>
-      <div class="stat-card"><div class="stat-value">${unique}</div><div class="stat-label">Mahasiswa Terlibat</div></div>
-      <div class="stat-card"><div class="stat-value">${totalMhs}</div><div class="stat-label">Total Mahasiswa</div></div>
-      <div class="stat-card"><div class="stat-value">${pctTerlibat}%</div><div class="stat-label">% Terlibat</div></div>`;
+  // Hitung persentase mahasiswa yang TIDAK melanggar (berbahasa Arab baik)
+  function getPersentaseBaik(jk, data) {
+    const totalJk = allMahasiswa.filter(m => m.jk === jk).length;
+    if (totalJk === 0) return { total: 0, melanggar: 0, baik: 0, pct: 100 };
+    
+    const pelanggarIds = new Set(
+      data.filter(d => {
+        const m = allMahasiswa.find(x => x.id === d.mahasiswaId);
+        return m?.jk === jk;
+      }).map(d => d.mahasiswaId)
+    );
+    
+    const melanggar = pelanggarIds.size;
+    const baik = totalJk - melanggar;
+    const pct = Math.round((baik / totalJk) * 100);
+    
+    return { total: totalJk, melanggar, baik, pct };
   }
 
-  // ========== GENDER COMPARISON ==========
+  function updateStats() {
+    const f = getFiltered();
+    const totalMhs = allMahasiswa.length;
+    const pelanggar = new Set(f.map(d => d.mahasiswaId || d.namaPelapor)).size;
+    const baik = totalMhs - pelanggar;
+    const pctBaik = totalMhs > 0 ? Math.round((baik / totalMhs) * 100) : 100;
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card"><div class="stat-value">${totalMhs}</div><div class="stat-label">Total Mahasiswa</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--green-light);">${baik}</div><div class="stat-label">✅ Berbahasa Baik</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--red);">${pelanggar}</div><div class="stat-label">❌ Melanggar</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:${pctBaik >= 80 ? 'var(--green-light)' : pctBaik >= 50 ? 'var(--orange)' : 'var(--red)'};">${pctBaik}%</div><div class="stat-label">% Berbahasa Baik</div></div>`;
+  }
+
+  // ========== GENDER COMPARISON (Persentase Baik) ==========
   function updateGenderComparison() {
     const f = getFiltered();
-    const lakiIds = new Set(f.filter(d => {
-      const m = allMahasiswa.find(x => x.id === d.mahasiswaId);
-      return m?.jk === 'L';
-    }).map(d => d.mahasiswaId));
-    const perempuanIds = new Set(f.filter(d => {
-      const m = allMahasiswa.find(x => x.id === d.mahasiswaId);
-      return m?.jk === 'P';
-    }).map(d => d.mahasiswaId));
+    const laki = getPersentaseBaik('L', f);
+    const perempuan = getPersentaseBaik('P', f);
 
-    const totalL = allMahasiswa.filter(m => m.jk === 'L').length;
-    const totalP = allMahasiswa.filter(m => m.jk === 'P').length;
-    const pctL = totalL > 0 ? Math.round((lakiIds.size / totalL) * 100) : 0;
-    const pctP = totalP > 0 ? Math.round((perempuanIds.size / totalP) * 100) : 0;
+    const barL = laki.pct;
+    const barP = perempuan.pct;
 
     document.getElementById('genderGrid').innerHTML = `
-      <div class="gender-card" style="border-left:4px solid #3b82f6;">
-        <div class="g-icon">♂️</div>
-        <div class="g-total" style="color:#3b82f6;">${lakiIds.size}/${totalL}</div>
-        <div class="g-label">Mahasiswa (Laki-laki)</div>
-        <div class="g-pct" style="color:#3b82f6;">${pctL}% berbahasa Arab tidak baik</div>
+      <div class="gender-card" style="border-top: 4px solid #3b82f6;">
+        <div class="g-icon">👨‍🎓</div>
+        <div class="g-total" style="color:#3b82f6;">${laki.pct}%</div>
+        <div class="g-label">Mahasiswa Putra</div>
+        <div class="g-pct">${laki.baik}/${laki.total} berbahasa Arab baik</div>
+        <div class="g-bar-wrap"><div class="g-bar" style="width:${barL}%;background:#3b82f6;"></div></div>
       </div>
-      <div class="gender-card" style="border-left:4px solid #ec4899;">
-        <div class="g-icon">♀️</div>
-        <div class="g-total" style="color:#ec4899;">${perempuanIds.size}/${totalP}</div>
-        <div class="g-label">Mahasiswi (Perempuan)</div>
-        <div class="g-pct" style="color:#ec4899;">${pctP}% berbahasa Arab tidak baik</div>
+      <div class="gender-card" style="border-top: 4px solid #ec4899;">
+        <div class="g-icon">👩‍🎓</div>
+        <div class="g-total" style="color:#ec4899;">${perempuan.pct}%</div>
+        <div class="g-label">Mahasiswi Putri</div>
+        <div class="g-pct">${perempuan.baik}/${perempuan.total} berbahasa Arab baik</div>
+        <div class="g-bar-wrap"><div class="g-bar" style="width:${barP}%;background:#ec4899;"></div></div>
       </div>`;
   }
 
@@ -240,32 +253,37 @@
         d.tanggal >= start.toISOString().split('T')[0] &&
         d.tanggal <= end.toISOString().split('T')[0]
       );
-      const unique = new Set(docs.map(d => d.mahasiswaId || d.namaPelapor)).size;
+
+      const laki = getPersentaseBaik('L', docs);
+      const perempuan = getPersentaseBaik('P', docs);
 
       weeks.push({
-        label: `${start.getDate()}/${start.getMonth() + 1} - ${end.getDate()}/${end.getMonth() + 1}`,
-        count: docs.length,
-        unique: unique
+        label: `Pekan ${4 - i}`,
+        date: `${start.getDate()}/${start.getMonth() + 1} - ${end.getDate()}/${end.getMonth() + 1}`,
+        laki: laki,
+        perempuan: perempuan
       });
     }
 
-    const maxCount = Math.max(...weeks.map(w => w.count), 1);
-    const maxHeight = 120;
-
     document.getElementById('weekComparison').innerHTML = `
-      <div class="week-row">
+      <div class="week-grid">
         ${weeks.map((w, i) => {
-          const height = Math.max(10, (w.count / maxCount) * maxHeight);
-          const barClass = ['bar-week1', 'bar-week2', 'bar-week3', 'bar-week4'][i];
-          return `<div class="week-item">
-            <div class="week-bar ${barClass}" style="height:${height}px;"><span>${w.count}</span></div>
-            <div class="week-label">Pekan ${i + 1}<br>${w.label}</div>
-            <div style="font-size:9px;color:var(--text-muted);">${w.unique} unik</div>
+          const bgColor = i === 3 ? 'var(--accent-light)' : '';
+          return `<div class="week-card" style="${bgColor ? 'background:' + bgColor + ';' : ''}">
+            <div class="w-label">${w.label}</div>
+            <div class="w-date">${w.date}</div>
+            <div class="w-row">
+              <span class="w-color" style="background:#3b82f6;"></span>
+              <span>Putra:</span>
+              <span class="w-pct" style="color:#3b82f6;">${w.laki.pct}%</span>
+            </div>
+            <div class="w-row">
+              <span class="w-color" style="background:#ec4899;"></span>
+              <span>Putri:</span>
+              <span class="w-pct" style="color:#ec4899;">${w.perempuan.pct}%</span>
+            </div>
           </div>`;
         }).join('')}
-      </div>
-      <div style="display:flex;gap:12px;margin-top:10px;font-size:9px;color:var(--text-muted);justify-content:center;">
-        <span>🔵 Pekan 1</span><span>🟢 Pekan 2</span><span>🟠 Pekan 3</span><span>🔴 Pekan 4 (ini)</span>
       </div>`;
   }
 
@@ -291,13 +309,13 @@
     const total = f.length || 1;
 
     document.getElementById('tableContainer').innerHTML = list.length ? `
-      <table><thead><tr><th>No</th><th>Nama</th><th>NIM</th><th>JK</th><th>Jumlah</th><th>%</th><th>Status</th></tr></thead><tbody>
+      <table><thead><tr><th>No</th><th>Nama</th><th>NIM</th><th>JK</th><th>Jumlah Pelanggaran</th><th>Status</th></tr></thead><tbody>
       ${list.map((m, i) => {
         const pct = Math.round((m.count / total) * 100);
         const cls = pct >= 30 ? 'badge-high' : pct >= 15 ? 'badge-mid' : 'badge-low';
-        const label = pct >= 30 ? 'Tinggi' : pct >= 15 ? 'Sedang' : 'Rendah';
-        return `<tr><td>${i + 1}</td><td><strong>${m.nama}</strong></td><td>${m.nim}</td><td>${m.jk}</td><td>${m.count}</td><td>${pct}%</td><td><span class="badge ${cls}">${label}</span></td></tr>`;
-      }).join('')}</tbody></table>` : '<p style="text-align:center;color:var(--text-muted);">Tidak ada data</p>';
+        const label = pct >= 30 ? 'Sering' : pct >= 15 ? 'Kadang' : 'Jarang';
+        return `<tr><td>${i + 1}</td><td><strong>${m.nama}</strong></td><td>${m.nim}</td><td>${m.jk === 'L' ? 'Putra' : m.jk === 'P' ? 'Putri' : '-'}</td><td>${m.count}</td><td><span class="badge ${cls}">${label}</span></td></tr>`;
+      }).join('')}</tbody></table>` : '<p style="text-align:center;color:var(--text-muted);">✅ Tidak ada pelanggaran</p>';
   }
 
   window.filterData = function(f) {
