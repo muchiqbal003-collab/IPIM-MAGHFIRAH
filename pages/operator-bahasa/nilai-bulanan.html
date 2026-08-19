@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Nilai Ujian Bulanan • Operator Bahasa IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004d40; --primary-dark: #00332b; --primary-light: #00695c;
+      --accent: #d4a843; --accent-dark: #b8860b; --accent-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b; --gray-600: #475569;
+      --gray-700: #334155; --gray-800: #1e293b; --red: #ef4444; --red-light: #fef2f2;
+      --green-success: #10b981; --green-light: #ecfdf5; --blue: #3b82f6; --blue-light: #eff6ff;
+      --orange: #f97316; --orange-light: #fff7ed;
+      --bg-primary: #f0f4f0;
+      --surface-glass: rgba(255, 255, 255, 0.6);
+      --surface-glass-strong: rgba(255, 255, 255, 0.85);
+      --border-glass: rgba(0, 77, 64, 0.08);
+      --text-primary: var(--gray-800);
+      --text-secondary: var(--gray-600);
+      --text-muted: var(--gray-400);
+      --sidebar-bg: rgba(255, 255, 255, 0.7);
+      --nav-hover: rgba(0, 77, 64, 0.06);
+      --nav-active: rgba(212, 168, 67, 0.15);
+      --table-header-bg: rgba(248, 250, 252, 0.8);
+      --table-row-hover: rgba(0, 77, 64, 0.02);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.04), inset -2px -2px 5px rgba(255,255,255,0.8);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-2xl: 28px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628;
+      --surface-glass: rgba(19, 32, 51, 0.6);
+      --surface-glass-strong: rgba(19, 32, 51, 0.85);
+      --border-glass: rgba(255,255,255,0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --sidebar-bg: rgba(10, 22, 40, 0.75);
+      --nav-hover: rgba(212,168,67,0.08);
+      --nav-active: rgba(212,168,67,0.18);
+      --table-header-bg: rgba(19, 32, 51, 0.6);
+      --table-row-hover: rgba(212,168,67,0.04);
+      --input-bg: rgba(19, 32, 51, 0.8);
+      --gray-50: #1e293b; --gray-100: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.02);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-primary);
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(0,77,64,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 80%, rgba(249,115,22,0.04) 0%, transparent 50%);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 28px 32px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
+    }
+    .page-title h1 {
+      font-size: clamp(20px, 4vw, 26px); font-weight: 800;
+      color: var(--text-primary); letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .page-title p { font-size: 13px; color: var(--text-secondary); margin-top: 3px; font-weight: 500; }
+
+    .btn {
+      padding: 10px 18px; border: none; border-radius: 40px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--transition); white-space: nowrap;
+      background: var(--surface-glass-strong); backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-md); color: var(--text-primary);
+    }
+    .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn:active { box-shadow: var(--shadow-inset); transform: scale(0.97); }
+    .btn-success { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; }
+    .btn-warning { background: linear-gradient(135deg, var(--orange), #ea580c); color: white; border: none; }
+    .btn-outline { background: var(--surface-glass); }
+    .btn-sm { padding: 7px 14px; font-size: 12px; }
+
+    .card {
+      background: var(--surface-glass); backdrop-filter: blur(28px) saturate(180%);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border-glass);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong);
+    }
+    .card-header h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px 24px; overflow-x: auto; }
+
+    .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .form-group select {
+      padding: 10px 14px; border: 1.5px solid var(--border-glass);
+      border-radius: 40px; font-size: 13px; font-family: inherit;
+      background: var(--input-bg); color: var(--text-primary); outline: none;
+      transition: var(--transition); min-width: 200px;
+    }
+    .form-group select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
+
+    .sesi-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .sesi-tab {
+      padding: 8px 18px; border-radius: 40px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--border-glass);
+      background: var(--surface-glass); color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .sesi-tab.active { background: var(--orange); color: white; border-color: var(--orange); }
+    .sesi-tab:hover:not(.active) { background: rgba(249,115,22,0.08); }
+
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 500px; }
+    thead th {
+      background: var(--table-header-bg); backdrop-filter: blur(8px);
+      padding: 12px 10px; font-size: 10px; font-weight: 700;
+      color: var(--text-secondary); text-transform: uppercase;
+      border-bottom: 2px solid var(--border-glass); text-align: center; white-space: nowrap;
+    }
+    tbody td { padding: 10px; border-bottom: 1px solid var(--border-glass); text-align: center; }
+    tbody tr:hover { background: var(--table-row-hover); }
+    .nilai-input {
+      width: 70px; padding: 8px; border: 1.5px solid var(--border-glass);
+      border-radius: 8px; font-size: 13px; text-align: center;
+      font-family: inherit; font-weight: 600;
+      background: var(--input-bg); color: var(--text-primary);
+    }
+    .nilai-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.1); outline: none; }
+
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .badge-mumtaz { background: #fef9c3; color: #854d0e; }
+    .badge-jayyid-jiddan { background: #dcfce7; color: #166534; }
+    .badge-jayyid { background: #dbeafe; color: #1e40af; }
+    .badge-maqbul { background: #fff7ed; color: #9a3412; }
+    .badge-rasib { background: #fee2e2; color: #991b1b; }
+
+    .summary-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .summary-item {
+      background: var(--surface-glass); backdrop-filter: blur(12px);
+      padding: 12px 18px; border-radius: var(--radius-md);
+      font-size: 12px; font-weight: 600; border: 1px solid var(--border-glass);
+    }
+    .summary-item span { font-size: 18px; font-weight: 800; }
+
+    .alert { padding: 12px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; }
+    .alert-error { background: var(--red-light); color: #b71c1c; }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 16px 14px; }
+      .topbar { margin-top: 50px; flex-direction: column; gap: 10px; }
+      .filter-row { flex-direction: column; }
+      .card-body { padding: 14px 10px; }
+    }
+    @media (max-width: 480px) {
+      .page-title h1 { font-size: 18px; }
+      .btn { padding: 8px 14px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body data-page="nilai-bulanan">
+
+  <!-- Sidebar Container -->
+  <div id="sidebarContainer"></div>
+
+  <!-- Burger & Theme Toggle -->
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <div class="topbar">
+      <div class="page-title">
+        <h1>📅 Nilai Ujian Bulanan</h1>
+        <p>Input nilai per mahasiswa — satu baris, satu nilai</p>
+      </div>
+      <button class="btn btn-outline" onclick="logout()">
+        <svg><use href="#icon-logout"/></svg> Keluar
+      </button>
+    </div>
+
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <!-- FILTER -->
+    <div class="card">
+      <div class="card-header"><h3>🔍 Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label>🏫 Kelas</label>
+            <select id="filterKelas" onchange="onFilterChange()"><option value="">Pilih Kelas...</option></select>
+          </div>
+          <div class="form-group">
+            <label>📅 Sesi/Bulan</label>
+            <select id="filterSesi" onchange="onFilterChange()"></select>
+          </div>
+        </div>
+        <div class="sesi-tabs" id="sesiTabs"></div>
+        <button class="btn btn-sm btn-warning" onclick="tambahSesi()" style="margin-top:10px;">
+          <svg><use href="#icon-plus"/></svg> Tambah Sesi
+        </button>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-row" id="summaryRow" style="display:none;">
+      <div class="summary-item">👨‍🎓 Total: <span id="sumTotal">0</span></div>
+      <div class="summary-item">⭐ Mumtaz: <span id="sumMumtaz" style="color:#854d0e;">0</span></div>
+      <div class="summary-item">🟢 Jayyid Jiddan: <span id="sumJJ" style="color:#166534;">0</span></div>
+      <div class="summary-item">🔵 Jayyid: <span id="sumJayyid" style="color:#1e40af;">0</span></div>
+      <div class="summary-item">🟠 Maqbul: <span id="sumMaqbul" style="color:#9a3412;">0</span></div>
+      <div class="summary-item">🔴 Rasib: <span id="sumRasib" style="color:#991b1b;">0</span></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Daftar Mahasiswa (<span id="totalData">0</span>)</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-success btn-sm" onclick="simpanSemua()">
+            <svg><use href="#icon-save"/></svg> Simpan Semua
+          </button>
+          <button class="btn btn-warning btn-sm" onclick="exportExcel()">
+            <svg><use href="#icon-export"/></svg> Export Excel
+          </button>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+            <svg><use href="#icon-import"/></svg> Import Excel
+            <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcel(event)">
+          </label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" id="tableContainer">
+          <p style="text-align:center;color:var(--text-muted);padding:30px;">Pilih kelas dan sesi untuk memulai</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script>
+    (function(){
+    'use strict';
+
+    let user;
+    try { user = checkRole(['operator-bahasa','pusat-data']); } catch(e) {}
+    if (!user) user = { nama: 'Operator' };
+
+    let allMahasiswa = [], allKelas = [], existingNilai = {};
+    let daftarSesi = ['Bulan 1']; // Default hanya 1 sesi
+
+    const filterKelas = document.getElementById('filterKelas');
+    const filterSesi = document.getElementById('filterSesi');
+    const sesiTabs = document.getElementById('sesiTabs');
+    const tableContainer = document.getElementById('tableContainer');
+    const summaryRow = document.getElementById('summaryRow');
+
+    function showAlert(type, msg) {
+      const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+      if (el) { el.textContent = msg; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 4000); }
+    }
+
+    function getPredikat(n) {
+      if (n >= 90) return { label: 'Mumtaz', cls: 'badge-mumtaz' };
+      if (n >= 80) return { label: 'Jayyid Jiddan', cls: 'badge-jayyid-jiddan' };
+      if (n >= 70) return { label: 'Jayyid', cls: 'badge-jayyid' };
+      if (n >= 60) return { label: 'Maqbul', cls: 'badge-maqbul' };
+      return { label: 'Rasib', cls: 'badge-rasib' };
+    }
+
+    // Load sesi dari Firestore
+    async function loadSesi() {
+      try {
+        const snap = await db.collection('settings').doc('sesiBulanan').get();
+        if (snap.exists && snap.data().daftar && snap.data().daftar.length > 0) {
+          daftarSesi = snap.data().daftar;
+        }
+      } catch(e) {}
+      renderSesiUI();
+    }
+
+    function renderSesiUI() {
+      const active = filterSesi.value || daftarSesi[0];
+      sesiTabs.innerHTML = daftarSesi.map(s =>
+        `<span class="sesi-tab${s === active ? ' active' : ''}" onclick="pilihSesi('${s.replace(/'/g, "\\'")}')">${s}</span>`
+      ).join('');
+      filterSesi.innerHTML = daftarSesi.map(s => `<option value="${s}">${s}</option>`).join('');
+      if (!filterSesi.value && daftarSesi.length) filterSesi.value = daftarSesi[0];
+    }
+
+    window.pilihSesi = function(sesi) {
+      filterSesi.value = sesi;
+      renderSesiUI();
+      onFilterChange();
+    };
+
+    window.tambahSesi = async function() {
+      const nama = prompt('Nama sesi/bulan baru (contoh: Bulan 2):');
+      if (!nama) return;
+      if (daftarSesi.includes(nama)) { alert('Sesi sudah ada!'); return; }
+      daftarSesi.push(nama);
+      try { await db.collection('settings').doc('sesiBulanan').set({ daftar: daftarSesi }); } catch(e) {}
+      renderSesiUI();
+      filterSesi.value = nama;
+      onFilterChange();
+    };
+
+    // Load kelas
+    async function loadKelas() {
+      try {
+        const snap = await db.collection('kelas').get();
+        allKelas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+        filterKelas.innerHTML = '<option value="">Pilih Kelas...</option>';
+        allKelas.forEach(k => {
+          filterKelas.innerHTML += `<option value="${k.id}">${k.nama || k.id} (${k.semester || '?'})</option>`;
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    // Reset & load mahasiswa
+    function onFilterChange() {
+      allMahasiswa = [];
+      existingNilai = {};
+      tableContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:30px;">Memuat data...</p>';
+      summaryRow.style.display = 'none';
+      loadMahasiswa();
+    }
+
+    async function loadMahasiswa() {
+      const kelasId = filterKelas.value;
+      const sesi = filterSesi.value;
+
+      if (!kelasId) {
+        tableContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:30px;">Pilih kelas untuk memulai</p>';
+        summaryRow.style.display = 'none';
+        allMahasiswa = [];
+        return;
+      }
+
+      try {
+        const snap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
+        allMahasiswa = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+        existingNilai = {};
+
+        if (kelasId && sesi) {
+          const nilaiSnap = await db.collection('nilaiBulanan')
+            .where('kelasId', '==', kelasId)
+            .where('sesi', '==', sesi)
+            .get();
+          nilaiSnap.forEach(d => {
+            const data = d.data();
+            existingNilai[data.mahasiswaId] = { id: d.id, ...data };
+          });
+        }
+
+        renderTable();
+      } catch(e) {
+        console.error(e);
+        tableContainer.innerHTML = '<p style="text-align:center;color:var(--red);padding:30px;">Error: ' + e.message + '</p>';
+      }
+    }
+
+    function renderTable() {
+      if (!allMahasiswa.length) {
+        tableContainer.innerHTML = '<p style="text-align:center;padding:30px;">Tidak ada mahasiswa</p>';
+        summaryRow.style.display = 'none';
+        return;
+      }
+
+      let html = '<table><thead><tr><th>No</th><th>NIM</th><th>Nama</th><th>Nilai</th><th>Predikat</th></tr></thead><tbody>';
+      let m = 0, jj = 0, j = 0, mq = 0, r = 0, totalData = 0;
+
+      allMahasiswa.forEach((mhs, i) => {
+        const ex = existingNilai[mhs.id];
+        const nilai = ex ? ex.nilai : '';
+        const predikat = nilai !== '' ? getPredikat(parseInt(nilai)) : null;
+        if (predikat) {
+          if (predikat.label === 'Mumtaz') m++;
+          else if (predikat.label === 'Jayyid Jiddan') jj++;
+          else if (predikat.label === 'Jayyid') j++;
+          else if (predikat.label === 'Maqbul') mq++;
+          else r++;
+          totalData++;
+        }
+
+        html += `<tr><td>${i + 1}</td><td>${mhs.nim || '-'}</td><td style="text-align:left;font-weight:600;">${mhs.nama || '-'}</td>`;
+        html += `<td><input type="number" class="nilai-input" id="nilai_${mhs.id}" value="${nilai}" min="0" max="100" oninput="onNilaiChange('${mhs.id}')"></td>`;
+        html += `<td><span class="badge ${predikat ? predikat.cls : 'badge-maqbul'}" id="pred_${mhs.id}" style="${!predikat ? 'opacity:0.3;' : ''}">${predikat ? predikat.label : '-'}</span></td>`;
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      tableContainer.innerHTML = html;
+      document.getElementById('totalData').textContent = totalData;
+
+      document.getElementById('sumTotal').textContent = allMahasiswa.length;
+      document.getElementById('sumMumtaz').textContent = m;
+      document.getElementById('sumJJ').textContent = jj;
+      document.getElementById('sumJayyid').textContent = j;
+      document.getElementById('sumMaqbul').textContent = mq;
+      document.getElementById('sumRasib').textContent = r;
+      summaryRow.style.display = 'flex';
+    }
+
+    window.onNilaiChange = function(mhsId) {
+      const input = document.getElementById('nilai_' + mhsId);
+      const predEl = document.getElementById('pred_' + mhsId);
+      if (!input || !predEl) return;
+      const val = parseInt(input.value);
+      if (isNaN(val) || val < 0 || val > 100) { predEl.textContent = '-'; predEl.style.opacity = '0.3'; return; }
+      const p = getPredikat(val);
+      predEl.textContent = p.label;
+      predEl.className = 'badge ' + p.cls;
+      predEl.style.opacity = '1';
+    };
+
+    // Simpan nilai
+    window.simpanSemua = async function() {
+      if (!allMahasiswa.length) return showAlert('error', 'Pilih kelas dulu!');
+      if (!confirm('Simpan semua nilai untuk ' + filterSesi.value + '?')) return;
+      const kelasId = filterKelas.value, sesi = filterSesi.value;
+      const batch = db.batch();
+      let count = 0;
+
+      for (const mhs of allMahasiswa) {
+        const input = document.getElementById('nilai_' + mhs.id);
+        if (!input || input.value === '') continue;
+        const nilai = parseInt(input.value);
+        if (isNaN(nilai) || nilai < 0 || nilai > 100) continue;
+        const p = getPredikat(nilai);
+        const data = {
+          mahasiswaId: mhs.id, nim: mhs.nim || '', nama: mhs.nama || '',
+          kelasId, sesi, nilai, predikat: p.label,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        const ex = existingNilai[mhs.id];
+        if (ex?.id) batch.update(db.collection('nilaiBulanan').doc(ex.id), data);
+        else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); batch.set(db.collection('nilaiBulanan').doc(), data); }
+        count++;
+      }
+      if (!count) return showAlert('error', 'Tidak ada nilai yang diisi!');
+      try {
+        await batch.commit();
+        showAlert('success', count + ' nilai disimpan untuk ' + sesi + '!');
+        onFilterChange();
+      } catch(e) { showAlert('error', e.message); }
+    };
+
+    // Export Excel
+    window.exportExcel = function() {
+      if (!allMahasiswa.length) return alert('Tidak ada data!');
+      const data = allMahasiswa.map((mhs, i) => {
+        const input = document.getElementById('nilai_' + mhs.id);
+        const nilai = input?.value || '';
+        const p = nilai !== '' ? getPredikat(parseInt(nilai)) : null;
+        return { No: i + 1, NIM: mhs.nim || '', Nama: mhs.nama || '', Nilai: nilai || '-', Predikat: p ? p.label : '-' };
+      });
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Nilai Bulanan');
+      XLSX.writeFile(wb, 'nilai-' + (filterSesi.value || 'sesi') + '-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+      showAlert('success', 'Data diexport!');
+    };
+
+    // Import Excel
+    window.importExcel = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const wb = XLSX.read(e.target.result, { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(ws);
+          if (!json.length) return alert('File kosong!');
+          let imported = 0;
+          json.forEach(row => {
+            const nim = String(row.NIM || row.nim || '').trim();
+            const mhs = allMahasiswa.find(m => String(m.nim || '').trim() === nim);
+            if (!mhs) return;
+            const nilai = row.Nilai || row.nilai || '';
+            const input = document.getElementById('nilai_' + mhs.id);
+            if (input && nilai !== '') { input.value = nilai; onNilaiChange(mhs.id); imported++; }
+          });
+          showAlert('success', 'Import selesai! ' + imported + ' nilai diisi. Klik Simpan Semua.');
+        } catch(err) { showAlert('error', 'Gagal import: ' + err.message); }
+      };
+      reader.readAsArrayBuffer(file);
+      event.target.value = '';
+    };
+
+    window.logout = function() {
+      if (confirm('Keluar?')) {
+        try { auth.signOut(); } catch(e) {}
+        localStorage.removeItem('user');
+        window.location.href = '../../index.html';
+      }
+    };
+
+    // Init
+    loadSesi();
+    loadKelas();
+    })();
+  </script>
+</body>
+</html>

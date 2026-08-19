@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Input Pelanggaran • Operator Bahasa IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004d40; --primary-light: #00695c; --accent: #d4a843; --accent-light: #fdf6e3;
+      --bg-primary: #f0f4f0; --surface-glass: rgba(255,255,255,0.6); --surface-glass-strong: rgba(255,255,255,0.85);
+      --border-glass: rgba(0,77,64,0.08); --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
+      --sidebar-bg: rgba(255,255,255,0.7); --nav-hover: rgba(0,77,64,0.06); --nav-active: rgba(212,168,67,0.15);
+      --red: #ef4444; --red-light: #fef2f2; --green-light: #ecfdf5; --green-success: #10b981;
+      --blue: #3b82f6; --blue-light: #eff6ff; --orange: #f97316; --orange-light: #fff7ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1); --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px;
+      --transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628; --surface-glass: rgba(19,32,51,0.6); --surface-glass-strong: rgba(19,32,51,0.85);
+      --border-glass: rgba(255,255,255,0.08); --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+      --sidebar-bg: rgba(10,22,40,0.75); --nav-hover: rgba(212,168,67,0.08); --nav-active: rgba(212,168,67,0.18);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); display: flex; min-height: 100vh; }
+
+    .main-content { flex: 1; padding: 24px 28px; min-height: 100vh; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .page-title h1 { font-size: clamp(20px, 4vw, 24px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .page-title p { font-size: 12px; color: var(--text-secondary); }
+
+    .btn { padding: 9px 16px; border: none; border-radius: 40px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); background: var(--surface-glass-strong); border: 1px solid var(--border-glass); box-shadow: var(--shadow-sm); color: var(--text-primary); }
+    .btn:hover { box-shadow: var(--shadow-md); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; }
+    .btn-success { background: linear-gradient(135deg, var(--green-success), #059669); color: white; border: none; }
+    .btn-danger { background: linear-gradient(135deg, var(--red), #dc2626); color: white; border: none; }
+    .btn-warning { background: linear-gradient(135deg, var(--orange), #ea580c); color: white; border: none; }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: var(--surface-glass); backdrop-filter: blur(24px); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid var(--border-glass); margin-bottom: 16px; overflow: hidden; }
+    .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: var(--surface-glass-strong); }
+    .card-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .card-body { padding: 16px 20px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .form-group select, .form-group input, .form-group textarea {
+      padding: 10px 14px; border: 1.5px solid var(--border-glass); border-radius: 40px;
+      font-size: 13px; font-family: inherit; background: var(--surface-glass-strong);
+      color: var(--text-primary); outline: none; min-width: 200px;
+    }
+    .form-group textarea { border-radius: var(--radius-lg); resize: vertical; min-height: 80px; }
+
+    .ai-input-area { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 12px; }
+    .ai-input-area textarea {
+      flex: 1; min-width: 250px; padding: 12px 16px;
+      border: 2px dashed var(--accent); border-radius: var(--radius-lg);
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px;
+      resize: vertical; min-height: 90px; background: var(--surface-glass-strong);
+      color: var(--text-primary); outline: none;
+    }
+    .ai-preview { background: var(--blue-light); border-radius: var(--radius-lg); padding: 14px; margin-top: 10px; font-size: 12px; max-height: 250px; overflow-y: auto; }
+    .ai-preview table { width: 100%; font-size: 11px; }
+    .ai-preview .match { color: var(--green-success); font-weight: 700; }
+    .ai-preview .no-match { color: var(--red); }
+
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 400px; }
+    thead th { background: rgba(248,250,252,0.8); padding: 10px; font-size: 9px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; border-bottom: 2px solid var(--border-glass); text-align: left; }
+    tbody td { padding: 9px 10px; border-bottom: 1px solid var(--border-glass); }
+    tbody tr:hover { background: rgba(0,77,64,0.02); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; background: rgba(0,77,64,0.08); color: var(--primary); }
+
+    .alert { padding: 10px 14px; border-radius: var(--radius-md); font-size: 12px; font-weight: 500; margin-bottom: 12px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; }
+    .alert-error { background: var(--red-light); color: #991b1b; }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 14px 12px; }
+      .topbar { margin-top: 50px; flex-direction: column; }
+    }
+  </style>
+</head>
+<body data-page="input-pelanggaran">
+
+  <div id="sidebarContainer"></div>
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
+
+  <main class="main-content" id="mainContent">
+    <div class="topbar">
+      <div class="page-title"><h1>⚠️ Input Pelanggaran</h1><p>AI Smart Input • Copy-paste nama → auto-deteksi mahasiswa</p></div>
+      <button class="btn" onclick="logout()">🚪 Keluar</button>
+    </div>
+
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <!-- AI SMART INPUT -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🤖 AI Smart Input</h3>
+        <span style="font-size:11px;color:var(--text-muted);">Copas nama-nama, AI cocokkan otomatis</span>
+      </div>
+      <div class="card-body">
+        <div class="ai-input-area">
+          <textarea id="aiInput" placeholder="Copas nama mahasiswa di sini...&#10;Contoh:&#10;aldi, fahmi, ahmad&#10;atau satu per baris&#10;Aldi Muhammad Iqbal&#10;Fahmi Abdillah"></textarea>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button class="btn btn-primary" onclick="aiDetect()">🔍 Deteksi Nama</button>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('aiInput').value=''">🗑️ Clear</button>
+          </div>
+        </div>
+        <div id="aiResult"></div>
+      </div>
+    </div>
+
+    <!-- FORM MANUAL -->
+    <div class="card">
+      <div class="card-header"><h3>📝 Form Manual</h3></div>
+      <div class="card-body">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+          <div class="form-group" style="flex:2;min-width:180px;">
+            <label>Nama Mahasiswa</label>
+            <select id="mhsSelect"><option value="">Pilih...</option></select>
+          </div>
+          <div class="form-group" style="min-width:110px;">
+            <label>Jenis</label>
+            <select id="jenisInput"><option value="Lisan">Lisan</option><option value="Tulisan">Tulisan</option><option value="Simbol">Simbol</option><option value="Gestur">Gestur</option></select>
+          </div>
+          <div class="form-group" style="flex:2;min-width:150px;">
+            <label>Deskripsi</label>
+            <input type="text" id="deskripsiInput" placeholder="Detail singkat...">
+          </div>
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" onclick="tambahManual()">➕ Tambah</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST HARI INI -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Hari Ini (<span id="todayCount">0</span>)</h3>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn btn-success btn-sm" onclick="simpanBatch()">💾 Simpan Batch</button>
+          <button class="btn btn-danger btn-sm" onclick="hapusHariIni()">🗑️ Hapus Hari Ini</button>
+          <button class="btn btn-warning btn-sm" onclick="hapusSeminggu()">🗑️ Hapus 1 Minggu</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" id="tableContainer">
+          <p style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
+
+  <script>
+  (function(){
+  'use strict';
+
+  let allMahasiswa = [], mhsMap = {}, batchData = [], existingToday = [];
+
+  function showAlert(type, msg) {
+    const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+    if (el) { el.textContent = msg; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+  }
+
+  // Load mahasiswa
+  async function loadMahasiswa() {
+    try {
+      const snap = await db.collection('mahasiswa').get();
+      allMahasiswa = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+      mhsMap = {};
+      allMahasiswa.forEach(m => {
+        mhsMap[(m.nama || '').toLowerCase()] = m;
+        const words = (m.nama || '').toLowerCase().split(/\s+/);
+        words.forEach(w => {
+          if (w.length >= 3 && !mhsMap[w]) mhsMap[w] = m;
+        });
+      });
+
+      const sel = document.getElementById('mhsSelect');
+      sel.innerHTML = '<option value="">Pilih Mahasiswa...</option>';
+      allMahasiswa.forEach(m => {
+        sel.innerHTML += `<option value="${m.id}">${m.nama || m.id} (${m.nim || '-'})</option>`;
+      });
+    } catch(e) {
+      console.error('Gagal load mahasiswa:', e);
+    }
+  }
+
+  // Load pelanggaran hari ini
+  async function loadToday() {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      const snap = await db.collection('laporBahasa').where('tanggal', '==', today).get();
+      existingToday = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      document.getElementById('todayCount').textContent = existingToday.length;
+      renderTable();
+    } catch(e) {
+      console.error('Gagal load data hari ini:', e);
+      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center;color:var(--red);padding:20px;">Gagal memuat data. Periksa rules Firestore.</p>';
+    }
+  }
+
+  function renderTable() {
+    const all = [...existingToday, ...batchData];
+    const container = document.getElementById('tableContainer');
+    if (!all.length) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">✅ Belum ada pelanggaran</p>';
+      return;
+    }
+    container.innerHTML = `
+      <table><thead><tr><th>No</th><th>Nama</th><th>NIM</th><th>Jenis</th><th>Deskripsi</th><th>Status</th><th></th></tr></thead><tbody>
+      ${all.map((d, i) => `
+        <tr style="${!d.id ? 'background:var(--blue-light);' : ''}">
+          <td>${i + 1}</td>
+          <td><strong>${d.namaPelapor || '-'}</strong></td>
+          <td>${d.nim || '-'}</td>
+          <td><span class="badge">${d.jenis || '-'}</span></td>
+          <td>${d.deskripsi || '-'}</td>
+          <td>${d.id ? '✅' : '🆕 Baru'}</td>
+          <td><button class="btn btn-sm" onclick="hapusItem('${d.id || i}')">❌</button></td>
+        </tr>`
+      ).join('')}</tbody></table>`;
+  }
+
+  // AI Detect
+  window.aiDetect = function() {
+    const input = document.getElementById('aiInput').value.trim();
+    if (!input) { showAlert('error', 'Masukkan nama dulu!'); return; }
+
+    const names = input.split(/[\n,;]+/).map(n => n.trim()).filter(n => n.length >= 2);
+    const resultDiv = document.getElementById('aiResult');
+    let html = '<div class="ai-preview"><strong>🔍 Hasil Deteksi:</strong><br><table><thead><tr><th>Input</th><th>Match</th><th>NIM</th><th>Status</th></tr></thead><tbody>';
+    let matchCount = 0;
+
+    names.forEach(name => {
+      const matched = fuzzyFind(name);
+      if (matched) {
+        matchCount++;
+        html += `<tr><td>${name}</td><td class="match">✅ ${matched.nama}</td><td>${matched.nim || '-'}</td><td>✔️ Siap input</td></tr>`;
+        batchData.push({
+          namaPelapor: matched.nama,
+          nim: matched.nim || '',
+          kelasId: matched.kelasId || '',
+          mahasiswaId: matched.id,
+          jenis: 'Lisan',
+          deskripsi: '(Auto input via AI)',
+          tanggal: new Date().toISOString().split('T')[0]
+        });
+      } else {
+        html += `<tr><td>${name}</td><td class="no-match">❌ Tidak ditemukan</td><td>-</td><td>⚠️ Skip</td></tr>`;
+      }
+    });
+
+    html += `</tbody></table><p style="margin-top:8px;"><strong>🎯 ${matchCount}/${names.length} nama cocok</strong></p>`;
+    if (matchCount > 0) {
+      html += `<button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="konfirmasiBatch()">✅ Konfirmasi & Input ${matchCount} Data</button>`;
+    }
+    html += '</div>';
+    resultDiv.innerHTML = html;
+    renderTable();
+  };
+
+  function fuzzyFind(name) {
+    name = name.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+    if (!name) return null;
+    if (mhsMap[name]) return mhsMap[name];
+    for (const m of allMahasiswa) {
+      const namaLower = (m.nama || '').toLowerCase();
+      if (namaLower.includes(name)) return m;
+    }
+    const words = name.split(/\s+/).filter(w => w.length >= 3);
+    for (const m of allMahasiswa) {
+      const namaLower = (m.nama || '').toLowerCase();
+      for (const w of words) {
+        if (namaLower.includes(w)) return m;
+      }
+    }
+    return null;
+  }
+
+  window.konfirmasiBatch = async function() {
+    if (!batchData.length) return;
+    if (!confirm('Input ' + batchData.length + ' pelanggaran?')) return;
+    const batch = db.batch();
+    batchData.forEach(d => {
+      const ref = db.collection('laporBahasa').doc();
+      batch.set(ref, { ...d, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    });
+    try {
+      await batch.commit();
+      showAlert('success', batchData.length + ' data disimpan!');
+      batchData = [];
+      document.getElementById('aiInput').value = '';
+      document.getElementById('aiResult').innerHTML = '';
+      await loadToday();
+    } catch(e) {
+      console.error('Gagal simpan batch:', e);
+      showAlert('error', 'Gagal simpan: ' + e.message);
+    }
+  };
+
+  window.tambahManual = function() {
+    const mhsId = document.getElementById('mhsSelect').value;
+    const jenis = document.getElementById('jenisInput').value;
+    const deskripsi = document.getElementById('deskripsiInput').value.trim();
+    if (!mhsId) return showAlert('error', 'Pilih mahasiswa!');
+    const m = allMahasiswa.find(x => x.id === mhsId);
+    if (!m) return;
+    batchData.push({
+      namaPelapor: m.nama, nim: m.nim || '', kelasId: m.kelasId || '',
+      mahasiswaId: m.id, jenis, deskripsi: deskripsi || '-',
+      tanggal: new Date().toISOString().split('T')[0]
+    });
+    document.getElementById('deskripsiInput').value = '';
+    renderTable();
+    showAlert('success', 'Ditambahkan ke batch!');
+  };
+
+  window.simpanBatch = async function() {
+    if (!batchData.length) return showAlert('error', 'Tidak ada data!');
+    await konfirmasiBatch();
+  };
+
+  // HAPUS ITEM
+  window.hapusItem = async function(idx) {
+    if (typeof idx === 'string' && idx.length > 10) {
+      if (!confirm('Hapus data ini?')) return;
+      try {
+        await db.collection('laporBahasa').doc(idx).delete();
+        showAlert('success', 'Data dihapus!');
+        await loadToday();
+      } catch(e) {
+        console.error('Gagal hapus:', e);
+        showAlert('error', 'Gagal hapus: ' + e.message);
+      }
+    } else {
+      batchData.splice(idx, 1);
+      renderTable();
+    }
+  };
+
+  // HAPUS HARI INI
+  window.hapusHariIni = async function() {
+    const today = new Date().toISOString().split('T')[0];
+    if (!confirm('Hapus SEMUA pelanggaran hari ini?')) return;
+    try {
+      const snap = await db.collection('laporBahasa').where('tanggal', '==', today).get();
+      if (snap.empty) { showAlert('error', 'Tidak ada data!'); return; }
+      const batch = db.batch();
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      showAlert('success', snap.size + ' data dihapus!');
+      await loadToday();
+    } catch(e) {
+      console.error('Gagal hapus hari ini:', e);
+      showAlert('error', 'Gagal hapus: ' + e.message);
+    }
+  };
+
+  // HAPUS 1 MINGGU
+  window.hapusSeminggu = async function() {
+    if (!confirm('Hapus semua pelanggaran 1 minggu terakhir?')) return;
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    try {
+      const snap = await db.collection('laporBahasa')
+        .where('tanggal', '>=', weekAgo.toISOString().split('T')[0])
+        .get();
+      if (snap.empty) { showAlert('error', 'Tidak ada data!'); return; }
+      const batch = db.batch();
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      showAlert('success', snap.size + ' data dihapus!');
+      await loadToday();
+    } catch(e) {
+      console.error('Gagal hapus seminggu:', e);
+      showAlert('error', 'Gagal hapus: ' + e.message);
+    }
+  };
+
+  window.logout = function() {
+    if (confirm('Keluar?')) {
+      try { auth.signOut(); } catch(e) {}
+      localStorage.removeItem('user');
+      window.location.href = '../../index.html';
+    }
+  };
+
+  // Init
+  loadMahasiswa();
+  loadToday();
+  })();
+  </script>
+</body>
+</html>

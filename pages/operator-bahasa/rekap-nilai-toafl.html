@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Rekap Nilai TOAFL • Operator Bahasa IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004d40; --primary-light: #00695c; --accent: #d4a843; --accent-light: #fdf6e3;
+      --bg-primary: #f0f4f0; --surface-glass: rgba(255,255,255,0.6); --surface-glass-strong: rgba(255,255,255,0.85);
+      --border-glass: rgba(0,77,64,0.08); --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
+      --sidebar-bg: rgba(255,255,255,0.7); --nav-hover: rgba(0,77,64,0.06); --nav-active: rgba(212,168,67,0.15);
+      --red: #ef4444; --red-light: #fef2f2; --green-light: #ecfdf5; --blue: #3b82f6; --blue-light: #eff6ff;
+      --orange: #f97316; --orange-light: #fff7ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1); --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px;
+      --transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628; --surface-glass: rgba(19,32,51,0.6); --surface-glass-strong: rgba(19,32,51,0.85);
+      --border-glass: rgba(255,255,255,0.08); --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+      --sidebar-bg: rgba(10,22,40,0.75); --nav-hover: rgba(212,168,67,0.08); --nav-active: rgba(212,168,67,0.18);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); display: flex; min-height: 100vh; }
+
+    .main-content { flex: 1; padding: 24px 28px; min-height: 100vh; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .page-title h1 { font-size: clamp(20px, 4vw, 24px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .page-title p { font-size: 12px; color: var(--text-secondary); }
+
+    .btn { padding: 9px 16px; border: none; border-radius: 40px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); background: var(--surface-glass-strong); border: 1px solid var(--border-glass); box-shadow: var(--shadow-sm); color: var(--text-primary); }
+    .btn:hover { box-shadow: var(--shadow-md); }
+    .btn-warning { background: linear-gradient(135deg, var(--orange), #ea580c); color: white; border: none; }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: var(--surface-glass); backdrop-filter: blur(24px); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid var(--border-glass); margin-bottom: 16px; overflow: hidden; }
+    .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: var(--surface-glass-strong); }
+    .card-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .card-body { padding: 16px 20px; overflow-x: auto; }
+
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .form-group select {
+      padding: 10px 14px; border: 1.5px solid var(--border-glass); border-radius: 40px;
+      font-size: 13px; font-family: inherit; background: var(--surface-glass-strong);
+      color: var(--text-primary); outline: none; min-width: 180px;
+    }
+
+    .summary-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .summary-item {
+      background: var(--surface-glass); padding: 10px 16px; border-radius: var(--radius-md);
+      font-size: 11px; font-weight: 600; border: 1px solid var(--border-glass);
+    }
+    .summary-item span { font-size: 16px; font-weight: 800; }
+
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+    thead th { background: rgba(248,250,252,0.8); padding: 10px; font-size: 9px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; border-bottom: 2px solid var(--border-glass); text-align: center; white-space: nowrap; }
+    tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border-glass); text-align: center; }
+    tbody tr:hover { background: rgba(0,77,64,0.02); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; }
+    .badge-lulus { background: var(--green-light); color: #1b5e20; }
+    .badge-tidak { background: var(--red-light); color: #b71c1c; }
+    .badge-mumtaz { background: #fef9c3; color: #854d0e; }
+    .badge-jayyid-jiddan { background: #dcfce7; color: #166534; }
+    .badge-jayyid { background: #dbeafe; color: #1e40af; }
+    .badge-maqbul { background: #fff7ed; color: #9a3412; }
+    .badge-rasib { background: #fee2e2; color: #991b1b; }
+
+    .alert { padding: 10px 14px; border-radius: var(--radius-md); font-size: 12px; font-weight: 500; margin-bottom: 12px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; }
+    .alert-error { background: var(--red-light); color: #991b1b; }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 14px 12px; }
+      .topbar { margin-top: 50px; flex-direction: column; }
+      .filter-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body data-page="rekap-nilai-toafl">
+
+  <div id="sidebarContainer"></div>
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
+
+  <main class="main-content" id="mainContent">
+    <div class="topbar">
+      <div class="page-title"><h1>📊 Rekap Nilai TOAFL</h1><p>Lihat & export rekap nilai TOAFL</p></div>
+      <button class="btn" onclick="logout()">🚪 Keluar</button>
+    </div>
+
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <!-- FILTER -->
+    <div class="card">
+      <div class="card-header"><h3>🔍 Filter</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label>🏫 Kelas</label>
+            <select id="filterKelas" onchange="loadData()"><option value="">Semua Kelas</option></select>
+          </div>
+          <div class="form-group">
+            <label>📅 Sesi</label>
+            <select id="filterSesi" onchange="loadData()"><option value="">Semua Sesi</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-row" id="summaryRow" style="display:none;">
+      <div class="summary-item">👨‍🎓 Total: <span id="sumTotal">0</span></div>
+      <div class="summary-item">✅ Lulus: <span id="sumLulus" style="color:#1b5e20;">0</span></div>
+      <div class="summary-item">❌ Tidak: <span id="sumTidak" style="color:#b71c1c;">0</span></div>
+      <div class="summary-item">📊 Rata²: <span id="sumRata">0</span></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Daftar Nilai (<span id="totalData">0</span>)</h3>
+        <button class="btn btn-warning btn-sm" onclick="exportExcel()">📥 Export Excel</button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" id="tableContainer">
+          <p style="text-align:center;color:var(--text-muted);padding:20px;">Memuat data...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script>
+  (function(){
+  'use strict';
+
+  let allData = [], allKelas = [];
+
+  function showAlert(type, msg) {
+    const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+    if (el) { el.textContent = msg; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+  }
+
+  function getPredikat(n) {
+    if (n >= 90) return { label: 'Mumtaz', cls: 'badge-mumtaz' };
+    if (n >= 80) return { label: 'Jayyid Jiddan', cls: 'badge-jayyid-jiddan' };
+    if (n >= 70) return { label: 'Jayyid', cls: 'badge-jayyid' };
+    if (n >= 60) return { label: 'Maqbul', cls: 'badge-maqbul' };
+    return { label: 'Rasib', cls: 'badge-rasib' };
+  }
+
+  async function loadOptions() {
+    // Load kelas
+    const kelasSnap = await db.collection('kelas').get();
+    allKelas = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const kelasSel = document.getElementById('filterKelas');
+    allKelas.forEach(k => {
+      kelasSel.innerHTML += `<option value="${k.id}">${k.nama || k.id}</option>`;
+    });
+
+    // Load sesi unik
+    const nilaiSnap = await db.collection('nilaiTOAFL').get();
+    const sesiSet = new Set();
+    nilaiSnap.forEach(d => {
+      const sesi = d.data().sesi || d.data().jenisUjian || '';
+      if (sesi) sesiSet.add(sesi);
+    });
+    const sesiSel = document.getElementById('filterSesi');
+    [...sesiSet].sort().forEach(s => {
+      sesiSel.innerHTML += `<option value="${s}">${s}</option>`;
+    });
+
+    loadData();
+  }
+
+  async function loadData() {
+    const kelasId = document.getElementById('filterKelas').value;
+    const sesi = document.getElementById('filterSesi').value;
+
+    let q = db.collection('nilaiTOAFL');
+    if (kelasId) q = q.where('kelasId', '==', kelasId);
+    if (sesi) q = q.where('sesi', '==', sesi);
+
+    const snap = await q.get();
+    allData = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+    document.getElementById('totalData').textContent = allData.length;
+    renderTable();
+    updateSummary();
+  }
+
+  function renderTable() {
+    const container = document.getElementById('tableContainer');
+    if (!allData.length) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">Tidak ada data</p>';
+      document.getElementById('summaryRow').style.display = 'none';
+      return;
+    }
+
+    let html = '<table><thead><tr><th>No</th><th>NIM</th><th>Nama</th><th>Kelas</th><th>Sesi</th>';
+    ['istima', 'qiraah', 'kitabah', 'kalam'].forEach(k => {
+      html += `<th>${k === 'istima' ? "Istima'" : k === 'qiraah' ? "Qira'ah" : k === 'kitabah' ? 'Kitabah' : 'Kalam'}</th>`;
+    });
+    html += '<th>Total</th><th>Rata²</th><th>Predikat</th><th>Status</th></tr></thead><tbody>';
+
+    allData.forEach((d, i) => {
+      const kelas = allKelas.find(k => k.id === d.kelasId);
+      const predikat = getPredikat(d.rata || 0);
+      const lulus = (d.total || 0) >= 240;
+
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td>${d.nim || '-'}</td>
+        <td style="text-align:left;font-weight:600;">${d.nama || '-'}</td>
+        <td>${kelas?.nama || d.kelasId || '-'}</td>
+        <td>${d.sesi || d.jenisUjian || '-'}</td>
+        <td>${d.istima ?? '-'}</td>
+        <td>${d.qiraah ?? '-'}</td>
+        <td>${d.kitabah ?? '-'}</td>
+        <td>${d.kalam ?? '-'}</td>
+        <td style="font-weight:700;">${d.total ?? '-'}</td>
+        <td>${d.rata ?? '-'}</td>
+        <td><span class="badge ${predikat.cls}">${predikat.label}</span></td>
+        <td><span class="badge ${lulus ? 'badge-lulus' : 'badge-tidak'}">${lulus ? 'Lulus' : 'Tidak'}</span></td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  function updateSummary() {
+    const lulus = allData.filter(d => (d.total || 0) >= 240).length;
+    const tidak = allData.length - lulus;
+    const rataTotal = allData.filter(d => d.rata).reduce((s, d) => s + (d.rata || 0), 0);
+    const avg = allData.filter(d => d.rata).length > 0 ? Math.round(rataTotal / allData.filter(d => d.rata).length) : 0;
+
+    document.getElementById('sumTotal').textContent = allData.length;
+    document.getElementById('sumLulus').textContent = lulus;
+    document.getElementById('sumTidak').textContent = tidak;
+    document.getElementById('sumRata').textContent = avg;
+    document.getElementById('summaryRow').style.display = 'flex';
+  }
+
+  window.exportExcel = function() {
+    if (!allData.length) return alert('Tidak ada data!');
+    const data = allData.map((d, i) => {
+      const kelas = allKelas.find(k => k.id === d.kelasId);
+      const predikat = getPredikat(d.rata || 0);
+      return {
+        No: i + 1, NIM: d.nim || '', Nama: d.nama || '',
+        Kelas: kelas?.nama || '-', Sesi: d.sesi || d.jenisUjian || '-',
+        Istima: d.istima ?? '', Qiraah: d.qiraah ?? '',
+        Kitabah: d.kitabah ?? '', Kalam: d.kalam ?? '',
+        Total: d.total ?? '', Rata: d.rata ?? '',
+        Predikat: predikat.label,
+        Status: (d.total || 0) >= 240 ? 'Lulus' : 'Tidak Lulus'
+      };
+    });
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Rekap TOAFL');
+    XLSX.writeFile(wb, 'rekap-toafl-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+    showAlert('success', 'Data diexport!');
+  };
+
+  window.logout = function() {
+    if (confirm('Keluar?')) {
+      try { auth.signOut(); } catch(e) {}
+      localStorage.removeItem('user');
+      window.location.href = '../../index.html';
+    }
+  };
+
+  loadOptions();
+  })();
+  </script>
+</body>
+</html>

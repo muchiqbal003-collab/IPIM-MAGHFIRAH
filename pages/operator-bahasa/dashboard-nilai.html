@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Dashboard Nilai Bulanan • IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #004d40; --primary-dark: #00332b; --primary-light: #00695c;
+      --accent: #d4a843; --accent-dark: #b8860b; --accent-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b; --gray-600: #475569;
+      --gray-700: #334155; --gray-800: #1e293b; --red: #ef4444; --red-light: #fef2f2;
+      --green-success: #10b981; --green-light: #ecfdf5; --blue: #3b82f6; --blue-light: #eff6ff;
+      --orange: #f97316; --orange-light: #fff7ed;
+      --bg-primary: #f0f4f0;
+      --surface-glass: rgba(255, 255, 255, 0.6);
+      --surface-glass-strong: rgba(255, 255, 255, 0.85);
+      --border-glass: rgba(0, 77, 64, 0.08);
+      --text-primary: var(--gray-800);
+      --text-secondary: var(--gray-600);
+      --text-muted: var(--gray-400);
+      --sidebar-bg: rgba(255, 255, 255, 0.7);
+      --nav-hover: rgba(0, 77, 64, 0.06);
+      --nav-active: rgba(212, 168, 67, 0.15);
+      --table-header-bg: rgba(248, 250, 252, 0.8);
+      --table-row-hover: rgba(0, 77, 64, 0.02);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.04), inset -2px -2px 5px rgba(255,255,255,0.8);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-2xl: 28px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628;
+      --surface-glass: rgba(19, 32, 51, 0.6);
+      --surface-glass-strong: rgba(19, 32, 51, 0.85);
+      --border-glass: rgba(255,255,255,0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --sidebar-bg: rgba(10, 22, 40, 0.75);
+      --nav-hover: rgba(212,168,67,0.08);
+      --nav-active: rgba(212,168,67,0.18);
+      --table-header-bg: rgba(19, 32, 51, 0.6);
+      --table-row-hover: rgba(212,168,67,0.04);
+      --input-bg: rgba(19, 32, 51, 0.8);
+      --gray-50: #1e293b; --gray-100: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.02);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 28px 32px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
+    }
+    .page-title h1 {
+      font-size: clamp(20px, 4vw, 26px); font-weight: 800;
+      color: var(--text-primary); letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .page-title p { font-size: 13px; color: var(--text-secondary); margin-top: 3px; font-weight: 500; }
+
+    .btn {
+      padding: 10px 18px; border: none; border-radius: 40px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--transition); white-space: nowrap;
+      background: var(--surface-glass-strong); backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-md); color: var(--text-primary);
+    }
+    .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-outline { background: var(--surface-glass); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat-card {
+      background: var(--surface-glass); backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 16px;
+      border: 1px solid var(--border-glass); text-align: center;
+    }
+    .stat-card .stat-value { font-size: 24px; font-weight: 800; }
+    .stat-card .stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    .card {
+      background: var(--surface-glass); backdrop-filter: blur(28px);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border-glass);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong);
+    }
+    .card-header h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px 24px; }
+
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .form-group select {
+      padding: 10px 14px; border: 1.5px solid var(--border-glass);
+      border-radius: 40px; font-size: 13px; font-family: inherit;
+      background: var(--input-bg); color: var(--text-primary); outline: none; min-width: 180px;
+    }
+
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .chart-wrap { position: relative; height: 250px; }
+
+    .top-list { display: flex; flex-direction: column; gap: 6px; }
+    .top-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; background: var(--surface-glass);
+      border-radius: var(--radius-md); border: 1px solid var(--border-glass); font-size: 12px;
+    }
+    .top-rank {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 12px; flex-shrink: 0;
+    }
+    .top-1 { background: #fef9c3; color: #854d0e; }
+    .top-2 { background: #f1f5f9; color: #475569; }
+    .top-3 { background: #fff7ed; color: #9a3412; }
+    .top-other { background: var(--gray-100); color: var(--text-muted); }
+
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+    .badge-mumtaz { background: #fef9c3; color: #854d0e; }
+    .badge-jayyid-jiddan { background: #dcfce7; color: #166534; }
+    .badge-jayyid { background: #dbeafe; color: #1e40af; }
+    .badge-maqbul { background: #fff7ed; color: #9a3412; }
+    .badge-rasib { background: #fee2e2; color: #991b1b; }
+
+    .gender-box { flex: 1; text-align: center; padding: 14px; border-radius: var(--radius-md); }
+    .gender-box .g-value { font-size: 24px; font-weight: 800; }
+    .gender-box .g-label { font-size: 10px; margin-top: 2px; }
+    .gender-box .g-avg { font-size: 14px; font-weight: 700; margin-top: 4px; }
+
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .main-content { padding: 16px 14px; }
+      .topbar { margin-top: 50px; flex-direction: column; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .chart-grid { grid-template-columns: 1fr; }
+      .stat-card .stat-value { font-size: 20px; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body data-page="dashboard-nilai">
+
+  <!-- Sidebar Container -->
+  <div id="sidebarContainer"></div>
+
+  <!-- Burger & Theme Toggle -->
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <div class="topbar">
+      <div class="page-title">
+        <h1>📊 Dashboard Nilai Ujian Bulanan</h1>
+        <p>Statistik nilai per kelas, gender, dan tren bulanan</p>
+      </div>
+      <button class="btn btn-outline" onclick="logout()">
+        <svg><use href="#icon-logout"/></svg> Keluar
+      </button>
+    </div>
+
+    <!-- FILTER -->
+    <div class="card">
+      <div class="card-header"><h3>🔍 Filter Bulan</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label>📅 Pilih Bulan</label>
+            <select id="dashFilterSesi" onchange="loadDashboard()">
+              <option value="">Semua Bulan</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <!-- CHARTS -->
+    <div class="card">
+      <div class="card-header"><h3>📈 Grafik Perbandingan</h3></div>
+      <div class="card-body">
+        <div class="chart-grid">
+          <div>
+            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">📊 Perbandingan Antar Kelas</h4>
+            <div class="chart-wrap"><canvas id="chartKelas"></canvas></div>
+          </div>
+          <div>
+            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">📈 Tren Bulan ke Bulan</h4>
+            <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENDER & TOP 15 -->
+    <div class="card">
+      <div class="card-header"><h3>👥 Gender & Peringkat</h3></div>
+      <div class="card-body">
+        <div class="chart-grid">
+          <div>
+            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">♂ Laki-laki vs ♀ Perempuan</h4>
+            <div id="genderStats"></div>
+          </div>
+          <div>
+            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">🏆 Top 15 Nilai Tertinggi</h4>
+            <div id="topList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
+  <script>
+    (function() {
+    'use strict';
+
+    let allKelas = [], allMahasiswa = [], allNilai = [];
+    let chartKelas = null, chartTrend = null;
+
+    const SESI = ['Bulan 1', 'Bulan 2', 'Bulan 3', 'Bulan 4'];
+
+    function getPredikat(n) {
+      if (n >= 90) return { label: 'Mumtaz', cls: 'badge-mumtaz' };
+      if (n >= 80) return { label: 'Jayyid Jiddan', cls: 'badge-jayyid-jiddan' };
+      if (n >= 70) return { label: 'Jayyid', cls: 'badge-jayyid' };
+      if (n >= 60) return { label: 'Maqbul', cls: 'badge-maqbul' };
+      return { label: 'Rasib', cls: 'badge-rasib' };
+    }
+
+    async function loadAllData() {
+      const [kelasSnap, mhsSnap, nilaiSnap] = await Promise.all([
+        db.collection('kelas').get(),
+        db.collection('mahasiswa').get(),
+        db.collection('nilaiBulanan').get()
+      ]);
+
+      allKelas = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+      allMahasiswa = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allNilai = nilaiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Populate filter sesi
+      const sesiSet = new Set(allNilai.map(n => n.sesi).filter(Boolean));
+      const dashSel = document.getElementById('dashFilterSesi');
+      dashSel.innerHTML = '<option value="">Semua Bulan</option>';
+      [...sesiSet].sort().forEach(s => {
+        dashSel.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+      // Tambahkan sesi default jika belum ada
+      SESI.forEach(s => {
+        if (!sesiSet.has(s)) dashSel.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+
+      loadDashboard();
+    }
+
+    async function loadDashboard() {
+      const sesi = document.getElementById('dashFilterSesi').value;
+      const nilaiFiltered = sesi ? allNilai.filter(n => n.sesi === sesi) : allNilai;
+
+      // Jika "Semua Bulan", ambil nilai terakhir per mahasiswa
+      let dataStats = nilaiFiltered;
+      if (!sesi) {
+        const lastMap = {};
+        allNilai.forEach(n => {
+          const idx = SESI.indexOf(n.sesi);
+          if (!lastMap[n.mahasiswaId] || idx > SESI.indexOf(lastMap[n.mahasiswaId].sesi)) {
+            lastMap[n.mahasiswaId] = n;
+          }
+        });
+        dataStats = Object.values(lastMap);
+      }
+
+      const totalMhs = allMahasiswa.length;
+      const totalDinilai = dataStats.length;
+      const avg = totalDinilai > 0 ? Math.round(dataStats.reduce((s, n) => s + (n.nilai || 0), 0) / totalDinilai) : 0;
+
+      const mumtaz = dataStats.filter(n => n.nilai >= 90).length;
+      const jj = dataStats.filter(n => n.nilai >= 80 && n.nilai < 90).length;
+      const jayyid = dataStats.filter(n => n.nilai >= 70 && n.nilai < 80).length;
+      const maqbul = dataStats.filter(n => n.nilai >= 60 && n.nilai < 70).length;
+      const rasib = dataStats.filter(n => n.nilai < 60).length;
+
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><div class="stat-value">${totalMhs}</div><div class="stat-label">Total Mahasiswa</div></div>
+        <div class="stat-card"><div class="stat-value">${totalDinilai}</div><div class="stat-label">Sudah Dinilai</div></div>
+        <div class="stat-card"><div class="stat-value">${avg}</div><div class="stat-label">Rata-rata</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#854d0e;">${mumtaz}</div><div class="stat-label">⭐ Mumtaz</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#166534;">${jj}</div><div class="stat-label">🟢 Jayyid Jiddan</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#1e40af;">${jayyid}</div><div class="stat-label">🔵 Jayyid</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#9a3412;">${maqbul}</div><div class="stat-label">🟠 Maqbul</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#991b1b;">${rasib}</div><div class="stat-label">🔴 Rasib</div></div>
+      `;
+
+      // Chart per kelas
+      const kelasLabels = allKelas.map(k => k.nama || k.id);
+      const kelasAvg = allKelas.map(k => {
+        const nilaiKelas = dataStats.filter(n => n.kelasId === k.id);
+        return nilaiKelas.length ? Math.round(nilaiKelas.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiKelas.length) : 0;
+      });
+      const kelasMumtaz = allKelas.map(k => dataStats.filter(n => n.kelasId === k.id && n.nilai >= 90).length);
+
+      if (chartKelas) chartKelas.destroy();
+      chartKelas = new Chart(document.getElementById('chartKelas'), {
+        type: 'bar',
+        data: {
+          labels: kelasLabels,
+          datasets: [
+            { label: 'Rata-rata', data: kelasAvg, backgroundColor: 'rgba(0,77,64,0.7)', borderRadius: 6 },
+            { label: 'Mumtaz', data: kelasMumtaz, backgroundColor: 'rgba(212,168,67,0.7)', borderRadius: 6 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      // Chart tren
+      const trendAvg = SESI.map(s => {
+        const nilai = allNilai.filter(n => n.sesi === s);
+        return nilai.length ? Math.round(nilai.reduce((sum, n) => sum + (n.nilai || 0), 0) / nilai.length) : 0;
+      });
+
+      if (chartTrend) chartTrend.destroy();
+      chartTrend = new Chart(document.getElementById('chartTrend'), {
+        type: 'line',
+        data: {
+          labels: SESI,
+          datasets: [{
+            label: 'Rata-rata',
+            data: trendAvg,
+            borderColor: '#f97316',
+            backgroundColor: 'rgba(249,115,22,0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#f97316'
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
+      });
+
+      // Gender
+      const nilaiL = dataStats.filter(n => {
+        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
+        return m?.jk === 'L';
+      });
+      const nilaiP = dataStats.filter(n => {
+        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
+        return m?.jk === 'P';
+      });
+      const avgL = nilaiL.length ? Math.round(nilaiL.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiL.length) : 0;
+      const avgP = nilaiP.length ? Math.round(nilaiP.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiP.length) : 0;
+
+      document.getElementById('genderStats').innerHTML = `
+        <div style="display:flex;gap:12px;">
+          <div class="gender-box" style="background:var(--blue-light);">
+            <div class="g-value" style="color:#1e40af;">${nilaiL.length}</div>
+            <div class="g-label">Laki-laki</div>
+            <div class="g-avg" style="color:#3b82f6;">Avg: ${avgL}</div>
+          </div>
+          <div class="gender-box" style="background:#fce4ec;">
+            <div class="g-value" style="color:#c2185b;">${nilaiP.length}</div>
+            <div class="g-label">Perempuan</div>
+            <div class="g-avg" style="color:#ec4899;">Avg: ${avgP}</div>
+          </div>
+        </div>
+      `;
+
+      // Top 15
+      const sorted = [...dataStats].sort((a, b) => (b.nilai || 0) - (a.nilai || 0)).slice(0, 15);
+      const topHtml = sorted.map((n, idx) => {
+        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
+        const p = getPredikat(n.nilai || 0);
+        const rankClass = idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : 'top-other';
+        return `<div class="top-item">
+          <span class="top-rank ${rankClass}">${idx + 1}</span>
+          <span style="flex:1;font-weight:600;">${m?.nama || n.nama || '-'}</span>
+          <span style="color:var(--text-muted);">${m?.kelasNama || '-'}</span>
+          <span style="font-weight:800;">${n.nilai || 0}</span>
+          <span class="badge ${p.cls}">${p.label}</span>
+        </div>`;
+      }).join('');
+      document.getElementById('topList').innerHTML = topHtml || '<p style="text-align:center;color:var(--text-muted);">Belum ada data</p>';
+    }
+
+    window.logout = function() {
+      if (confirm('Keluar?')) {
+        try { auth.signOut(); } catch(e) {}
+        localStorage.removeItem('user');
+        window.location.href = '../../index.html';
+      }
+    };
+
+    loadAllData();
+    })();
+  </script>
+</body>
+</html>
