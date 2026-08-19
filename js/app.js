@@ -160,24 +160,7 @@
   // ============================================
   // LOAD PIM-BOT AI
   // ============================================
-  (function loadPimBot() {
-    const path = window.location.pathname;
-    const script = document.createElement('script');
-    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
-    
-    if (isLocal) {
-      const depth = (path.match(/\//g) || []).length - 1;
-      if (depth === 0) script.src = 'js/pim-bot.js';
-      else if (depth === 1) script.src = '../js/pim-bot.js';
-      else script.src = '../../js/pim-bot.js';
-    } else {
-      script.src = '/IPIM-MAGHFIRAH/js/pim-bot.js';
-    }
-    
-    script.onload = () => console.log('🤖 PIM-Bot loaded!');
-    script.onerror = () => console.warn('⚠️ PIM-Bot gagal dimuat');
-    document.body.appendChild(script);
-  })();
+  
 
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
