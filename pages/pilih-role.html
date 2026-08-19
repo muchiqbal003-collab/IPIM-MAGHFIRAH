@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pilih Role - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-600:#666666;--gray-800:#222222;
+      --red:#c62828;--blue:#0d47a1;--orange:#e65100;--purple:#6a1b9a;--teal:#004d40;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;--transition:all 0.3s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 20px; -webkit-tap-highlight-color: transparent;
+    }
+    .container {
+      max-width: 480px; width: 100%; text-align: center;
+    }
+    .logo {
+      width: 72px; height: 72px; border-radius: 22px;
+      background: linear-gradient(135deg, #004d40, #006644);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 32px; margin: 0 auto 14px;
+      box-shadow: 0 8px 24px rgba(0,61,51,0.3);
+    }
+    h1 { font-size: 20px; font-weight: 800; color: var(--green-dark); }
+    .subtitle { font-size: 13px; color: var(--gray-600); margin: 6px 0 22px; line-height: 1.5; }
+    .user-name { 
+      font-size: 14px; font-weight: 700; color: var(--green-dark);
+      background: var(--green-light); padding: 8px 16px;
+      border-radius: 40px; display: inline-block; margin-bottom: 16px;
+    }
+    
+    .role-list { display: flex; flex-direction: column; gap: 10px; }
+    .role-card {
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg); padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 2px 12px rgba(0,61,51,0.06);
+      display: flex; align-items: center; gap: 14px;
+      cursor: pointer; transition: var(--transition); text-align: left;
+    }
+    .role-card:hover { box-shadow: 0 6px 20px rgba(0,61,51,0.15); transform: translateY(-2px); }
+    .role-card:active { transform: scale(0.98); }
+    .role-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .icon-admin { background: #fce4ec; color: #c62828; }
+    .icon-akademik { background: #e3f2fd; color: #0d47a1; }
+    .icon-halaqoh { background: #e8f5e9; color: #1b5e20; }
+    .icon-bahasa { background: #fff3e0; color: #e65100; }
+    .icon-pengasuhan { background: #ede9fe; color: #6a1b9a; }
+    .icon-dosen { background: #e0f2f1; color: #004d40; }
+    .icon-musyrif { background: #f3e5f5; color: #880e4f; }
+    .icon-umum { background: #f1f8e9; color: #33691e; }
+    .role-info { flex: 1; }
+    .role-nama { font-size: 14px; font-weight: 700; color: var(--gray-800); }
+    .role-desc { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+    .role-arrow { color: var(--gray-600); font-size: 14px; }
+    
+    .btn-logout {
+      margin-top: 24px; padding: 10px 24px; border: none;
+      background: rgba(255,255,255,0.6); border-radius: 40px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif; color: var(--gray-600);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: var(--transition);
+    }
+    .btn-logout:hover { background: #fce4ec; color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo"><i class="fa-solid fa-graduation-cap"></i></div>
+    <h1>Pilih Role</h1>
+    <p class="subtitle" id="subtitleText">Anda memiliki beberapa role. Pilih role untuk melanjutkan.</p>
+    <div class="user-name" id="userName">...</div>
+    
+    <div class="role-list" id="roleList"></div>
+    
+    <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const ROLE_META = {
+      'pusat-data': { 
+        icon: 'fa-shield-halved', iconClass: 'icon-admin', 
+        nama: 'Pusat Data', desc: 'Super Admin — kelola semua data', 
+        page: 'pages/pusat-data/dashboard.html' 
+      },
+      'operator-akademik': { 
+        icon: 'fa-building-columns', iconClass: 'icon-akademik', 
+        nama: 'Operator Akademik', desc: 'Kelola akademik, jadwal, nilai', 
+        page: 'pages/operator-akademik/dashboard.html' 
+      },
+      'operator-halaqoh': { 
+        icon: 'fa-mosque', iconClass: 'icon-halaqoh', 
+        nama: 'Operator Halaqoh', desc: 'Kelola halaqoh & tahfidz', 
+        page: 'pages/operator-halaqoh/dashboard.html' 
+      },
+      'operator-bahasa': { 
+        icon: 'fa-language', iconClass: 'icon-bahasa', 
+        nama: 'Operator Bahasa', desc: 'Kelola bahasa & TOAFL', 
+        page: 'pages/operator-bahasa/dashboard.html' 
+      },
+      'operator-pengasuhan': { 
+        icon: 'fa-house-chimney', iconClass: 'icon-pengasuhan', 
+        nama: 'Operator Pengasuhan', desc: 'Kelola pengasuhan', 
+        page: 'pages/operator-pengasuhan/dashboard.html' 
+      },
+      'dosen': { 
+        icon: 'fa-chalkboard-user', iconClass: 'icon-dosen', 
+        nama: 'Dosen', desc: 'Mode dosen — absensi & nilai', 
+        page: 'pages/user/dashboard.html' 
+      },
+      'dosen-musyrif': { 
+        icon: 'fa-user-tie', iconClass: 'icon-musyrif', 
+        nama: 'Dosen + Musyrif', desc: 'Mode dosen & musyrif', 
+        page: 'pages/user/dashboard.html' 
+      },
+      'musyrif': { 
+        icon: 'fa-book-quran', iconClass: 'icon-musyrif', 
+        nama: 'Musyrif', desc: 'Mode musyrif — halaqoh & tahfidz', 
+        page: 'pages/user/dashboard.html' 
+      },
+      'umum': { 
+        icon: 'fa-user', iconClass: 'icon-umum', 
+        nama: 'Umum', desc: 'Mode user umum', 
+        page: 'pages/user/dashboard.html' 
+      }
+    };
+
+    // Ambil user dari localStorage
+    const user = getUser();
+    if (!user) {
+      window.location.href = '../index.html';
+    }
+
+    // Tampilkan nama user
+    document.getElementById('userName').textContent = `👤 ${user.nama || user.email || 'User'}`;
+
+    // Ambil roles
+    const roles = user.roles || [user.role || 'umum'];
+    const uniqueRoles = [...new Set(roles)];
+
+    // Update subtitle
+    document.getElementById('subtitleText').textContent = 
+      uniqueRoles.length > 1 
+        ? 'Anda memiliki beberapa role. Pilih role untuk melanjutkan.' 
+        : 'Pilih role Anda untuk masuk.';
+
+    // Render role cards
+    const roleList = document.getElementById('roleList');
+    roleList.innerHTML = uniqueRoles.map(role => {
+      const meta = ROLE_META[role] || ROLE_META['umum'];
+      return `
+        <div class="role-card" onclick="pilihRole('${role}')">
+          <div class="role-icon ${meta.iconClass}"><i class="fa-solid ${meta.icon}"></i></div>
+          <div class="role-info">
+            <div class="role-nama">${meta.nama}</div>
+            <div class="role-desc">${meta.desc}</div>
+          </div>
+          <div class="role-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        </div>
+      `;
+    }).join('');
+
+    // Fungsi pilih role
+    window.pilihRole = function(role) {
+      // Simpan role aktif ke localStorage
+      localStorage.setItem('roleAktif', role);
+      
+      // Update user object di localStorage
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      userData.role = role;
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // Redirect ke halaman sesuai role
+      const meta = ROLE_META[role] || ROLE_META['umum'];
+      window.location.href = '../' + meta.page;
+    };
+
+    // Logout
+    window.logout = function() {
+      if (confirm('Keluar dari aplikasi?')) {
+        auth.signOut().then(() => {
+          localStorage.removeItem('user');
+          localStorage.removeItem('userUid');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('roleAktif');
+          window.location.href = '../index.html';
+        }).catch(() => {
+          localStorage.removeItem('user');
+          localStorage.removeItem('roleAktif');
+          window.location.href = '../index.html';
+        });
+      }
+    };
+  </script>
+</body>
+</html>
