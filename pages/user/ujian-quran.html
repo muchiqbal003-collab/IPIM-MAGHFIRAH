@@ -108,7 +108,7 @@
     <div id="alertSuccess" class="alert alert-success"></div>
 
     <div class="card" id="mainCard">
-      <div class="card-title"><i class="fa-solid fa-quran"></i> Input Nilai Ujian</div>
+      <div class="card-title"><i class="fa-solid fa-quran"></i> Input Nilai Ujian — 5 Soal</div>
       <form id="ujianForm" onsubmit="return false;">
         <!-- Mahasiswa -->
         <div class="form-group"><label>👨‍🎓 Mahasiswa</label><select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select></div>
@@ -140,7 +140,7 @@
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s1_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s1_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s1_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 1: <span id="totalS1">0</span></div>
+          <div class="total-soal">Total Soal 1: <span id="totalS1">0</span>/100</div>
         </div>
 
         <!-- Soal 2 -->
@@ -148,7 +148,7 @@
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s2_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s2_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s2_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 2: <span id="totalS2">0</span></div>
+          <div class="total-soal">Total Soal 2: <span id="totalS2">0</span>/100</div>
         </div>
 
         <!-- Soal 3 -->
@@ -156,7 +156,23 @@
           <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s3_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s3_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
           <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s3_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 3: <span id="totalS3">0</span></div>
+          <div class="total-soal">Total Soal 3: <span id="totalS3">0</span>/100</div>
+        </div>
+
+        <!-- Soal 4 -->
+        <div class="soal-box"><h5>📝 Soal 4</h5>
+          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s4_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
+          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s4_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s4_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+          <div class="total-soal">Total Soal 4: <span id="totalS4">0</span>/100</div>
+        </div>
+
+        <!-- Soal 5 -->
+        <div class="soal-box"><h5>📝 Soal 5</h5>
+          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s5_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
+          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s5_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s5_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+          <div class="total-soal">Total Soal 5: <span id="totalS5">0</span>/100</div>
         </div>
 
         <!-- Hasil -->
@@ -249,16 +265,17 @@
 
     function getVal(id) { return parseInt(document.getElementById(id)?.value) || 0; }
 
+    // Total maksimal 5 soal = 500 poin, dikonversi ke 100
     window.hitungTotal = function() {
-      const s1 = getVal('s1_kelancaran') + getVal('s1_tajwid') + getVal('s1_makhorij');
-      const s2 = getVal('s2_kelancaran') + getVal('s2_tajwid') + getVal('s2_makhorij');
-      const s3 = getVal('s3_kelancaran') + getVal('s3_tajwid') + getVal('s3_makhorij');
-      document.getElementById('totalS1').textContent = s1;
-      document.getElementById('totalS2').textContent = s2;
-      document.getElementById('totalS3').textContent = s3;
+      const totals = [];
+      for (let i = 1; i <= 5; i++) {
+        const t = getVal(`s${i}_kelancaran`) + getVal(`s${i}_tajwid`) + getVal(`s${i}_makhorij`);
+        document.getElementById(`totalS${i}`).textContent = t;
+        totals.push(t);
+      }
 
-      const total = s1 + s2 + s3;
-      const nilaiAkhir = Math.round((total / 300) * 100);
+      const totalSemua = totals.reduce((sum, t) => sum + t, 0);
+      const nilaiAkhir = Math.round((totalSemua / 500) * 100); // 5 soal × 100 = 500
       const predikat = getPredikat(nilaiAkhir);
 
       document.getElementById('nilaiAkhir').textContent = nilaiAkhir;
@@ -282,6 +299,8 @@
         soal1: { kelancaran: getVal('s1_kelancaran'), tajwid: getVal('s1_tajwid'), makhorij: getVal('s1_makhorij') },
         soal2: { kelancaran: getVal('s2_kelancaran'), tajwid: getVal('s2_tajwid'), makhorij: getVal('s2_makhorij') },
         soal3: { kelancaran: getVal('s3_kelancaran'), tajwid: getVal('s3_tajwid'), makhorij: getVal('s3_makhorij') },
+        soal4: { kelancaran: getVal('s4_kelancaran'), tajwid: getVal('s4_tajwid'), makhorij: getVal('s4_makhorij') },
+        soal5: { kelancaran: getVal('s5_kelancaran'), tajwid: getVal('s5_tajwid'), makhorij: getVal('s5_makhorij') },
         nilaiAkhir: parseInt(document.getElementById('nilaiAkhir').textContent),
         predikat: document.getElementById('predikatLatin').textContent,
         predikatArab: document.getElementById('predikatArab').textContent,
@@ -296,7 +315,7 @@
         document.getElementById('nilaiAkhir').textContent = '0';
         document.getElementById('predikatLatin').textContent = '-';
         document.getElementById('predikatArab').textContent = '';
-        ['S1','S2','S3'].forEach(s => document.getElementById('total'+s).textContent = '0');
+        for (let i = 1; i <= 5; i++) document.getElementById(`totalS${i}`).textContent = '0';
       } catch(e) { alert('❌ Gagal: ' + e.message); }
       finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Nilai Ujian'; }
     };
