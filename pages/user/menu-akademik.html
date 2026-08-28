@@ -32,11 +32,6 @@
       -webkit-tap-highlight-color: transparent; 
       min-height: 100vh;
     }
-    
-    body.lang-ar {
-      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
-      direction: rtl;
-    }
 
     .app-header { 
       position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
@@ -55,150 +50,27 @@
       width: 36px; height: 36px; border-radius: 50%; 
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
-    .btn-back:hover {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.05);
-    }
-    .btn-lang {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      width: 36px; height: 36px; border-radius: 50%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .btn-lang:hover {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.05);
-    }
-    .app-header h3 { 
-      font-size: 16px; font-weight: 700; flex: 1;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
 
-    .content { 
-      padding: 14px; max-width: 600px; margin: 0 auto; 
-      display: flex; flex-direction: column; gap: 14px; 
-    }
+    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 
-    .hero-card {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: var(--radius-lg);
-      padding: 28px 20px;
-      text-align: center;
-      box-shadow: 
-        0 8px 32px rgba(0, 61, 51, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero-card::before {
-      content: '';
-      position: absolute;
-      top: -30%;
-      right: -20%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(0, 168, 89, 0.15) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-    
-    .hero-card::after {
-      content: '';
-      position: absolute;
-      bottom: -20%;
-      left: -10%;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(21, 101, 192, 0.1) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-    
-    .hero-card .icon { 
-      font-size: 48px; 
-      margin-bottom: 12px;
-      position: relative;
-      z-index: 1;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-    }
-    .hero-card h2 { 
-      font-size: 20px; font-weight: 800;
-      background: linear-gradient(135deg, #003d33, #006644);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-card p { 
-      font-size: 12px; 
-      color: var(--gray-600);
-      margin-top: 6px;
-      position: relative;
-      z-index: 1;
-      line-height: 1.5;
-    }
-
-    .menu-grid { 
-      display: grid; 
-      grid-template-columns: repeat(2, 1fr); 
-      gap: 10px; 
-    }
+    .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     
     .menu-card {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border-radius: var(--radius-lg);
       padding: 20px 14px; 
       text-align: center; 
       cursor: pointer; 
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 
-        0 4px 16px rgba(0, 61, 51, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-      position: relative;
-      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 16px rgba(0, 61, 51, 0.06);
     }
-    
-    .menu-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.3) 0%, 
-        rgba(255, 255, 255, 0) 100%);
-      pointer-events: none;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    }
-    
-    .menu-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 
-        0 8px 24px rgba(0, 61, 51, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      border-color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .menu-card:active { 
-      transform: scale(0.95); 
-      background: rgba(255, 255, 255, 0.4);
-      transition: all 0.15s ease;
-    }
+    .menu-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0, 61, 51, 0.1); }
+    .menu-card:active { transform: scale(0.95); }
     
     .menu-card .m-icon {
       width: 52px; height: 52px; 
@@ -206,67 +78,20 @@
       margin: 0 auto 12px;
       display: flex; align-items: center; justify-content: center; 
       font-size: 22px;
-      position: relative;
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.5);
       box-shadow: 0 4px 12px rgba(0, 61, 51, 0.08);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+    .m-icon.green { background: rgba(0, 168, 89, 0.1); color: #1b5e20; }
+    .m-icon.blue { background: rgba(21, 101, 192, 0.1); color: var(--blue); }
+    .m-icon.orange { background: rgba(245, 124, 0, 0.1); color: var(--orange); }
+    .m-icon.purple { background: rgba(106, 27, 154, 0.1); color: var(--purple); }
+    .m-icon.teal { background: rgba(0, 105, 92, 0.1); color: var(--teal); }
+    .m-icon.gold { background: rgba(245, 200, 66, 0.15); color: #a08000; }
+    .m-icon.red { background: #fce4ec; color: #c62828; }
     
-    .menu-card:hover .m-icon {
-      transform: scale(1.08) rotate(-5deg);
-      box-shadow: 0 6px 20px rgba(0, 61, 51, 0.12);
-    }
-    
-    .m-icon.green { 
-      background: rgba(0, 168, 89, 0.1); 
-      color: #1b5e20;
-      border-color: rgba(0, 168, 89, 0.2);
-    }
-    .m-icon.blue { 
-      background: rgba(21, 101, 192, 0.1); 
-      color: var(--blue);
-      border-color: rgba(21, 101, 192, 0.2);
-    }
-    .m-icon.orange { 
-      background: rgba(245, 124, 0, 0.1); 
-      color: var(--orange);
-      border-color: rgba(245, 124, 0, 0.2);
-    }
-    .m-icon.purple { 
-      background: rgba(106, 27, 154, 0.1); 
-      color: var(--purple);
-      border-color: rgba(106, 27, 154, 0.2);
-    }
-    .m-icon.teal { 
-      background: rgba(0, 105, 92, 0.1); 
-      color: var(--teal);
-      border-color: rgba(0, 105, 92, 0.2);
-    }
-    .m-icon.gold { 
-      background: rgba(245, 200, 66, 0.15); 
-      color: #a08000;
-      border-color: rgba(245, 200, 66, 0.3);
-    }
-    
-    .menu-card .m-label { 
-      font-size: 13px; font-weight: 700; 
-      color: #1a3c34;
-      position: relative;
-      z-index: 1;
-      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-      margin-bottom: 3px;
-    }
-    .menu-card .m-sub { 
-      font-size: 10px; 
-      color: var(--gray-600);
-      opacity: 0.7;
-      position: relative;
-      z-index: 1;
-    }
+    .menu-card .m-label { font-size: 13px; font-weight: 700; color: #1a3c34; margin-bottom: 3px; }
+    .menu-card .m-sub { font-size: 10px; color: var(--gray-600); opacity: 0.7; }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -278,34 +103,21 @@
       border-radius: 24px; 
       display: flex; align-items: center; justify-content: space-around; 
       z-index: 100;
-      box-shadow: 
-        0 8px 32px rgba(0,61,51,0.1), 
-        0 2px 8px rgba(0,0,0,0.06), 
-        inset 0 1px 0 rgba(255,255,255,0.8);
+      box-shadow: 0 8px 32px rgba(0,61,51,0.1), 0 2px 8px rgba(0,0,0,0.06);
       padding: 0 8px; 
-      padding-bottom: env(safe-area-inset-bottom);
     }
     .nav-item { 
       display: flex; flex-direction: column; align-items: center; justify-content: center; 
       gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); 
       cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; 
-      border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      position: relative; 
+      border-radius: 18px; transition: all 0.3s ease; 
     }
-    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
+    .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { 
-      color: var(--green); 
-      filter: drop-shadow(0 2px 4px rgba(0,168,89,0.3)); 
-    }
-    .nav-item.active::before { 
-      content: ''; position: absolute; top: 2px; width: 28px; height: 3px; 
-      background: var(--green); border-radius: 0 0 4px 4px; 
-    }
+    .nav-item.active i { color: var(--green); }
 
     @media (min-width: 768px) {
       .content { max-width: 600px; }
-      .menu-grid { gap: 12px; }
     }
   </style>
 </head>
@@ -315,106 +127,84 @@
     <button class="btn-back" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
-    <h3 data-lang="akademikCenter">Akademik Center</h3>
-    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
-      <span id="langIndicator">🌐</span>
-    </button>
+    <h3>Akademik Center</h3>
   </header>
 
   <div class="content">
-    <div class="hero-card">
-      <div class="icon"><i class="fa-solid fa-book-open"></i></div>
-      <h2 data-lang="akademikCenter">Akademik Center</h2>
-      <p data-lang="akademikCenterSub">Kelola perkuliahan, absensi, nilai, & mahasiswa bimbingan dengan mudah</p>
-    </div>
-
     <div class="menu-grid">
       <div class="menu-card" onclick="goTo('jadwal-saya.html')">
-        <div class="m-icon blue">
-          <i class="fa-solid fa-calendar-alt"></i>
-        </div>
-        <div class="m-label" data-lang="jadwalSaya">Jadwal Saya</div>
-        <div class="m-sub" data-lang="jadwalSayaSub">Lihat & atur jadwal</div>
+        <div class="m-icon blue"><i class="fa-solid fa-calendar-alt"></i></div>
+        <div class="m-label">Jadwal Saya</div>
+        <div class="m-sub">Lihat & atur jadwal</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-absensi-kelas.html')">
-        <div class="m-icon teal">
-          <i class="fa-solid fa-clipboard-check"></i>
-        </div>
-        <div class="m-label" data-lang="absensiMK">Rekap Absensi</div>
-        <div class="m-sub" data-lang="absensiMKSub">Rekap absensi MK</div>
+        <div class="m-icon teal"><i class="fa-solid fa-clipboard-check"></i></div>
+        <div class="m-label">Rekap Absensi</div>
+        <div class="m-sub">Rekap absensi MK</div>
       </div>
       
       <div class="menu-card" onclick="goTo('nilai.html')">
-        <div class="m-icon orange">
-          <i class="fa-solid fa-star"></i>
-        </div>
-        <div class="m-label" data-lang="inputNilai">Input Nilai</div>
-        <div class="m-sub" data-lang="inputNilaiSub">Nilai mahasiswa</div>
+        <div class="m-icon orange"><i class="fa-solid fa-star"></i></div>
+        <div class="m-label">Input Nilai</div>
+        <div class="m-sub">Nilai mahasiswa</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rekap-nilai-matkul.html')">
-        <div class="m-icon purple">
-          <i class="fa-solid fa-chart-line"></i>
-        </div>
-        <div class="m-label" data-lang="rekapNilai">Rekap Nilai</div>
-        <div class="m-sub" data-lang="rekapNilaiSub">Lihat rekap nilai</div>
+        <div class="m-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="m-label">Rekap Nilai</div>
+        <div class="m-sub">Lihat rekap nilai</div>
       </div>
       
       <div class="menu-card" onclick="goTo('mahasiswa-bimbingan.html')">
-        <div class="m-icon green">
-          <i class="fa-solid fa-user-graduate"></i>
-        </div>
-        <div class="m-label" data-lang="mahasiswaPA">Mahasiswa PA</div>
-        <div class="m-sub" data-lang="mahasiswaPASub">Bimbingan akademik</div>
+        <div class="m-icon green"><i class="fa-solid fa-user-graduate"></i></div>
+        <div class="m-label">Mahasiswa PA</div>
+        <div class="m-sub">Bimbingan akademik</div>
       </div>
       
       <div class="menu-card" onclick="goTo('rps.html')">
-        <div class="m-icon teal">
-          <i class="fa-solid fa-file-alt"></i>
-        </div>
-        <div class="m-label" data-lang="silabus">RPS</div>
-        <div class="m-sub" data-lang="silabusSub">RPS & materi</div>
+        <div class="m-icon teal"><i class="fa-solid fa-file-alt"></i></div>
+        <div class="m-label">RPS</div>
+        <div class="m-sub">RPS & materi</div>
       </div>
       
       <div class="menu-card" onclick="goTo('pencapaian.html')">
-        <div class="m-icon gold">
-          <i class="fa-solid fa-pen-to-square"></i>
-        </div>
-        <div class="m-label" data-lang="pencapaian">Pencapaian</div>
-        <div class="m-sub" data-lang="pencapaianSub">Input capaian</div>
+        <div class="m-icon gold"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="m-label">Pencapaian</div>
+        <div class="m-sub">Input capaian</div>
       </div>
       
-      <div class="menu-card" onclick="goTo('absensi-tertinggal.html')">
-        <div class="m-icon orange">
-          <i class="fa-solid fa-user-xmark"></i>
-        </div>
-        <div class="m-label" data-lang="Cek Absensi">Cek Absensi</div>
-        <div class="m-sub" data-lang="Cek Absensi">Cek Absensi</div>
+      <!-- ⬇️ GANTI DI SINI ⬇️ -->
+      <div class="menu-card" onclick="goTo('absen-susulan.html')">
+        <div class="m-icon orange"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="m-label">Absen Susulan</div>
+        <div class="m-sub">Lupa absen? Isi di sini</div>
       </div>
+      <!-- ⬆️ GANTI DI SINI ⬆️ -->
+      
     </div>
   </div>
 
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')">
       <i class="fa-solid fa-house"></i>
-      <span data-lang="home">Home</span>
+      <span>Home</span>
     </div>
     <div class="nav-item" onclick="goTo('kalender.html')">
       <i class="fa-solid fa-calendar-days"></i>
-      <span data-lang="kalender">Kalender</span>
+      <span>Kalender</span>
     </div>
     <div class="nav-item active" onclick="goTo('menu-cepat.html')">
       <i class="fa-solid fa-grip"></i>
-      <span data-lang="menu">Menu</span>
+      <span>Menu</span>
     </div>
     <div class="nav-item" onclick="goTo('rekap.html')">
       <i class="fa-solid fa-chart-simple"></i>
-      <span data-lang="rekap">Rekap</span>
+      <span>Rekap</span>
     </div>
     <div class="nav-item" onclick="goTo('profil.html')">
       <i class="fa-solid fa-circle-user"></i>
-      <span data-lang="profil">Profil</span>
+      <span>Profil</span>
     </div>
   </nav>
 
@@ -423,30 +213,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
-  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
-
-    function cycleLang() {
-      const langs = ['id', 'en', 'ar'];
-      const current = getLang();
-      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
-      setLang(langs[nextIndex]);
-      updateLangIndicator();
-    }
-    
-    function updateLangIndicator() {
-      const lang = getLang();
-      const indicator = document.getElementById('langIndicator');
-      if (lang === 'id') indicator.textContent = '🇮🇩';
-      else if (lang === 'en') indicator.textContent = '🇬🇧';
-      else if (lang === 'ar') indicator.textContent = '🇸🇦';
-    }
-    
-    updateLangIndicator();
-    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
   </script>
 </body>
 </html>
