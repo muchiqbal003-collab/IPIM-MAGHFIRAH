@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Absensi Tertinggal - IPIM</title>
+  <title>Absen Susulan - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,14 +12,13 @@
     :root {
       --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
       --green-light:#e8f5e9;--green-pale:#f0faf5;
-      --gold:#f5c842;--white:#ffffff;
-      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
-      --gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--red-light:#fce4ec;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
       --orange:#f57c00;--orange-light:#fff3e0;
-      --blue:#1565c0;--blue-light:#e3f2fd;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
-      --transition:all 0.2s ease;--header-height:56px;
+      --transition:all 0.3s ease;--header-height:56px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -31,133 +30,105 @@
 
     .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
     .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .app-header h3 { font-size: 15px; font-weight: 700; flex: 1; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
 
-    .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-
-    .info-box {
-      background: var(--orange-light); border-radius: var(--radius-sm);
-      padding: 12px 16px; font-size: 12px; color: var(--orange);
-      display: flex; align-items: center; gap: 8px;
-    }
+    .content { padding: 14px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
     .card {
-      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
-      padding: 16px; border: 1px solid rgba(255,255,255,0.6);
-      box-shadow: 0 2px 12px rgba(0,61,51,0.06);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
     }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 
-    .jadwal-item {
-      display: flex; align-items: center; gap: 10px; padding: 12px;
-      background: rgba(255,255,255,0.5); border-radius: var(--radius);
-      margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.5);
-      cursor: pointer; transition: var(--transition);
+    .form-group { margin-bottom: 12px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group select {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 9L1 4h10z' fill='%23666'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
     }
-    .jadwal-item:active { transform: scale(0.98); }
-    .jadwal-item.belum { border-left: 3px solid var(--red); }
-    .jadwal-item.sudah { border-left: 3px solid var(--green); opacity: 0.7; }
+    .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
 
-    .jadwal-info { flex: 1; min-width: 0; }
-    .jadwal-hari { font-size: 13px; font-weight: 700; color: var(--green-dark); }
-    .jadwal-detail { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
-    .jadwal-jp { font-size: 10px; color: var(--gray-600); }
+    .status-box {
+      display: none; padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600; margin-bottom: 12px;
+      align-items: center; gap: 8px;
+    }
+    .status-box.show { display: flex; }
+    .status-box.sudah { background: var(--green-light); color: #1b5e20; border: 1px solid #c8e6c9; }
+    .status-box.belum { background: var(--orange-light); color: #e65100; border: 1px solid #ffe0b2; }
 
-    .status-badge {
-      padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;
-      white-space: nowrap; flex-shrink: 0;
+    .info-box {
+      background: var(--blue-light); border-radius: var(--radius-sm);
+      padding: 10px 14px; font-size: 11px; color: #0d47a1;
+      display: none; margin-bottom: 10px; border-left: 3px solid var(--blue);
     }
-    .status-badge.belum { background: var(--red-light); color: #b71c1c; }
-    .status-badge.sudah { background: var(--green-light); color: #1b5e20; }
+    .info-box.show { display: block; }
 
-    .btn {
-      padding: 10px 20px; border: none; border-radius: 40px;
-      font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-      transition: var(--transition);
-    }
-    .btn-primary { background: linear-gradient(135deg, #004d40, #006644); color: white; }
-    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-    .btn-sm { padding: 6px 12px; font-size: 11px; }
+    .mahasiswa-list { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; }
+    .mhs-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.6); border-radius: var(--radius-sm); cursor: pointer; border: 1px solid rgba(255,255,255,0.5); transition: all 0.2s; }
+    .mhs-item:hover { background: rgba(0,168,89,0.05); }
+    .mhs-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); }
+    .mhs-item span { flex: 1; font-size: 12px; }
 
-    .modal-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center;
-      padding: 16px;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal-box {
-      background: white; border-radius: var(--radius-lg); width: 100%; max-width: 450px;
-      max-height: 80vh; overflow-y: auto; padding: 20px;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
-    }
-    .modal-box h4 { margin-bottom: 12px; font-size: 14px; font-weight: 700; }
+    .btn-primary { width: 100%; padding: 13px; justify-content: center; background: linear-gradient(135deg, #004d40, #006644); color: white; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .santri-list { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; }
-    .santri-row {
-      display: flex; align-items: center; gap: 8px; padding: 8px 10px;
-      background: var(--gray-50); border-radius: var(--radius-sm);
-    }
-    .santri-nama { flex: 1; font-size: 12px; font-weight: 600; }
-    .status-select {
-      padding: 5px 8px; border-radius: 20px; font-size: 10px; font-weight: 600;
-      border: 1.5px solid var(--gray-200); background: white; cursor: pointer;
-    }
-    .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
-    .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
-    .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
-    .status-select.alfa { border-color: #ef4444; background: #fce4ec; color: #991b1b; }
-
-    .bottom-nav {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 32px); max-width: 420px; height: 64px;
-      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
-      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
-      padding: 0 8px;
-    }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; }
-    .nav-item i { font-size: 20px; }
-    .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); }
-
-    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .toast.show { opacity: 1; }
+    .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
+    .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
+    .alert-error { background: #fce4ec; color: #b71c1c; border-left: 4px solid var(--red); }
   </style>
 </head>
 <body>
-
   <header class="app-header">
-    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>📝 Absensi Tertinggal</h3>
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>⏰ Absen Susulan</h3>
   </header>
 
   <div class="content">
-    <div class="info-box">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Daftar jadwal yang <strong>belum diabsen</strong> dalam 14 hari terakhir. Klik untuk mengisi.</span>
-    </div>
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
 
-    <div class="card" id="jadwalTertinggal">
-      <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-calendar-check"></i> Absen 7 Hari Terakhir</div>
+
+      <!-- TANGGAL -->
+      <div class="form-group">
+        <label>📅 Tanggal</label>
+        <select id="tanggalAbsen" onchange="onTanggalChange()"></select>
+      </div>
+
+      <!-- MATA KULIAH -->
+      <div class="form-group">
+        <label>📚 Mata Kuliah</label>
+        <select id="mkId" onchange="onMkChange()"><option value="">Pilih Mata Kuliah...</option></select>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-box" id="statusBox"></div>
+
+      <!-- INFO JP -->
+      <div class="info-box" id="infoJP"></div>
+
+      <!-- MAHASISWA -->
+      <div class="form-group" id="mhsFormGroup" style="display:none;">
+        <label>👨‍🎓 Mahasiswa</label>
+        <div class="mahasiswa-list" id="mhsList"></div>
+      </div>
+
+      <!-- BUTTON SIMPAN -->
+      <button type="button" class="btn-primary" id="btnSimpan" onclick="simpanAbsenSusulan()" disabled>
+        <i class="fa-solid fa-save"></i> Simpan Absen Susulan
+      </button>
     </div>
   </div>
-
-  <!-- Modal Absensi -->
-  <div class="modal-overlay" id="modalAbsensi">
-    <div class="modal-box" id="modalContent"></div>
-  </div>
-
-  <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-    <div class="nav-item active" onclick="goTo('absensi-tertinggal.html')"><i class="fa-solid fa-clock-rotate-left"></i><span>Tertinggal</span></div>
-    <div class="nav-item" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
-    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
-  </nav>
-
-  <div class="toast" id="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -167,236 +138,261 @@
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
-    window.goTo = page => window.location.href = page;
 
-    const JP_WAKTU = { 1:'07:15-08:05',2:'08:10-09:00',3:'09:05-09:55',4:'10:10-11:00',5:'11:05-11:55' };
-    const HARI_LIST = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    let semuaJadwal = [], semuaAbsensi = [], semuaMhs = [], mhsMap = {};
+    let selectedJadwal = null;
+    let allMahasiswa = [];
+    let sudahAbsen = false;
+    let allJadwalData = [];
 
-    function showToast(msg, type='') {
-      const el = document.getElementById('toast');
-      el.textContent = msg; el.className = `toast ${type} show`;
-      setTimeout(() => { el.className = 'toast'; }, 3000);
+    function showAlert(type, text) {
+      const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+      el.textContent = text; el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
     }
 
-    function closeModal() { document.getElementById('modalAbsensi').classList.remove('show'); }
-
-    function getLocalDate() {
-      const now = new Date();
-      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
-      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    // ═══ LOAD TANGGAL 7 HARI MUNDUR ═══
+    function loadTanggal() {
+      const sel = document.getElementById('tanggalAbsen');
+      sel.innerHTML = '';
+      for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const o = document.createElement('option');
+        o.value = d.toISOString().split('T')[0];
+        o.textContent = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        if (i === 0) o.textContent += ' (Hari Ini)';
+        if (i === 1) o.textContent += ' (Kemarin)';
+        sel.appendChild(o);
+      }
+      loadJadwal();
     }
 
-    async function loadData() {
+    // ═══ LOAD JADWAL SESUAI TANGGAL ═══
+    async function loadJadwal() {
+      const tanggal = document.getElementById('tanggalAbsen').value;
+      const dayName = new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long' }).toLowerCase();
+
       try {
-        const today = getLocalDate();
-        const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-        const startDate = twoWeeksAgo.toISOString().split('T')[0];
+        const snap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
+        allJadwalData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const jadwalList = allJadwalData.filter(j => (j.hari || '').toLowerCase() === dayName);
 
-        // Load jadwal dosen
-        const jSnap = await db.collection('jadwal').where('dosenId','==',user.uid).get();
-        semuaJadwal = jSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Gabungkan JP
+        const grouped = {};
+        jadwalList.forEach(j => {
+          const key = `${j.mkId}_${j.kelasId}`;
+          if (!grouped[key]) {
+            grouped[key] = {
+              mkId: j.mkId || '',
+              mkNama: j.mkNama || '-',
+              kelasId: j.kelasId || '',
+              kelasNama: j.kelasNama || '-',
+              totalJP: 0,
+              jadwalIds: []
+            };
+          }
+          grouped[key].totalJP += (j.jp || j.sks || 1);
+          grouped[key].jadwalIds.push(j.id);
+        });
 
-        // Load absensi dalam 14 hari
-        const aSnap = await db.collection('absensi')
-          .where('dosenId','==',user.uid)
-          .where('tanggal','>=',startDate)
-          .get();
-        semuaAbsensi = aSnap.docs.map(d => d.data());
+        const jadwalGabungan = Object.values(grouped);
+        const sel = document.getElementById('mkId');
+        sel.innerHTML = '<option value="">Pilih Mata Kuliah...</option>';
 
-        // Load mahasiswa
-        const mSnap = await db.collection('mahasiswa').get();
-        mhsMap = {};
-        mSnap.forEach(d => { mhsMap[d.id] = d.data(); });
+        jadwalGabungan.forEach(g => {
+          const o = document.createElement('option');
+          o.value = g.mkId;
+          o.textContent = `${g.mkNama} — ${g.kelasNama} (${g.totalJP} JP)`;
+          o.setAttribute('data-totaljp', g.totalJP);
+          o.setAttribute('data-mknama', g.mkNama);
+          o.setAttribute('data-mkid', g.mkId);
+          o.setAttribute('data-kelasid', g.kelasId);
+          sel.appendChild(o);
+        });
 
-        renderJadwalTertinggal(startDate, today);
-      } catch(e) {
-        document.getElementById('jadwalTertinggal').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
-      }
+        console.log('✅ Jadwal ditemukan:', jadwalGabungan.length);
+        resetForm();
+      } catch(e) { console.error('❌ Gagal load jadwal:', e); }
     }
 
-    function renderJadwalTertinggal(startDate, today) {
-      // Generate semua hari mengajar dalam 14 hari terakhir (sampai hari ini)
-      const hariMengajar = [];
-      const d = new Date(startDate);
-      const end = new Date(today);
-      
-      while (d <= end) {
-        const dateStr = d.toISOString().split('T')[0];
-        const hari = HARI_LIST[d.getDay()];
-        
-        // Cari jadwal di hari ini
-        const jadwalHariIni = semuaJadwal.filter(j => j.hari === hari);
-        
-        jadwalHariIni.forEach(j => {
-          // Cek JP mana yang sudah diabsen
-          const maxJP = 5;
-          for (let jp = 1; jp <= maxJP; jp++) {
-            const sudahAbsen = semuaAbsensi.some(a => 
-              a.jadwalId === j.id && 
-              a.tanggal === dateStr && 
-              a.jamKe === jp
-            );
-            
-            hariMengajar.push({
-              jadwalId: j.id,
-              tanggal: dateStr,
-              hari: hari,
-              jamKe: jp,
-              waktu: JP_WAKTU[jp] || `JP ${jp}`,
-              mkNama: j.mkNama || '-',
-              kelasNama: j.kelasNama || '-',
-              kelasIds: j.kelasIds || [j.kelasId],
-              sudahAbsen
-            });
-          }
-        });
-        
-        d.setDate(d.getDate() + 1);
-      }
+    function resetForm() {
+      document.getElementById('statusBox').classList.remove('show');
+      document.getElementById('statusBox').className = 'status-box';
+      document.getElementById('infoJP').classList.remove('show');
+      document.getElementById('mhsFormGroup').style.display = 'none';
+      document.getElementById('mhsList').innerHTML = '';
+      document.getElementById('btnSimpan').disabled = true;
+      sudahAbsen = false;
+    }
 
-      // Filter: hanya tampilkan yang BELUM diabsen (tapi tetap tampilkan semua biar tau)
-      // Urutkan: yang belum di atas
-      hariMengajar.sort((a,b) => {
-        if (a.sudahAbsen !== b.sudahAbsen) return a.sudahAbsen ? 1 : -1;
-        return b.tanggal.localeCompare(a.tanggal) || a.jamKe - b.jamKe;
-      });
+    function onTanggalChange() {
+      loadJadwal();
+    }
 
-      const container = document.getElementById('jadwalTertinggal');
-      
-      if (hariMengajar.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:var(--gray-600);padding:20px;">Tidak ada jadwal dalam 14 hari terakhir</p>';
+    // ═══ SAAT MK DIPILIH ═══
+    async function onMkChange() {
+      const sel = document.getElementById('mkId');
+      const statusBox = document.getElementById('statusBox');
+      const infoBox = document.getElementById('infoJP');
+      const mhsFormGroup = document.getElementById('mhsFormGroup');
+      const btnSimpan = document.getElementById('btnSimpan');
+
+      if (!sel.value) {
+        resetForm();
         return;
       }
 
-      const belumCount = hariMengajar.filter(h => !h.sudahAbsen).length;
+      const totalJP = sel.options[sel.selectedIndex].getAttribute('data-totaljp');
+      const mkNama = sel.options[sel.selectedIndex].getAttribute('data-mknama');
+      const mkId = sel.options[sel.selectedIndex].getAttribute('data-mkid');
+      const kelasId = sel.options[sel.selectedIndex].getAttribute('data-kelasid');
+      const tanggal = document.getElementById('tanggalAbsen').value;
 
-      container.innerHTML = `
-        <div style="margin-bottom:12px;font-size:13px;font-weight:700;color:var(--green-dark);">
-          📋 ${hariMengajar.length} slot · 
-          <span style="color:var(--red);">${belumCount} belum diabsen</span> · 
-          <span style="color:var(--green);">${hariMengajar.length - belumCount} sudah</span>
-        </div>
-        ${hariMengajar.map(h => `
-          <div class="jadwal-item ${h.sudahAbsen ? 'sudah' : 'belum'}" onclick="${h.sudahAbsen ? '' : `bukaFormAbsen('${h.jadwalId}','${h.tanggal}',${h.jamKe},'${h.hari}','${h.waktu}','${h.mkNama.replace(/'/g,"\\'")}','${h.kelasNama.replace(/'/g,"\\'")}','${JSON.stringify(h.kelasIds).replace(/"/g,'&quot;')}')`}">
-            <div class="jadwal-info">
-              <div class="jadwal-hari">${h.hari}, ${formatTanggal(h.tanggal)} · ${h.waktu}</div>
-              <div class="jadwal-detail">📚 ${h.mkNama} · 🏫 ${h.kelasNama}</div>
-              <div class="jadwal-jp">JP ${h.jamKe}</div>
-            </div>
-            <span class="status-badge ${h.sudahAbsen ? 'sudah' : 'belum'}">${h.sudahAbsen ? '✅ Sudah' : '❌ Belum'}</span>
-          </div>
-        `).join('')}
-      `;
-    }
+      selectedJadwal = { totalJP: parseInt(totalJP), mkNama, mkId, kelasId };
 
-    function formatTanggal(dateStr) {
-      const [y,m,d] = dateStr.split('-');
-      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-      return `${d} ${months[parseInt(m)-1]}`;
-    }
+      console.log('📋 MK dipilih:', mkNama, '| MK ID:', mkId, '| Kelas ID:', kelasId);
 
-    // ═══ BUKA FORM ABSENSI ═══
-    window.bukaFormAbsen = async function(jadwalId, tanggal, jamKe, hari, waktu, mkNama, kelasNama, kelasIdsStr) {
-      const kelasIds = JSON.parse(kelasIdsStr.replace(/&quot;/g,'"'));
-      
-      // Ambil mahasiswa dari kelas-kelas terkait
-      let mhsList = [];
-      for (const kid of kelasIds) {
-        const mSnap = await db.collection('mahasiswa').where('kelasId','==',kid).get();
-        mSnap.forEach(d => { mhsList.push({ id: d.id, ...d.data() }); });
+      // Info JP
+      if (parseInt(totalJP) > 1) {
+        infoBox.innerHTML = `✅ <strong>${totalJP} JP gabungan</strong> — ${mkNama}.`;
+        infoBox.classList.add('show');
+      } else {
+        infoBox.classList.remove('show');
       }
-      mhsList = [...new Map(mhsList.map(m => [m.id, m])).values()];
-      mhsList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
-      // Cek absensi existing
-      const existingSnap = await db.collection('absensi')
-        .where('jadwalId','==',jadwalId)
-        .where('tanggal','==',tanggal)
-        .where('jamKe','==',jamKe)
-        .get();
-      const existingMap = {};
-      existingSnap.forEach(d => {
-        const data = d.data();
-        existingMap[data.mahasiswaId] = { status: data.status, id: d.id };
-      });
+      // ═══ CEK APAKAH SUDAH PERNAH ABSEN ═══
+      try {
+        const snap = await db.collection('absensi')
+          .where('dosenId', '==', user.uid)
+          .where('tanggal', '==', tanggal)
+          .get();
 
-      const statusOptions = ['hadir','sakit','izin','alfa','jaga'];
-      const statusLabels = { hadir:'✓ Hadir', sakit:'🤒 Sakit', izin:'📝 Izin', alfa:'❌ Alfa', jaga:'🛡️ Jaga' };
+        const absenDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        console.log('📋 Data absen tanggal ini:', absenDocs.length);
 
-      document.getElementById('modalContent').innerHTML = `
-        <h4>📝 Absensi Tertinggal</h4>
-        <p style="font-size:11px;color:var(--gray-600);margin-bottom:12px;">
-          ${hari}, ${formatTanggal(tanggal)} · ${waktu} · JP ${jamKe}<br>
-          📚 ${mkNama} · 🏫 ${kelasNama}
-        </p>
-        <div class="santri-list">
-          ${mhsList.map(m => {
-            const existing = existingMap[m.id];
-            const currentStatus = existing ? existing.status : 'hadir';
-            return `<div class="santri-row">
-              <span class="santri-nama">${m.nama}</span>
-              <select class="status-select ${currentStatus}" id="sel_${m.id}" onchange="updateSelectColor('${m.id}')">
-                ${statusOptions.map(s => `<option value="${s}" ${currentStatus===s?'selected':''}>${statusLabels[s]}</option>`).join('')}
-              </select>
-            </div>`;
-          }).join('')}
-        </div>
-        <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;">
-          <button class="btn btn-outline btn-sm" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary btn-sm" id="btnSimpanTertinggal">💾 Simpan Absensi</button>
-        </div>`;
+        // Cek dengan beberapa kemungkinan field
+        const mkAbsen = absenDocs.filter(a => {
+          const absenMk = (a.mkId || a.mapelId || a.matkulId || a.mk || '').toString().toLowerCase();
+          const jadwalMk = (mkId || '').toString().toLowerCase();
+          const jadwalNama = (mkNama || '').toLowerCase();
+          return absenMk === jadwalMk || absenMk === jadwalNama;
+        });
 
-      document.getElementById('modalAbsensi').classList.add('show');
+        console.log('📋 MK match dengan absen:', mkAbsen.length);
 
-      document.getElementById('btnSimpanTertinggal').onclick = async () => {
+        if (mkAbsen.length > 0) {
+          sudahAbsen = true;
+          statusBox.className = 'status-box sudah show';
+          statusBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> ✅ Sudah absen pada tanggal ini.';
+          mhsFormGroup.style.display = 'none';
+          btnSimpan.disabled = true;
+        } else {
+          sudahAbsen = false;
+          statusBox.className = 'status-box belum show';
+          statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen.';
+          mhsFormGroup.style.display = 'block';
+          btnSimpan.disabled = false;
+          await loadMahasiswa(kelasId);
+        }
+      } catch(e) {
+        console.error('❌ Error cek absen:', e);
+        statusBox.className = 'status-box belum show';
+        statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen.';
+        mhsFormGroup.style.display = 'block';
+        btnSimpan.disabled = false;
+        await loadMahasiswa(kelasId);
+      }
+    }
+
+    // ═══ LOAD MAHASISWA ═══
+    async function loadMahasiswa(kelasId) {
+      console.log('📋 Load mahasiswa untuk kelas:', kelasId);
+
+      const container = document.getElementById('mhsList');
+      container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Memuat mahasiswa...</p>';
+
+      try {
+        let snap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
+
+        if (snap.empty) {
+          console.log('⚠️ Tidak ada dengan kelasId, coba semua mahasiswa...');
+          snap = await db.collection('mahasiswa').limit(100).get();
+        }
+
+        allMahasiswa = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+        console.log('✅ Mahasiswa ditemukan:', allMahasiswa.length);
+
+        if (allMahasiswa.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:var(--red);">Tidak ada mahasiswa.</p>';
+          return;
+        }
+
+        container.innerHTML = allMahasiswa.map(m => `
+          <label class="mhs-item">
+            <input type="checkbox" class="mhs-check" value="${m.id}">
+            <span>${m.nama || '-'} (${m.nim || '-'})</span>
+          </label>
+        `).join('');
+      } catch(e) {
+        console.error('❌ Gagal load mahasiswa:', e);
+        container.innerHTML = '<p style="text-align:center;color:var(--red);">Gagal memuat.</p>';
+      }
+    }
+
+    // ═══ SIMPAN ABSEN SUSULAN ═══
+    window.simpanAbsenSusulan = async function() {
+      if (sudahAbsen) {
+        showAlert('error', '❌ Anda sudah absen pada tanggal ini!');
+        return;
+      }
+
+      const tanggal = document.getElementById('tanggalAbsen').value;
+
+      if (!selectedJadwal) { showAlert('error', 'Pilih mata kuliah!'); return; }
+
+      const checked = document.querySelectorAll('.mhs-check:checked');
+      if (checked.length === 0) { showAlert('error', 'Pilih minimal 1 mahasiswa!'); return; }
+
+      const btn = document.getElementById('btnSimpan');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
         const batch = db.batch();
-        let count = 0;
+        checked.forEach(c => {
+          const ref = db.collection('absensi').doc();
+          batch.set(ref, {
+            mahasiswaId: c.value,
+            dosenId: user.uid,
+            dosenNama: user.nama || '-',
+            mkId: selectedJadwal.mkId,
+            mapelId: selectedJadwal.mkId,
+            mkNama: selectedJadwal.mkNama,
+            jp: selectedJadwal.totalJP,
+            status: 'hadir',
+            tanggal: tanggal,
+            keterangan: 'Absen susulan',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+        await batch.commit();
+        showAlert('success', `✅ Absen susulan disimpan! ${checked.length} mahasiswa hadir.`);
         
-        for (const m of mhsList) {
-          const sel = document.getElementById(`sel_${m.id}`);
-          const status = sel ? sel.value : 'hadir';
-          
-          // Update atau create
-          const existingId = existingMap[m.id]?.id;
-          if (existingId) {
-            batch.update(db.collection('absensi').doc(existingId), {
-              status,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          } else {
-            const ref = db.collection('absensi').doc();
-            batch.set(ref, {
-              mahasiswaId: m.id,
-              jadwalId, kelasId: kelasIds[0], mapelId: jadwalId,
-              dosenId: user.uid,
-              status, tanggal, jamKe, pertemuanKe: 1,
-              mkNama, kelasNama,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          }
-          count++;
-        }
-
-        try {
-          await batch.commit();
-          showToast(`✅ ${count} absensi tersimpan!`, 'success');
-          closeModal();
-          await loadData();
-        } catch(e) {
-          showToast('❌ Gagal: ' + e.message, 'error');
-        }
-      };
-    };
-
-    window.updateSelectColor = function(mhsId) {
-      const sel = document.getElementById(`sel_${mhsId}`);
-      if (sel) {
-        sel.className = `status-select ${sel.value}`;
+        // Reload status
+        await onMkChange();
+      } catch(e) {
+        console.error('❌ Gagal simpan:', e);
+        showAlert('error', '❌ Gagal: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Absen Susulan';
       }
     };
 
-    loadData();
+    // Init
+    loadTanggal();
   </script>
 </body>
 </html>
