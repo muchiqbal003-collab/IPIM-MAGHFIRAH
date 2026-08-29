@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Kelola Ujian Bulanan • Operator Bahasa IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004d40; --primary-dark: #00332b; --primary-light: #00695c;
+      --accent: #d4a843; --accent-dark: #b8860b; --accent-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b; --gray-600: #475569;
+      --gray-700: #334155; --gray-800: #1e293b; --red: #ef4444; --red-light: #fef2f2;
+      --green-success: #10b981; --green-light: #ecfdf5; --blue: #3b82f6; --blue-light: #eff6ff;
+      --orange: #f97316; --orange-light: #fff7ed;
+      --bg-primary: #f0f4f0;
+      --surface-glass: rgba(255, 255, 255, 0.6);
+      --surface-glass-strong: rgba(255, 255, 255, 0.85);
+      --border-glass: rgba(0, 77, 64, 0.08);
+      --text-primary: var(--gray-800);
+      --text-secondary: var(--gray-600);
+      --text-muted: var(--gray-400);
+      --sidebar-bg: rgba(255, 255, 255, 0.7);
+      --nav-hover: rgba(0, 77, 64, 0.06);
+      --nav-active: rgba(212, 168, 67, 0.15);
+      --table-header-bg: rgba(248, 250, 252, 0.8);
+      --table-row-hover: rgba(0, 77, 64, 0.02);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.04), inset -2px -2px 5px rgba(255,255,255,0.8);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-2xl: 28px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1628;
+      --surface-glass: rgba(19, 32, 51, 0.6);
+      --surface-glass-strong: rgba(19, 32, 51, 0.85);
+      --border-glass: rgba(255,255,255,0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --sidebar-bg: rgba(10, 22, 40, 0.75);
+      --nav-hover: rgba(212,168,67,0.08);
+      --nav-active: rgba(212,168,67,0.18);
+      --table-header-bg: rgba(19, 32, 51, 0.6);
+      --table-row-hover: rgba(212,168,67,0.04);
+      --input-bg: rgba(19, 32, 51, 0.8);
+      --gray-50: #1e293b; --gray-100: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.02);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    .main-content { flex: 1; padding: 28px 32px; min-height: 100vh; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+    .page-title h1 { font-size: clamp(20px, 4vw, 26px); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .page-title p { font-size: 13px; color: var(--text-secondary); margin-top: 3px; font-weight: 500; }
+
+    .btn { padding: 10px 18px; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition); white-space: nowrap; background: var(--surface-glass-strong); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); box-shadow: var(--shadow-md); color: var(--text-primary); }
+    .btn:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn:active { box-shadow: var(--shadow-inset); transform: scale(0.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; }
+    .btn-danger { background: var(--red-light); color: var(--red); border: none; }
+    .btn-outline { background: var(--surface-glass); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    .card { background: var(--surface-glass); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden; }
+    .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong); }
+    .card-header h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 20px 24px; overflow-x: auto; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; align-items: end; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .form-group input, .form-group select { padding: 10px 14px; border: 1.5px solid var(--border-glass); border-radius: 40px; font-size: 13px; font-family: inherit; background: var(--input-bg); color: var(--text-primary); outline: none; transition: var(--transition); }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,77,64,0.1); }
+
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+    thead th { background: var(--table-header-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 10px; text-align: left; font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; border-bottom: 2px solid var(--border-glass); }
+    tbody td { padding: 10px; border-bottom: 1px solid var(--border-glass); }
+    tbody tr:hover { background: var(--table-row-hover); }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .badge-active { background: var(--green-light); color: #065f46; }
+    .badge-inactive { background: var(--gray-100); color: var(--text-muted); }
+
+    .toggle-switch { position: relative; width: 42px; height: 24px; display: inline-block; }
+    .toggle-switch input { display: none; }
+    .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--gray-200); border-radius: 24px; cursor: pointer; transition: all 0.3s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: all 0.3s; }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green-success); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    .alert { padding: 12px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
+    .alert-success { background: var(--green-light); color: #065f46; }
+    .alert-error { background: var(--red-light); color: #991b1b; }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 16px 14px; }
+      .topbar { margin-top: 50px; flex-direction: column; gap: 10px; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .card-body { padding: 14px 10px; }
+    }
+    @media (max-width: 480px) {
+      .page-title h1 { font-size: 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-page="kelola-ujian-bulanan">
+
+  <div id="sidebarContainer"></div>
+  <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
+  <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
+
+  <main class="main-content" id="mainContent">
+    <div class="topbar">
+      <div class="page-title">
+        <h1>📋 Kelola Ujian Bulanan</h1>
+        <p>Set dosen bahasa Arab • Buat ujian • Atur bobot</p>
+      </div>
+      <button class="btn btn-outline" onclick="logout()">🚪 Keluar</button>
+    </div>
+
+    <div id="alertSuccess" class="alert alert-success"></div>
+    <div id="alertError" class="alert alert-error"></div>
+
+    <!-- SET DOSEN BAHASA ARAB -->
+    <div class="card">
+      <div class="card-header">
+        <h3>👨‍🏫 Set Dosen Bahasa Arab</h3>
+        <span style="font-size:11px;color:var(--text-muted);">Toggle untuk menandai dosen sebagai pengajar Bahasa Arab</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" id="dosenBahasaArabList">
+          <p style="text-align:center;color:var(--text-muted);padding:20px;">Memuat dosen...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM BUAT UJIAN -->
+    <div class="card">
+      <div class="card-header"><h3>➕ Buat Ujian Bulanan</h3></div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>📅 Tahun</label>
+            <select id="tahun" onchange="loadBulan()"></select>
+          </div>
+          <div class="form-group">
+            <label>📅 Bulan</label>
+            <select id="bulan"></select>
+          </div>
+          <div class="form-group">
+            <label>🔢 Sesi</label>
+            <select id="sesi">
+              <option value="1">Sesi 1</option>
+              <option value="2">Sesi 2</option>
+              <option value="3">Sesi 3</option>
+              <option value="4">Sesi 4</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>📚 Matakuliah</label>
+            <select id="mkId"><option value="">Pilih Matakuliah...</option></select>
+          </div>
+          <div class="form-group">
+            <label>👨‍🏫 Dosen Bahasa Arab</label>
+            <select id="dosenId"><option value="">Pilih Dosen...</option></select>
+          </div>
+          <div class="form-group">
+            <label>📝 Total Soal</label>
+            <input type="number" id="totalSoal" value="100" min="1">
+          </div>
+          <div class="form-group">
+            <label>💯 Bobot</label>
+            <input type="number" id="bobot" value="100" min="1">
+          </div>
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" onclick="buatUjian()">➕ Buat</button>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:10px;">💡 Nilai akhir = benar × bobot / total soal</p>
+      </div>
+    </div>
+
+    <!-- DAFTAR UJIAN -->
+    <div class="card">
+      <div class="card-header"><h3>📋 Daftar Ujian (<span id="totalUjian">0</span>)</h3></div>
+      <div class="card-body">
+        <div class="table-responsive" id="ujianTable">
+          <p style="text-align:center;color:var(--text-muted);padding:20px;">Memuat...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/sidebar-bahasa.js"></script>
+
+  <script>
+  (function() {
+  'use strict';
+
+  let allDosen = [], dosenBahasaArab = [], mkMap = {};
+
+  function showAlert(type, msg) {
+    const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
+    if (el) { el.textContent = msg; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 4000); }
+  }
+
+  // ============ LOAD TAHUN (5 tahun: sekarang-2 s/d sekarang+2) ============
+  function loadTahun() {
+    const tahunSel = document.getElementById('tahun');
+    const now = new Date();
+    const tahunSekarang = now.getFullYear();
+    
+    tahunSel.innerHTML = '';
+    for (let i = tahunSekarang - 2; i <= tahunSekarang + 2; i++) {
+      const o = document.createElement('option');
+      o.value = i;
+      o.textContent = i;
+      if (i === tahunSekarang) o.selected = true;
+      tahunSel.appendChild(o);
+    }
+    
+    loadBulan();
+  }
+
+  // ============ LOAD BULAN (12 bulan sesuai tahun yang dipilih) ============
+  function loadBulan() {
+    const bulanSel = document.getElementById('bulan');
+    const tahun = document.getElementById('tahun').value;
+    const bulanNama = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    
+    bulanSel.innerHTML = '';
+    for (let i = 0; i < 12; i++) {
+      const o = document.createElement('option');
+      o.value = `${tahun}-${String(i + 1).padStart(2, '0')}`;
+      o.textContent = bulanNama[i];
+      bulanSel.appendChild(o);
+    }
+    
+    // Set bulan berjalan jika tahun yang dipilih = tahun sekarang
+    const now = new Date();
+    if (parseInt(tahun) === now.getFullYear()) {
+      bulanSel.value = `${tahun}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    } else {
+      bulanSel.value = `${tahun}-01`;
+    }
+  }
+
+  // ============ LOAD SEMUA DOSEN ============
+  async function loadAllDosen() {
+    try {
+      const usersSnap = await db.collection('users').where('role', 'in', ['dosen', 'dosen-musyrif']).get();
+      allDosen = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allDosen.sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+      dosenBahasaArab = allDosen.filter(d => (d.roles && d.roles.includes('dosen-bahasa-arab')) || d.spesialisasi === 'bahasa-arab');
+      renderDosenList();
+      updateDosenDropdown();
+    } catch(e) { console.error(e); }
+  }
+
+  // ============ RENDER LIST DOSEN ============
+  function renderDosenList() {
+    const container = document.getElementById('dosenBahasaArabList');
+    if (!allDosen.length) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Tidak ada dosen terdaftar</p>';
+      return;
+    }
+    let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Email</th><th>Dosen Bahasa Arab?</th></tr></thead><tbody>';
+    allDosen.forEach((d, i) => {
+      const isBahasaArab = (d.roles && d.roles.includes('dosen-bahasa-arab')) || d.spesialisasi === 'bahasa-arab';
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td><strong>${d.nama || '-'}</strong></td>
+        <td>${d.email || '-'}</td>
+        <td><label class="toggle-switch"><input type="checkbox" ${isBahasaArab ? 'checked' : ''} onchange="toggleDosenBahasaArab('${d.id}', this.checked)"><span class="toggle-slider"></span></label></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  // ============ UPDATE DROPDOWN DOSEN ============
+  function updateDosenDropdown() {
+    const sel = document.getElementById('dosenId');
+    sel.innerHTML = '<option value="">Pilih Dosen Bahasa Arab...</option>';
+    dosenBahasaArab.forEach(d => {
+      const o = document.createElement('option');
+      o.value = d.id;
+      o.textContent = d.nama || d.email || d.id;
+      sel.appendChild(o);
+    });
+  }
+
+  // ============ TOGGLE DOSEN BAHASA ARAB ============
+  window.toggleDosenBahasaArab = async function(dosenId, isChecked) {
+    try {
+      const docRef = db.collection('users').doc(dosenId);
+      const doc = await docRef.get();
+      if (!doc.exists) return;
+      const data = doc.data();
+      let roles = data.roles || [data.role || 'dosen'];
+      if (isChecked) {
+        if (!roles.includes('dosen-bahasa-arab')) roles.push('dosen-bahasa-arab');
+        await docRef.update({ roles, spesialisasi: 'bahasa-arab' });
+      } else {
+        roles = roles.filter(r => r !== 'dosen-bahasa-arab');
+        await docRef.update({ roles, spesialisasi: '' });
+      }
+      showAlert('success', `✅ Berhasil ${isChecked ? 'menambahkan' : 'menghapus'} dosen bahasa Arab!`);
+      await loadAllDosen();
+    } catch(e) { showAlert('error', '❌ ' + e.message); }
+  };
+
+  // ============ LOAD MATAKULIAH ============
+  async function loadMK() {
+    try {
+      const mkSnap = await db.collection('matakuliah').get();
+      mkMap = {};
+      const mkSel = document.getElementById('mkId');
+      mkSel.innerHTML = '<option value="">Pilih Matakuliah...</option>';
+      mkSnap.docs.sort((a, b) => (a.data().nama || '').localeCompare(b.data().nama || '')).forEach(d => {
+        const data = d.data();
+        mkMap[d.id] = data;
+        const o = document.createElement('option');
+        o.value = d.id;
+        o.textContent = `${data.kode || ''} - ${data.nama || ''}`;
+        mkSel.appendChild(o);
+      });
+    } catch(e) { console.error(e); }
+  }
+
+  // ============ BUAT UJIAN ============
+  window.buatUjian = async function() {
+    const bulan = document.getElementById('bulan').value;
+    const sesi = document.getElementById('sesi').value;
+    const mkId = document.getElementById('mkId').value;
+    const dosenId = document.getElementById('dosenId').value;
+    const totalSoal = parseInt(document.getElementById('totalSoal').value);
+    const bobot = parseInt(document.getElementById('bobot').value);
+
+    if (!bulan || !mkId || !dosenId || !totalSoal || !bobot) {
+      showAlert('error', '⚠️ Lengkapi semua field!');
+      return;
+    }
+
+    try {
+      const existingSnap = await db.collection('ujianBulanan')
+        .where('bulan', '==', bulan)
+        .where('sesi', '==', parseInt(sesi))
+        .where('mkId', '==', mkId)
+        .where('dosenId', '==', dosenId)
+        .get();
+      if (!existingSnap.empty) {
+        showAlert('error', '⚠️ Ujian sudah ada untuk kombinasi ini!');
+        return;
+      }
+    } catch(e) { console.error(e); }
+
+    const dosenData = dosenBahasaArab.find(d => d.id === dosenId);
+    const mkData = mkMap[mkId];
+
+    try {
+      await db.collection('ujianBulanan').add({
+        bulan, sesi: parseInt(sesi), mkId,
+        mkNama: mkData?.nama || '',
+        dosenId, dosenNama: dosenData?.nama || '',
+        totalSoal, bobot, status: 'aktif',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showAlert('success', '✅ Ujian berhasil dibuat!');
+      document.getElementById('mkId').value = '';
+      document.getElementById('dosenId').value = '';
+      loadUjian();
+    } catch(e) { showAlert('error', '❌ ' + e.message); }
+  };
+
+  // ============ LOAD DAFTAR UJIAN ============
+  async function loadUjian() {
+    try {
+      const snap = await db.collection('ujianBulanan').get();
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => {
+          if ((b.bulan || '') !== (a.bulan || '')) return (b.bulan || '').localeCompare(a.bulan || '');
+          return (a.sesi || 0) - (b.sesi || 0);
+        });
+      document.getElementById('totalUjian').textContent = list.length;
+
+      const container = document.getElementById('ujianTable');
+      if (!list.length) {
+        container.innerHTML = '<p style="text-align:center;padding:20px;color:var(--text-muted);">Belum ada ujian</p>';
+        return;
+      }
+
+      const bulanNama = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      let html = '<table><thead><tr><th>Bulan</th><th>Sesi</th><th>Matakuliah</th><th>Dosen</th><th>Soal</th><th>Bobot</th><th>Status</th><th>Aksi</th></tr></thead><tbody>';
+      list.forEach(u => {
+        const [thn, bln] = (u.bulan || '').split('-');
+        const labelBulan = bln ? `${bulanNama[parseInt(bln) - 1]} ${thn}` : u.bulan;
+        html += `<tr>
+          <td><strong>${labelBulan}</strong></td>
+          <td>Sesi ${u.sesi}</td>
+          <td>${u.mkNama || '-'}</td>
+          <td>${u.dosenNama || '-'}</td>
+          <td>${u.totalSoal}</td>
+          <td>${u.bobot}</td>
+          <td><span class="badge ${u.status === 'aktif' ? 'badge-active' : 'badge-inactive'}">${u.status === 'aktif' ? '✅ Aktif' : '❌ Nonaktif'}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline" onclick="toggleStatus('${u.id}', '${u.status}')">${u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}</button>
+            <button class="btn btn-sm btn-danger" onclick="hapusUjian('${u.id}')">🗑️</button>
+          </td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    } catch(e) { console.error(e); }
+  }
+
+  // ============ TOGGLE STATUS ============
+  window.toggleStatus = async function(id, status) {
+    try {
+      await db.collection('ujianBulanan').doc(id).update({ status: status === 'aktif' ? 'nonaktif' : 'aktif' });
+      loadUjian();
+    } catch(e) { console.error(e); }
+  };
+
+  // ============ HAPUS UJIAN ============
+  window.hapusUjian = async function(id) {
+    if (!confirm('Hapus ujian ini?')) return;
+    if (!confirm('Yakin? Nilai yang sudah diinput juga akan hilang!')) return;
+    try {
+      await db.collection('ujianBulanan').doc(id).delete();
+      const nSnap = await db.collection('nilaiUjianBulanan').where('ujianId', '==', id).get();
+      const batch = db.batch();
+      nSnap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      showAlert('success', '✅ Ujian dihapus!');
+      loadUjian();
+    } catch(e) { showAlert('error', '❌ ' + e.message); }
+  };
+
+  // ============ LOGOUT ============
+  window.logout = function() {
+    if (confirm('Keluar?')) {
+      try { auth.signOut(); } catch(e) {}
+      localStorage.removeItem('user');
+      window.location.href = '../../index.html';
+    }
+  };
+
+  // ============ INIT ============
+  loadTahun();
+  loadAllDosen();
+  loadMK();
+  loadUjian();
+  })();
+  </script>
+</body>
+</html>
