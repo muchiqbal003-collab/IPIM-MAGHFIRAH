@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Input Ujian Bulanan - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--red-light:#fce4ec;
+      --blue:#1565c0;--blue-light:#e3f2fd;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
+    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+    }
+
+    .info-box {
+      background: var(--blue-light); border-radius: var(--radius-sm);
+      padding: 12px 16px; font-size: 12px; color: var(--blue);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+
+    .warning-box {
+      background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm);
+      padding: 20px; text-align: center; color: #856404;
+    }
+
+    .santri-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      background: rgba(255,255,255,0.6); border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.5); margin-bottom: 6px;
+    }
+    .santri-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-light); color: var(--green-dark); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .santri-nama { flex: 1; font-size: 13px; font-weight: 600; }
+
+    .nilai-input {
+      width: 70px; padding: 8px; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; text-align: center; font-size: 14px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none;
+      background: white; transition: var(--transition);
+    }
+    .nilai-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+
+    .nilai-final {
+      font-size: 13px; font-weight: 800; color: var(--green-dark);
+      min-width: 50px; text-align: right;
+    }
+
+    .btn-simpan {
+      width: 100%; padding: 13px; border: none; border-radius: 40px;
+      background: linear-gradient(135deg, #004d40, #006644); color: white;
+      font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,61,51,0.3); margin-top: 12px;
+    }
+    .btn-simpan:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .ujian-card {
+      background: rgba(255,255,255,0.7); border-radius: var(--radius);
+      padding: 14px 16px; border: 1px solid rgba(255,255,255,0.6);
+      cursor: pointer; transition: var(--transition); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .ujian-card:hover { box-shadow: 0 4px 16px rgba(0,61,51,0.1); }
+    .ujian-card:active { transform: scale(0.98); }
+    .ujian-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .ujian-info { flex: 1; }
+    .ujian-info h4 { font-size: 13px; font-weight: 700; }
+    .ujian-info p { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
+    .toast.show { opacity: 1; }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 24px;
+      display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
+    .nav-item i { font-size: 20px; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
+    @media (max-width: 480px) { .content { padding: 10px; } }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>📝 Input Ujian Bulanan</h3>
+  </header>
+
+  <div class="content" id="content">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
+    <div class="nav-item active" onclick="goTo('input-ujian-bulanan.html')"><i class="fa-solid fa-pen"></i><span>Ujian</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif']);
+    if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
+
+    const nilaiState = {};
+    let selectedUjian = null;
+    let mhsList = [];
+    let isSaving = false;
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.className = 'toast show';
+      setTimeout(() => { el.className = 'toast'; }, 3000);
+    }
+
+    function getLocalDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    }
+
+    // ═══════════════════════════════════════
+    // CEK AKSES: HANYA DOSEN BAHASA ARAB
+    // ═══════════════════════════════════════
+    async function cekAksesDosenBahasaArab() {
+      const roles = user.roles || [user.role];
+
+      // 1. Cek dari roles (multi-role)
+      if (roles.includes('dosen-bahasa-arab')) return true;
+
+      // 2. Cek dari field spesialisasi di users
+      try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          const d = userDoc.data();
+          if (d.spesialisasi === 'bahasa-arab') return true;
+        }
+      } catch(e) { console.error(e); }
+
+      // 3. Cek dari koleksi dosen (spesialisasi)
+      try {
+        const dSnap = await db.collection('dosen').where('userId', '==', user.uid).get();
+        if (!dSnap.empty) {
+          const dData = dSnap.docs[0].data();
+          if (dData.spesialisasi === 'bahasa-arab') return true;
+        }
+      } catch(e) { console.error(e); }
+
+      // 4. Cek dari localStorage (foto/spesialisasi tersimpan)
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (storedUser.spesialisasi === 'bahasa-arab') return true;
+
+      return false;
+    }
+
+    // ═══ LOAD UJIAN LIST (HANYA YANG DITUGASKAN) ═══
+    async function loadUjianList() {
+      const container = document.getElementById('content');
+      container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Memuat ujian...</p>';
+
+      try {
+        const snap = await db.collection('ujianBulanan')
+          .where('dosenId', '==', user.uid)
+          .where('status', '==', 'aktif')
+          .get();
+        
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div class="warning-box">
+              <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+              <strong>Belum ada ujian yang ditugaskan untuk Anda.</strong>
+              <p style="margin-top:8px;font-size:12px;">Hubungi Operator Bahasa untuk membuatkan ujian.</p>
+            </div>`;
+          return;
+        }
+
+        const bulanNama = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        
+        let html = '<p style="font-size:13px;font-weight:700;margin-bottom:10px;">📋 Pilih Ujian untuk Diinput:</p>';
+        
+        list.forEach(u => {
+          const [thn, bln] = (u.bulan||'').split('-');
+          const labelBulan = bln ? `${bulanNama[parseInt(bln)-1]} ${thn}` : u.bulan;
+          html += `
+            <div class="ujian-card" onclick="pilihUjian('${u.id}')">
+              <div class="ujian-icon">📝</div>
+              <div class="ujian-info">
+                <h4>Ujian ${labelBulan} — Sesi ${u.sesi}</h4>
+                <p>Total Soal: ${u.totalSoal} · Bobot: ${u.bobot}</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color:var(--gray-600);"></i>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+      } catch(e) {
+        console.error(e);
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
+      }
+    }
+
+    // ═══ PILIH UJIAN ═══
+    window.pilihUjian = async function(ujianId) {
+      const container = document.getElementById('content');
+      container.innerHTML = '<p style="text-align:center;">Memuat mahasiswa...</p>';
+
+      try {
+        const doc = await db.collection('ujianBulanan').doc(ujianId).get();
+        if (!doc.exists) { container.innerHTML = '<div class="warning-box">Ujian tidak ditemukan</div>'; return; }
+        
+        selectedUjian = { id: ujianId, ...doc.data() };
+
+        // Ambil mahasiswa dari kelas yang terhubung dengan jadwal dosen ini
+        const jadwalSnap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
+        const kelasIds = new Set();
+        jadwalSnap.forEach(d => {
+          const j = d.data();
+          if (j.kelasIds) j.kelasIds.forEach(id => kelasIds.add(id));
+          if (j.kelasId) kelasIds.add(j.kelasId);
+        });
+
+        // Ambil mahasiswa dari semua kelas tersebut
+        mhsList = [];
+        for (const kelasId of kelasIds) {
+          const mSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
+          mSnap.forEach(d => { mhsList.push({ id: d.id, ...d.data() }); });
+        }
+
+        // Kalau kosong, ambil semua mahasiswa
+        if (mhsList.length === 0) {
+          const allSnap = await db.collection('mahasiswa').get();
+          mhsList = allSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+
+        // Hapus duplikat
+        mhsList = [...new Map(mhsList.map(m => [m.id, m])).values()];
+        mhsList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+
+        // Set default nilai kosong
+        mhsList.forEach(m => { nilaiState[m.id] = ''; });
+
+        // Cek nilai existing
+        const nSnap = await db.collection('nilaiUjianBulanan')
+          .where('ujianId', '==', ujianId)
+          .get();
+        nSnap.forEach(d => {
+          const data = d.data();
+          if (data.mahasiswaId) nilaiState[data.mahasiswaId] = data.benar || '';
+        });
+
+        renderInputForm();
+      } catch(e) {
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
+      }
+    };
+
+    // ═══ RENDER FORM INPUT ═══
+    function renderInputForm() {
+      const container = document.getElementById('content');
+      const u = selectedUjian;
+      const bobot = u.bobot || 100;
+      const totalSoal = u.totalSoal || 100;
+
+      let html = `
+        <div class="info-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>💡 Total Soal: <strong>${totalSoal}</strong> · Bobot: <strong>${bobot}</strong><br>
+          ➡️ Nilai akhir = benar × ${bobot} / ${totalSoal}</span>
+        </div>`;
+
+      mhsList.forEach((m, i) => {
+        html += `
+          <div class="santri-row">
+            <div class="santri-num">${i+1}</div>
+            <div class="santri-nama">${m.nama}</div>
+            <input type="number" class="nilai-input" id="nilai_${m.id}" 
+              value="${nilaiState[m.id]}" min="0" max="${totalSoal}" 
+              onchange="hitungNilai('${m.id}')" placeholder="Benar">
+            <div class="nilai-final" id="final_${m.id}">-</div>
+          </div>`;
+      });
+
+      html += `<button class="btn-simpan" id="btnSimpan" onclick="simpanNilai()"><i class="fa-solid fa-save"></i> Simpan Nilai</button>`;
+
+      container.innerHTML = html;
+
+      // Hitung ulang nilai yang sudah ada
+      mhsList.forEach(m => {
+        if (nilaiState[m.id] !== '') hitungNilai(m.id);
+      });
+    }
+
+    // ═══ HITUNG NILAI OTOMATIS ═══
+    window.hitungNilai = function(mhsId) {
+      const input = document.getElementById(`nilai_${mhsId}`);
+      const finalEl = document.getElementById(`final_${mhsId}`);
+      if (!input || !finalEl) return;
+
+      const benar = parseInt(input.value) || 0;
+      const u = selectedUjian;
+      const totalSoal = u.totalSoal || 100;
+      const bobot = u.bobot || 100;
+
+      // Konversi: benar × bobot / totalSoal
+      const final = Math.round((benar * bobot) / totalSoal);
+      finalEl.textContent = final;
+      nilaiState[mhsId] = benar;
+    };
+
+    // ═══ SIMPAN NILAI ═══
+    window.simpanNilai = async function() {
+      if (isSaving) return;
+      if (!selectedUjian) { showToast('Pilih ujian dulu!'); return; }
+
+      isSaving = true;
+      const btn = document.getElementById('btnSimpan');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
+        const batch = db.batch();
+        let count = 0;
+
+        for (const m of mhsList) {
+          const benar = parseInt(nilaiState[m.id] || '0');
+          if (benar <= 0) continue;
+
+          const u = selectedUjian;
+          const final = Math.round((benar * u.bobot) / u.totalSoal);
+
+          // Cek existing
+          const existingSnap = await db.collection('nilaiUjianBulanan')
+            .where('ujianId', '==', selectedUjian.id)
+            .where('mahasiswaId', '==', m.id)
+            .get();
+
+          const data = {
+            ujianId: selectedUjian.id,
+            mahasiswaId: m.id,
+            nama: m.nama,
+            nim: m.nim || '',
+            benar,
+            final,
+            dosenId: user.uid,
+            dosenNama: user.nama || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+
+          if (!existingSnap.empty) {
+            existingSnap.docs.forEach(d => batch.update(d.ref, data));
+          } else {
+            data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            batch.set(db.collection('nilaiUjianBulanan').doc(), data);
+          }
+          count++;
+        }
+
+        if (count === 0) {
+          showToast('⚠️ Tidak ada nilai untuk disimpan!');
+          return;
+        }
+
+        await batch.commit();
+        showToast(`✅ ${count} nilai berhasil disimpan!`);
+      } catch(e) {
+        showToast('❌ Gagal: ' + e.message);
+      } finally {
+        isSaving = false;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Nilai';
+      }
+    };
+
+    // ═══ INIT ═══
+    (async function init() {
+      // Cek akses dosen bahasa arab
+      const punyaAkses = await cekAksesDosenBahasaArab();
+      
+      if (!punyaAkses) {
+        document.getElementById('content').innerHTML = `
+          <div class="warning-box">
+            <i class="fa-solid fa-lock" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+            <strong>⚠️ Akses Dibatasi</strong>
+            <p style="margin-top:8px;font-size:12px;">Hanya <strong>Dosen Bahasa Arab</strong> yang bisa input nilai ujian bulanan.</p>
+          </div>`;
+        return;
+      }
+
+      await loadUjianList();
+    })();
+  </script>
+</body>
+</html>
