@@ -6,7 +6,7 @@
   <title>Dashboard Nilai Bulanan • IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
@@ -34,8 +34,7 @@
       --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
       --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
       --shadow-xl: 0 20px 40px rgba(0,0,0,0.12);
-      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.04), inset -2px -2px 5px rgba(255,255,255,0.8);
-      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-2xl: 28px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -58,7 +57,6 @@
       --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
       --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
       --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
-      --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.02);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,87 +70,29 @@
       overflow-x: hidden;
     }
 
-    .main-content {
-      flex: 1;
-      padding: 28px 32px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
-    }
-    .page-title h1 {
-      font-size: clamp(20px, 4vw, 26px); font-weight: 800;
-      color: var(--text-primary); letter-spacing: -0.5px;
-      display: flex; align-items: center; gap: 10px;
-    }
+    .main-content { flex: 1; padding: 28px 32px; min-height: 100vh; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+    .page-title h1 { font-size: clamp(20px, 4vw, 26px); font-weight: 800; display: flex; align-items: center; gap: 10px; }
     .page-title p { font-size: 13px; color: var(--text-secondary); margin-top: 3px; font-weight: 500; }
 
-    .btn {
-      padding: 10px 18px; border: none; border-radius: 40px;
-      font-size: 13px; font-weight: 600; font-family: inherit;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-      transition: var(--transition); white-space: nowrap;
-      background: var(--surface-glass-strong); backdrop-filter: blur(12px);
-      border: 1px solid var(--border-glass);
-      box-shadow: var(--shadow-md); color: var(--text-primary);
-    }
-    .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn { padding: 10px 18px; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition); white-space: nowrap; background: var(--surface-glass-strong); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); box-shadow: var(--shadow-md); color: var(--text-primary); }
     .btn:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
     .btn-outline { background: var(--surface-glass); }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-    .stat-card {
-      background: var(--surface-glass); backdrop-filter: blur(12px);
-      border-radius: var(--radius-lg); padding: 16px;
-      border: 1px solid var(--border-glass); text-align: center;
-    }
-    .stat-card .stat-value { font-size: 24px; font-weight: 800; }
-    .stat-card .stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-
-    .card {
-      background: var(--surface-glass); backdrop-filter: blur(28px);
-      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
-      border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden;
-    }
-    .card-header {
-      padding: 18px 24px; border-bottom: 1px solid var(--border-glass);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong);
-    }
+    .card { background: var(--surface-glass); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid var(--border-glass); margin-bottom: 20px; overflow: hidden; }
+    .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; background: var(--surface-glass-strong); }
     .card-header h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .card-body { padding: 20px 24px; }
+    .card-body { padding: 20px 24px; overflow-x: auto; }
 
     .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; }
     .form-group label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-    .form-group select {
-      padding: 10px 14px; border: 1.5px solid var(--border-glass);
-      border-radius: 40px; font-size: 13px; font-family: inherit;
-      background: var(--input-bg); color: var(--text-primary); outline: none; min-width: 180px;
-    }
+    .form-group select { padding: 10px 14px; border: 1.5px solid var(--border-glass); border-radius: 40px; font-size: 13px; font-family: inherit; background: var(--input-bg); color: var(--text-primary); outline: none; min-width: 180px; }
 
     .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .chart-wrap { position: relative; height: 250px; }
 
-    .top-list { display: flex; flex-direction: column; gap: 6px; }
-    .top-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 12px; background: var(--surface-glass);
-      border-radius: var(--radius-md); border: 1px solid var(--border-glass); font-size: 12px;
-    }
-    .top-rank {
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 12px; flex-shrink: 0;
-    }
-    .top-1 { background: #fef9c3; color: #854d0e; }
-    .top-2 { background: #f1f5f9; color: #475569; }
-    .top-3 { background: #fff7ed; color: #9a3412; }
-    .top-other { background: var(--gray-100); color: var(--text-muted); }
-
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
     .badge-mumtaz { background: #fef9c3; color: #854d0e; }
     .badge-jayyid-jiddan { background: #dcfce7; color: #166534; }
     .badge-jayyid { background: #dbeafe; color: #1e40af; }
@@ -164,81 +104,98 @@
     .gender-box .g-label { font-size: 10px; margin-top: 2px; }
     .gender-box .g-avg { font-size: 14px; font-weight: 700; margin-top: 4px; }
 
-    @media (max-width: 1024px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .chart-grid { grid-template-columns: 1fr; }
-    }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+    thead th { background: var(--table-header-bg); padding: 10px; font-size: 9px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; border-bottom: 2px solid var(--border-glass); text-align: center; }
+    tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border-glass); text-align: center; }
+    tbody tr:hover { background: var(--table-row-hover); }
+
+    .top-list { display: flex; flex-direction: column; gap: 6px; }
+    .top-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--surface-glass); border-radius: var(--radius-md); border: 1px solid var(--border-glass); font-size: 12px; }
+    .top-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
+    .top-1 { background: #fef9c3; color: #854d0e; }
+    .top-2 { background: #f1f5f9; color: #475569; }
+    .top-3 { background: #fff7ed; color: #9a3412; }
+    .top-other { background: var(--gray-100); color: var(--text-muted); }
+
+    @media (max-width: 1024px) { .chart-grid { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
       .main-content { padding: 16px 14px; }
       .topbar { margin-top: 50px; flex-direction: column; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       .chart-grid { grid-template-columns: 1fr; }
-      .stat-card .stat-value { font-size: 20px; }
-    }
-    @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body data-page="dashboard-nilai">
 
-  <!-- Sidebar Container -->
   <div id="sidebarContainer"></div>
-
-  <!-- Burger & Theme Toggle -->
   <button class="burger-btn" id="burgerToggle"><svg><use href="#icon-burger"/></svg></button>
   <button class="theme-toggle" id="themeToggle"><svg id="themeIcon"><use href="#icon-moon"/></svg></button>
 
-  <!-- Main Content -->
   <main class="main-content" id="mainContent">
     <div class="topbar">
       <div class="page-title">
         <h1>📊 Dashboard Nilai Ujian Bulanan</h1>
-        <p>Statistik nilai per kelas, gender, dan tren bulanan</p>
+        <p>Data dari input ujian bulanan • Per kelas, gender, tren, top 15</p>
       </div>
-      <button class="btn btn-outline" onclick="logout()">
-        <svg><use href="#icon-logout"/></svg> Keluar
-      </button>
+      <button class="btn btn-outline" onclick="logout()">🚪 Keluar</button>
     </div>
 
     <!-- FILTER -->
     <div class="card">
-      <div class="card-header"><h3>🔍 Filter Bulan</h3></div>
+      <div class="card-header"><h3>🔍 Filter Ujian</h3></div>
       <div class="card-body">
         <div class="filter-row">
           <div class="form-group">
-            <label>📅 Pilih Bulan</label>
-            <select id="dashFilterSesi" onchange="loadDashboard()">
-              <option value="">Semua Bulan</option>
+            <label>📝 Pilih Ujian</label>
+            <select id="filterUjian" onchange="loadDashboard()">
+              <option value="">Semua Ujian</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>🏫 Pilih Kelas</label>
+            <select id="filterKelas" onchange="loadDashboard()">
+              <option value="">Semua Kelas</option>
             </select>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- STATS -->
-    <div class="stats-grid" id="statsGrid"></div>
-
-    <!-- CHARTS -->
+    <!-- PREDIKAT SUMMARY -->
     <div class="card">
-      <div class="card-header"><h3>📈 Grafik Perbandingan</h3></div>
+      <div class="card-header"><h3>📊 Distribusi Predikat (Parameter Arab)</h3></div>
       <div class="card-body">
         <div class="chart-grid">
           <div>
-            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">📊 Perbandingan Antar Kelas</h4>
-            <div class="chart-wrap"><canvas id="chartKelas"></canvas></div>
+            <div class="chart-wrap"><canvas id="chartPredikat"></canvas></div>
           </div>
           <div>
-            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">📈 Tren Bulan ke Bulan</h4>
-            <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;background:#fef9c3;border-radius:12px;">
+                <span>ممتاز (Mumtaz)</span><strong style="color:#854d0e;">90-100</strong><span id="cMumtaz" style="font-size:20px;font-weight:800;">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;background:#dcfce7;border-radius:12px;">
+                <span>جيّد جدّا (Jayyid Jiddan)</span><strong style="color:#166534;">80-89</strong><span id="cJJ" style="font-size:20px;font-weight:800;">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;background:#dbeafe;border-radius:12px;">
+                <span>جيّد (Jayyid)</span><strong style="color:#1e40af;">70-79</strong><span id="cJayyid" style="font-size:20px;font-weight:800;">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;background:#fff7ed;border-radius:12px;">
+                <span>مقبول (Maqbul)</span><strong style="color:#9a3412;">60-69</strong><span id="cMaqbul" style="font-size:20px;font-weight:800;">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;background:#fee2e2;border-radius:12px;">
+                <span>راسب (Rasib)</span><strong style="color:#991b1b;">0-59</strong><span id="cRasib" style="font-size:20px;font-weight:800;">0</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- GENDER & TOP 15 -->
+    <!-- GENDER & KELAS -->
     <div class="card">
-      <div class="card-header"><h3>👥 Gender & Peringkat</h3></div>
+      <div class="card-header"><h3>👥 Perbandingan Gender & Kelas</h3></div>
       <div class="card-body">
         <div class="chart-grid">
           <div>
@@ -246,199 +203,237 @@
             <div id="genderStats"></div>
           </div>
           <div>
-            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">🏆 Top 15 Nilai Tertinggi</h4>
-            <div id="topList"></div>
+            <h4 style="font-size:12px;font-weight:700;margin-bottom:10px;">📊 Rata-rata per Kelas</h4>
+            <div class="chart-wrap"><canvas id="chartKelas"></canvas></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- TOP 15 -->
+    <div class="card">
+      <div class="card-header"><h3>🏆 Top 15 Nilai Tertinggi</h3></div>
+      <div class="card-body">
+        <div id="topList"></div>
+      </div>
+    </div>
+
+    <!-- TABEL RINCIAN -->
+    <div class="card">
+      <div class="card-header"><h3>📋 Rincian per Kelas</h3></div>
+      <div class="card-body">
+        <div class="table-responsive" id="kelasTable"></div>
       </div>
     </div>
   </main>
 
   <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/sidebar-bahasa.js"></script>
+
   <script>
-    (function() {
-    'use strict';
+  (function() {
+  'use strict';
 
-    let allKelas = [], allMahasiswa = [], allNilai = [];
-    let chartKelas = null, chartTrend = null;
+  let allKelas = [], allMahasiswa = [], allNilai = [], allUjian = [];
+  let chartKelas = null, chartPredikat = null;
 
-    const SESI = ['Bulan 1', 'Bulan 2', 'Bulan 3', 'Bulan 4'];
+  const PREDIKAT = [
+    { label: 'ممتاز', latin: 'Mumtaz', min: 90, max: 100, cls: 'badge-mumtaz', color: '#fde047' },
+    { label: 'جيّد جدّا', latin: 'Jayyid Jiddan', min: 80, max: 89, cls: 'badge-jayyid-jiddan', color: '#86efac' },
+    { label: 'جيّد', latin: 'Jayyid', min: 70, max: 79, cls: 'badge-jayyid', color: '#93c5fd' },
+    { label: 'مقبول', latin: 'Maqbul', min: 60, max: 69, cls: 'badge-maqbul', color: '#fdba74' },
+    { label: 'راسب', latin: 'Rasib', min: 0, max: 59, cls: 'badge-rasib', color: '#fca5a5' }
+  ];
 
-    function getPredikat(n) {
-      if (n >= 90) return { label: 'Mumtaz', cls: 'badge-mumtaz' };
-      if (n >= 80) return { label: 'Jayyid Jiddan', cls: 'badge-jayyid-jiddan' };
-      if (n >= 70) return { label: 'Jayyid', cls: 'badge-jayyid' };
-      if (n >= 60) return { label: 'Maqbul', cls: 'badge-maqbul' };
-      return { label: 'Rasib', cls: 'badge-rasib' };
+  function getPredikat(n) {
+    if (n >= 90) return PREDIKAT[0];
+    if (n >= 80) return PREDIKAT[1];
+    if (n >= 70) return PREDIKAT[2];
+    if (n >= 60) return PREDIKAT[3];
+    return PREDIKAT[4];
+  }
+
+  async function loadAllData() {
+    const [kelasSnap, mhsSnap, nilaiSnap, ujianSnap] = await Promise.all([
+      db.collection('kelas').get(),
+      db.collection('mahasiswa').get(),
+      db.collection('nilaiUjianBulanan').get(),
+      db.collection('ujianBulanan').get()
+    ]);
+
+    allKelas = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+    allMahasiswa = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allNilai = nilaiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allUjian = ujianSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Populate filter ujian
+    const ujianSel = document.getElementById('filterUjian');
+    ujianSel.innerHTML = '<option value="">Semua Ujian</option>';
+    const bulanNama = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    allUjian.sort((a, b) => (b.bulan || '').localeCompare(a.bulan || '')).forEach(u => {
+      const [thn, bln] = (u.bulan || '').split('-');
+      const label = bln ? `${bulanNama[parseInt(bln) - 1]} ${thn} - Sesi ${u.sesi}` : u.id;
+      ujianSel.innerHTML += `<option value="${u.id}">${label}</option>`;
+    });
+
+    // Populate filter kelas
+    const kelasSel = document.getElementById('filterKelas');
+    allKelas.forEach(k => {
+      kelasSel.innerHTML += `<option value="${k.id}">${k.nama || k.id}</option>`;
+    });
+
+    loadDashboard();
+  }
+
+  async function loadDashboard() {
+    const ujianId = document.getElementById('filterUjian').value;
+    const kelasId = document.getElementById('filterKelas').value;
+
+    let dataStats = allNilai;
+    if (ujianId) dataStats = dataStats.filter(n => n.ujianId === ujianId);
+    if (kelasId) {
+      const mhsIds = new Set(allMahasiswa.filter(m => m.kelasId === kelasId).map(m => m.id));
+      dataStats = dataStats.filter(n => mhsIds.has(n.mahasiswaId));
     }
 
-    async function loadAllData() {
-      const [kelasSnap, mhsSnap, nilaiSnap] = await Promise.all([
-        db.collection('kelas').get(),
-        db.collection('mahasiswa').get(),
-        db.collection('nilaiBulanan').get()
-      ]);
+    // Hitung predikat
+    const counts = { mumtaz: 0, jj: 0, jayyid: 0, maqbul: 0, rasib: 0 };
+    dataStats.forEach(n => {
+      const p = getPredikat(n.final || 0);
+      if (p.latin === 'Mumtaz') counts.mumtaz++;
+      else if (p.latin === 'Jayyid Jiddan') counts.jj++;
+      else if (p.latin === 'Jayyid') counts.jayyid++;
+      else if (p.latin === 'Maqbul') counts.maqbul++;
+      else counts.rasib++;
+    });
 
-      allKelas = kelasSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
-      allMahasiswa = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      allNilai = nilaiSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    document.getElementById('cMumtaz').textContent = counts.mumtaz;
+    document.getElementById('cJJ').textContent = counts.jj;
+    document.getElementById('cJayyid').textContent = counts.jayyid;
+    document.getElementById('cMaqbul').textContent = counts.maqbul;
+    document.getElementById('cRasib').textContent = counts.rasib;
 
-      // Populate filter sesi
-      const sesiSet = new Set(allNilai.map(n => n.sesi).filter(Boolean));
-      const dashSel = document.getElementById('dashFilterSesi');
-      dashSel.innerHTML = '<option value="">Semua Bulan</option>';
-      [...sesiSet].sort().forEach(s => {
-        dashSel.innerHTML += `<option value="${s}">${s}</option>`;
-      });
-      // Tambahkan sesi default jika belum ada
-      SESI.forEach(s => {
-        if (!sesiSet.has(s)) dashSel.innerHTML += `<option value="${s}">${s}</option>`;
-      });
+    // Chart Predikat
+    if (chartPredikat) chartPredikat.destroy();
+    chartPredikat = new Chart(document.getElementById('chartPredikat'), {
+      type: 'doughnut',
+      data: {
+        labels: ['ممتاز', 'جيّد جدّا', 'جيّد', 'مقبول', 'راسب'],
+        datasets: [{
+          data: [counts.mumtaz, counts.jj, counts.jayyid, counts.maqbul, counts.rasib],
+          backgroundColor: ['#fde047', '#86efac', '#93c5fd', '#fdba74', '#fca5a5'],
+          borderWidth: 2
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+    });
 
-      loadDashboard();
-    }
+    // Gender
+    const nilaiL = dataStats.filter(n => { const m = allMahasiswa.find(x => x.id === n.mahasiswaId); return m?.jk === 'L'; });
+    const nilaiP = dataStats.filter(n => { const m = allMahasiswa.find(x => x.id === n.mahasiswaId); return m?.jk === 'P'; });
+    const avgL = nilaiL.length ? Math.round(nilaiL.reduce((s, n) => s + (n.final || 0), 0) / nilaiL.length) : 0;
+    const avgP = nilaiP.length ? Math.round(nilaiP.reduce((s, n) => s + (n.final || 0), 0) / nilaiP.length) : 0;
 
-    async function loadDashboard() {
-      const sesi = document.getElementById('dashFilterSesi').value;
-      const nilaiFiltered = sesi ? allNilai.filter(n => n.sesi === sesi) : allNilai;
-
-      // Jika "Semua Bulan", ambil nilai terakhir per mahasiswa
-      let dataStats = nilaiFiltered;
-      if (!sesi) {
-        const lastMap = {};
-        allNilai.forEach(n => {
-          const idx = SESI.indexOf(n.sesi);
-          if (!lastMap[n.mahasiswaId] || idx > SESI.indexOf(lastMap[n.mahasiswaId].sesi)) {
-            lastMap[n.mahasiswaId] = n;
-          }
-        });
-        dataStats = Object.values(lastMap);
-      }
-
-      const totalMhs = allMahasiswa.length;
-      const totalDinilai = dataStats.length;
-      const avg = totalDinilai > 0 ? Math.round(dataStats.reduce((s, n) => s + (n.nilai || 0), 0) / totalDinilai) : 0;
-
-      const mumtaz = dataStats.filter(n => n.nilai >= 90).length;
-      const jj = dataStats.filter(n => n.nilai >= 80 && n.nilai < 90).length;
-      const jayyid = dataStats.filter(n => n.nilai >= 70 && n.nilai < 80).length;
-      const maqbul = dataStats.filter(n => n.nilai >= 60 && n.nilai < 70).length;
-      const rasib = dataStats.filter(n => n.nilai < 60).length;
-
-      document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card"><div class="stat-value">${totalMhs}</div><div class="stat-label">Total Mahasiswa</div></div>
-        <div class="stat-card"><div class="stat-value">${totalDinilai}</div><div class="stat-label">Sudah Dinilai</div></div>
-        <div class="stat-card"><div class="stat-value">${avg}</div><div class="stat-label">Rata-rata</div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#854d0e;">${mumtaz}</div><div class="stat-label">⭐ Mumtaz</div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#166534;">${jj}</div><div class="stat-label">🟢 Jayyid Jiddan</div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#1e40af;">${jayyid}</div><div class="stat-label">🔵 Jayyid</div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#9a3412;">${maqbul}</div><div class="stat-label">🟠 Maqbul</div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#991b1b;">${rasib}</div><div class="stat-label">🔴 Rasib</div></div>
-      `;
-
-      // Chart per kelas
-      const kelasLabels = allKelas.map(k => k.nama || k.id);
-      const kelasAvg = allKelas.map(k => {
-        const nilaiKelas = dataStats.filter(n => n.kelasId === k.id);
-        return nilaiKelas.length ? Math.round(nilaiKelas.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiKelas.length) : 0;
-      });
-      const kelasMumtaz = allKelas.map(k => dataStats.filter(n => n.kelasId === k.id && n.nilai >= 90).length);
-
-      if (chartKelas) chartKelas.destroy();
-      chartKelas = new Chart(document.getElementById('chartKelas'), {
-        type: 'bar',
-        data: {
-          labels: kelasLabels,
-          datasets: [
-            { label: 'Rata-rata', data: kelasAvg, backgroundColor: 'rgba(0,77,64,0.7)', borderRadius: 6 },
-            { label: 'Mumtaz', data: kelasMumtaz, backgroundColor: 'rgba(212,168,67,0.7)', borderRadius: 6 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, scales: { y: { beginAtZero: true } } }
-      });
-
-      // Chart tren
-      const trendAvg = SESI.map(s => {
-        const nilai = allNilai.filter(n => n.sesi === s);
-        return nilai.length ? Math.round(nilai.reduce((sum, n) => sum + (n.nilai || 0), 0) / nilai.length) : 0;
-      });
-
-      if (chartTrend) chartTrend.destroy();
-      chartTrend = new Chart(document.getElementById('chartTrend'), {
-        type: 'line',
-        data: {
-          labels: SESI,
-          datasets: [{
-            label: 'Rata-rata',
-            data: trendAvg,
-            borderColor: '#f97316',
-            backgroundColor: 'rgba(249,115,22,0.1)',
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: '#f97316'
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
-      });
-
-      // Gender
-      const nilaiL = dataStats.filter(n => {
-        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
-        return m?.jk === 'L';
-      });
-      const nilaiP = dataStats.filter(n => {
-        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
-        return m?.jk === 'P';
-      });
-      const avgL = nilaiL.length ? Math.round(nilaiL.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiL.length) : 0;
-      const avgP = nilaiP.length ? Math.round(nilaiP.reduce((s, n) => s + (n.nilai || 0), 0) / nilaiP.length) : 0;
-
-      document.getElementById('genderStats').innerHTML = `
-        <div style="display:flex;gap:12px;">
-          <div class="gender-box" style="background:var(--blue-light);">
-            <div class="g-value" style="color:#1e40af;">${nilaiL.length}</div>
-            <div class="g-label">Laki-laki</div>
-            <div class="g-avg" style="color:#3b82f6;">Avg: ${avgL}</div>
-          </div>
-          <div class="gender-box" style="background:#fce4ec;">
-            <div class="g-value" style="color:#c2185b;">${nilaiP.length}</div>
-            <div class="g-label">Perempuan</div>
-            <div class="g-avg" style="color:#ec4899;">Avg: ${avgP}</div>
-          </div>
+    document.getElementById('genderStats').innerHTML = `
+      <div style="display:flex;gap:12px;">
+        <div class="gender-box" style="background:var(--blue-light);">
+          <div class="g-value" style="color:#1e40af;">${nilaiL.length}</div>
+          <div class="g-label">Mahasiswa (Laki-laki)</div>
+          <div class="g-avg" style="color:#3b82f6;">Rata: ${avgL}</div>
         </div>
-      `;
+        <div class="gender-box" style="background:#fce4ec;">
+          <div class="g-value" style="color:#c2185b;">${nilaiP.length}</div>
+          <div class="g-label">Mahasiswi (Perempuan)</div>
+          <div class="g-avg" style="color:#ec4899;">Rata: ${avgP}</div>
+        </div>
+      </div>`;
 
-      // Top 15
-      const sorted = [...dataStats].sort((a, b) => (b.nilai || 0) - (a.nilai || 0)).slice(0, 15);
-      const topHtml = sorted.map((n, idx) => {
-        const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
-        const p = getPredikat(n.nilai || 0);
-        const rankClass = idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : 'top-other';
-        return `<div class="top-item">
-          <span class="top-rank ${rankClass}">${idx + 1}</span>
-          <span style="flex:1;font-weight:600;">${m?.nama || n.nama || '-'}</span>
-          <span style="color:var(--text-muted);">${m?.kelasNama || '-'}</span>
-          <span style="font-weight:800;">${n.nilai || 0}</span>
-          <span class="badge ${p.cls}">${p.label}</span>
-        </div>`;
-      }).join('');
-      document.getElementById('topList').innerHTML = topHtml || '<p style="text-align:center;color:var(--text-muted);">Belum ada data</p>';
+    // Chart per Kelas
+    const kelasLabels = allKelas.map(k => k.nama || k.id);
+    const kelasAvg = allKelas.map(k => {
+      const mhsIds = new Set(allMahasiswa.filter(m => m.kelasId === k.id).map(m => m.id));
+      const nilaiKelas = dataStats.filter(n => mhsIds.has(n.mahasiswaId));
+      return nilaiKelas.length ? Math.round(nilaiKelas.reduce((s, n) => s + (n.final || 0), 0) / nilaiKelas.length) : 0;
+    });
+
+    if (chartKelas) chartKelas.destroy();
+    chartKelas = new Chart(document.getElementById('chartKelas'), {
+      type: 'bar',
+      data: {
+        labels: kelasLabels,
+        datasets: [{ label: 'Rata-rata', data: kelasAvg, backgroundColor: 'rgba(0,77,64,0.7)', borderRadius: 6 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+
+    // Top 15
+    const sorted = [...dataStats].sort((a, b) => (b.final || 0) - (a.final || 0)).slice(0, 15);
+    const topHtml = sorted.map((n, idx) => {
+      const m = allMahasiswa.find(x => x.id === n.mahasiswaId);
+      const p = getPredikat(n.final || 0);
+      const rankClass = idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : 'top-other';
+      return `<div class="top-item">
+        <span class="top-rank ${rankClass}">${idx + 1}</span>
+        <span style="flex:1;font-weight:600;">${m?.nama || n.nama || '-'}</span>
+        <span style="font-weight:800;">${n.final || 0}</span>
+        <span class="badge ${p.cls}">${p.label}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('topList').innerHTML = topHtml || '<p style="text-align:center;color:var(--text-muted);">Belum ada data</p>';
+
+    // Tabel Rincian per Kelas
+    let tableHtml = '<table><thead><tr><th>Kelas</th><th>Laki</th><th>Perempuan</th><th>Total</th><th>Rata²</th><th>ممتاز</th><th>جيّد جدّا</th><th>جيّد</th><th>مقبول</th><th>راسب</th></tr></thead><tbody>';
+    
+    allKelas.forEach(k => {
+      const mhsIds = new Set(allMahasiswa.filter(m => m.kelasId === k.id).map(m => m.id));
+      const nilaiKelas = dataStats.filter(n => mhsIds.has(n.mahasiswaId));
+      const nilaiL = nilaiKelas.filter(n => { const m = allMahasiswa.find(x => x.id === n.mahasiswaId); return m?.jk === 'L'; });
+      const nilaiP = nilaiKelas.filter(n => { const m = allMahasiswa.find(x => x.id === n.mahasiswaId); return m?.jk === 'P'; });
+      const avg = nilaiKelas.length ? Math.round(nilaiKelas.reduce((s, n) => s + (n.final || 0), 0) / nilaiKelas.length) : 0;
+
+      let m = 0, jj = 0, j = 0, mq = 0, r = 0;
+      nilaiKelas.forEach(n => {
+        const p = getPredikat(n.final || 0);
+        if (p.latin === 'Mumtaz') m++;
+        else if (p.latin === 'Jayyid Jiddan') jj++;
+        else if (p.latin === 'Jayyid') j++;
+        else if (p.latin === 'Maqbul') mq++;
+        else r++;
+      });
+
+      tableHtml += `<tr>
+        <td><strong>${k.nama || k.id}</strong></td>
+        <td>${nilaiL.length}</td>
+        <td>${nilaiP.length}</td>
+        <td>${nilaiKelas.length}</td>
+        <td><strong>${avg}</strong></td>
+        <td>${m}</td>
+        <td>${jj}</td>
+        <td>${j}</td>
+        <td>${mq}</td>
+        <td>${r}</td>
+      </tr>`;
+    });
+
+    tableHtml += '</tbody></table>';
+    document.getElementById('kelasTable').innerHTML = tableHtml;
+  }
+
+  window.logout = function() {
+    if (confirm('Keluar?')) {
+      try { auth.signOut(); } catch(e) {}
+      localStorage.removeItem('user');
+      window.location.href = '../../index.html';
     }
+  };
 
-    window.logout = function() {
-      if (confirm('Keluar?')) {
-        try { auth.signOut(); } catch(e) {}
-        localStorage.removeItem('user');
-        window.location.href = '../../index.html';
-      }
-    };
-
-    loadAllData();
-    })();
+  loadAllData();
+  })();
   </script>
 </body>
 </html>
