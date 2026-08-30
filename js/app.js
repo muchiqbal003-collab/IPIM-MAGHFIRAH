@@ -56,10 +56,10 @@
 
     // Cek role aktif dari localStorage
     const roleAktif = localStorage.getItem('roleAktif');
-    const userRole = roleAktif || user.role || 'umum';
+    const userRole = roleAktif || user.role || 'duty-lecturer';
 
     // Cek semua roles yang dimiliki user
-    const allRoles = user.roles || [user.role || 'umum'];
+    const allRoles = user.roles || [user.role || 'duty-lecturer'];
 
     // Cek apakah user punya akses
     const hasAccess = allRoles.some(r => allowedRoles.includes(r));
@@ -157,11 +157,7 @@
     window.addEventListener('load', initLanguage);
   }
 
-  // ============================================
-  // LOAD PIM-BOT AI
-  // ============================================
   
-
   console.log('✅ IPIM App siap!');
   console.log('👤 User:', getUser());
   console.log('📅 Hari ini:', formatTanggal(new Date()));
