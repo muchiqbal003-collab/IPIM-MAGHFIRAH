@@ -12,8 +12,7 @@
     :root {
       --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
       --green-light:#e8f5e9;--green-pale:#f0faf5;
-      --gold:#f5c842;--gold-light:#fffbee;
-      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gold:#f5c842;--white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
       --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
       --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
       --orange:#f57c00;--orange-light:#fff3e0;
@@ -39,9 +38,7 @@
       background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
       color: white; font-size: 16px; width: 36px; height: 36px;
       border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: var(--transition);
     }
-    .btn-back:active { transform: scale(0.9); }
     .header-info { flex: 1; }
     .header-info h3 { font-size: 16px; font-weight: 700; }
     .header-info p { font-size: 11px; opacity: 0.75; margin-top: 1px; }
@@ -69,16 +66,56 @@
       width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-200);
       border-radius: var(--radius-sm); font-size: 13px;
       font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
-      color: var(--gray-800); transition: var(--transition);
       appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 9L1 4h10z' fill='%23666'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       padding-right: 36px;
     }
-    .form-group select:focus {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(0,168,89,0.1);
+    .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+
+    /* JP Slots */
+    .jp-slot-list { display: flex; flex-direction: column; gap: 6px; }
+    .jp-slot {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .jp-slot:hover { background: rgba(0,168,89,0.05); border-color: var(--green); }
+    .jp-slot.sudah { opacity: 0.5; cursor: not-allowed; background: var(--green-light); border-color: #c8e6c9; }
+    .jp-slot.sudah:hover { background: var(--green-light); }
+    .jp-slot input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .jp-slot.sudah input[type="checkbox"] { cursor: not-allowed; }
+    .jp-info { flex: 1; }
+    .jp-label { font-size: 12px; font-weight: 700; color: var(--green-dark); }
+    .jp-waktu { font-size: 10px; color: var(--gray-600); }
+    .jp-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .jp-badge.sudah { background: #c8e6c9; color: #1b5e20; }
+    .jp-badge.belum { background: var(--orange-light); color: #e65100; }
+
+    /* Mahasiswa */
+    .mahasiswa-list {
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 250px; overflow-y: auto; padding-right: 4px;
+    }
+    .mahasiswa-list::-webkit-scrollbar { width: 4px; }
+    .mahasiswa-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+    .mhs-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .mhs-item:hover { background: rgba(0,168,89,0.05); }
+    .mhs-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .mhs-item span { flex: 1; font-size: 12px; font-weight: 500; }
+    .mhs-item .nim { font-size: 10px; color: var(--gray-600); }
+
+    .summary-info {
+      background: var(--blue-light); border-radius: var(--radius-sm);
+      padding: 10px 14px; font-size: 11px; color: #0d47a1;
+      margin-bottom: 10px; border-left: 3px solid var(--blue);
     }
 
     .status-box {
@@ -87,70 +124,26 @@
       align-items: center; gap: 8px;
     }
     .status-box.show { display: flex; }
-    .status-box.sudah {
-      background: var(--green-light); color: #1b5e20;
-      border: 1px solid #c8e6c9;
-    }
-    .status-box.belum {
-      background: var(--orange-light); color: #e65100;
-      border: 1px solid #ffe0b2;
-    }
+    .status-box.sudah { background: var(--green-light); color: #1b5e20; border: 1px solid #c8e6c9; }
+    .status-box.belum { background: var(--orange-light); color: #e65100; border: 1px solid #ffe0b2; }
 
-    .info-box {
-      background: var(--blue-light); border-radius: var(--radius-sm);
-      padding: 10px 14px; font-size: 11px; color: #0d47a1;
-      display: none; margin-bottom: 10px; border-left: 3px solid var(--blue);
-    }
-    .info-box.show { display: block; }
-
-    .mahasiswa-list {
-      display: flex; flex-direction: column; gap: 6px;
-      max-height: 280px; overflow-y: auto; padding-right: 4px;
-    }
-    .mahasiswa-list::-webkit-scrollbar { width: 4px; }
-    .mahasiswa-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
-
-    .mhs-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
-      cursor: pointer; border: 1px solid rgba(255,255,255,0.5);
-      transition: all 0.2s;
-    }
-    .mhs-item:hover { background: rgba(0,168,89,0.05); border-color: var(--green); }
-    .mhs-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
-    .mhs-item span { flex: 1; font-size: 12px; font-weight: 500; }
-    .mhs-item .nim { font-size: 10px; color: var(--gray-600); }
-
-    .btn-primary {
-      width: 100%; padding: 13px; justify-content: center;
-      background: linear-gradient(135deg, #004d40, #006644); color: white;
-      border: none; border-radius: 40px; font-size: 13px; font-weight: 700;
-      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
-      margin-top: 8px; display: flex; align-items: center; gap: 8px;
-      box-shadow: 0 4px 12px rgba(0,61,51,0.25);
-      transition: var(--transition);
-    }
-    .btn-primary:hover { box-shadow: 0 6px 20px rgba(0,61,51,0.35); }
-    .btn-primary:active { transform: scale(0.97); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-
-    .alert {
-      padding: 12px 16px; border-radius: var(--radius-sm);
-      font-size: 13px; display: none; font-weight: 600;
-    }
-    .alert-success {
-      background: var(--green-light); color: #1b5e20;
-      border-left: 4px solid var(--green);
-    }
-    .alert-error {
-      background: #fce4ec; color: #b71c1c;
-      border-left: 4px solid var(--red);
-    }
+    .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; font-weight: 600; }
+    .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
+    .alert-error { background: #fce4ec; color: #b71c1c; border-left: 4px solid var(--red); }
 
     .btn-simpan-wrap {
       position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; z-index: 50;
     }
+    .btn-primary {
+      width: 100%; padding: 13px; justify-content: center;
+      background: linear-gradient(135deg, #004d40, #006644); color: white;
+      border: none; border-radius: 40px; font-size: 13px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,61,51,0.25);
+    }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -166,14 +159,11 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600);
       cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+      transition: all 0.3s; position: relative;
     }
-    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
+    .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
-    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
-
-    @media (max-width: 480px) { .content { padding: 10px; } }
+    .nav-item.active i { color: var(--green); }
   </style>
 </head>
 <body>
@@ -182,7 +172,7 @@
     <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
     <div class="header-info">
       <h3>⏰ Absen Susulan</h3>
-      <p>Isi absensi untuk 7 hari terakhir</p>
+      <p>Pilih JP yang mau di-absensi</p>
     </div>
   </header>
 
@@ -205,11 +195,14 @@
         <select id="mkId" onchange="onMkChange()"><option value="">Pilih Mata Kuliah...</option></select>
       </div>
 
+      <!-- JP SLOTS -->
+      <div class="form-group" id="jpSlotGroup" style="display:none;">
+        <label>🔢 Pilih JP yang Mau Di-absensi</label>
+        <div class="jp-slot-list" id="jpSlotList"></div>
+      </div>
+
       <!-- STATUS -->
       <div class="status-box" id="statusBox"></div>
-
-      <!-- INFO JP -->
-      <div class="info-box" id="infoJP"></div>
 
       <!-- MAHASISWA -->
       <div class="form-group" id="mhsFormGroup" style="display:none;">
@@ -245,10 +238,10 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    let selectedJadwal = null;
+    let selectedMK = null;
     let allMahasiswa = [];
-    let sudahAbsen = false;
-    let allJadwalData = [];
+    let jpSlots = [];
+    let absenStatus = {};
 
     function showAlert(type, text) {
       const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
@@ -256,13 +249,11 @@
       setTimeout(() => el.style.display = 'none', 3000);
     }
 
-    // ═══ HELPER: Tanggal WIB ═══
     function getWIBDate(d) {
       const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
       return new Intl.DateTimeFormat('en-CA', options).format(d);
     }
 
-    // ═══ HELPER: Nama hari dari string tanggal ═══
     function getDayNameFromDate(dateStr) {
       const [y, m, d] = dateStr.split('-').map(Number);
       const date = new Date(y, m - 1, d);
@@ -270,29 +261,21 @@
       return dayNames[date.getDay()];
     }
 
-    // ═══ LOAD TANGGAL 7 HARI MUNDUR (WIB) ═══
+    // ═══ LOAD TANGGAL ═══
     function loadTanggal() {
       const sel = document.getElementById('tanggalAbsen');
       sel.innerHTML = '';
-      
       for (let i = 0; i < 7; i++) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        
         const dateStr = getWIBDate(d);
-        
         const o = document.createElement('option');
         o.value = dateStr;
-        o.textContent = d.toLocaleDateString('id-ID', { 
-          timeZone: 'Asia/Jakarta',
-          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
-        });
-        
+        o.textContent = d.toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         if (i === 0) o.textContent += ' (Hari Ini)';
         if (i === 1) o.textContent += ' (Kemarin)';
         sel.appendChild(o);
       }
-      
       loadJadwal();
     }
 
@@ -303,13 +286,11 @@
 
       try {
         const snap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
-        allJadwalData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const allJadwal = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        const jadwalList = allJadwalData.filter(j => {
-          const jadwalHari = (j.hari || '').toLowerCase().trim();
-          return jadwalHari === dayName;
-        });
+        const jadwalList = allJadwal.filter(j => (j.hari || '').toLowerCase().trim() === dayName);
 
+        // Group by MK
         const grouped = {};
         jadwalList.forEach(j => {
           const key = `${j.mkId}_${j.kelasId}`;
@@ -319,30 +300,34 @@
               mkNama: j.mkNama || '-',
               kelasId: j.kelasId || '',
               kelasNama: j.kelasNama || '-',
-              totalJP: 0,
-              jadwalIds: []
+              jpList: []
             };
           }
-          grouped[key].totalJP += (j.jp || j.sks || 1);
-          grouped[key].jadwalIds.push(j.id);
+          const jp = j.jamKe || j.jp || 1;
+          grouped[key].jpList.push({
+            jamKe: parseInt(jp),
+            waktu: j.waktu || '',
+            jadwalId: j.id
+          });
         });
 
-        const jadwalGabungan = Object.values(grouped);
-        const sel = document.getElementById('mkId');
-        sel.innerHTML = '<option value="">Pilih Mata Kuliah...</option>';
+        // Urutkan JP
+        Object.values(grouped).forEach(g => {
+          g.jpList.sort((a,b) => a.jamKe - b.jamKe);
+          g.totalJP = g.jpList.length;
+        });
 
-        jadwalGabungan.forEach(g => {
+        const mkSel = document.getElementById('mkId');
+        mkSel.innerHTML = '<option value="">Pilih Mata Kuliah...</option>';
+        
+        Object.values(grouped).forEach(g => {
           const o = document.createElement('option');
           o.value = g.mkId;
           o.textContent = `${g.mkNama} — ${g.kelasNama} (${g.totalJP} JP)`;
-          o.setAttribute('data-totaljp', g.totalJP);
-          o.setAttribute('data-mknama', g.mkNama);
-          o.setAttribute('data-mkid', g.mkId);
-          o.setAttribute('data-kelasid', g.kelasId);
-          sel.appendChild(o);
+          o.setAttribute('data-mkdata', JSON.stringify(g));
+          mkSel.appendChild(o);
         });
 
-        console.log('✅ Jadwal:', jadwalGabungan.length, '| Hari:', dayName);
         resetForm();
       } catch(e) { console.error('❌ Gagal load jadwal:', e); }
     }
@@ -350,80 +335,87 @@
     function resetForm() {
       document.getElementById('statusBox').classList.remove('show');
       document.getElementById('statusBox').className = 'status-box';
-      document.getElementById('infoJP').classList.remove('show');
+      document.getElementById('jpSlotGroup').style.display = 'none';
+      document.getElementById('jpSlotList').innerHTML = '';
       document.getElementById('mhsFormGroup').style.display = 'none';
       document.getElementById('mhsList').innerHTML = '';
       document.getElementById('btnSimpan').disabled = true;
-      sudahAbsen = false;
+      jpSlots = [];
+      absenStatus = {};
     }
 
-    window.onTanggalChange = function() {
-      loadJadwal();
-    };
+    window.onTanggalChange = function() { loadJadwal(); };
 
     // ═══ SAAT MK DIPILIH ═══
     window.onMkChange = async function() {
       const sel = document.getElementById('mkId');
-      const statusBox = document.getElementById('statusBox');
-      const infoBox = document.getElementById('infoJP');
+      const jpSlotGroup = document.getElementById('jpSlotGroup');
+      const jpSlotList = document.getElementById('jpSlotList');
       const mhsFormGroup = document.getElementById('mhsFormGroup');
       const btnSimpan = document.getElementById('btnSimpan');
+      const statusBox = document.getElementById('statusBox');
 
-      if (!sel.value) {
-        resetForm();
-        return;
-      }
+      if (!sel.value) { resetForm(); return; }
 
-      const totalJP = sel.options[sel.selectedIndex].getAttribute('data-totaljp');
-      const mkNama = sel.options[sel.selectedIndex].getAttribute('data-mknama');
-      const mkId = sel.options[sel.selectedIndex].getAttribute('data-mkid');
-      const kelasId = sel.options[sel.selectedIndex].getAttribute('data-kelasid');
+      const mkData = JSON.parse(sel.options[sel.selectedIndex].getAttribute('data-mkdata'));
+      selectedMK = mkData;
+      jpSlots = mkData.jpList;
+
       const tanggal = document.getElementById('tanggalAbsen').value;
 
-      selectedJadwal = { totalJP: parseInt(totalJP), mkNama, mkId, kelasId };
-
-      if (parseInt(totalJP) > 1) {
-        infoBox.innerHTML = `✅ <strong>${totalJP} JP gabungan</strong> — ${mkNama}.`;
-        infoBox.classList.add('show');
-      } else {
-        infoBox.classList.remove('show');
-      }
-
+      // Cek absen existing per JP
       try {
         const snap = await db.collection('absensi')
           .where('dosenId', '==', user.uid)
           .where('tanggal', '==', tanggal)
           .get();
-
+        
         const absenDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        const mkAbsen = absenDocs.filter(a => {
-          const absenMk = (a.mkId || a.mapelId || a.matkulId || a.mk || '').toString().toLowerCase();
-          const jadwalMk = (mkId || '').toString().toLowerCase();
-          const jadwalNama = (mkNama || '').toLowerCase();
-          return absenMk === jadwalMk || absenMk === jadwalNama;
+        
+        // Tandai JP yang sudah absen
+        absenStatus = {};
+        jpSlots.forEach(jp => {
+          const sudah = absenDocs.some(a => 
+            (a.mkId === mkData.mkId || a.mapelId === mkData.mkId) && 
+            a.jamKe === jp.jamKe
+          );
+          absenStatus[jp.jamKe] = sudah;
         });
 
-        if (mkAbsen.length > 0) {
-          sudahAbsen = true;
-          statusBox.className = 'status-box sudah show';
-          statusBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> ✅ Sudah absen pada tanggal ini.';
-          mhsFormGroup.style.display = 'none';
-          btnSimpan.disabled = true;
-        } else {
-          sudahAbsen = false;
-          statusBox.className = 'status-box belum show';
-          statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen — pilih mahasiswa di bawah.';
-          mhsFormGroup.style.display = 'block';
-          btnSimpan.disabled = false;
-          await loadMahasiswa(kelasId);
-        }
-      } catch(e) {
-        statusBox.className = 'status-box belum show';
-        statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen.';
+        // Render JP slots
+        jpSlotList.innerHTML = jpSlots.map(jp => {
+          const sudah = absenStatus[jp.jamKe];
+          return `
+            <label class="jp-slot ${sudah ? 'sudah' : ''}">
+              <input type="checkbox" class="jp-check" value="${jp.jamKe}" ${sudah ? 'disabled' : ''} onchange="onJPToggle()">
+              <div class="jp-info">
+                <div class="jp-label">JP ${jp.jamKe} ${jp.waktu ? '· ' + jp.waktu : ''}</div>
+              </div>
+              <span class="jp-badge ${sudah ? 'sudah' : 'belum'}">${sudah ? '✅ Sudah' : '⚠️ Belum'}</span>
+            </label>
+          `;
+        }).join('');
+
+        jpSlotGroup.style.display = 'block';
+        mhsFormGroup.style.display = 'none';
+        btnSimpan.disabled = true;
+        statusBox.classList.remove('show');
+      } catch(e) { console.error(e); }
+    };
+
+    // ═══ TOGGLE JP CHECKBOX ═══
+    window.onJPToggle = function() {
+      const checkedJPs = [...document.querySelectorAll('.jp-check:checked')].map(cb => parseInt(cb.value));
+      const mhsFormGroup = document.getElementById('mhsFormGroup');
+      const btnSimpan = document.getElementById('btnSimpan');
+
+      if (checkedJPs.length > 0) {
         mhsFormGroup.style.display = 'block';
         btnSimpan.disabled = false;
-        await loadMahasiswa(kelasId);
+        loadMahasiswa(selectedMK.kelasId);
+      } else {
+        mhsFormGroup.style.display = 'none';
+        btnSimpan.disabled = true;
       }
     };
 
@@ -434,18 +426,10 @@
 
       try {
         let snap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
-
-        if (snap.empty) {
-          snap = await db.collection('mahasiswa').limit(100).get();
-        }
+        if (snap.empty) snap = await db.collection('mahasiswa').limit(100).get();
 
         allMahasiswa = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
-
-        if (allMahasiswa.length === 0) {
-          container.innerHTML = '<p style="text-align:center;color:var(--red);">Tidak ada mahasiswa.</p>';
-          return;
-        }
+          .sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
         container.innerHTML = allMahasiswa.map(m => `
           <label class="mhs-item">
@@ -454,22 +438,19 @@
           </label>
         `).join('');
       } catch(e) {
-        container.innerHTML = '<p style="text-align:center;color:var(--red);">Gagal memuat.</p>';
+        container.innerHTML = '<p style="color:red;">Gagal memuat.</p>';
       }
     }
 
     // ═══ SIMPAN ═══
     window.simpanAbsenSusulan = async function() {
-      if (sudahAbsen) {
-        showAlert('error', '❌ Anda sudah absen pada tanggal ini!');
-        return;
-      }
-
       const tanggal = document.getElementById('tanggalAbsen').value;
-      if (!selectedJadwal) { showAlert('error', 'Pilih mata kuliah!'); return; }
+      const checkedJPs = [...document.querySelectorAll('.jp-check:checked')].map(cb => parseInt(cb.value));
+      const checkedMhs = document.querySelectorAll('.mhs-check:checked');
 
-      const checked = document.querySelectorAll('.mhs-check:checked');
-      if (checked.length === 0) { showAlert('error', 'Pilih minimal 1 mahasiswa!'); return; }
+      if (!selectedMK) { showAlert('error', 'Pilih mata kuliah!'); return; }
+      if (checkedJPs.length === 0) { showAlert('error', 'Pilih minimal 1 JP!'); return; }
+      if (checkedMhs.length === 0) { showAlert('error', 'Pilih minimal 1 mahasiswa!'); return; }
 
       const btn = document.getElementById('btnSimpan');
       btn.disabled = true;
@@ -477,24 +458,35 @@
 
       try {
         const batch = db.batch();
-        checked.forEach(c => {
-          const ref = db.collection('absensi').doc();
-          batch.set(ref, {
-            mahasiswaId: c.value,
-            dosenId: user.uid,
-            dosenNama: user.nama || '-',
-            mkId: selectedJadwal.mkId,
-            mapelId: selectedJadwal.mkId,
-            mkNama: selectedJadwal.mkNama,
-            jp: selectedJadwal.totalJP,
-            status: 'hadir',
-            tanggal: tanggal,
-            keterangan: 'Absen susulan',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        let totalData = 0;
+
+        checkedJPs.forEach(jamKe => {
+          const jpData = jpSlots.find(j => j.jamKe === jamKe);
+          checkedMhs.forEach(c => {
+            const ref = db.collection('absensi').doc();
+            batch.set(ref, {
+              mahasiswaId: c.value,
+              dosenId: user.uid,
+              dosenNama: user.nama || '-',
+              mkId: selectedMK.mkId,
+              mapelId: selectedMK.mkId,
+              mkNama: selectedMK.mkNama,
+              kelasId: selectedMK.kelasId,
+              kelasNama: selectedMK.kelasNama,
+              jamKe: jamKe,
+              waktu: jpData?.waktu || '',
+              jp: 1,
+              status: 'hadir',
+              tanggal: tanggal,
+              keterangan: 'Absen susulan',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            totalData++;
           });
         });
+
         await batch.commit();
-        showAlert('success', `✅ Absen susulan disimpan! ${checked.length} mahasiswa hadir.`);
+        showAlert('success', `✅ ${checkedMhs.length} mahasiswa × ${checkedJPs.length} JP = ${totalData} data tersimpan!`);
         await onMkChange();
       } catch(e) {
         showAlert('error', '❌ Gagal: ' + e.message);
