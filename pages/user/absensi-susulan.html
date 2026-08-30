@@ -14,7 +14,7 @@
       --green-light:#e8f5e9;--green-pale:#f0faf5;
       --gold:#f5c842;--gold-light:#fffbee;
       --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
-      --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
       --red:#e53935;--blue:#1565c0;--blue-light:#e3f2fd;
       --orange:#f57c00;--orange-light:#fff3e0;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
@@ -28,42 +28,73 @@
       -webkit-tap-highlight-color: transparent; min-height: 100vh;
     }
 
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
-    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,61,51,0.35);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: white; font-size: 16px; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .btn-back:active { transform: scale(0.9); }
+    .header-info { flex: 1; }
+    .header-info h3 { font-size: 16px; font-weight: 700; }
+    .header-info p { font-size: 11px; opacity: 0.75; margin-top: 1px; }
 
-    .content { padding: 14px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .content { padding: 14px; max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
     .card {
       background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
-      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 18px; border: 1px solid rgba(255, 255, 255, 0.6);
       box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
     }
-    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .card-title {
+      font-size: 14px; font-weight: 700; color: var(--green-dark);
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title i { color: var(--green); font-size: 16px; }
 
-    .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      font-size: 11px; font-weight: 600; color: var(--gray-600);
+      display: block; margin-bottom: 5px;
+    }
     .form-group select {
-      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-200);
       border-radius: var(--radius-sm); font-size: 13px;
       font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
+      color: var(--gray-800); transition: var(--transition);
       appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 9L1 4h10z' fill='%23666'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 34px;
+      background-position: right 14px center;
+      padding-right: 36px;
     }
-    .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+    .form-group select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0,168,89,0.1);
+    }
 
     .status-box {
-      display: none; padding: 10px 14px; border-radius: var(--radius-sm);
+      display: none; padding: 12px 14px; border-radius: var(--radius-sm);
       font-size: 12px; font-weight: 600; margin-bottom: 12px;
       align-items: center; gap: 8px;
     }
     .status-box.show { display: flex; }
-    .status-box.sudah { background: var(--green-light); color: #1b5e20; border: 1px solid #c8e6c9; }
-    .status-box.belum { background: var(--orange-light); color: #e65100; border: 1px solid #ffe0b2; }
+    .status-box.sudah {
+      background: var(--green-light); color: #1b5e20;
+      border: 1px solid #c8e6c9;
+    }
+    .status-box.belum {
+      background: var(--orange-light); color: #e65100;
+      border: 1px solid #ffe0b2;
+    }
 
     .info-box {
       background: var(--blue-light); border-radius: var(--radius-sm);
@@ -72,24 +103,87 @@
     }
     .info-box.show { display: block; }
 
-    .mahasiswa-list { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; }
-    .mhs-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.6); border-radius: var(--radius-sm); cursor: pointer; border: 1px solid rgba(255,255,255,0.5); transition: all 0.2s; }
-    .mhs-item:hover { background: rgba(0,168,89,0.05); }
-    .mhs-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); }
-    .mhs-item span { flex: 1; font-size: 12px; }
+    .mahasiswa-list {
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 280px; overflow-y: auto; padding-right: 4px;
+    }
+    .mahasiswa-list::-webkit-scrollbar { width: 4px; }
+    .mahasiswa-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
 
-    .btn-primary { width: 100%; padding: 13px; justify-content: center; background: linear-gradient(135deg, #004d40, #006644); color: white; border: none; border-radius: 40px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; margin-top: 8px; display: flex; align-items: center; gap: 8px; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .mhs-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .mhs-item:hover { background: rgba(0,168,89,0.05); border-color: var(--green); }
+    .mhs-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .mhs-item span { flex: 1; font-size: 12px; font-weight: 500; }
+    .mhs-item .nim { font-size: 10px; color: var(--gray-600); }
 
-    .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
-    .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
-    .alert-error { background: #fce4ec; color: #b71c1c; border-left: 4px solid var(--red); }
+    .btn-primary {
+      width: 100%; padding: 13px; justify-content: center;
+      background: linear-gradient(135deg, #004d40, #006644); color: white;
+      border: none; border-radius: 40px; font-size: 13px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      margin-top: 8px; display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,61,51,0.25);
+      transition: var(--transition);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 20px rgba(0,61,51,0.35); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+    .alert {
+      padding: 12px 16px; border-radius: var(--radius-sm);
+      font-size: 13px; display: none; font-weight: 600;
+    }
+    .alert-success {
+      background: var(--green-light); color: #1b5e20;
+      border-left: 4px solid var(--green);
+    }
+    .alert-error {
+      background: #fce4ec; color: #b71c1c;
+      border-left: 4px solid var(--red);
+    }
+
+    .btn-simpan-wrap {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; z-index: 50;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 420px; height: 64px;
+      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 24px;
+      display: flex; align-items: center; justify-content: space-around; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600);
+      cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+    }
+    .nav-item i { font-size: 20px; transition: all 0.3s ease; }
+    .nav-item.active { color: var(--green-dark); font-weight: 700; }
+    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
+    @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
 <body>
+
   <header class="app-header">
-    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>⏰ Absen Susulan</h3>
+    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="header-info">
+      <h3>⏰ Absen Susulan</h3>
+      <p>Isi absensi untuk 7 hari terakhir</p>
+    </div>
   </header>
 
   <div class="content">
@@ -97,11 +191,11 @@
     <div id="alertError" class="alert alert-error"></div>
 
     <div class="card">
-      <div class="card-title"><i class="fa-solid fa-calendar-check"></i> Absen 7 Hari Terakhir</div>
+      <div class="card-title"><i class="fa-solid fa-calendar-check"></i> Form Absen Susulan</div>
 
       <!-- TANGGAL -->
       <div class="form-group">
-        <label>📅 Tanggal</label>
+        <label>📅 Pilih Tanggal</label>
         <select id="tanggalAbsen" onchange="onTanggalChange()"></select>
       </div>
 
@@ -119,16 +213,27 @@
 
       <!-- MAHASISWA -->
       <div class="form-group" id="mhsFormGroup" style="display:none;">
-        <label>👨‍🎓 Mahasiswa</label>
+        <label>👨‍🎓 Pilih Mahasiswa yang Hadir</label>
         <div class="mahasiswa-list" id="mhsList"></div>
       </div>
-
-      <!-- BUTTON SIMPAN -->
-      <button type="button" class="btn-primary" id="btnSimpan" onclick="simpanAbsenSusulan()" disabled>
-        <i class="fa-solid fa-save"></i> Simpan Absen Susulan
-      </button>
     </div>
   </div>
+
+  <!-- Bottom Simpan -->
+  <div class="btn-simpan-wrap">
+    <button type="button" class="btn-primary" id="btnSimpan" onclick="simpanAbsenSusulan()" disabled>
+      <i class="fa-solid fa-save"></i> Simpan Absen Susulan
+    </button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
+    <div class="nav-item active" onclick="goTo('absen-susulan.html')"><i class="fa-solid fa-clock"></i><span>Susulan</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
+  </nav>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -138,6 +243,7 @@
   <script>
     const user = checkRole(['dosen', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
     let selectedJadwal = null;
     let allMahasiswa = [];
@@ -150,34 +256,60 @@
       setTimeout(() => el.style.display = 'none', 3000);
     }
 
-    // ═══ LOAD TANGGAL 7 HARI MUNDUR ═══
+    // ═══ HELPER: Tanggal WIB ═══
+    function getWIBDate(d) {
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(d);
+    }
+
+    // ═══ HELPER: Nama hari dari string tanggal ═══
+    function getDayNameFromDate(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+      return dayNames[date.getDay()];
+    }
+
+    // ═══ LOAD TANGGAL 7 HARI MUNDUR (WIB) ═══
     function loadTanggal() {
       const sel = document.getElementById('tanggalAbsen');
       sel.innerHTML = '';
+      
       for (let i = 0; i < 7; i++) {
         const d = new Date();
         d.setDate(d.getDate() - i);
+        
+        const dateStr = getWIBDate(d);
+        
         const o = document.createElement('option');
-        o.value = d.toISOString().split('T')[0];
-        o.textContent = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        o.value = dateStr;
+        o.textContent = d.toLocaleDateString('id-ID', { 
+          timeZone: 'Asia/Jakarta',
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+        });
+        
         if (i === 0) o.textContent += ' (Hari Ini)';
         if (i === 1) o.textContent += ' (Kemarin)';
         sel.appendChild(o);
       }
+      
       loadJadwal();
     }
 
-    // ═══ LOAD JADWAL SESUAI TANGGAL ═══
+    // ═══ LOAD JADWAL ═══
     async function loadJadwal() {
       const tanggal = document.getElementById('tanggalAbsen').value;
-      const dayName = new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long' }).toLowerCase();
+      const dayName = getDayNameFromDate(tanggal);
 
       try {
         const snap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
         allJadwalData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const jadwalList = allJadwalData.filter(j => (j.hari || '').toLowerCase() === dayName);
+        
+        const jadwalList = allJadwalData.filter(j => {
+          const jadwalHari = (j.hari || '').toLowerCase().trim();
+          return jadwalHari === dayName;
+        });
 
-        // Gabungkan JP
         const grouped = {};
         jadwalList.forEach(j => {
           const key = `${j.mkId}_${j.kelasId}`;
@@ -210,7 +342,7 @@
           sel.appendChild(o);
         });
 
-        console.log('✅ Jadwal ditemukan:', jadwalGabungan.length);
+        console.log('✅ Jadwal:', jadwalGabungan.length, '| Hari:', dayName);
         resetForm();
       } catch(e) { console.error('❌ Gagal load jadwal:', e); }
     }
@@ -225,12 +357,12 @@
       sudahAbsen = false;
     }
 
-    function onTanggalChange() {
+    window.onTanggalChange = function() {
       loadJadwal();
-    }
+    };
 
     // ═══ SAAT MK DIPILIH ═══
-    async function onMkChange() {
+    window.onMkChange = async function() {
       const sel = document.getElementById('mkId');
       const statusBox = document.getElementById('statusBox');
       const infoBox = document.getElementById('infoJP');
@@ -250,9 +382,6 @@
 
       selectedJadwal = { totalJP: parseInt(totalJP), mkNama, mkId, kelasId };
 
-      console.log('📋 MK dipilih:', mkNama, '| MK ID:', mkId, '| Kelas ID:', kelasId);
-
-      // Info JP
       if (parseInt(totalJP) > 1) {
         infoBox.innerHTML = `✅ <strong>${totalJP} JP gabungan</strong> — ${mkNama}.`;
         infoBox.classList.add('show');
@@ -260,7 +389,6 @@
         infoBox.classList.remove('show');
       }
 
-      // ═══ CEK APAKAH SUDAH PERNAH ABSEN ═══
       try {
         const snap = await db.collection('absensi')
           .where('dosenId', '==', user.uid)
@@ -268,17 +396,13 @@
           .get();
 
         const absenDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        console.log('📋 Data absen tanggal ini:', absenDocs.length);
 
-        // Cek dengan beberapa kemungkinan field
         const mkAbsen = absenDocs.filter(a => {
           const absenMk = (a.mkId || a.mapelId || a.matkulId || a.mk || '').toString().toLowerCase();
           const jadwalMk = (mkId || '').toString().toLowerCase();
           const jadwalNama = (mkNama || '').toLowerCase();
           return absenMk === jadwalMk || absenMk === jadwalNama;
         });
-
-        console.log('📋 MK match dengan absen:', mkAbsen.length);
 
         if (mkAbsen.length > 0) {
           sudahAbsen = true;
@@ -289,25 +413,22 @@
         } else {
           sudahAbsen = false;
           statusBox.className = 'status-box belum show';
-          statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen.';
+          statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen — pilih mahasiswa di bawah.';
           mhsFormGroup.style.display = 'block';
           btnSimpan.disabled = false;
           await loadMahasiswa(kelasId);
         }
       } catch(e) {
-        console.error('❌ Error cek absen:', e);
         statusBox.className = 'status-box belum show';
         statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ⚠️ Belum absen.';
         mhsFormGroup.style.display = 'block';
         btnSimpan.disabled = false;
         await loadMahasiswa(kelasId);
       }
-    }
+    };
 
     // ═══ LOAD MAHASISWA ═══
     async function loadMahasiswa(kelasId) {
-      console.log('📋 Load mahasiswa untuk kelas:', kelasId);
-
       const container = document.getElementById('mhsList');
       container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Memuat mahasiswa...</p>';
 
@@ -315,14 +436,11 @@
         let snap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
 
         if (snap.empty) {
-          console.log('⚠️ Tidak ada dengan kelasId, coba semua mahasiswa...');
           snap = await db.collection('mahasiswa').limit(100).get();
         }
 
         allMahasiswa = snap.docs.map(d => ({ id: d.id, ...d.data() }))
           .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
-
-        console.log('✅ Mahasiswa ditemukan:', allMahasiswa.length);
 
         if (allMahasiswa.length === 0) {
           container.innerHTML = '<p style="text-align:center;color:var(--red);">Tidak ada mahasiswa.</p>';
@@ -332,16 +450,15 @@
         container.innerHTML = allMahasiswa.map(m => `
           <label class="mhs-item">
             <input type="checkbox" class="mhs-check" value="${m.id}">
-            <span>${m.nama || '-'} (${m.nim || '-'})</span>
+            <span>${m.nama || '-'} <span class="nim">(${m.nim || '-'})</span></span>
           </label>
         `).join('');
       } catch(e) {
-        console.error('❌ Gagal load mahasiswa:', e);
         container.innerHTML = '<p style="text-align:center;color:var(--red);">Gagal memuat.</p>';
       }
     }
 
-    // ═══ SIMPAN ABSEN SUSULAN ═══
+    // ═══ SIMPAN ═══
     window.simpanAbsenSusulan = async function() {
       if (sudahAbsen) {
         showAlert('error', '❌ Anda sudah absen pada tanggal ini!');
@@ -349,7 +466,6 @@
       }
 
       const tanggal = document.getElementById('tanggalAbsen').value;
-
       if (!selectedJadwal) { showAlert('error', 'Pilih mata kuliah!'); return; }
 
       const checked = document.querySelectorAll('.mhs-check:checked');
@@ -379,11 +495,8 @@
         });
         await batch.commit();
         showAlert('success', `✅ Absen susulan disimpan! ${checked.length} mahasiswa hadir.`);
-        
-        // Reload status
         await onMkChange();
       } catch(e) {
-        console.error('❌ Gagal simpan:', e);
         showAlert('error', '❌ Gagal: ' + e.message);
       } finally {
         btn.disabled = false;
