@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Jadwal Harian - Duty Lecturer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/duty-style.css">
+  <style>
+    .jp-timeline { display: flex; flex-direction: column; gap: 8px; }
+    .jp-item {
+      display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px;
+      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .jp-item.selesai { border-left: 4px solid var(--green); }
+    .jp-item.berjalan { border-left: 4px solid var(--orange); background: #fff8e1; }
+    .jp-item.belum { border-left: 4px solid var(--gray-200); opacity: 0.7; }
+    .jp-num {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--maroon); color: white; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;
+    }
+    .jp-num small { font-size: 8px; font-weight: 500; }
+    .jp-info { flex: 1; }
+    .jp-mk { font-size: 13px; font-weight: 700; }
+    .jp-detail { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+    .jp-status { font-size: 10px; font-weight: 700; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-info">
+      <h3>📅 Jadwal Harian</h3>
+      <p id="headerDate">Memuat...</p>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-title">Jadwal Hari Ini</div>
+      <div class="jp-timeline" id="jpTimeline">
+        <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/bottom-nav-duty.js"></script>
+  <script>
+    const user = checkRole(['duty-lecturer', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+
+    function getWIBDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    }
+
+    function getDayName(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const names = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      return names[date.getDay()];
+    }
+
+    function getCurrentJP() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      if (h < 7 || (h === 7 && m < 15)) return 0;
+      if (h < 8 || (h === 8 && m < 5)) return 1;
+      if (h < 9) return 2;
+      if (h < 10) return 3;
+      if (h < 11) return 4;
+      if (h < 12) return 5;
+      return 6;
+    }
+
+    async function loadJadwal() {
+      const today = getWIBDate();
+      const dayName = getDayName(today);
+      const currentJP = getCurrentJP();
+
+      document.getElementById('headerDate').textContent = 
+        new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      try {
+        const [jadwalSnap, absenSnap] = await Promise.all([
+          db.collection('jadwal').where('hari', '==', dayName).get(),
+          db.collection('absensi').where('tanggal', '==', today).get()
+        ]);
+
+        const jadwal = jadwalSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a,b) => (a.jamKe||0) - (b.jamKe||0));
+        const absen = absenSnap.docs.map(d => d.data());
+
+        const container = document.getElementById('jpTimeline');
+
+        if (jadwal.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:var(--gray-600);padding:20px;">Tidak ada jadwal hari ini</p>';
+          return;
+        }
+
+        // Group per JP
+        const grouped = {};
+        jadwal.forEach(j => {
+          const jp = j.jamKe || 1;
+          if (!grouped[jp]) grouped[jp] = [];
+          grouped[jp].push(j);
+        });
+
+        const allJPs = Object.keys(grouped).map(Number).sort((a,b) => a - b);
+
+        container.innerHTML = allJPs.map(jp => {
+          const items = grouped[jp];
+          let status = 'belum';
+          if (jp < currentJP) status = 'selesai';
+          if (jp === currentJP) status = 'berjalan';
+
+          const dosenAbsen = items.every(j => {
+            return absen.some(a => a.dosenId === j.dosenId && a.jamKe === jp);
+          });
+
+          const statusLabel = status === 'selesai' ? (dosenAbsen ? '✅ Selesai' : '⚠️ Selesai tapi belum absen')
+            : status === 'berjalan' ? '🔴 Sedang Berjalan' : '⏳ Belum Dimulai';
+
+          return `
+            <div class="jp-item ${status}">
+              <div class="jp-num">${jp}<small>JP</small></div>
+              <div class="jp-info">
+                ${items.map(j => `
+                  <div style="margin-bottom:4px;">
+                    <div class="jp-mk">${j.mkNama || '-'}</div>
+                    <div class="jp-detail">👨‍🏫 ${j.dosenNama || '-'} · 🏫 ${j.kelasNama || '-'} · 🕐 ${j.waktu || '-'}</div>
+                  </div>
+                `).join('')}
+                <div class="jp-status">${statusLabel}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch(e) { console.error(e); }
+    }
+
+    loadJadwal();
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Duty Lecturer - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/duty-style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-info">
+      <h3>🏫 Duty Lecturer</h3>
+      <p id="headerDate">Memuat...</p>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statJalan">-</div>
+        <div class="stat-label">JP Berjalan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statDosenBelum" style="color:#e53935;">-</div>
+        <div class="stat-label">Dosen Belum Absen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statMhsTidakHadir" style="color:#e53935;">-</div>
+        <div class="stat-label">Mhs Tidak Hadir</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statKelasAktif" style="color:#1b5e20;">-</div>
+        <div class="stat-label">Kelas Aktif</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 JP Sedang Berjalan</div>
+      <div id="jpBerjalan"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 Jadwal Hari Ini</div>
+      <div id="jadwalRingkas"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/bottom-nav-duty.js"></script>
+  <script>
+    const user = checkRole(['duty-lecturer', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+
+    function getWIBDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    }
+
+    function getDayName(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const names = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      return names[date.getDay()];
+    }
+
+    async function loadDashboard() {
+      const today = getWIBDate();
+      const dayName = getDayName(today);
+
+      document.getElementById('headerDate').textContent = 
+        new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      try {
+        const [jadwalSnap, absenSnap] = await Promise.all([
+          db.collection('jadwal').where('hari', '==', dayName).get(),
+          db.collection('absensi').where('tanggal', '==', today).get()
+        ]);
+
+        const jadwal = jadwalSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a,b) => (a.jamKe||0) - (b.jamKe||0));
+        const absen = absenSnap.docs.map(d => d.data());
+
+        const dosenIds = [...new Set(jadwal.map(j => j.dosenId))];
+        const dosenSudah = [...new Set(absen.map(a => a.dosenId))];
+        const dosenBelum = dosenIds.filter(id => !dosenSudah.includes(id));
+        const mhsTidakHadir = absen.filter(a => a.status && a.status !== 'hadir');
+
+        document.getElementById('statJalan').textContent = jadwal.length;
+        document.getElementById('statDosenBelum').textContent = dosenBelum.length;
+        document.getElementById('statMhsTidakHadir').textContent = mhsTidakHadir.length;
+        document.getElementById('statKelasAktif').textContent = [...new Set(jadwal.map(j => j.kelasId))].length;
+
+        const container = document.getElementById('jadwalRingkas');
+        if (jadwal.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Tidak ada jadwal</p>';
+        } else {
+          container.innerHTML = jadwal.slice(0, 10).map(j => `
+            <div class="list-item">
+              <div class="avatar">${(j.dosenNama||'?')[0]}</div>
+              <div class="info">
+                <div class="name">${j.mkNama || '-'}</div>
+                <div class="detail">JP ${j.jamKe} · ${j.kelasNama || '-'} · ${j.dosenNama || '-'}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // JP berjalan
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const jpBerjalan = jadwal.find(j => {
+          if (!j.waktu) return false;
+          const [start] = j.waktu.split('-');
+          const [h, m] = start.trim().split(':').map(Number);
+          const startMin = h * 60 + m;
+          return currentMinutes >= startMin && currentMinutes < startMin + 50;
+        });
+
+        document.getElementById('jpBerjalan').innerHTML = jpBerjalan
+          ? `<div class="list-item" style="border-left:4px solid var(--green);">
+              <div class="info"><div class="name">${jpBerjalan.mkNama}</div>
+              <div class="detail">JP ${jpBerjalan.jamKe} · ${jpBerjalan.kelasNama} · ${jpBerjalan.waktu}</div></div>
+              <span class="badge badge-sudah">Berjalan</span>
+            </div>`
+          : '<p style="text-align:center;color:var(--gray-600);">Tidak ada JP berjalan</p>';
+      } catch(e) { console.error(e); }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

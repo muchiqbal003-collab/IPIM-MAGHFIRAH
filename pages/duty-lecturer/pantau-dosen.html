@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pantau Dosen - Duty Lecturer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/duty-style.css">
+  <style>
+    .filter-tabs { display: flex; gap: 4px; margin-bottom: 12px; background: var(--gray-100); border-radius: 40px; padding: 4px; }
+    .filter-tab { flex: 1; padding: 8px; text-align: center; border-radius: 40px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--gray-600); }
+    .filter-tab.active { background: white; color: var(--maroon); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-info">
+      <h3>👁️ Pantau Dosen</h3>
+      <p id="headerDate">Memuat...</p>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterDosen('semua', this)">Semua (<span id="countSemua">0</span>)</button>
+      <button class="filter-tab" onclick="filterDosen('belum', this)">Belum (<span id="countBelum">0</span>)</button>
+      <button class="filter-tab" onclick="filterDosen('terlewat', this)">Terlewat (<span id="countTerlewat">0</span>)</button>
+      <button class="filter-tab" onclick="filterDosen('sudah', this)">Sudah (<span id="countSudah">0</span>)</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Status Absensi Dosen</div>
+      <div id="dosenList"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+    </div>
+
+    <button class="btn-share-wa" onclick="shareDosenWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.25-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.36 14.1c-.23.65-1.34 1.24-1.86 1.31-.52.08-1.19.12-1.92-.12-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.6-4.02-4.74-4.21-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.23.57.79 1.95.86 2.09.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.17-.3.38-.42.51-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.16-.19.7-.82.88-1.1.18-.28.37-.23.62-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.32.07.12.07.67-.16 1.32z"/></svg>
+      Share WA
+    </button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/bottom-nav-duty.js"></script>
+  <script>
+    const user = checkRole(['duty-lecturer', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+
+    let allDosenStatus = [];
+    let currentFilter = 'semua';
+
+    function getWIBDate() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(now);
+    }
+
+    function getDayName(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const names = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      return names[date.getDay()];
+    }
+
+    function getCurrentJP() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      if (h < 7 || (h === 7 && m < 15)) return 0;
+      if (h < 8 || (h === 8 && m < 5)) return 1;
+      if (h < 9) return 2;
+      if (h < 10) return 3;
+      if (h < 11) return 4;
+      if (h < 12) return 5;
+      return 6;
+    }
+
+    async function loadDosen() {
+      const today = getWIBDate();
+      const dayName = getDayName(today);
+      const currentJP = getCurrentJP();
+
+      document.getElementById('headerDate').textContent = 
+        new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      try {
+        const [jadwalSnap, absenSnap] = await Promise.all([
+          db.collection('jadwal').where('hari', '==', dayName).get(),
+          db.collection('absensi').where('tanggal', '==', today).get()
+        ]);
+
+        const jadwal = jadwalSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const absen = absenSnap.docs.map(d => d.data());
+
+        // Group per dosen
+        const dosenMap = {};
+        jadwal.forEach(j => {
+          if (!dosenMap[j.dosenId]) {
+            dosenMap[j.dosenId] = { dosenId: j.dosenId, dosenNama: j.dosenNama || '-', jpList: [] };
+          }
+          dosenMap[j.dosenId].jpList.push({
+            jamKe: j.jamKe,
+            mkNama: j.mkNama,
+            kelasNama: j.kelasNama,
+            sudahAbsen: absen.some(a => a.dosenId === j.dosenId && a.jamKe === j.jamKe)
+          });
+        });
+
+        allDosenStatus = Object.values(dosenMap).map(d => {
+          const totalJP = d.jpList.length;
+          const sudahCount = d.jpList.filter(jp => jp.sudahAbsen).length;
+          const terlewatCount = d.jpList.filter(jp => !jp.sudahAbsen && jp.jamKe < currentJP).length;
+          let status = 'sudah';
+          if (sudahCount === 0) status = 'belum';
+          else if (terlewatCount > 0) status = 'terlewat';
+          return { ...d, totalJP, sudahCount, terlewatCount, status };
+        });
+
+        const belumCount = allDosenStatus.filter(d => d.status === 'belum' || d.status === 'terlewat').length;
+        updateDutyBadge('pantau', belumCount);
+
+        document.getElementById('countSemua').textContent = allDosenStatus.length;
+        document.getElementById('countBelum').textContent = allDosenStatus.filter(d => d.status === 'belum').length;
+        document.getElementById('countTerlewat').textContent = allDosenStatus.filter(d => d.status === 'terlewat').length;
+        document.getElementById('countSudah').textContent = allDosenStatus.filter(d => d.status === 'sudah').length;
+
+        renderDosen();
+      } catch(e) { console.error(e); }
+    }
+
+    function renderDosen() {
+      const filtered = currentFilter === 'semua' ? allDosenStatus : allDosenStatus.filter(d => d.status === currentFilter);
+      const container = document.getElementById('dosenList');
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--gray-600);padding:20px;">Tidak ada data</p>';
+        return;
+      }
+      container.innerHTML = filtered.map(d => {
+        const badgeClass = d.status === 'sudah' ? 'badge-sudah' : d.status === 'terlewat' ? 'badge-terlewat' : 'badge-belum';
+        const badgeLabel = d.status === 'sudah' ? '✅ Sudah' : d.status === 'terlewat' ? '⚠️ Terlewat' : '❌ Belum';
+        return `
+          <div class="list-item">
+            <div class="avatar">${(d.dosenNama||'?')[0]}</div>
+            <div class="info">
+              <div class="name">${d.dosenNama}</div>
+              <div class="detail">${d.sudahCount}/${d.totalJP} JP absen · ${d.jpList.map(jp => `JP ${jp.jamKe}`).join(', ')}</div>
+            </div>
+            <span class="badge ${badgeClass}">${badgeLabel}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterDosen(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderDosen();
+    }
+    window.filterDosen = filterDosen;
+
+    function shareDosenWA() {
+      const dateStr = new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const sudah = allDosenStatus.filter(d => d.status === 'sudah');
+      const terlewat = allDosenStatus.filter(d => d.status === 'terlewat');
+      const belum = allDosenStatus.filter(d => d.status === 'belum');
+      let text = `📋 *LAPORAN ABSENSI DOSEN*\n📅 ${dateStr}\n━━━━━━━━━━━━━━━━\n\n`;
+      text += `✅ *SUDAH ABSEN (${sudah.length}):*\n`;
+      sudah.forEach((d, i) => { text += `${i+1}. ${d.dosenNama} - ${d.sudahCount}/${d.totalJP} JP\n`; });
+      text += `\n⚠️ *TERLEWAT (${terlewat.length}):*\n`;
+      terlewat.forEach((d, i) => { text += `${i+1}. ${d.dosenNama} - ${d.terlewatCount} JP terlewat\n`; });
+      text += `\n❌ *BELUM ABSEN (${belum.length}):*\n`;
+      belum.forEach((d, i) => { text += `${i+1}. ${d.dosenNama} - ${d.totalJP} JP\n`; });
+      text += `\n━━━━━━━━━━━━━━━━\n📱 © IPIM Maghfirah`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+    window.shareDosenWA = shareDosenWA;
+
+    loadDosen();
+    setInterval(loadDosen, 60000);
+  </script>
+</body>
+</html>
