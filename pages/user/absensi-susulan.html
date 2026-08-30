@@ -72,7 +72,25 @@
       background-position: right 14px center;
       padding-right: 36px;
     }
-    .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,89,0.1); }
+
+    /* Card Belum Absen */
+    .belum-absen-card {
+      background: var(--orange-light); border: 1px solid #ffe0b2;
+      border-radius: var(--radius); padding: 14px; margin-bottom: 14px;
+    }
+    .belum-absen-card h4 {
+      font-size: 12px; font-weight: 700; color: #e65100;
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .belum-absen-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .belum-absen-chip {
+      background: white; border: 1px solid #ffe0b2; border-radius: 20px;
+      padding: 6px 12px; font-size: 10px; font-weight: 600; cursor: pointer;
+      color: #e65100; transition: all 0.2s; display: flex; align-items: center; gap: 4px;
+    }
+    .belum-absen-chip:hover { background: #fff3e0; border-color: var(--orange); }
+    .belum-absen-chip .date { font-weight: 700; }
+    .belum-absen-chip .count { background: var(--orange); color: white; border-radius: 10px; padding: 1px 6px; font-size: 9px; }
 
     /* JP Slots */
     .jp-slot-list { display: flex; flex-direction: column; gap: 6px; }
@@ -84,21 +102,17 @@
     }
     .jp-slot:hover { background: rgba(0,168,89,0.05); border-color: var(--green); }
     .jp-slot.sudah { opacity: 0.5; cursor: not-allowed; background: var(--green-light); border-color: #c8e6c9; }
-    .jp-slot.sudah:hover { background: var(--green-light); }
     .jp-slot input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
     .jp-slot.sudah input[type="checkbox"] { cursor: not-allowed; }
     .jp-info { flex: 1; }
     .jp-label { font-size: 12px; font-weight: 700; color: var(--green-dark); }
     .jp-waktu { font-size: 10px; color: var(--gray-600); }
-    .jp-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .jp-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
     .jp-badge.sudah { background: #c8e6c9; color: #1b5e20; }
     .jp-badge.belum { background: var(--orange-light); color: #e65100; }
 
     /* Mahasiswa */
-    .mahasiswa-list {
-      display: flex; flex-direction: column; gap: 6px;
-      max-height: 250px; overflow-y: auto; padding-right: 4px;
-    }
+    .mahasiswa-list { display: flex; flex-direction: column; gap: 6px; max-height: 250px; overflow-y: auto; padding-right: 4px; }
     .mahasiswa-list::-webkit-scrollbar { width: 4px; }
     .mahasiswa-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
     .mhs-item {
@@ -112,16 +126,15 @@
     .mhs-item span { flex: 1; font-size: 12px; font-weight: 500; }
     .mhs-item .nim { font-size: 10px; color: var(--gray-600); }
 
-    .summary-info {
-      background: var(--blue-light); border-radius: var(--radius-sm);
-      padding: 10px 14px; font-size: 11px; color: #0d47a1;
-      margin-bottom: 10px; border-left: 3px solid var(--blue);
+    .select-all-btn {
+      font-size: 10px; color: var(--green-mid); font-weight: 600;
+      background: var(--green-light); border: none; cursor: pointer;
+      padding: 4px 10px; border-radius: 20px; margin-bottom: 6px;
     }
 
     .status-box {
       display: none; padding: 12px 14px; border-radius: var(--radius-sm);
-      font-size: 12px; font-weight: 600; margin-bottom: 12px;
-      align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; margin-bottom: 12px; align-items: center; gap: 8px;
     }
     .status-box.show { display: flex; }
     .status-box.sudah { background: var(--green-light); color: #1b5e20; border: 1px solid #c8e6c9; }
@@ -164,6 +177,9 @@
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
     .nav-item.active i { color: var(--green); }
+    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
+    @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
 <body>
@@ -172,7 +188,7 @@
     <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
     <div class="header-info">
       <h3>⏰ Absen Susulan</h3>
-      <p>Pilih JP yang mau di-absensi</p>
+      <p>Lihat tanggal yang kelewat & isi absensi</p>
     </div>
   </header>
 
@@ -180,12 +196,18 @@
     <div id="alertSuccess" class="alert alert-success"></div>
     <div id="alertError" class="alert alert-error"></div>
 
+    <!-- CARD TANGGAL BELUM ABSEN -->
+    <div class="belum-absen-card" id="belumAbsenCard" style="display:none;">
+      <h4><i class="fa-solid fa-triangle-exclamation"></i> 📅 Tanggal yang Belum/Kehadiran Kurang:</h4>
+      <div class="belum-absen-list" id="belumAbsenList"></div>
+    </div>
+
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-calendar-check"></i> Form Absen Susulan</div>
 
       <!-- TANGGAL -->
       <div class="form-group">
-        <label>📅 Pilih Tanggal</label>
+        <label>📅 Pilih Tanggal (30 hari terakhir)</label>
         <select id="tanggalAbsen" onchange="onTanggalChange()"></select>
       </div>
 
@@ -207,19 +229,19 @@
       <!-- MAHASISWA -->
       <div class="form-group" id="mhsFormGroup" style="display:none;">
         <label>👨‍🎓 Pilih Mahasiswa yang Hadir</label>
+        <button type="button" class="select-all-btn" onclick="toggleAllMhs(true)">✅ Centang Semua</button>
+        <button type="button" class="select-all-btn" onclick="toggleAllMhs(false)" style="margin-left:4px;">⬜ Kosongkan</button>
         <div class="mahasiswa-list" id="mhsList"></div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Simpan -->
   <div class="btn-simpan-wrap">
     <button type="button" class="btn-primary" id="btnSimpan" onclick="simpanAbsenSusulan()" disabled>
       <i class="fa-solid fa-save"></i> Simpan Absen Susulan
     </button>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
     <div class="nav-item" onclick="goTo('jadwal-saya.html')"><i class="fa-solid fa-calendar-days"></i><span>Jadwal</span></div>
@@ -242,6 +264,7 @@
     let allMahasiswa = [];
     let jpSlots = [];
     let absenStatus = {};
+    let jadwal30Hari = [];
 
     function showAlert(type, text) {
       const el = document.getElementById(type === 'success' ? 'alertSuccess' : 'alertError');
@@ -261,11 +284,17 @@
       return dayNames[date.getDay()];
     }
 
-    // ═══ LOAD TANGGAL ═══
+    function formatTanggalLabel(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    // ═══ LOAD TANGGAL 30 HARI MUNDUR ═══
     function loadTanggal() {
       const sel = document.getElementById('tanggalAbsen');
       sel.innerHTML = '';
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 30; i++) {
         const d = new Date();
         d.setDate(d.getDate() - i);
         const dateStr = getWIBDate(d);
@@ -276,60 +305,128 @@
         if (i === 1) o.textContent += ' (Kemarin)';
         sel.appendChild(o);
       }
-      loadJadwal();
+      loadJadwal30Hari();
     }
 
-    // ═══ LOAD JADWAL ═══
+    // ═══ LOAD SEMUA JADWAL 30 HARI + CEK BELUM ABSEN ═══
+    async function loadJadwal30Hari() {
+      try {
+        // Ambil semua jadwal dosen
+        const snap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
+        jadwal30Hari = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Ambil semua absensi 30 hari terakhir
+        const tanggalAwal = getWIBDate(new Date(Date.now() - 30 * 86400000));
+        const absenSnap = await db.collection('absensi')
+          .where('dosenId', '==', user.uid)
+          .where('tanggal', '>=', tanggalAwal)
+          .get();
+        
+        const absenData = absenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Cari tanggal yang belum di-absensi
+        const belumAbsenList = [];
+        
+        for (let i = 0; i < 30; i++) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dateStr = getWIBDate(d);
+          const dayName = getDayNameFromDate(dateStr);
+          
+          // Jadwal dosen di hari itu
+          const jadwalHari = jadwal30Hari.filter(j => (j.hari || '').toLowerCase().trim() === dayName);
+          
+          if (jadwalHari.length === 0) continue; // Tidak ada jadwal
+          
+          // Hitung total JP di hari itu
+          const totalJP = jadwalHari.reduce((sum, j) => sum + (parseInt(j.jamKe || j.jp) > 0 ? 1 : 0), 0);
+          
+          // Cek sudah berapa JP yang di-absensi
+          const absenHari = absenData.filter(a => a.tanggal === dateStr);
+          const jpDiabsen = absenHari.length > 0 ? new Set(absenHari.map(a => a.jamKe)).size : 0;
+          
+          // Kalau JP yang diabsen kurang dari total JP → belum lengkap
+          if (jpDiabsen < totalJP) {
+            belumAbsenList.push({
+              tanggal: dateStr,
+              totalJP,
+              jpDiabsen,
+              jpKurang: totalJP - jpDiabsen
+            });
+          }
+        }
+
+        // Render chips tanggal belum absen
+        renderBelumAbsenChips(belumAbsenList);
+        
+        // Load jadwal untuk tanggal terpilih
+        loadJadwal();
+      } catch(e) { console.error('❌ Gagal load data:', e); }
+    }
+
+    function renderBelumAbsenChips(list) {
+      const card = document.getElementById('belumAbsenCard');
+      const container = document.getElementById('belumAbsenList');
+      
+      if (list.length === 0) {
+        card.style.display = 'none';
+        return;
+      }
+
+      card.style.display = 'block';
+      container.innerHTML = list.map(item => `
+        <div class="belum-absen-chip" onclick="pilihTanggalBelumAbsen('${item.tanggal}')">
+          <span class="date">${formatTanggalLabel(item.tanggal)}</span>
+          <span class="count">${item.jpKurang} JP belum</span>
+        </div>
+      `).join('');
+    }
+
+    // ═══ KLIK CHIP TANGGAL BELUM ABSEN ═══
+    window.pilihTanggalBelumAbsen = function(tanggal) {
+      document.getElementById('tanggalAbsen').value = tanggal;
+      loadJadwal();
+    };
+
+    // ═══ LOAD JADWAL UNTUK TANGGAL TERPILIH ═══
     async function loadJadwal() {
       const tanggal = document.getElementById('tanggalAbsen').value;
       const dayName = getDayNameFromDate(tanggal);
 
-      try {
-        const snap = await db.collection('jadwal').where('dosenId', '==', user.uid).get();
-        const allJadwal = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        
-        const jadwalList = allJadwal.filter(j => (j.hari || '').toLowerCase().trim() === dayName);
+      const jadwalList = jadwal30Hari.filter(j => (j.hari || '').toLowerCase().trim() === dayName);
 
-        // Group by MK
-        const grouped = {};
-        jadwalList.forEach(j => {
-          const key = `${j.mkId}_${j.kelasId}`;
-          if (!grouped[key]) {
-            grouped[key] = {
-              mkId: j.mkId || '',
-              mkNama: j.mkNama || '-',
-              kelasId: j.kelasId || '',
-              kelasNama: j.kelasNama || '-',
-              jpList: []
-            };
-          }
-          const jp = j.jamKe || j.jp || 1;
-          grouped[key].jpList.push({
-            jamKe: parseInt(jp),
-            waktu: j.waktu || '',
-            jadwalId: j.id
-          });
-        });
+      const grouped = {};
+      jadwalList.forEach(j => {
+        const key = `${j.mkId}_${j.kelasId}`;
+        if (!grouped[key]) {
+          grouped[key] = {
+            mkId: j.mkId || '',
+            mkNama: j.mkNama || '-',
+            kelasId: j.kelasId || '',
+            kelasNama: j.kelasNama || '-',
+            jpList: []
+          };
+        }
+        const jp = j.jamKe || j.jp || 1;
+        grouped[key].jpList.push({ jamKe: parseInt(jp), waktu: j.waktu || '', jadwalId: j.id });
+      });
 
-        // Urutkan JP
-        Object.values(grouped).forEach(g => {
-          g.jpList.sort((a,b) => a.jamKe - b.jamKe);
-          g.totalJP = g.jpList.length;
-        });
+      Object.values(grouped).forEach(g => {
+        g.jpList.sort((a,b) => a.jamKe - b.jamKe);
+        g.totalJP = g.jpList.length;
+      });
 
-        const mkSel = document.getElementById('mkId');
-        mkSel.innerHTML = '<option value="">Pilih Mata Kuliah...</option>';
-        
-        Object.values(grouped).forEach(g => {
-          const o = document.createElement('option');
-          o.value = g.mkId;
-          o.textContent = `${g.mkNama} — ${g.kelasNama} (${g.totalJP} JP)`;
-          o.setAttribute('data-mkdata', JSON.stringify(g));
-          mkSel.appendChild(o);
-        });
+      const mkSel = document.getElementById('mkId');
+      mkSel.innerHTML = '<option value="">Pilih Mata Kuliah...</option>';
+      Object.values(grouped).forEach(g => {
+        const o = document.createElement('option');
+        o.value = g.mkId;
+        o.textContent = `${g.mkNama} — ${g.kelasNama} (${g.totalJP} JP)`;
+        o.setAttribute('data-mkdata', JSON.stringify(g));
+        mkSel.appendChild(o);
+      });
 
-        resetForm();
-      } catch(e) { console.error('❌ Gagal load jadwal:', e); }
+      resetForm();
     }
 
     function resetForm() {
@@ -363,7 +460,6 @@
 
       const tanggal = document.getElementById('tanggalAbsen').value;
 
-      // Cek absen existing per JP
       try {
         const snap = await db.collection('absensi')
           .where('dosenId', '==', user.uid)
@@ -372,7 +468,6 @@
         
         const absenDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         
-        // Tandai JP yang sudah absen
         absenStatus = {};
         jpSlots.forEach(jp => {
           const sudah = absenDocs.some(a => 
@@ -382,14 +477,13 @@
           absenStatus[jp.jamKe] = sudah;
         });
 
-        // Render JP slots
         jpSlotList.innerHTML = jpSlots.map(jp => {
           const sudah = absenStatus[jp.jamKe];
           return `
             <label class="jp-slot ${sudah ? 'sudah' : ''}">
               <input type="checkbox" class="jp-check" value="${jp.jamKe}" ${sudah ? 'disabled' : ''} onchange="onJPToggle()">
               <div class="jp-info">
-                <div class="jp-label">JP ${jp.jamKe} ${jp.waktu ? '· ' + jp.waktu : ''}</div>
+                <div class="jp-label">JP ${jp.jamKe} ${jp.waktu ? '<span class="jp-waktu">· ' + jp.waktu + '</span>' : ''}</div>
               </div>
               <span class="jp-badge ${sudah ? 'sudah' : 'belum'}">${sudah ? '✅ Sudah' : '⚠️ Belum'}</span>
             </label>
@@ -403,7 +497,6 @@
       } catch(e) { console.error(e); }
     };
 
-    // ═══ TOGGLE JP CHECKBOX ═══
     window.onJPToggle = function() {
       const checkedJPs = [...document.querySelectorAll('.jp-check:checked')].map(cb => parseInt(cb.value));
       const mhsFormGroup = document.getElementById('mhsFormGroup');
@@ -419,7 +512,10 @@
       }
     };
 
-    // ═══ LOAD MAHASISWA ═══
+    window.toggleAllMhs = function(checked) {
+      document.querySelectorAll('.mhs-check').forEach(cb => { cb.checked = checked; });
+    };
+
     async function loadMahasiswa(kelasId) {
       const container = document.getElementById('mhsList');
       container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Memuat mahasiswa...</p>';
@@ -442,7 +538,6 @@
       }
     }
 
-    // ═══ SIMPAN ═══
     window.simpanAbsenSusulan = async function() {
       const tanggal = document.getElementById('tanggalAbsen').value;
       const checkedJPs = [...document.querySelectorAll('.jp-check:checked')].map(cb => parseInt(cb.value));
@@ -487,6 +582,9 @@
 
         await batch.commit();
         showAlert('success', `✅ ${checkedMhs.length} mahasiswa × ${checkedJPs.length} JP = ${totalData} data tersimpan!`);
+        
+        // Refresh data belum absen
+        await loadJadwal30Hari();
         await onMkChange();
       } catch(e) {
         showAlert('error', '❌ Gagal: ' + e.message);
