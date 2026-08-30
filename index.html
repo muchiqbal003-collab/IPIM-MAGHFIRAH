@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="IPIM">
   
-  <!-- Manifest (sesuai file Anda) -->
+  <!-- Manifest -->
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
 
@@ -21,76 +21,282 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    :root {
+      --green-dark: #003d33;
+      --green-mid: #006644;
+      --green: #00a859;
+      --gold: #d4a843;
+      --white: #ffffff;
+      --gray-600: #666666;
+      --gray-800: #222222;
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --glass-shadow: 0 8px 32px rgba(0, 61, 51, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #e8f5e9 0%, #f0faf5 30%, #e8f0e8 60%, #f5f0e8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Decorative gradient blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      z-index: 0;
+    }
+    .blob-1 { width: 300px; height: 300px; background: #00a859; top: -100px; right: -100px; }
+    .blob-2 { width: 250px; height: 250px; background: #d4a843; bottom: -80px; left: -80px; }
+    .blob-3 { width: 150px; height: 150px; background: #006644; top: 50%; left: 10%; }
+
+    .login-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Install Prompt */
+    .install-prompt {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--glass-shadow);
+      width: calc(100% - 40px);
+      max-width: 400px;
+    }
+    .prompt-logo { width: 36px; height: 36px; border-radius: 8px; }
+    .prompt-text { flex: 1; }
+    .prompt-text strong { font-size: 12px; display: block; color: var(--gray-800); }
+    .prompt-text span { font-size: 10px; color: var(--gray-600); }
+    .btn-install {
+      background: var(--green-dark); color: white; border: none;
+      padding: 8px 14px; border-radius: 20px; font-size: 11px;
+      font-weight: 600; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+      white-space: nowrap;
+    }
+    .btn-close-prompt {
+      background: none; border: none; color: var(--gray-600);
+      cursor: pointer; font-size: 16px; padding: 4px;
+    }
+
+    /* Login Card - Glassmorphism */
+    .login-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 36px 28px 24px;
+      box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    /* Logo Section */
+    .logo-section { text-align: center; margin-bottom: 24px; }
+
+    .logo-image-wrapper {
+      width: 88px; height: 88px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--green-dark);
+      box-shadow: 0 4px 20px rgba(0,61,51,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+    }
+    .logo-image { width: 100%; height: 100%; object-fit: cover; }
+
+    .brand-name {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green-dark);
+      letter-spacing: 2px;
+    }
+    .brand-fullname {
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .brand-tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--green-mid);
+      font-weight: 600;
+    }
+    .tag-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* Form */
+    .login-form { display: flex; flex-direction: column; gap: 14px; }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+    .form-group label i { color: var(--green-mid); font-size: 12px; }
+
+    .input-wrapper { position: relative; }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid rgba(0, 77, 64, 0.15);
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: rgba(255, 255, 255, 0.7);
+      outline: none;
+      color: var(--gray-800);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-wrapper input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.1);
+    }
+    .input-wrapper input::placeholder { color: #aaa; }
+
+    /* Login Button */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #004d40, #006644);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 61, 51, 0.25);
+      transition: box-shadow 0.2s;
+      margin-top: 6px;
+    }
+    .btn-login:hover { box-shadow: 0 6px 24px rgba(0, 61, 51, 0.35); }
+    .btn-login:active { transform: scale(0.98); }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+    .btn-login .btn-loader { display: none; }
+    .btn-login.loading .btn-content { display: none; }
+    .btn-login.loading .btn-loader { display: flex; align-items: center; gap: 8px; }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+    }
+
+    /* Message */
+    .message-box {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: none;
+      text-align: center;
+    }
+    .message-box.error { display: block; background: #fce4ec; color: #b71c1c; }
+    .message-box.success { display: block; background: #e8f5e9; color: #1b5e20; }
+
+    /* Footer */
+    .login-footer { text-align: center; margin-top: 20px; }
+    .footer-line { height: 1px; background: rgba(0,77,64,0.1); margin-bottom: 10px; }
+    .login-footer p { font-size: 9px; color: #aaa; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-card { padding: 24px 18px 18px; }
+      .logo-image-wrapper { width: 72px; height: 72px; }
+      .brand-name { font-size: 22px; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Decorative Elements -->
-  <div class="decor-top"></div>
-  <div class="decor-bottom"></div>
-  <div class="pattern-dots"></div>
+  <!-- Decorative Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 
   <div class="login-wrapper">
     <!-- Pop-up Install Aplikasi -->
     <div class="install-prompt" id="installPrompt" style="display: none;">
-      <div class="prompt-icon">
-        <img src="assets/icons/icon-logo.png" alt="IPIM" class="prompt-logo">
-      </div>
+      <img src="assets/icons/icon-logo.png" alt="IPIM" class="prompt-logo">
       <div class="prompt-text">
         <strong>Install Aplikasi IPIM</strong>
         <span>Akses lebih cepat tanpa buka browser</span>
       </div>
-      <button class="btn-install" id="btnInstall">
-        <i class="fa-solid fa-download"></i> Install
-      </button>
-      <button class="btn-close-prompt" id="btnCloseInstall">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+      <button class="btn-install" id="btnInstall"><i class="fa-solid fa-download"></i> Install</button>
+      <button class="btn-close-prompt" id="btnCloseInstall"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <div class="login-card">
-      <!-- Logo Section with Circle Frame -->
+      <!-- Logo Section -->
       <div class="logo-section">
-        <div class="logo-circle-frame">
-          <div class="circle-outer"></div>
-          <div class="circle-middle"></div>
-          <div class="circle-dots"></div>
-          <div class="logo-image-wrapper">
-            <img src="assets/icons/icon-logo.png" alt="IPIM Logo" class="logo-image">
-            <div class="logo-glow"></div>
-          </div>
+        <div class="logo-image-wrapper">
+          <img src="assets/icons/icon-logo.png" alt="IPIM Logo" class="logo-image">
         </div>
-        
-        <div class="brand-text">
-          <h1 class="brand-name">IPIM</h1>
-          <p class="brand-fullname">Institute Pendidikan Islam Maghfirah</p>
-          <div class="brand-tag">
-            <span class="tag-dot"></span>
-            <span>Sistem Informasi Terpadu</span>
-            <span class="tag-dot"></span>
-          </div>
+        <h1 class="brand-name">IPIM</h1>
+        <p class="brand-fullname">Institute Pendidikan Islam Maghfirah</p>
+        <div class="brand-tag">
+          <span class="tag-dot"></span>
+          <span>Sistem Informasi Terpadu</span>
+          <span class="tag-dot"></span>
         </div>
       </div>
 
       <!-- Login Form -->
       <form id="loginForm" class="login-form">
         <div class="form-group">
-          <label for="email">
-            <i class="fa-solid fa-envelope"></i> Email
-          </label>
+          <label for="email"><i class="fa-solid fa-envelope"></i> Email</label>
           <div class="input-wrapper">
             <input type="email" id="email" placeholder="nama@ipim.ac.id" required autocomplete="email">
-            <div class="input-border"></div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="password">
-            <i class="fa-solid fa-lock"></i> Kata Sandi
-          </label>
+          <label for="password"><i class="fa-solid fa-lock"></i> Kata Sandi</label>
           <div class="input-wrapper">
             <input type="password" id="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
-            <div class="input-border"></div>
           </div>
         </div>
 
@@ -126,39 +332,27 @@
   <script src="js/app.js"></script>
   
   <script>
-    // Service Worker - Menggunakan sw.js Anda
+    // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-          .then(registration => {
-            console.log('✅ Service Worker registered:', registration.scope);
-          })
-          .catch(error => {
-            console.warn('❌ Service Worker failed:', error.message);
-          });
+          .then(reg => console.log('✅ SW registered:', reg.scope))
+          .catch(err => console.warn('❌ SW failed:', err.message));
       });
     }
 
-    // PWA Install Prompt
+    // PWA Install
     let deferredPrompt;
-    
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      
-      const installPrompt = document.getElementById('installPrompt');
-      if (installPrompt) {
-        installPrompt.style.display = 'flex';
-      }
+      document.getElementById('installPrompt').style.display = 'flex';
     });
 
     document.getElementById('btnInstall').addEventListener('click', async () => {
       if (!deferredPrompt) return;
-      
       deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`User install response: ${outcome}`);
-      
+      await deferredPrompt.userChoice;
       deferredPrompt = null;
       document.getElementById('installPrompt').style.display = 'none';
     });
@@ -167,10 +361,14 @@
       document.getElementById('installPrompt').style.display = 'none';
     });
 
-    window.addEventListener('appinstalled', () => {
-      console.log('✅ PWA installed');
-      deferredPrompt = null;
-    });
+    // Notifikasi
+    async function requestNotificationPermission() {
+      if ('Notification' in window && 'serviceWorker' in navigator) {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') console.log('✅ Notifikasi diizinkan');
+      }
+    }
+    setTimeout(() => requestNotificationPermission(), 2000);
   </script>
 </body>
 </html>
