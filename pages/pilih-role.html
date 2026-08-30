@@ -15,6 +15,7 @@
       --gold:#f5c842;--gold-light:#fffbee;
       --white:#ffffff;--gray-50:#f9f9f9;--gray-600:#666666;--gray-800:#222222;
       --red:#c62828;--blue:#0d47a1;--orange:#e65100;--purple:#6a1b9a;--teal:#004d40;
+      --maroon:#7a1515;--maroon-light:#fce4ec;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;--transition:all 0.3s ease;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,9 +25,7 @@
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       padding: 20px; -webkit-tap-highlight-color: transparent;
     }
-    .container {
-      max-width: 480px; width: 100%; text-align: center;
-    }
+    .container { max-width: 480px; width: 100%; text-align: center; }
     .logo {
       width: 72px; height: 72px; border-radius: 22px;
       background: linear-gradient(135deg, #004d40, #006644);
@@ -41,7 +40,6 @@
       background: var(--green-light); padding: 8px 16px;
       border-radius: 40px; display: inline-block; margin-bottom: 16px;
     }
-    
     .role-list { display: flex; flex-direction: column; gap: 10px; }
     .role-card {
       background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
@@ -66,12 +64,11 @@
     .icon-pengasuhan { background: #ede9fe; color: #6a1b9a; }
     .icon-dosen { background: #e0f2f1; color: #004d40; }
     .icon-musyrif { background: #f3e5f5; color: #880e4f; }
-    .icon-umum { background: #f1f8e9; color: #33691e; }
+    .icon-duty { background: var(--maroon-light); color: var(--maroon); }
     .role-info { flex: 1; }
     .role-nama { font-size: 14px; font-weight: 700; color: var(--gray-800); }
     .role-desc { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
     .role-arrow { color: var(--gray-600); font-size: 14px; }
-    
     .btn-logout {
       margin-top: 24px; padding: 10px 24px; border: none;
       background: rgba(255,255,255,0.6); border-radius: 40px;
@@ -90,9 +87,7 @@
     <h1>Pilih Role</h1>
     <p class="subtitle" id="subtitleText">Anda memiliki beberapa role. Pilih role untuk melanjutkan.</p>
     <div class="user-name" id="userName">...</div>
-    
     <div class="role-list" id="roleList"></div>
-    
     <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
   </div>
 
@@ -143,36 +138,29 @@
         nama: 'Musyrif', desc: 'Mode musyrif — halaqoh & tahfidz', 
         page: 'pages/user/dashboard.html' 
       },
-      'umum': { 
-        icon: 'fa-user', iconClass: 'icon-umum', 
-        nama: 'Umum', desc: 'Mode user umum', 
-        page: 'pages/user/dashboard.html' 
+      'duty-lecturer': { 
+        icon: 'fa-clipboard-check', iconClass: 'icon-duty', 
+        nama: 'Duty Lecturer', desc: 'Pantau jadwal, absensi & kehadiran', 
+        page: 'pages/duty-lecturer/dashboard.html' 
       }
     };
 
-    // Ambil user dari localStorage
     const user = getUser();
-    if (!user) {
-      window.location.href = '../index.html';
-    }
+    if (!user) { window.location.href = '../index.html'; }
 
-    // Tampilkan nama user
     document.getElementById('userName').textContent = `👤 ${user.nama || user.email || 'User'}`;
 
-    // Ambil roles
-    const roles = user.roles || [user.role || 'umum'];
+    const roles = user.roles || [user.role || 'duty-lecturer'];
     const uniqueRoles = [...new Set(roles)];
 
-    // Update subtitle
     document.getElementById('subtitleText').textContent = 
       uniqueRoles.length > 1 
         ? 'Anda memiliki beberapa role. Pilih role untuk melanjutkan.' 
         : 'Pilih role Anda untuk masuk.';
 
-    // Render role cards
     const roleList = document.getElementById('roleList');
     roleList.innerHTML = uniqueRoles.map(role => {
-      const meta = ROLE_META[role] || ROLE_META['umum'];
+      const meta = ROLE_META[role] || ROLE_META['duty-lecturer'];
       return `
         <div class="role-card" onclick="pilihRole('${role}')">
           <div class="role-icon ${meta.iconClass}"><i class="fa-solid ${meta.icon}"></i></div>
@@ -185,33 +173,22 @@
       `;
     }).join('');
 
-    // Fungsi pilih role
     window.pilihRole = function(role) {
-      // Simpan role aktif ke localStorage
       localStorage.setItem('roleAktif', role);
-      
-      // Update user object di localStorage
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
       userData.role = role;
       localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Redirect ke halaman sesuai role
-      const meta = ROLE_META[role] || ROLE_META['umum'];
+      const meta = ROLE_META[role] || ROLE_META['duty-lecturer'];
       window.location.href = '../' + meta.page;
     };
 
-    // Logout
     window.logout = function() {
       if (confirm('Keluar dari aplikasi?')) {
         auth.signOut().then(() => {
-          localStorage.removeItem('user');
-          localStorage.removeItem('userUid');
-          localStorage.removeItem('userEmail');
-          localStorage.removeItem('roleAktif');
+          localStorage.clear();
           window.location.href = '../index.html';
         }).catch(() => {
-          localStorage.removeItem('user');
-          localStorage.removeItem('roleAktif');
+          localStorage.clear();
           window.location.href = '../index.html';
         });
       }
