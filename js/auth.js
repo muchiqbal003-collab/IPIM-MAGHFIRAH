@@ -41,24 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
     messageBox.className = 'message-box';
 
     try {
-      // Login Firebase Auth
       const userCredential = await auth.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
 
-      // Ambil data dari Firestore berdasarkan UID
       const userDoc = await db.collection('users').doc(user.uid).get();
-
-      // Jika tidak ditemukan, coba cari berdasarkan email (fallback)
       let userData = userDoc.exists ? userDoc.data() : null;
       
       if (!userData) {
-        // Fallback: cari berdasarkan email
         const emailSnap = await db.collection('users').where('email', '==', email).get();
         if (!emailSnap.empty) {
           userData = emailSnap.docs[0].data();
-          // Update dokumen dengan UID yang benar
           await db.collection('users').doc(emailSnap.docs[0].id).update({ uid: user.uid });
-          // Pindahkan data ke dokumen dengan UID sebagai ID
           await db.collection('users').doc(user.uid).set({ ...userData, uid: user.uid });
           await db.collection('users').doc(emailSnap.docs[0].id).delete();
         }
@@ -71,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // ═══ SIMPAN LOG LOGIN ═══
       try {
         await db.collection('loginLogs').add({
           uid: user.uid,
@@ -81,20 +73,16 @@ document.addEventListener('DOMContentLoaded', function() {
           roles: userData.roles || [userData.role || 'unknown'],
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        console.log('✅ Login log tersimpan');
       } catch(logError) {
         console.warn('⚠️ Gagal simpan login log:', logError.message);
       }
 
-      // ═══ MULTI-ROLE SUPPORT ═══
-      const defaultRole = userData.role || 'umum';
+      const defaultRole = userData.role || 'duty-lecturer';
       const roles = userData.roles || [defaultRole];
       const uniqueRoles = [...new Set(roles)];
       
-      // Hapus roleAktif lama
       localStorage.removeItem('roleAktif');
 
-      // Simpan ke localStorage (TERMASUK UID + ROLES)
       localStorage.setItem('user', JSON.stringify({
         uid: user.uid,
         email: user.email,
@@ -107,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
       showMessage('✅ Login berhasil! Mengalihkan...', 'success');
 
-      // Redirect sesuai role(s)
       setTimeout(() => {
         redirectByRole(uniqueRoles);
       }, 800);
@@ -140,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ═══ FUNGSI REDIRECT (MULTI-ROLE SUPPORT) ═══
   function redirectByRole(roles) {
     const uniqueRoles = [...new Set(roles || [])];
     
@@ -150,10 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (uniqueRoles.length > 1) {
-      // Multi-role → buka halaman pilih role
       window.location.href = 'pages/pilih-role.html';
     } else {
-      // 1 role → langsung masuk
       const rolePages = {
         'pusat-data': 'pages/pusat-data/dashboard.html',
         'operator-akademik': 'pages/operator-akademik/dashboard.html',
@@ -163,27 +147,22 @@ document.addEventListener('DOMContentLoaded', function() {
         'dosen': 'pages/user/dashboard.html',
         'musyrif': 'pages/user/dashboard.html',
         'dosen-musyrif': 'pages/user/dashboard.html',
-        'umum': 'pages/user/dashboard.html'
+        'duty-lecturer': 'pages/duty-lecturer/dashboard.html'
       };
       
-      window.location.href = rolePages[uniqueRoles[0]] || 'pages/user/dashboard.html';
+      window.location.href = rolePages[uniqueRoles[0]] || 'pages/duty-lecturer/dashboard.html';
     }
   }
 
-  // Cek jika sudah login
   auth.onAuthStateChanged(function(user) {
     if (user) {
       console.log('✅ User sudah login:', user.email);
-      
-      // Jika ada user di localStorage tapi belum redirect
       const storedUser = localStorage.getItem('user');
       if (storedUser && !window.location.pathname.includes('pilih-role.html')) {
         const parsedUser = JSON.parse(storedUser);
         const path = window.location.pathname;
-        
-        // Hanya redirect kalau masih di halaman login (index.html)
         if (path.endsWith('index.html') || path.endsWith('/')) {
-          const roles = parsedUser.roles || [parsedUser.role || 'umum'];
+          const roles = parsedUser.roles || [parsedUser.role || 'duty-lecturer'];
           redirectByRole(roles);
         }
       }
