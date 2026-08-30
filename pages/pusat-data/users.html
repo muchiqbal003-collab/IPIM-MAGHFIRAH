@@ -8,9 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
@@ -18,7 +15,7 @@
       --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
       --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
       --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
-      --blue: #1565c0; --blue-light: #e3f2fd;
+      --blue: #1565c0; --blue-light: #e3f2fd; --purple: #6a1b9a; --purple-light: #ede9fe;
       --sidebar-width: 260px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
@@ -53,19 +50,30 @@
     .btn-primary { background: var(--green-dark); color: white; } .btn-primary:hover { background: #00695c; }
     .btn-danger { background: var(--red-light); color: var(--red); } .btn-danger:hover { background: #f8bbd0; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-    .btn-info { background: var(--blue-light); color: var(--blue); }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
 
     .card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 20px; }
-    .card-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .card-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .card-header h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); display: flex; align-items: center; gap: 8px; }
     .card-body { padding: 20px; overflow-x: auto; }
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 14px; align-items: end; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; align-items: end; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
     .form-group input, .form-group select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; color: var(--gray-800); outline: none; transition: var(--transition); background: white; }
     .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+
+    .role-checkbox-section { margin-top: 16px; padding: 16px; background: var(--gray-50); border-radius: var(--radius); border: 1px dashed var(--gray-200); }
+    .role-checkbox-section h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: var(--gray-800); }
+    .role-checkbox-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .role-check {
+      display: flex; align-items: center; gap: 5px; padding: 6px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: 20px; font-size: 11px;
+      cursor: pointer; transition: var(--transition); user-select: none;
+      background: white;
+    }
+    .role-check.checked { background: var(--green-light); border-color: var(--green); color: var(--green-dark); font-weight: 600; }
+    .role-check input { display: none; }
 
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
     thead th { background: var(--gray-100); padding: 10px 8px; text-align: center; font-size: 10px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
@@ -77,20 +85,12 @@
     .badge-operator { background: #e8f5e9; color: #1b5e20; }
     .badge-dosen { background: #e3f2fd; color: #0d47a1; }
     .badge-musyrif { background: #ede9fe; color: #4a148c; }
+    .badge-mahasiswa { background: #fff3e0; color: #e65100; }
     .badge-umum { background: #f5f5f5; color: #424242; }
 
     .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; }
     .alert-success { background: var(--green-light); color: #1b5e20; }
     .alert-error { background: var(--red-light); color: #b71c1c; }
-
-    /* Modal */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
-    .modal-overlay.show { display: flex; }
-    .modal-box { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 420px; padding: 24px; box-shadow: 0 12px 48px rgba(0,0,0,0.25); }
-    .modal-box h4 { margin-bottom: 16px; font-size: 16px; font-weight: 700; }
-    .modal-box .form-group { margin-bottom: 12px; }
-    .modal-box .form-group input, .modal-box .form-group select { width: 100%; }
-    .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 
     @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .form-grid { grid-template-columns: 1fr 1fr; } }
   </style>
@@ -118,12 +118,11 @@
   </aside>
 
   <main class="main-content">
-    <div class="topbar"><div class="page-title"><h1>👥 Manajemen User</h1><p>Kelola semua pengguna · Edit Role & Password · Export</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
+    <div class="topbar"><div class="page-title"><h1>👥 Manajemen User</h1><p>Kelola semua pengguna sistem IPIM · Multi-role support</p></div><button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div>
 
     <div id="alertSuccess" class="alert alert-success"></div>
     <div id="alertError" class="alert alert-error"></div>
 
-    <!-- Tambah User -->
     <div class="card">
       <div class="card-header"><h3><i class="fa-solid fa-user-plus"></i> Tambah User Baru</h3></div>
       <div class="card-body">
@@ -133,8 +132,8 @@
             <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="email@ipim.ac.id" required></div>
             <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Min. 6 karakter" required minlength="6"></div>
             <div class="form-group">
-              <label>Role</label>
-              <select id="role" required>
+              <label>Role Default</label>
+              <select id="role" required onchange="onRoleDefaultChange()">
                 <option value="">Pilih Role...</option>
                 <option value="pusat-data">Pusat Data</option>
                 <option value="operator-akademik">Operator Akademik</option>
@@ -147,27 +146,41 @@
                 <option value="umum">Umum</option>
               </select>
             </div>
-            <div class="form-group"><label>&nbsp;</label><button type="button" class="btn btn-primary" id="btnSubmit" onclick="tambahUser()"><i class="fa-solid fa-save"></i> Simpan</button></div>
           </div>
+
+          <!-- Multi-Role Checkbox -->
+          <div class="role-checkbox-section">
+            <h4>🎯 Role Tambahan (Multi-Role)</h4>
+            <p style="font-size:11px;color:var(--gray-600);margin-bottom:10px;">Centang role yang diizinkan. User akan memilih role saat login.</p>
+            <div class="role-checkbox-list" id="roleCheckboxes">
+              <label class="role-check"><input type="checkbox" value="pusat-data" class="cb-role"> Pusat Data</label>
+              <label class="role-check"><input type="checkbox" value="operator-akademik" class="cb-role"> Operator Akademik</label>
+              <label class="role-check"><input type="checkbox" value="operator-halaqoh" class="cb-role"> Operator Halaqoh</label>
+              <label class="role-check"><input type="checkbox" value="operator-bahasa" class="cb-role"> Operator Bahasa</label>
+              <label class="role-check"><input type="checkbox" value="operator-pengasuhan" class="cb-role"> Operator Pengasuhan</label>
+              <label class="role-check"><input type="checkbox" value="dosen" class="cb-role"> Dosen</label>
+              <label class="role-check"><input type="checkbox" value="musyrif" class="cb-role"> Musyrif</label>
+              <label class="role-check"><input type="checkbox" value="dosen-musyrif" class="cb-role"> Dosen-Musyrif</label>
+              <label class="role-check"><input type="checkbox" value="umum" class="cb-role"> Umum</label>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:16px;">
+            <button type="button" class="btn btn-primary" id="btnSubmit" onclick="tambahUser()"><i class="fa-solid fa-save"></i> Simpan</button>
+          </div>
+          <input type="hidden" id="editUid">
         </form>
       </div>
     </div>
 
-    <!-- Daftar User -->
     <div class="card">
       <div class="card-header">
         <h3><i class="fa-solid fa-list"></i> Daftar User (<span id="totalUser">0</span>)</h3>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-info btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
-          <button class="btn btn-outline btn-sm" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-        </div>
+        <button class="btn btn-outline btn-sm" onclick="exportExcel()"><i class="fa-solid fa-download"></i> Download Excel</button>
       </div>
       <div class="card-body" id="tableContainer"><p style="text-align:center;color:var(--gray-400);">Memuat data...</p></div>
     </div>
   </main>
-
-  <!-- Modal Edit -->
-  <div class="modal-overlay" id="modalEdit"><div class="modal-box" id="modalEditContent"></div></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -183,43 +196,76 @@
     let isAdding = false;
     let allUsers = [];
 
+    const ROLE_LABEL = {
+      'pusat-data': 'Pusat Data', 'operator-akademik': 'Op. Akademik',
+      'operator-halaqoh': 'Op. Halaqoh', 'operator-bahasa': 'Op. Bahasa',
+      'operator-pengasuhan': 'Op. Pengasuhan', 'dosen': 'Dosen',
+      'musyrif': 'Musyrif', 'dosen-musyrif': 'Dosen-Musyrif', 'umum': 'Umum'
+    };
+
     function showAlert(type, text) {
       const el = document.getElementById('alert' + type.charAt(0).toUpperCase() + type.slice(1));
       el.textContent = text; el.style.display = 'block';
       setTimeout(() => el.style.display = 'none', 4000);
     }
 
-    function closeModal() { document.getElementById('modalEdit').classList.remove('show'); }
-
     function getBadgeClass(role) {
-      const map = { 'pusat-data': 'badge-pusat', 'operator-akademik': 'badge-operator', 'operator-halaqoh': 'badge-operator', 'operator-bahasa': 'badge-operator', 'operator-pengasuhan': 'badge-operator', 'dosen': 'badge-dosen', 'dosen-musyrif': 'badge-dosen', 'musyrif': 'badge-musyrif', 'umum': 'badge-umum' };
+      const map = { 'pusat-data': 'badge-pusat', 'operator-akademik': 'badge-operator', 'operator-halaqoh': 'badge-operator', 'operator-bahasa': 'badge-operator', 'operator-pengasuhan': 'badge-operator', 'dosen': 'badge-dosen', 'dosen-musyrif': 'badge-dosen', 'musyrif': 'badge-musyrif', 'mahasiswa': 'badge-mahasiswa', 'umum': 'badge-umum' };
       return map[role] || 'badge-umum';
     }
 
     function getRoleLabel(role) {
-      const map = { 'pusat-data': 'Pusat Data', 'operator-akademik': 'Op. Akademik', 'operator-halaqoh': 'Op. Halaqoh', 'operator-bahasa': 'Op. Bahasa', 'operator-pengasuhan': 'Op. Pengasuhan', 'dosen': 'Dosen', 'musyrif': 'Musyrif', 'dosen-musyrif': 'Dosen-Musyrif', 'umum': 'Umum' };
-      return map[role] || role;
+      return ROLE_LABEL[role] || role;
     }
+
+    // Toggle role checkbox
+    document.querySelectorAll('.role-check').forEach(label => {
+      label.addEventListener('click', function() {
+        const cb = this.querySelector('input');
+        cb.checked = !cb.checked;
+        this.classList.toggle('checked', cb.checked);
+      });
+    });
+
+    // Saat role default dipilih, auto-centang checkbox yang sama
+    window.onRoleDefaultChange = function() {
+      const role = document.getElementById('role').value;
+      if (!role) return;
+      document.querySelectorAll('.cb-role').forEach(cb => {
+        if (cb.value === role) {
+          cb.checked = true;
+          cb.closest('.role-check').classList.add('checked');
+        }
+      });
+    };
 
     async function loadUsers() {
       try {
-        const snap = await db.collection('users').orderBy('nama').get();
-        allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const snap = await db.collection('users').get();
+        allUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }))
+          .sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+        
         document.getElementById('totalUser').textContent = allUsers.length;
-        let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Email</th><th>Role</th><th style="width:120px;">Aksi</th></tr></thead><tbody>';
-        if (allUsers.length === 0) {
-          html += '<tr><td colspan="5">Belum ada user</td></tr>';
+
+        let html = '<table><thead><tr><th>Nama</th><th>Email</th><th>Password</th><th>Roles</th><th>Aksi</th></tr></thead><tbody>';
+        if (snap.empty) {
+          html += '<tr><td colspan="5" style="text-align:center;padding:20px;">Belum ada user</td></tr>';
         } else {
-          allUsers.forEach((d, i) => {
+          allUsers.forEach(d => {
+            const passId = `pass_${d.uid}`;
+            const roles = d.roles || [d.role || 'umum'];
+            const roleBadges = roles.map(r => 
+              `<span class="badge ${getBadgeClass(r)}" style="margin:1px;display:inline-block;">${getRoleLabel(r)}</span>`
+            ).join('');
+            
             html += `<tr>
-              <td>${i+1}</td>
-              <td class="text-left"><strong>${d.nama || '-'}</strong></td>
+              <td style="text-align:left;"><strong>${d.nama || '-'}</strong></td>
               <td>${d.email || '-'}</td>
-              <td><span class="badge ${getBadgeClass(d.role)}">${getRoleLabel(d.role)}</span></td>
+              <td><span id="${passId}" style="filter: blur(5px); cursor: pointer;" onclick="togglePassword('${passId}')" title="Klik untuk lihat">${d.password || '••••••'}</span></td>
+              <td>${roleBadges}</td>
               <td>
-                <button class="btn btn-outline btn-sm" onclick="editUser('${d.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                <button class="btn btn-outline btn-sm" onclick="resetPassword('${d.id}')" title="Reset Password"><i class="fa-solid fa-key"></i></button>
-                <button class="btn btn-danger btn-sm" onclick="hapusUser('${d.id}','${d.email}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                <button class="btn btn-primary btn-sm" onclick="editUser('${d.uid}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="hapusUser('${d.uid}','${d.email}')"><i class="fa-solid fa-trash"></i></button>
               </td>
             </tr>`;
           });
@@ -229,162 +275,136 @@
       } catch(e) { console.error(e); }
     }
 
-    // ═══ TAMBAH USER ═══
+    window.editUser = function(uid) {
+      const d = allUsers.find(u => u.uid === uid);
+      if (!d) return;
+      
+      document.getElementById('nama').value = d.nama || '';
+      document.getElementById('email').value = d.email || '';
+      document.getElementById('password').value = d.password || '';
+      document.getElementById('role').value = d.role || 'umum';
+      document.getElementById('editUid').value = uid;
+      
+      // Set checkboxes
+      const roles = d.roles || [d.role || 'umum'];
+      document.querySelectorAll('.cb-role').forEach(cb => {
+        cb.checked = roles.includes(cb.value);
+        cb.closest('.role-check').classList.toggle('checked', cb.checked);
+      });
+      
+      document.getElementById('addUserForm').scrollIntoView({ behavior: 'smooth' });
+    };
+
     window.tambahUser = async function() {
       if (isAdding) return;
       isAdding = true;
+
       const nama = document.getElementById('nama').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const role = document.getElementById('role').value;
-      if (!nama || !email || !password || !role) { showAlert('error', 'Semua field wajib!'); isAdding = false; return; }
+      const editUid = document.getElementById('editUid').value;
+
+      if (!nama || !email || !role) { showAlert('error', 'Semua field wajib!'); isAdding = false; return; }
+
+      // Kumpulkan roles
+      const selectedRoles = [...document.querySelectorAll('.cb-role:checked')].map(cb => cb.value);
+      if (!selectedRoles.includes(role)) selectedRoles.unshift(role);
+      const uniqueRoles = [...new Set(selectedRoles)];
 
       const btn = document.getElementById('btnSubmit');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Membuat...';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
-        const apiKey = firebaseConfig.apiKey;
-        const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, returnSecureToken: true })
-        });
-        const data = await res.json();
-        if (data.error) {
-          let msg = data.error.message;
-          if (msg.includes('EMAIL_EXISTS')) msg = 'Email sudah terdaftar!';
-          else if (msg.includes('WEAK_PASSWORD')) msg = 'Password minimal 6 karakter!';
-          else if (msg.includes('INVALID_EMAIL')) msg = 'Format email tidak valid!';
-          throw new Error(msg);
+        if (editUid) {
+          // EDIT EXISTING
+          await db.collection('users').doc(editUid).update({
+            nama, email, role, roles: uniqueRoles,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          showAlert('success', `✅ ${nama} diupdate!`);
+        } else {
+          // TAMBAH BARU
+          if (!password) { showAlert('error', 'Password wajib!'); isAdding = false; btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan'; return; }
+          
+          const apiKey = firebaseConfig.apiKey;
+          const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, returnSecureToken: true })
+          });
+          const data = await res.json();
+          if (data.error) {
+            let msg = data.error.message;
+            if (msg.includes('EMAIL_EXISTS')) msg = 'Email sudah terdaftar!';
+            else if (msg.includes('WEAK_PASSWORD')) msg = 'Password minimal 6 karakter!';
+            else if (msg.includes('INVALID_EMAIL')) msg = 'Format email tidak valid!';
+            throw new Error(msg);
+          }
+          
+          const uid = data.localId;
+          await db.collection('users').doc(uid).set({
+            uid, nama, email, password,
+            role, roles: uniqueRoles,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          showAlert('success', `✅ ${nama} berhasil dibuat!`);
         }
-        const uid = data.localId;
-        await db.collection('users').doc(uid).set({
-          uid, nama, email, password, role,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showAlert('success', `✅ ${nama} berhasil dibuat!`);
+        
+        // Reset form
         document.getElementById('addUserForm').reset();
+        document.getElementById('editUid').value = '';
+        document.querySelectorAll('.cb-role').forEach(cb => { cb.checked = false; cb.closest('.role-check').classList.remove('checked'); });
         loadUsers();
       } catch(e) { showAlert('error', '❌ ' + e.message); }
-      finally { isAdding = false; btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan'; }
-    };
-
-    // ═══ EDIT USER (ROLE) ═══
-    window.editUser = function(id) {
-      const u = allUsers.find(x => x.id === id);
-      if (!u) return;
-      
-      const roleOptions = ['pusat-data','operator-akademik','operator-halaqoh','operator-bahasa','operator-pengasuhan','dosen','musyrif','dosen-musyrif','umum']
-        .map(r => `<option value="${r}" ${u.role===r?'selected':''}>${getRoleLabel(r)}</option>`).join('');
-
-      document.getElementById('modalEditContent').innerHTML = `
-        <h4>✏️ Edit User</h4>
-        <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;">${u.nama} (${u.email})</p>
-        <div class="form-group"><label>Role</label><select id="editRole">${roleOptions}</select></div>
-        <div class="modal-buttons">
-          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnUpdateRole" type="button">Update Role</button>
-        </div>`;
-      document.getElementById('modalEdit').classList.add('show');
-
-      document.getElementById('btnUpdateRole').onclick = async () => {
-        const newRole = document.getElementById('editRole').value;
-        await db.collection('users').doc(id).update({ role: newRole, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        closeModal();
-        showAlert('success', `✅ Role ${u.nama} diupdate ke ${getRoleLabel(newRole)}!`);
-        loadUsers();
-      };
-    };
-
-    // ═══ RESET PASSWORD ═══
-    window.resetPassword = function(id) {
-      const u = allUsers.find(x => x.id === id);
-      if (!u) return;
-
-      document.getElementById('modalEditContent').innerHTML = `
-        <h4>🔑 Reset Password</h4>
-        <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;">${u.nama} (${u.email})</p>
-        <div class="form-group"><label>Password Baru</label><input type="password" id="newPassword" placeholder="Min. 6 karakter" minlength="6"></div>
-        <div class="modal-buttons">
-          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnResetPass" type="button">Reset Password</button>
-        </div>`;
-      document.getElementById('modalEdit').classList.add('show');
-
-      document.getElementById('btnResetPass').onclick = async () => {
-        const newPass = document.getElementById('newPassword').value;
-        if (!newPass || newPass.length < 6) { alert('Password minimal 6 karakter!'); return; }
-
-        try {
-          // Update di Firestore
-          await db.collection('users').doc(id).update({ 
-            password: newPass, 
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-          });
-          closeModal();
-          showAlert('success', `✅ Password ${u.nama} berhasil direset!`);
-          loadUsers();
-        } catch(e) {
-          showAlert('error', '❌ Gagal reset password: ' + e.message);
-        }
-      };
-    };
-
-    // ═══ HAPUS USER ═══
-    window.hapusUser = async function(id, email) {
-      if (!confirm(`⚠️ Hapus user ${email}?\n\nData user akan dihapus permanen dari Firestore.\n(Akun Firebase Auth tidak otomatis terhapus)`)) return;
-      try {
-        await db.collection('users').doc(id).delete();
-        showAlert('success', '✅ User dihapus!');
-        loadUsers();
-      } catch(e) {
-        showAlert('error', '❌ Gagal hapus: ' + e.message);
+      finally { 
+        isAdding = false; 
+        btn.disabled = false; 
+        btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan'; 
       }
     };
 
-    // ═══ EXPORT EXCEL ═══
+    window.hapusUser = async function(id, email) {
+      if (!confirm(`Hapus ${email}?`)) return;
+      await db.collection('users').doc(id).delete();
+      showAlert('success', 'Dihapus!');
+      loadUsers();
+    };
+
+    window.togglePassword = function(id) {
+      const el = document.getElementById(id);
+      if (el.style.filter === 'blur(5px)') {
+        el.style.filter = 'none';
+        el.title = 'Klik untuk sembunyikan';
+      } else {
+        el.style.filter = 'blur(5px)';
+        el.title = 'Klik untuk lihat';
+      }
+    };
+
     function exportExcel() {
       if (allUsers.length === 0) { alert('Tidak ada data!'); return; }
-      const data = allUsers.map((d, i) => ({
-        No: i + 1,
-        Nama: d.nama || '-',
-        Email: d.email || '-',
-        Role: getRoleLabel(d.role),
-        Password: d.password || '***'
-      }));
-      const ws = XLSX.utils.json_to_sheet(data);
-      ws['!cols'] = [{wch:5},{wch:30},{wch:30},{wch:18},{wch:15}];
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Users');
-      XLSX.writeFile(wb, 'data-user-ipim.xlsx');
-      showAlert('success', '✅ Excel didownload!');
-    }
-
-    // ═══ EXPORT PDF ═══
-    function exportPDF() {
-      if (allUsers.length === 0) { alert('Tidak ada data!'); return; }
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      
-      doc.setFontSize(16);
-      doc.text('Data User IPIM Maghfirah', 14, 18);
-      doc.setFontSize(9);
-      doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')} · Total: ${allUsers.length} user`, 14, 24);
-
-      const head = [['No', 'Nama', 'Email', 'Role']];
-      const body = allUsers.map((d, i) => [i + 1, d.nama || '-', d.email || '-', getRoleLabel(d.role)]);
-
-      doc.autoTable({
-        head, body, startY: 28,
-        styles: { fontSize: 9, cellPadding: 3 },
-        headStyles: { fillColor: [0, 77, 64], textColor: [255, 255, 255] },
-        columnStyles: { 0: { cellWidth: 10 }, 1: { cellWidth: 55 }, 2: { cellWidth: 60 }, 3: { cellWidth: 35 } }
+      let csv = '\uFEFFNo;Nama;Email;Password;Roles\n';
+      allUsers.forEach((d, i) => {
+        const roles = (d.roles || [d.role || 'umum']).map(r => getRoleLabel(r)).join(', ');
+        csv += `${i+1};"${d.nama||'-'}";"${d.email||'-'}";"${d.password||'***'}";"${roles}"\n`;
       });
-
-      doc.save('data-user-ipim.pdf');
-      showAlert('success', '✅ PDF didownload!');
+      const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'data-user-ipim.xls';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     }
 
-    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
+    window.logout = function() { 
+      if (confirm('Keluar?')) { 
+        auth.signOut().then(() => { 
+          localStorage.removeItem('user'); 
+          localStorage.removeItem('roleAktif');
+          window.location.href = '../../index.html'; 
+        }); 
+      } 
+    };
+    
     loadUsers();
   </script>
 </body>
