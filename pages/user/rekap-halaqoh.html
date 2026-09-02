@@ -2,371 +2,249 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <title>Rekap Halaqoh - IPIM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rekap Absensi Halaqoh - IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
-    :root {
-      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
-      --green-light:#e8f5e9;--green-pale:#f0faf5;
-      --gold:#f5c842;--white:#ffffff;
-      --gray-50:#f9f9f9;--gray-100:#f0f0f0;--gray-200:#d1ead8;
-      --gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
-      --orange:#f57c00;--orange-light:#fff3e0;
-      --radius-sm:10px;--radius:14px;--radius-lg:18px;
-      --transition:all 0.3s ease;--header-height:56px;
+    :root { 
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; 
+      --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; 
+      --gray-200: #e0e0e0; --gray-600: #616161; --gray-800: #333333; 
+      --red: #e53935; --red-light: #fce4ec; --orange: #f57c00; --orange-light: #fff3e0;
+      --blue: #2563eb; --blue-light: #e3f2fd;
+      --radius-sm: 8px; --radius: 12px; --transition: all 0.25s ease; --header-height: 56px; 
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
-      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
-      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%); color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 80px; min-height: 100vh; }
+    
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33, #006644); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.3); }
+    .app-header .btn-back { background: rgba(255,255,255,0.12); border: none; color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .app-header h3 { font-size: 15px; font-weight: 700; flex: 1; }
+    
+    .content { padding: 16px; max-width: 700px; margin: 0 auto; }
+    
+    .card { background: white; border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 14px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,61,51,0.05); }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--green-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .halaqoh-card {
+      background: white; border-radius: var(--radius-sm);
+      padding: 14px; border: 1px solid var(--gray-200);
+      cursor: pointer; margin-bottom: 8px;
+      transition: all 0.2s;
     }
-
-    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
-    .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
-
-    .content { padding: 14px; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-
-    .card {
-      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
-      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06); overflow-x: auto;
-    }
-
-    .tabs { display: flex; gap: 0; margin-bottom: 12px; border-radius: 40px; overflow: hidden; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.3); }
-    .tab { flex: 1; text-align: center; padding: 10px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--gray-600); border: none; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .tab.active { background: white; color: var(--green-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 40px; }
-
-    .halaqoh-info {
-      display: flex; align-items: center; gap: 12px; padding: 14px;
-      background: rgba(255,255,255,0.5); border-radius: var(--radius);
-      margin-bottom: 8px;
-    }
-    .halaqoh-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
-    .halaqoh-detail h4 { font-size: 14px; font-weight: 700; }
-    .halaqoh-detail p { font-size: 11px; color: var(--gray-600); }
-
-    .jp-input { width: 50px; padding: 4px 6px; text-align: center; border: 1.5px solid var(--gray-200); border-radius: 4px; font-size: 11px; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .jp-input:focus { border-color: var(--green); outline: none; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 600px; }
-    thead th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
-    tbody td { padding: 7px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
-    .text-left { text-align: left; }
+    .halaqoh-card:active { background: var(--gray-50); }
+    .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
+    
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+    .badge-pengganti { background: var(--orange-light); color: var(--orange); }
+    .badge-tetap { background: var(--green-light); color: var(--green-dark); }
+    .badge-green { background: var(--green-light); color: #1b5e20; }
+    .badge-red { background: var(--red-light); color: #b71c1c; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: var(--blue-light); color: var(--blue); }
+    
+    .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+    .summary-card { background: white; border-radius: var(--radius-sm); padding: 10px; text-align: center; border: 1px solid var(--gray-200); }
+    .summary-card .s-val { font-size: 18px; font-weight: 800; color: var(--green-dark); }
+    .summary-card .s-lbl { font-size: 9px; color: var(--gray-600); margin-top: 2px; font-weight: 600; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 500px; }
+    th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); border-bottom: 2px solid var(--gray-200); white-space: nowrap; text-transform: uppercase; }
+    td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
     tbody tr:hover { background: var(--gray-50); }
-
-    .badge { padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; }
-    .badge-hadir { background: var(--green-light); color: #1b5e20; }
-    .badge-sakit { background: #fff3e0; color: #e65100; }
-    .badge-izin { background: #e3f2fd; color: #0d47a1; }
-    .badge-alfa { background: #fce4ec; color: #b71c1c; }
-    .badge-jaga { background: #f3e5f5; color: #6a1b9a; }
-    .badge-high { background: var(--green-light); color: #1b5e20; }
-    .badge-mid { background: #fff3e0; color: #e65100; }
-    .badge-low { background: #fce4ec; color: #b71c1c; }
-
-    .progress-bar-wrap { width: 100%; height: 5px; background: var(--gray-200); border-radius: 3px; overflow: hidden; margin-top: 2px; }
-    .progress-bar-fill { height: 100%; border-radius: 3px; }
-    .bar-high { background: var(--green); } .bar-mid { background: var(--orange); } .bar-low { background: var(--red); }
-
-    .empty-state { text-align: center; padding: 30px; color: var(--gray-400); font-size: 13px; }
-
-    .btn { padding: 8px 16px; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; background: var(--green-dark); color: white; }
-    .btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-    .btn-sm { padding: 5px 10px; font-size: 10px; }
-    .action-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
-
-    .bottom-nav {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 32px); max-width: 420px; height: 64px;
-      background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
-      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
-    }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
-    .nav-item i { font-size: 20px; }
-    .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); }
-    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+    
+    .info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 11px; color: var(--blue); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .warning-box { background: #fff3cd; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+    
+    @media (max-width: 480px) { .summary-row { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3>📊 Rekap Halaqoh</h3>
-  </header>
+<header class="app-header">
+  <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+  <h3>📊 Rekap Absensi Halaqoh</h3>
+</header>
 
-  <div class="content" id="mainContent">
-    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
-  </div>
+<div class="content" id="mainContent">
+  <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+</div>
 
-  <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grid-2"></i><span>Menu</span></div>
-    <div class="nav-item active" onclick="goTo('rekap-halaqoh.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
-  </nav>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase-config.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  const user = checkRole(['musyrif', 'dosen-musyrif']);
+  if (!user) window.location.href = '../../index.html';
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../../js/firebase-config.js"></script>
-  <script src="../../js/app.js"></script>
-  <script>
-    const user = checkRole(['musyrif', 'dosen-musyrif']);
-    if (!user) window.location.href = '../../index.html';
-    window.goTo = page => window.location.href = page;
+  let isPengganti = false;
+  let activeHalaqohId = null;
 
-    function getLocalDate() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      const d = String(now.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    }
+  // ═══ INIT ═══
+  async function init() {
+    const container = document.getElementById('mainContent');
+    
+    try {
+      // Cek halaqoh tetap
+      let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+      if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
 
-    let halaqohData = null, anggotaList = [], absensiList = [], hafalanList = [], ujianList = [];
-    let currentTab = 'absensi';
-    let totalPertemuan = 16;
-
-    async function loadAll() {
-      const container = document.getElementById('mainContent');
-      container.innerHTML = '<p style="text-align:center;">Mencari halaqoh...</p>';
-
-      try {
-        let hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
-        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId','==',user.uid).get();
-        if (hSnap.empty) {
-          container.innerHTML = '<div class="empty-state">⚠️ Anda belum memiliki Halaqoh.</div>';
-          return;
-        }
-
-        halaqohData = { id: hSnap.docs[0].id, ...hSnap.docs[0].data() };
-
-        const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohData.id).get();
-        const mhsIds = pSnap.docs.map(d => d.data().mahasiswaId).filter(Boolean);
-        anggotaList = [];
-        for (const id of mhsIds) {
-          const doc = await db.collection('mahasiswa').doc(id).get();
-          if (doc.exists) anggotaList.push({ id: doc.id, ...doc.data() });
-        }
-        anggotaList.sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
-
-        const aSnap = await db.collection('absensiHalaqoh').where('halaqohId','==',halaqohData.id).get();
-        absensiList = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        const hSnap2 = await db.collection('hafalan').get();
-        hafalanList = hSnap2.docs.map(d => ({ id: d.id, ...d.data() })).filter(h => mhsIds.includes(h.mahasiswaId));
-
-        const uSnap = await db.collection('ujianQuran').get();
-        ujianList = uSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => mhsIds.includes(u.mahasiswaId));
-
-        // Hitung total pertemuan dari tanggal unik
-        const tanggalUnik = new Set(absensiList.map(a => a.tanggal).filter(Boolean));
-        totalPertemuan = tanggalUnik.size || 16;
-
-        renderAll(container);
-      } catch(e) {
-        container.innerHTML = `<div class="empty-state">❌ Gagal: ${e.message}</div>`;
-      }
-    }
-
-    function getNama(id) {
-      const m = anggotaList.find(a => a.id === id);
-      return m?.nama || id;
-    }
-
-    function renderAll(container) {
-      let html = `
-        <div class="halaqoh-info">
-          <div class="halaqoh-avatar">${(halaqohData.nama||'H')[0]}</div>
-          <div class="halaqoh-detail"><h4>${halaqohData.nama}</h4><p>${anggotaList.length} anggota · Musyrif: ${user.nama}</p></div>
-        </div>
-        <div class="tabs">
-          <button class="tab ${currentTab==='absensi'?'active':''}" onclick="switchTab('absensi')">📋 Absensi</button>
-          <button class="tab ${currentTab==='hafalan'?'active':''}" onclick="switchTab('hafalan')">📖 Setoran</button>
-          <button class="tab ${currentTab==='ujian'?'active':''}" onclick="switchTab('ujian')">📝 Ujian</button>
-        </div>
-        <div id="tabContent"></div>`;
-
-      container.innerHTML = html;
-      renderTab();
-    }
-
-    window.switchTab = function(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab')[tab==='absensi'?0:tab==='hafalan'?1:2].classList.add('active');
-      renderTab();
-    };
-
-    function renderTab() {
-      const el = document.getElementById('tabContent');
-      if (!el) return;
-      if (currentTab === 'absensi') renderAbsensi(el);
-      else if (currentTab === 'hafalan') renderHafalan(el);
-      else renderUjian(el);
-    }
-
-    // ═══ ABSENSI (SEPERTI REKAP KELAS) ═══
-    function renderAbsensi(el) {
-      if (anggotaList.length === 0) {
-        el.innerHTML = '<div class="empty-state">📭 Belum ada anggota</div>';
+      if (!hSnap.empty) {
+        isPengganti = false;
+        activeHalaqohId = hSnap.docs[0].id;
+        await loadRekap(container, hSnap.docs[0].data().nama, false);
         return;
       }
 
-      // Hitung per mahasiswa
-      const rekap = {};
-      anggotaList.forEach(m => { rekap[m.id] = { sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 }; });
+      // Cek halaqoh pengganti
+      const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
+
+      if (!penggantiSnap.empty) {
+        isPengganti = true;
+        let html = `
+          <div class="info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk melihat rekap:</span>
+          </div>`;
+
+        penggantiSnap.forEach(d => {
+          const hData = d.data();
+          html += `
+            <div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
+              <h4>${hData.nama} <span class="badge badge-pengganti">Pengganti</span></h4>
+              <p>Musyrif tetap: ${hData.musyrifNama || '-'}</p>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+        return;
+      }
+
+      // Tidak punya halaqoh
+      container.innerHTML = `
+        <div class="warning-box">
+          <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+          <strong>Anda belum memiliki halaqoh.</strong>
+          <p style="margin-top:8px;font-size:12px;">Hubungi Operator Halaqoh.</p>
+        </div>`;
+
+    } catch(e) {
+      container.innerHTML = `<p style="text-align:center;color:var(--red);">Error: ${e.message}</p>`;
+    }
+  }
+
+  // ═══ PILIH HALAQOH (PENGGANTI) ═══
+  window.pilihHalaqoh = async function(hId) {
+    const container = document.getElementById('mainContent');
+    try {
+      const hDoc = await db.collection('halaqoh').doc(hId).get();
+      if (!hDoc.exists) { alert('Halaqoh tidak ditemukan!'); return; }
+      activeHalaqohId = hId;
+      isPengganti = true;
+      await loadRekap(container, hDoc.data().nama, true);
+    } catch(e) { alert('Gagal: ' + e.message); }
+  };
+
+  // ═══ LOAD REKAP ═══
+  async function loadRekap(container, halaqohNama, pengganti) {
+    container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Memuat rekap...</p>';
+    
+    try {
+      // Ambil semua absensi untuk halaqoh ini (oleh musyrif tetap ATAU pengganti)
+      const absenSnap = await db.collection('absensiHalaqoh')
+        .where('halaqohId', '==', activeHalaqohId)
+        .get();
       
-      absensiList.forEach(a => {
-        const mhsId = a.mahasiswaId;
-        if (!mhsId || !rekap[mhsId]) return;
+      const rekap = {};
+      let totalAbsensi = 0;
+      
+      absenSnap.forEach(d => {
+        const data = d.data();
+        const mhsId = data.mahasiswaId;
+        if (!mhsId) return;
+        if (!rekap[mhsId]) rekap[mhsId] = { hadir:0, sakit:0, izin:0, alfa:0, jaga:0, total:0 };
+        const status = data.status || 'hadir';
+        if (rekap[mhsId][status] !== undefined) rekap[mhsId][status]++;
         rekap[mhsId].total++;
-        if (a.status && a.status !== 'hadir') {
-          rekap[mhsId][a.status] = (rekap[mhsId][a.status] || 0) + 1;
-        }
+        totalAbsensi++;
       });
 
-      const arr = anggotaList.map(m => {
-        const r = rekap[m.id];
-        const totalTidakHadir = r.sakit + r.izin + r.alfa + r.jaga;
-        const hadir = Math.max(0, totalPertemuan - totalTidakHadir);
-        const persentase = totalPertemuan > 0 ? Math.round((hadir / totalPertemuan) * 100) : 0;
-        return { nama: m.nama, nim: m.nim, hadir, sakit: r.sakit, izin: r.izin, alfa: r.alfa, jaga: r.jaga, persentase };
-      });
-
+      // Ambil daftar anggota halaqoh
+      const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', activeHalaqohId).get();
+      const anggotaIds = pSnap.docs.map(d => d.data().mahasiswaId);
+      
+      const arr = [];
+      for (const id of anggotaIds) {
+        const mhsDoc = await db.collection('mahasiswa').doc(id).get();
+        if (!mhsDoc.exists) continue;
+        const nama = mhsDoc.data().nama;
+        const val = rekap[id] || { hadir:0, sakit:0, izin:0, alfa:0, jaga:0, total:0 };
+        const hadirTotal = val.hadir + (val.jaga || 0);
+        const persentase = val.total > 0 ? Math.round((hadirTotal / val.total) * 100) : 0;
+        arr.push({ nama, ...val, hadirTotal, persentase });
+      }
+      
       arr.sort((a,b) => a.nama.localeCompare(b.nama));
 
-      let html = `<div class="action-row">
-        <label style="font-size:11px;">Total Pertemuan:</label>
-        <input class="jp-input" id="totalPertemuan" value="${totalPertemuan}" onchange="updateTotalPertemuan(this.value)">
-        <span style="font-size:10px;color:var(--gray-600);">${absensiList.length} catatan</span>
-        <button class="btn btn-outline btn-sm" onclick="exportExcel()" style="margin-left:auto;"><i class="fa-solid fa-file-excel"></i> Excel</button>
-      </div>`;
+      // Summary
+      const totalHadir = arr.reduce((s, r) => s + r.hadirTotal, 0);
+      const totalSakit = arr.reduce((s, r) => s + r.sakit, 0);
+      const totalIzin = arr.reduce((s, r) => s + r.izin, 0);
+      const totalAlfa = arr.reduce((s, r) => s + r.alfa, 0);
 
-      html += '<table><thead><tr><th>No</th><th>Nama</th><th>NIM</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th><th>%</th></tr></thead><tbody>';
+      let html = `
+        <div class="card">
+          <div class="card-title">
+            📋 ${halaqohNama}
+            ${pengganti ? '<span class="badge badge-pengganti">Pengganti</span>' : '<span class="badge badge-tetap">Tetap</span>'}
+          </div>
+          <div class="summary-row">
+            <div class="summary-card"><div class="s-val">${arr.length}</div><div class="s-lbl">Anggota</div></div>
+            <div class="summary-card"><div class="s-val" style="color:#1b5e20;">${totalHadir}</div><div class="s-lbl">Hadir</div></div>
+            <div class="summary-card"><div class="s-val" style="color:#e65100;">${totalSakit + totalIzin + totalAlfa}</div><div class="s-lbl">Tidak Hadir</div></div>
+            <div class="summary-card"><div class="s-val" style="color:#2563eb;">${totalAbsensi}</div><div class="s-lbl">Total Absensi</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <table>
+            <thead><tr><th>No</th><th>Nama</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th><th>Total</th><th>%</th></tr></thead>
+            <tbody>`;
 
       if (arr.length === 0) {
-        html += '<tr><td colspan="9">Belum ada data</td></tr>';
+        html += '<tr><td colspan="9">Tidak ada data</td></tr>';
       } else {
         arr.forEach((r, i) => {
-          const barClass = r.persentase >= 80 ? 'bar-high' : r.persentase >= 60 ? 'bar-mid' : 'bar-low';
-          const badgeClass = r.persentase >= 80 ? 'badge-high' : r.persentase >= 60 ? 'badge-mid' : 'badge-low';
+          const badge = r.persentase >= 75 ? 'badge-green' : r.persentase >= 50 ? 'badge-yellow' : 'badge-red';
           html += `<tr>
             <td>${i+1}</td>
-            <td class="text-left"><strong>${r.nama}</strong></td>
-            <td>${r.nim||'-'}</td>
-            <td><span class="badge badge-hadir">${r.hadir}</span></td>
-            <td><span class="badge badge-sakit">${r.sakit}</span></td>
-            <td><span class="badge badge-izin">${r.izin}</span></td>
-            <td><span class="badge badge-alfa">${r.alfa}</span></td>
-            <td><span class="badge badge-jaga">${r.jaga}</span></td>
-            <td>
-              <span class="badge ${badgeClass}">${r.persentase}%</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill ${barClass}" style="width:${r.persentase}%"></div></div>
-            </td>
+            <td style="text-align:left;font-weight:600;">${r.nama}</td>
+            <td style="color:#1b5e20;font-weight:700;">${r.hadirTotal}</td>
+            <td style="color:#e65100;">${r.sakit}</td>
+            <td style="color:#2563eb;">${r.izin}</td>
+            <td style="color:#b71c1c;font-weight:700;">${r.alfa}</td>
+            <td style="color:#6d28d9;">${r.jaga||0}</td>
+            <td><strong>${r.total}</strong></td>
+            <td><span class="badge ${badge}">${r.persentase}%</span></td>
           </tr>`;
         });
       }
-      html += '</tbody></table>';
-
-      el.innerHTML = `<div class="card">${html}</div>`;
-    }
-
-    window.updateTotalPertemuan = function(val) {
-      totalPertemuan = parseInt(val) || 16;
-      renderAbsensi(document.getElementById('tabContent'));
-    };
-
-    // ═══ SETORAN HAFALAN ═══
-    function renderHafalan(el) {
-      if (hafalanList.length === 0) {
-        el.innerHTML = '<div class="empty-state">📭 Belum ada setoran hafalan</div>';
-        return;
-      }
-
-      const grouped = {};
-      hafalanList.forEach(h => {
-        const k = h.mahasiswaId;
-        if(!grouped[k]) grouped[k] = [];
-        grouped[k].push(h);
-      });
-
-      let html = '';
-      Object.entries(grouped).forEach(([id, data]) => {
-        html += `<div class="card"><strong style="font-size:12px;">📖 ${getNama(id)}</strong><small style="color:var(--gray-600);margin-left:4px;">(${data.length}x setoran)</small>`;
-        html += '<table><thead><tr><th>Tgl</th><th>Juz</th><th>Surah</th><th>Ayat</th><th>Nilai</th></tr></thead><tbody>';
-        data.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0)).forEach(d => {
-          const tgl = d.createdAt?.toDate?.() || new Date();
-          html += `<tr><td>${tgl.toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td><strong>Juz ${d.juz||'-'}</strong></td><td>${d.surah||'-'}</td><td>${d.ayat||'-'}</td><td>${d.nilai||'-'}</td></tr>`;
-        });
-        html += '</tbody></table></div>';
-      });
-      el.innerHTML = html;
-    }
-
-    // ═══ UJIAN BULANAN ═══
-    function renderUjian(el) {
-      if (ujianList.length === 0) {
-        el.innerHTML = '<div class="empty-state">📭 Belum ada data ujian</div>';
-        return;
-      }
-
-      let html = '<div class="card"><table><thead><tr><th>Nama</th><th>Ujian Ke</th><th>Bulan</th><th>Nilai</th><th>Predikat</th></tr></thead><tbody>';
-      ujianList.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0)).forEach(u => {
-        html += `<tr>
-          <td class="text-left">${getNama(u.mahasiswaId)}</td>
-          <td>Ujian ${u.ujianKe||'-'}</td><td>${u.bulan||'-'}</td>
-          <td><strong>${u.nilaiAkhir||'-'}</strong></td>
-          <td>${u.predikat||'-'}</td>
-        </tr>`;
-      });
+      
       html += '</tbody></table></div>';
-      el.innerHTML = html;
+      container.innerHTML = html;
+      
+    } catch(e) {
+      container.innerHTML = `<p style="text-align:center;color:var(--red);">Gagal: ${e.message}</p>`;
     }
+  }
 
-    window.exportExcel = function() {
-      const rekap = {};
-      anggotaList.forEach(m => { rekap[m.id] = { sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 }; });
-      absensiList.forEach(a => {
-        const mhsId = a.mahasiswaId;
-        if (!mhsId || !rekap[mhsId]) return;
-        rekap[mhsId].total++;
-        if (a.status && a.status !== 'hadir') rekap[mhsId][a.status] = (rekap[mhsId][a.status] || 0) + 1;
-      });
-
-      const data = anggotaList.map((m, i) => {
-        const r = rekap[m.id];
-        const totalTidakHadir = r.sakit + r.izin + r.alfa + r.jaga;
-        const hadir = Math.max(0, totalPertemuan - totalTidakHadir);
-        const pct = totalPertemuan > 0 ? Math.round((hadir / totalPertemuan) * 100) : 0;
-        return {
-          No: i+1, Nama: m.nama, NIM: m.nim||'-',
-          Hadir: hadir, Sakit: r.sakit, Izin: r.izin, Alfa: r.alfa, Jaga: r.jaga,
-          Persentase: pct + '%'
-        };
-      });
-
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Rekap Halaqoh');
-      XLSX.writeFile(wb, 'rekap-halaqoh.xlsx');
-    };
-
-    loadAll();
-  </script>
+  init();
+</script>
 </body>
 </html>
