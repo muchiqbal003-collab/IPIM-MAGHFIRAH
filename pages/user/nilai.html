@@ -17,7 +17,7 @@
     .content { padding: 16px; }
     .card { background: var(--white); border-radius: var(--radius); padding: 16px; border: 1px solid var(--gray-200); margin-bottom: 16px; }
     .jadwal-card { margin-bottom: 20px; }
-    .jadwal-card h3 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 15px; }
+    .jadwal-card h3 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 15px; flex-wrap: wrap; gap: 8px; }
     .btn { padding: 8px 14px; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: var(--transition); }
     .btn-primary { background: var(--green-dark); color: white; }
     .btn-outline { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); }
@@ -25,12 +25,13 @@
     .btn-sm { padding: 4px 10px; font-size: 11px; }
     .komponen-tag { background: var(--green-light); padding: 6px 12px; border-radius: 20px; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; margin: 0 6px 6px 0; }
     .komponen-tag strong { color: var(--green-dark); }
+    .kelas-badge { background: #e3f2fd; color: #0d47a1; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-left: 4px; }
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
     .modal-box { background: white; border-radius: var(--radius); width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; padding: 20px; }
     .form-group { margin-bottom: 12px; }
     .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
-    .form-group input { width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
     th { background: var(--gray-100); padding: 8px; text-align: center; border-bottom: 2px solid var(--gray-200); }
     td { padding: 8px; text-align: center; border-bottom: 1px solid var(--gray-100); }
@@ -38,7 +39,6 @@
     .badge-success { background: var(--green-light); color: #1b5e20; }
     .badge-warning { background: #fef3c7; color: #92400e; }
     .badge-danger { background: #fce4ec; color: #b71c1c; }
-    .alert { padding: 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: none; background: var(--green-light); color: #1b5e20; }
   </style>
 </head>
 <body>
@@ -66,9 +66,8 @@
 
     function showModal(html) { document.getElementById('modalContent').innerHTML = html; document.getElementById('modalOverlay').classList.add('show'); }
     function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
-    function showAlert(text) { const el = document.getElementById('alertSuccess'); if(el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 2000); } }
 
-    // ✅ Load halaman utama — hanya 1 card per matakuliah
+    // ═══ LOAD HALAMAN UTAMA ═══
     async function loadPage() {
       const container = document.getElementById('mainContent');
       try {
@@ -78,35 +77,62 @@
           return;
         }
 
-        // ✅ Gunakan Map untuk menyimpan satu entri per mkId
+        // ═══ GROUPING: 1 MK bisa punya BANYAK KELAS ═══
         const mkMap = new Map();
         jadwalSnap.forEach(doc => {
           const j = doc.data();
-          if (!mkMap.has(j.mkId)) {
-            mkMap.set(j.mkId, {
-              mkNama: j.mkNama,
-              kelasNama: j.kelasNama,
-              kelasId: j.kelasId,
-              jadwalIds: [doc.id]
+          const mkId = j.mkId || 'unknown';
+          
+          if (!mkMap.has(mkId)) {
+            mkMap.set(mkId, {
+              mkNama: j.mkNama || '-',
+              kelasList: [],  // ⬅️ ARRAY KELAS
+              jadwalIds: []
             });
-          } else {
-            mkMap.get(j.mkId).jadwalIds.push(doc.id);
+          }
+          
+          const mkData = mkMap.get(mkId);
+          
+          // Tambah kelas jika belum ada
+          if (!mkData.kelasList.some(k => k.kelasId === j.kelasId)) {
+            mkData.kelasList.push({
+              kelasId: j.kelasId,
+              kelasNama: j.kelasNama || '-'
+            });
+          }
+          
+          // Tambah jadwalId jika belum ada
+          if (!mkData.jadwalIds.includes(doc.id)) {
+            mkData.jadwalIds.push(doc.id);
+          }
+          
+          // Update nama MK kalau kosong
+          if (mkData.mkNama === '-' && j.mkNama) {
+            mkData.mkNama = j.mkNama;
           }
         });
 
-        let html = '<div id="alertSuccess" class="alert alert-success"></div>';
+        let html = '';
 
-        // Loop per matakuliah (bukan per JP)
         for (const [mkId, mkData] of mkMap) {
-          // Ambil komponen dari semua jadwal yang terkait dengan mkId ini
-          const kompSnap = await db.collection('komponenNilai').where('jadwalId', 'in', mkData.jadwalIds).get();
+          // Label semua kelas
+          const kelasLabel = mkData.kelasList.map(k => 
+            `<span class="kelas-badge">${k.kelasNama}</span>`
+          ).join(' ');
+
+          // Ambil komponen dari semua jadwal terkait
+          const kompSnap = await db.collection('komponenNilai')
+            .where('jadwalId', 'in', mkData.jadwalIds.length > 10 ? mkData.jadwalIds.slice(0, 10) : mkData.jadwalIds)
+            .get();
 
           html += `<div class="card jadwal-card">
-            <h3><span>${mkData.mkNama} - Kelas ${mkData.kelasNama}</span>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-outline btn-sm" onclick="lihatRekap('${mkId}','${mkData.kelasId}','${mkData.mkNama.replace(/'/g,"\\'")}','${mkData.kelasNama.replace(/'/g,"\\'")}')"><i class="fa-solid fa-chart-bar"></i> Rekap</button>
-              <button class="btn btn-primary btn-sm" onclick="tambahKomponen('${mkId}','${mkData.jadwalIds[0]}')"><i class="fa-solid fa-plus"></i> Komponen</button>
-            </div></h3>`;
+            <h3>
+              <span>${mkData.mkNama} <span style="margin-left:8px;">${kelasLabel}</span></span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="lihatRekap('${mkId}')"><i class="fa-solid fa-chart-bar"></i> Rekap</button>
+                <button class="btn btn-primary btn-sm" onclick="tambahKomponen('${mkId}')"><i class="fa-solid fa-plus"></i> Komponen</button>
+              </div>
+            </h3>`;
 
           if (kompSnap.empty) {
             html += '<p style="color:var(--gray-400);font-size:13px;">Belum ada komponen penilaian</p>';
@@ -116,8 +142,8 @@
               const k = kDoc.data();
               html += `<span class="komponen-tag">
                 <strong>${k.namaKomponen}</strong> (${k.bobot}%)
-                <button class="btn btn-sm btn-primary" onclick="inputNilai('${kDoc.id}','${k.namaKomponen.replace(/'/g,"\\'")}','${mkId}','${mkData.kelasId}')">✏️</button>
-                <button class="btn btn-sm btn-danger" onclick="hapusKomponen('${kDoc.id}','${mkId}')">🗑</button>
+                <button class="btn btn-sm btn-primary" onclick="inputNilai('${kDoc.id}','${k.namaKomponen.replace(/'/g,"\\'")}','${mkId}')">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="hapusKomponen('${kDoc.id}')">🗑</button>
               </span>`;
             });
             html += '</div>';
@@ -129,56 +155,119 @@
       } catch(e) { console.error(e); }
     }
 
-    // ✅ Tambah Komponen — sekarang disimpan per mkId, bukan jadwalId
-    window.tambahKomponen = function(mkId, jadwalId) {
-      showModal(`
-        <h3>Tambah Komponen Penilaian</h3>
-        <div class="form-group"><label>Nama Komponen</label><input type="text" id="fnama" placeholder="Contoh: UTS, Tugas 1"></div>
-        <div class="form-group"><label>Bobot (%)</label><input type="number" id="fbobot" value="0"></div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;">
-          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
-          <button class="btn btn-primary" id="btnSimpanKomponen">Simpan</button>
-        </div>
-      `);
-      document.getElementById('btnSimpanKomponen').onclick = async () => {
-        const nama = document.getElementById('fnama').value.trim();
-        const bobot = parseInt(document.getElementById('fbobot').value) || 0;
-        if (!nama) return alert('Nama komponen wajib!');
-        await db.collection('komponenNilai').add({ mkId, jadwalId, namaKomponen: nama, bobot, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        closeModal();
-        loadPage();
-      };
+    // ═══ TAMBAH KOMPONEN — PILIH KELAS ═══
+    window.tambahKomponen = function(mkId) {
+      // Ambil data MK dari jadwal
+      db.collection('jadwal').where('dosenId', '==', user.uid).where('mkId', '==', mkId).get().then(snap => {
+        const kelasSet = new Map();
+        snap.forEach(d => {
+          const j = d.data();
+          if (!kelasSet.has(j.kelasId)) {
+            kelasSet.set(j.kelasId, { kelasId: j.kelasId, kelasNama: j.kelasNama || '-' });
+          }
+        });
+
+        const kelasOptions = [...kelasSet.values()].map(k => 
+          `<option value="${k.kelasId}">${k.kelasNama}</option>`
+        ).join('');
+
+        showModal(`
+          <h3>Tambah Komponen Penilaian</h3>
+          <div class="form-group"><label>Kelas</label><select id="fKelasId">${kelasOptions}</select></div>
+          <div class="form-group"><label>Nama Komponen</label><input type="text" id="fnama" placeholder="Contoh: UTS, Tugas 1"></div>
+          <div class="form-group"><label>Bobot (%)</label><input type="number" id="fbobot" value="0"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+            <button class="btn btn-primary" id="btnSimpanKomponen">Simpan</button>
+          </div>
+        `);
+
+        document.getElementById('btnSimpanKomponen').onclick = async () => {
+          const kelasId = document.getElementById('fKelasId').value;
+          const nama = document.getElementById('fnama').value.trim();
+          const bobot = parseInt(document.getElementById('fbobot').value) || 0;
+          if (!nama) return alert('Nama komponen wajib!');
+          if (!kelasId) return alert('Pilih kelas!');
+
+          // Cari jadwalId untuk kelas ini
+          const jadwalDoc = await db.collection('jadwal')
+            .where('dosenId', '==', user.uid)
+            .where('mkId', '==', mkId)
+            .where('kelasId', '==', kelasId)
+            .get();
+          
+          const jadwalId = jadwalDoc.empty ? 'all' : jadwalDoc.docs[0].id;
+
+          await db.collection('komponenNilai').add({
+            mkId, kelasId, jadwalId,
+            namaKomponen: nama, bobot,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          closeModal();
+          loadPage();
+        };
+      });
     };
 
-    window.hapusKomponen = async function(id, mkId) {
+    // ═══ HAPUS KOMPONEN ═══
+    window.hapusKomponen = async function(id) {
       if (!confirm('Hapus komponen ini?')) return;
       await db.collection('komponenNilai').doc(id).delete();
       loadPage();
     };
 
-    // ✅ Input Nilai — menerima mkId dan kelasId
-    window.inputNilai = async function(komponenId, namaKomponen, mkId, kelasId) {
+    // ═══ INPUT NILAI — PILIH KELAS DULU ═══
+    window.inputNilai = async function(komponenId, namaKomponen, mkId) {
+      // Ambil data komponen untuk tau kelasId
+      const kompDoc = await db.collection('komponenNilai').doc(komponenId).get();
+      const kompData = kompDoc.data();
+      const kelasId = kompData.kelasId;
+
       const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
-      const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
-      
+      const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+
+      if (mhsList.length === 0) {
+        alert('Tidak ada mahasiswa di kelas ini!');
+        return;
+      }
+
       const nilaiSnap = await db.collection('nilaiMahasiswa').where('komponenId', '==', komponenId).get();
       const nilaiMap = {};
       nilaiSnap.forEach(d => { nilaiMap[d.data().mahasiswaId] = d.data().nilai; });
 
-      let html = `<h3>Input Nilai: ${namaKomponen}</h3><div style="max-height:400px;overflow-y:auto;"><table><thead><tr><th>NIM</th><th>Nama</th><th>Nilai</th></tr></thead><tbody>`;
+      let html = `<h3>Input Nilai: ${namaKomponen}</h3>
+        <p style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Kelas: ${kompData.kelasNama || kelasId}</p>
+        <div style="max-height:400px;overflow-y:auto;"><table>
+        <thead><tr><th>NIM</th><th>Nama</th><th>Nilai</th></tr></thead><tbody>`;
+
       mhsList.forEach(m => {
-        html += `<tr><td>${m.nim||'-'}</td><td style="text-align:left;">${m.nama}</td><td><input type="number" id="nilai_${m.id}" value="${nilaiMap[m.id]||''}" placeholder="0-100" min="0" max="100" style="width:80px;text-align:center;"></td></tr>`;
+        html += `<tr>
+          <td>${m.nim||'-'}</td>
+          <td style="text-align:left;">${m.nama}</td>
+          <td><input type="number" id="nilai_${m.id}" value="${nilaiMap[m.id]||''}" placeholder="0-100" min="0" max="100" style="width:80px;text-align:center;"></td>
+        </tr>`;
       });
-      html += '</tbody></table></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;"><button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-primary" id="btnSimpanNilai">Simpan Semua</button></div>';
-      
+
+      html += '</tbody></table></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+          <button class="btn btn-primary" id="btnSimpanNilai">Simpan Semua</button>
+        </div>`;
+
       showModal(html);
+
       document.getElementById('btnSimpanNilai').onclick = async () => {
         const batch = db.batch();
         for (const m of mhsList) {
           const nilai = parseFloat(document.getElementById('nilai_' + m.id).value);
           if (!isNaN(nilai)) {
             const ref = db.collection('nilaiMahasiswa').doc(`${komponenId}_${m.id}`);
-            batch.set(ref, { komponenId, mahasiswaId: m.id, nilai });
+            batch.set(ref, {
+              komponenId, mahasiswaId: m.id, nilai,
+              kelasId: kelasId,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
           }
         }
         await batch.commit();
@@ -187,23 +276,71 @@
       };
     };
 
-    // ✅ Lihat Rekap — menerima mkId dan kelasId
-    window.lihatRekap = async function(mkId, kelasId, mkNama, kelasNama) {
-      const kompSnap = await db.collection('komponenNilai').where('mkId', '==', mkId).get();
-      if (kompSnap.empty) { alert('Belum ada komponen!'); return; }
+    // ═══ LIHAT REKAP — PER KELAS ═══
+    window.lihatRekap = async function(mkId) {
+      // Ambil semua kelas untuk MK ini
+      const jadwalSnap = await db.collection('jadwal')
+        .where('dosenId', '==', user.uid)
+        .where('mkId', '==', mkId)
+        .get();
+
+      const kelasSet = new Map();
+      jadwalSnap.forEach(d => {
+        const j = d.data();
+        if (!kelasSet.has(j.kelasId)) {
+          kelasSet.set(j.kelasId, { kelasId: j.kelasId, kelasNama: j.kelasNama || '-' });
+        }
+      });
+
+      const kelasOptions = [...kelasSet.values()].map(k =>
+        `<option value="${k.kelasId}">${k.kelasNama}</option>`
+      ).join('');
+
+      showModal(`
+        <h3>Rekap Nilai: ${jadwalSnap.docs[0]?.data().mkNama || ''}</h3>
+        <div class="form-group"><label>Pilih Kelas</label><select id="fRekapKelasId">${kelasOptions}</select></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+          <button class="btn btn-primary" id="btnLihatRekap">Lihat Rekap</button>
+        </div>
+      `);
+
+      document.getElementById('btnLihatRekap').onclick = async () => {
+        const kelasId = document.getElementById('fRekapKelasId').value;
+        await renderRekap(mkId, kelasId);
+      };
+    };
+
+    async function renderRekap(mkId, kelasId) {
+      const kompSnap = await db.collection('komponenNilai')
+        .where('mkId', '==', mkId)
+        .where('kelasId', '==', kelasId)
+        .get();
+
+      if (kompSnap.empty) { alert('Belum ada komponen untuk kelas ini!'); return; }
 
       const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
-      const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
+      const mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => (a.nama||'').localeCompare(b.nama||''));
 
       const komponenList = kompSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const totalBobot = komponenList.reduce((s, k) => s + k.bobot, 0);
+      const totalBobot = komponenList.reduce((s, k) => s + (k.bobot || 0), 0);
 
       const komponenIds = komponenList.map(k => k.id);
-      const nilaiSnap = await db.collection('nilaiMahasiswa').where('komponenId', 'in', komponenIds).get();
-      const nilaiMap = {};
-      nilaiSnap.forEach(d => { const n = d.data(); if (!nilaiMap[n.mahasiswaId]) nilaiMap[n.mahasiswaId] = {}; nilaiMap[n.mahasiswaId][n.komponenId] = n.nilai; });
+      const nilaiSnap = await db.collection('nilaiMahasiswa')
+        .where('komponenId', 'in', komponenIds.length > 10 ? komponenIds.slice(0, 10) : komponenIds)
+        .get();
 
-      let html = `<h3>Rekap Nilai: ${mkNama} - Kelas ${kelasNama}</h3><div style="max-height:500px;overflow-y:auto;"><table><thead><tr><th>NIM</th><th>Nama</th>`;
+      const nilaiMap = {};
+      nilaiSnap.forEach(d => {
+        const n = d.data();
+        if (!nilaiMap[n.mahasiswaId]) nilaiMap[n.mahasiswaId] = {};
+        nilaiMap[n.mahasiswaId][n.komponenId] = n.nilai;
+      });
+
+      let html = `<h3>Rekap Nilai</h3>
+        <div style="max-height:500px;overflow-y:auto;"><table>
+        <thead><tr><th>NIM</th><th>Nama</th>`;
       komponenList.forEach(k => { html += `<th>${k.namaKomponen}<br><small>(${k.bobot}%)</small></th>`; });
       html += '<th>Nilai Akhir</th><th>Grade</th></tr></thead><tbody>';
 
@@ -224,9 +361,13 @@
         else if (nilaiAkhir > 0) { grade = 'E'; badge = 'badge-danger'; }
         html += `<td><strong>${nilaiAkhir||'-'}</strong></td><td><span class="badge ${badge}">${grade}</span></td></tr>`;
       });
-      html += '</tbody></table></div><div style="text-align:right;margin-top:12px;"><button class="btn btn-outline" onclick="closeModal()">Tutup</button></div>';
+
+      html += '</tbody></table></div>
+        <div style="text-align:right;margin-top:12px;">
+          <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
+        </div>';
       showModal(html);
-    };
+    }
 
     loadPage();
   </script>
