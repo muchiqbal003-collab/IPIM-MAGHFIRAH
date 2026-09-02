@@ -78,24 +78,36 @@
     .btn-primary { width: 100%; padding: 13px; justify-content: center; background: linear-gradient(135deg, #004d40, #006644); color: white; margin-top: 8px; }
     .btn-primary:disabled { opacity: 0.6; }
 
+    .halaqoh-card {
+      background: white; border-radius: var(--radius-sm);
+      padding: 14px; border: 1px solid var(--gray-200);
+      cursor: pointer; margin-bottom: 8px;
+    }
+    .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
+    .badge-pengganti { background: var(--orange-light); color: var(--orange); padding: 2px 8px; border-radius: 12px; font-size: 9px; font-weight: 700; }
+    .badge-tetap { background: var(--green-light); color: var(--green-dark); padding: 2px 8px; border-radius: 12px; font-size: 9px; font-weight: 700; }
+
     .bottom-nav {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 32px); max-width: 420px; height: 64px;
       background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
-      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
     .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
-    .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+    .nav-item.active i { color: var(--green); }
 
     .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
     .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
     .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
+    .info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 11px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+
+    @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
 <body>
@@ -104,94 +116,8 @@
     <h3>📖 Ujian Al-Quran</h3>
   </header>
 
-  <div class="content">
-    <div id="alertSuccess" class="alert alert-success"></div>
-
-    <div class="card" id="mainCard">
-      <div class="card-title"><i class="fa-solid fa-quran"></i> Input Nilai Ujian — 5 Soal</div>
-      <form id="ujianForm" onsubmit="return false;">
-        <!-- Mahasiswa -->
-        <div class="form-group"><label>👨‍🎓 Mahasiswa</label><select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select></div>
-
-        <!-- Ujian ke & Bulan -->
-        <div class="filter-row">
-          <div class="form-group">
-            <label>📝 Ujian Ke-</label>
-            <select id="ujianKe">
-              <option value="1">Ujian 1</option><option value="2">Ujian 2</option><option value="3">Ujian 3</option>
-              <option value="4">Ujian 4</option><option value="5">Ujian 5</option><option value="6">Ujian 6</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>📅 Bulan</label>
-            <select id="bulan">
-              <option value="Januari">Januari</option><option value="Februari">Februari</option>
-              <option value="Maret">Maret</option><option value="April">April</option>
-              <option value="Mei">Mei</option><option value="Juni">Juni</option>
-              <option value="Juli">Juli</option><option value="Agustus">Agustus</option>
-              <option value="September">September</option><option value="Oktober">Oktober</option>
-              <option value="November">November</option><option value="Desember">Desember</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Soal 1 -->
-        <div class="soal-box"><h5>📝 Soal 1</h5>
-          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s1_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s1_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s1_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 1: <span id="totalS1">0</span>/100</div>
-        </div>
-
-        <!-- Soal 2 -->
-        <div class="soal-box"><h5>📝 Soal 2</h5>
-          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s2_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s2_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s2_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 2: <span id="totalS2">0</span>/100</div>
-        </div>
-
-        <!-- Soal 3 -->
-        <div class="soal-box"><h5>📝 Soal 3</h5>
-          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s3_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s3_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s3_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 3: <span id="totalS3">0</span>/100</div>
-        </div>
-
-        <!-- Soal 4 -->
-        <div class="soal-box"><h5>📝 Soal 4</h5>
-          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s4_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s4_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s4_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 4: <span id="totalS4">0</span>/100</div>
-        </div>
-
-        <!-- Soal 5 -->
-        <div class="soal-box"><h5>📝 Soal 5</h5>
-          <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s5_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s5_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s5_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
-          <div class="total-soal">Total Soal 5: <span id="totalS5">0</span>/100</div>
-        </div>
-
-        <!-- Hasil -->
-        <div class="hasil-akhir">
-          <div class="nilai" id="nilaiAkhir">0</div>
-          <div class="predikat" id="predikatLatin">-</div>
-          <div class="arabic" id="predikatArab"></div>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanUjian()">
-          <i class="fa-solid fa-save"></i> Simpan Nilai Ujian
-        </button>
-      </form>
-    </div>
-
-    <div id="warningCard" class="warning-box" style="display:none;">
-      <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
-      <strong>Anda belum memiliki Halaqoh.</strong><br>Silakan hubungi Operator Halaqoh.
-    </div>
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
   </div>
 
   <nav class="bottom-nav">
@@ -212,7 +138,10 @@
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    // Nilai Arab
+    let isPengganti = false;
+    let activeHalaqohId = null;
+    let activeHalaqohData = null;
+
     const PREDIKAT_ARAB = {
       'Mumtaz': 'ممتاز',
       'Jayyid Jiddan': 'جيد جداً',
@@ -223,8 +152,7 @@
 
     function showAlert(text) {
       const el = document.getElementById('alertSuccess');
-      el.textContent = text; el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 3000);
+      if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
     }
 
     function getPredikat(nilaiAkhir) {
@@ -235,22 +163,84 @@
       return 'Rasib';
     }
 
-    async function loadMahasiswa() {
-      try {
-        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
-        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
-        if (hSnap.empty) {
-          document.getElementById('mainCard').style.display = 'none';
-          document.getElementById('warningCard').style.display = 'block';
-          return;
-        }
-        document.getElementById('mainCard').style.display = 'block';
-        document.getElementById('warningCard').style.display = 'none';
+    function getVal(id) { return parseInt(document.getElementById(id)?.value) || 0; }
 
-        const halaqohId = hSnap.docs[0].id;
-        const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
+    // ═══ RENDER FORM INPUT (5 SOAL) ═══
+    function renderForm() {
+      const container = document.getElementById('mainContent');
+      let soalHtml = '';
+      
+      for (let i = 1; i <= 5; i++) {
+        soalHtml += `
+          <div class="soal-box">
+            <h5>📝 Soal ${i}</h5>
+            <div class="nilai-row"><label>Kelancaran (40)</label><input type="number" id="s${i}_kelancaran" min="0" max="40" value="0" oninput="hitungTotal()"></div>
+            <div class="nilai-row"><label>Tajwid (30)</label><input type="number" id="s${i}_tajwid" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+            <div class="nilai-row"><label>Makhorij (30)</label><input type="number" id="s${i}_makhorij" min="0" max="30" value="0" oninput="hitungTotal()"></div>
+            <div class="total-soal">Total Soal ${i}: <span id="totalS${i}">0</span></div>
+          </div>`;
+      }
+
+      container.innerHTML = `
+        <div id="alertSuccess" class="alert alert-success"></div>
+
+        <div class="card">
+          <div class="card-title">
+            <i class="fa-solid fa-quran"></i> Input Nilai Ujian
+            ${isPengganti ? '<span class="badge-pengganti">Pengganti</span>' : '<span class="badge-tetap">Tetap</span>'}
+          </div>
+          <form id="ujianForm" onsubmit="return false;">
+            <div class="form-group"><label>👨‍🎓 Mahasiswa</label><select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select></div>
+
+            <div class="filter-row">
+              <div class="form-group">
+                <label>📝 Ujian Ke-</label>
+                <select id="ujianKe">
+                  <option value="1">Ujian 1</option><option value="2">Ujian 2</option><option value="3">Ujian 3</option>
+                  <option value="4">Ujian 4</option><option value="5">Ujian 5</option><option value="6">Ujian 6</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>📅 Bulan</label>
+                <select id="bulan">
+                  <option value="Januari">Januari</option><option value="Februari">Februari</option>
+                  <option value="Maret">Maret</option><option value="April">April</option>
+                  <option value="Mei">Mei</option><option value="Juni">Juni</option>
+                  <option value="Juli">Juli</option><option value="Agustus">Agustus</option>
+                  <option value="September">September</option><option value="Oktober">Oktober</option>
+                  <option value="November">November</option><option value="Desember">Desember</option>
+                </select>
+              </div>
+            </div>
+
+            ${soalHtml}
+
+            <div class="hasil-akhir">
+              <div class="nilai" id="nilaiAkhir">0</div>
+              <div class="predikat" id="predikatLatin">-</div>
+              <div class="arabic" id="predikatArab"></div>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanUjian()">
+              <i class="fa-solid fa-save"></i> Simpan Nilai Ujian
+            </button>
+          </form>
+        </div>`;
+
+      loadMahasiswa(activeHalaqohId);
+      hitungTotal();
+    }
+
+    // ═══ LOAD MAHASISWA ═══
+    async function loadMahasiswa(halaqohId) {
+      try {
         const sel = document.getElementById('mhsId');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">Memuat...</option>';
+
+        const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', halaqohId).get();
         sel.innerHTML = '<option value="">Pilih Mahasiswa...</option>';
+
         for (const d of pSnap.docs) {
           const mhsDoc = await db.collection('mahasiswa').doc(d.data().mahasiswaId).get();
           if (mhsDoc.exists) {
@@ -263,19 +253,18 @@
       } catch(e) { console.error(e); }
     }
 
-    function getVal(id) { return parseInt(document.getElementById(id)?.value) || 0; }
-
-    // Total maksimal 5 soal = 500 poin, dikonversi ke 100
+    // ═══ HITUNG TOTAL (5 SOAL) ═══
     window.hitungTotal = function() {
-      const totals = [];
+      let totalSemua = 0;
+      
       for (let i = 1; i <= 5; i++) {
-        const t = getVal(`s${i}_kelancaran`) + getVal(`s${i}_tajwid`) + getVal(`s${i}_makhorij`);
-        document.getElementById(`totalS${i}`).textContent = t;
-        totals.push(t);
+        const s = getVal(`s${i}_kelancaran`) + getVal(`s${i}_tajwid`) + getVal(`s${i}_makhorij`);
+        document.getElementById(`totalS${i}`).textContent = s;
+        totalSemua += s;
       }
 
-      const totalSemua = totals.reduce((sum, t) => sum + t, 0);
-      const nilaiAkhir = Math.round((totalSemua / 500) * 100); // 5 soal × 100 = 500
+      // Total maksimal: 5 soal × 100 = 500
+      const nilaiAkhir = Math.round((totalSemua / 500) * 100);
       const predikat = getPredikat(nilaiAkhir);
 
       document.getElementById('nilaiAkhir').textContent = nilaiAkhir;
@@ -283,6 +272,7 @@
       document.getElementById('predikatArab').textContent = PREDIKAT_ARAB[predikat] || '';
     };
 
+    // ═══ SIMPAN UJIAN ═══
     window.simpanUjian = async function() {
       const mhsId = document.getElementById('mhsId').value;
       if (!mhsId) { alert('Pilih mahasiswa!'); return; }
@@ -290,17 +280,25 @@
       const btn = document.getElementById('btnSimpan');
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
+      const soal = {};
+      for (let i = 1; i <= 5; i++) {
+        soal[`soal${i}`] = {
+          kelancaran: getVal(`s${i}_kelancaran`),
+          tajwid: getVal(`s${i}_tajwid`),
+          makhorij: getVal(`s${i}_makhorij`)
+        };
+      }
+
       const data = {
         mahasiswaId: mhsId,
+        halaqohId: activeHalaqohId,
+        halaqohNama: activeHalaqohData?.nama || '',
         musyrifId: user.uid,
         musyrifNama: user.nama || '-',
+        isPengganti: isPengganti,
         ujianKe: document.getElementById('ujianKe').value,
         bulan: document.getElementById('bulan').value,
-        soal1: { kelancaran: getVal('s1_kelancaran'), tajwid: getVal('s1_tajwid'), makhorij: getVal('s1_makhorij') },
-        soal2: { kelancaran: getVal('s2_kelancaran'), tajwid: getVal('s2_tajwid'), makhorij: getVal('s2_makhorij') },
-        soal3: { kelancaran: getVal('s3_kelancaran'), tajwid: getVal('s3_tajwid'), makhorij: getVal('s3_makhorij') },
-        soal4: { kelancaran: getVal('s4_kelancaran'), tajwid: getVal('s4_tajwid'), makhorij: getVal('s4_makhorij') },
-        soal5: { kelancaran: getVal('s5_kelancaran'), tajwid: getVal('s5_tajwid'), makhorij: getVal('s5_makhorij') },
+        soal: soal,
         nilaiAkhir: parseInt(document.getElementById('nilaiAkhir').textContent),
         predikat: document.getElementById('predikatLatin').textContent,
         predikatArab: document.getElementById('predikatArab').textContent,
@@ -315,13 +313,76 @@
         document.getElementById('nilaiAkhir').textContent = '0';
         document.getElementById('predikatLatin').textContent = '-';
         document.getElementById('predikatArab').textContent = '';
-        for (let i = 1; i <= 5; i++) document.getElementById(`totalS${i}`).textContent = '0';
+        for (let i = 1; i <= 5; i++) {
+          document.getElementById(`totalS${i}`).textContent = '0';
+        }
       } catch(e) { alert('❌ Gagal: ' + e.message); }
       finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Nilai Ujian'; }
     };
 
-    loadMahasiswa();
-    hitungTotal();
+    // ═══ INIT ═══
+    async function init() {
+      const container = document.getElementById('mainContent');
+      
+      try {
+        let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+        if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
+
+        if (!hSnap.empty) {
+          isPengganti = false;
+          activeHalaqohId = hSnap.docs[0].id;
+          activeHalaqohData = hSnap.docs[0].data();
+          renderForm();
+          return;
+        }
+
+        const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
+
+        if (!penggantiSnap.empty) {
+          isPengganti = true;
+          let html = `
+            <div class="info-box">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk input nilai ujian:</span>
+            </div>`;
+
+          penggantiSnap.forEach(d => {
+            const hData = d.data();
+            html += `
+              <div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
+                <h4>${hData.nama} <span class="badge-pengganti">Pengganti</span></h4>
+                <p>Musyrif tetap: ${hData.musyrifNama || '-'}</p>
+              </div>`;
+          });
+
+          container.innerHTML = html;
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="warning-box">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
+            <strong>Anda belum memiliki Halaqoh.</strong>
+            <p style="margin-top:8px;font-size:12px;">Silakan hubungi Operator Halaqoh.</p>
+          </div>`;
+
+      } catch(e) {
+        container.innerHTML = `<p style="text-align:center;color:var(--red);">Error: ${e.message}</p>`;
+      }
+    }
+
+    window.pilihHalaqoh = async function(hId) {
+      try {
+        const hDoc = await db.collection('halaqoh').doc(hId).get();
+        if (!hDoc.exists) { alert('Halaqoh tidak ditemukan!'); return; }
+        activeHalaqohId = hId;
+        activeHalaqohData = hDoc.data();
+        isPengganti = true;
+        renderForm();
+      } catch(e) { alert('Gagal: ' + e.message); }
+    };
+
+    init();
   </script>
 </body>
 </html>
