@@ -30,11 +30,6 @@
       -webkit-tap-highlight-color: transparent; 
       min-height: 100vh;
     }
-    
-    body.lang-ar {
-      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
-      direction: rtl;
-    }
 
     .app-header { 
       position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
@@ -53,14 +48,6 @@
       width: 36px; height: 36px; border-radius: 50%; 
       cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-    .btn-lang {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      width: 36px; height: 36px; border-radius: 50%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700;
-    }
     .header-info { flex: 1; }
     .header-info h3 { font-size: 15px; font-weight: 700; }
     .header-info .sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
@@ -77,47 +64,19 @@
       border: 1px solid var(--gray-200);
       box-shadow: 0 1px 4px rgba(0,61,51,0.04);
     }
-    .info-card .halaqoh-nama { 
-      font-size: 16px; font-weight: 800; 
-      color: var(--green-dark); 
-      margin-bottom: 6px;
-    }
-    .info-row { 
-      display: flex; gap: 8px; flex-wrap: wrap; 
-    }
-    .info-chip { 
-      display: flex; align-items: center; gap: 5px; 
-      background: var(--green-light); 
-      border-radius: 20px; padding: 4px 10px; 
-      font-size: 10px; font-weight: 600; 
-      color: var(--green-dark); 
-    }
-    .info-chip i { font-size: 10px; }
-    .badge { 
-      display: inline-block; padding: 3px 10px; 
-      border-radius: 12px; font-size: 10px; font-weight: 600; 
-    }
+    .info-card .halaqoh-nama { font-size: 16px; font-weight: 800; color: var(--green-dark); margin-bottom: 6px; }
+    .info-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .info-chip { display: flex; align-items: center; gap: 5px; background: var(--green-light); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--green-dark); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
     .badge-pengganti { background: var(--orange-light); color: var(--orange); }
     .badge-tetap { background: var(--green-light); color: var(--green-dark); }
+    .badge-terkunci { background: #fee2e2; color: #991b1b; }
 
-    .list-header { 
-      display: flex; align-items: center; justify-content: space-between; 
-      padding: 0 2px; 
-    }
-    .list-header span { 
-      font-size: 12px; font-weight: 700; 
-      color: var(--green-dark); 
-    }
-    .mark-all-btn { 
-      font-size: 11px; color: var(--green-mid); 
-      font-weight: 600; background: var(--green-light); 
-      border: none; cursor: pointer; 
-      padding: 5px 12px; border-radius: 20px; 
-    }
+    .list-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
+    .list-header span { font-size: 12px; font-weight: 700; color: var(--green-dark); }
+    .mark-all-btn { font-size: 11px; color: var(--green-mid); font-weight: 600; background: var(--green-light); border: none; cursor: pointer; padding: 5px 12px; border-radius: 20px; }
 
-    .santri-list { 
-      display: flex; flex-direction: column; gap: 6px; 
-    }
+    .santri-list { display: flex; flex-direction: column; gap: 6px; }
     .santri-row {
       background: var(--white);
       border-radius: var(--radius-sm);
@@ -125,25 +84,12 @@
       border: 1px solid var(--gray-200);
       display: flex; align-items: center; gap: 10px; 
     }
-    .santri-num { 
-      width: 28px; height: 28px; border-radius: 50%; 
-      background: var(--green-light); 
-      color: var(--green-mid); 
-      font-size: 11px; font-weight: 700; 
-      display: flex; align-items: center; justify-content: center; 
-      flex-shrink: 0; 
-    }
-    .santri-nama { 
-      flex: 1; font-size: 13px; font-weight: 600; 
-    }
+    .santri-row.locked { opacity: 0.75; background: var(--gray-50); }
+    .santri-num { width: 28px; height: 28px; border-radius: 50%; background: var(--green-light); color: var(--green-mid); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .santri-nama { flex: 1; font-size: 13px; font-weight: 600; }
 
-    .status-select { 
-      padding: 6px 10px; border-radius: 20px; 
-      font-size: 11px; font-weight: 600; 
-      font-family: inherit; 
-      border: 1.5px solid var(--gray-200); 
-      background: white; cursor: pointer; outline: none; 
-    }
+    .status-select { padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: inherit; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; outline: none; }
+    .status-select:disabled { cursor: not-allowed; opacity: 0.8; }
     .status-select.hadir { border-color: #10b981; background: #d1fae5; color: #065f46; }
     .status-select.sakit { border-color: #f59e0b; background: #fef3c7; color: #92400e; }
     .status-select.izin { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
@@ -159,14 +105,8 @@
       box-shadow: 0 1px 4px rgba(0,61,51,0.04);
     }
     .summary-item { flex: 1; text-align: center; }
-    .summary-val { 
-      font-size: 20px; font-weight: 800; 
-      color: var(--green-dark); 
-    }
-    .summary-lbl { 
-      font-size: 10px; color: var(--gray-600); 
-      margin-top: 2px; 
-    }
+    .summary-val { font-size: 20px; font-weight: 800; color: var(--green-dark); }
+    .summary-lbl { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
 
     .btn-simpan {
       width: 100%; padding: 13px; border: none; border-radius: 40px;
@@ -177,7 +117,8 @@
       justify-content: center; gap: 8px;
       box-shadow: 0 4px 12px rgba(0,61,51,0.3);
     }
-    .btn-simpan:disabled { opacity: 0.6; }
+    .btn-simpan:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-simpan.locked { background: #9e9e9e; box-shadow: none; }
 
     .halaqoh-card {
       background: var(--white); 
@@ -186,34 +127,21 @@
       cursor: pointer; margin-bottom: 8px;
     }
     .halaqoh-card:active { background: var(--gray-50); }
-    .halaqoh-card h4 { 
-      font-size: 13px; font-weight: 700; 
-      margin-bottom: 4px; 
-      display: flex; align-items: center; gap: 6px; 
-    }
+    .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
     .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
 
-    .info-box { 
-      background: #e3f2fd; border-radius: var(--radius-sm); 
-      padding: 12px 16px; font-size: 12px; color: #1565c0; 
-      display: flex; align-items: center; gap: 8px; 
-    }
-    .warning-box { 
-      background: #fff3cd; border: 1px solid #ffc107; 
-      border-radius: var(--radius-sm); padding: 16px; 
-      text-align: center; color: #856404; 
+    .info-box { background: #e3f2fd; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 12px; color: #1565c0; display: flex; align-items: center; gap: 8px; }
+    .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+
+    .locked-info {
+      background: #fee2e2; border: 1px solid #fca5a5;
+      border-radius: var(--radius-sm); padding: 12px 16px;
+      text-align: center; color: #991b1b;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 13px; font-weight: 600;
     }
 
-    .toast { 
-      position: fixed; bottom: 100px; left: 50%; 
-      transform: translateX(-50%); 
-      background: var(--gray-800); color: white; 
-      border-radius: 20px; padding: 10px 20px; 
-      font-size: 13px; font-weight: 600; 
-      z-index: 200; opacity: 0; 
-      transition: opacity 0.3s; white-space: nowrap; 
-      pointer-events: none; 
-    }
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--gray-800); color: white; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
     .toast.show { opacity: 1; }
 
     .bottom-nav {
@@ -224,35 +152,15 @@
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 24px; display: flex; align-items: center; 
       justify-content: space-around; z-index: 100;
-      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 
-                  0 2px 8px rgba(0, 0, 0, 0.06), 
-                  inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-item { 
-      display: flex; flex-direction: column; align-items: center; 
-      justify-content: center; gap: 2px; font-size: 10px; 
-      font-weight: 500; color: var(--gray-600); 
-      cursor: pointer; text-decoration: none; padding: 8px 0; 
-      flex: 1; border-radius: 18px; 
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      position: relative; 
-    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
-    .nav-item.active i { 
-      color: var(--green); 
-      filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); 
-    }
-    .nav-item.active::before { 
-      content: ''; position: absolute; top: 2px; 
-      width: 28px; height: 3px; background: var(--green); 
-      border-radius: 0 0 4px 4px; 
-    }
+    .nav-item.active i { color: var(--green); }
 
-    @media (max-width: 480px) { 
-      .content { padding: 10px; } 
-    }
+    @media (max-width: 480px) { .content { padding: 10px; } }
   </style>
 </head>
 <body>
@@ -262,12 +170,10 @@
       <i class="fa-solid fa-arrow-left"></i>
     </button>
     <div class="header-info">
-      <h3 id="headerTitle" data-lang="absensiHalaqoh">Absensi Halaqoh</h3>
+      <h3 id="headerTitle">Absensi Halaqoh</h3>
       <div class="sub" id="headerSub">Memuat...</div>
     </div>
-    <button class="btn-lang" onclick="cycleLang()" title="Ganti Bahasa">
-      <span id="langIndicator">🌐</span>
-    </button>
+    <span class="badge badge-tetap" id="lockBadge" style="display:none;">🔒 Terkunci</span>
   </header>
 
   <div class="content" id="mainContent">
@@ -276,26 +182,16 @@
 
   <div style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:50;">
     <button class="btn-simpan" id="btnSimpan" onclick="simpanAbsensi()">
-      <i class="fa-solid fa-circle-check"></i> <span data-lang="simpanAbsensi">Simpan Absensi</span>
+      <i class="fa-solid fa-circle-check"></i> Simpan Absensi
     </button>
   </div>
 
   <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')">
-      <i class="fa-solid fa-house"></i><span data-lang="home">Home</span>
-    </div>
-    <div class="nav-item active" onclick="goTo('absensi-halaqoh.html')">
-      <i class="fa-solid fa-clipboard-check"></i><span data-lang="absensi">Absensi</span>
-    </div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')">
-      <i class="fa-solid fa-grip"></i><span data-lang="menu">Menu</span>
-    </div>
-    <div class="nav-item" onclick="goTo('rekap.html')">
-      <i class="fa-solid fa-chart-simple"></i><span data-lang="rekap">Rekap</span>
-    </div>
-    <div class="nav-item" onclick="goTo('profil.html')">
-      <i class="fa-solid fa-circle-user"></i><span data-lang="profil">Profil</span>
-    </div>
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item active" onclick="goTo('absensi-halaqoh.html')"><i class="fa-solid fa-clipboard-check"></i><span>Absensi</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span>Menu</span></div>
+    <div class="nav-item" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
   </nav>
 
   <div class="toast" id="toast"></div>
@@ -305,47 +201,14 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
-  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['musyrif', 'dosen-musyrif']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
 
-    // ═══ MULTI LANGUAGE ═══
-    function cycleLang() {
-      const langs = ['id', 'en', 'ar'];
-      const current = getLang();
-      const nextIndex = (langs.indexOf(current) + 1) % langs.length;
-      setLang(langs[nextIndex]);
-      updateLangIndicator();
-      refreshUI();
-    }
-    
-    function updateLangIndicator() {
-      const lang = getLang();
-      const indicator = document.getElementById('langIndicator');
-      if (lang === 'id') indicator.textContent = '🇮🇩';
-      else if (lang === 'en') indicator.textContent = '🇬🇧';
-      else if (lang === 'ar') indicator.textContent = '🇸🇦';
-    }
-    
-    updateLangIndicator();
-    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
-
-    const STATUS_LABELS = {
-      id: { hadir: 'Hadir', sakit: 'Sakit', izin: 'Izin', alfa: 'Alfa', jaga: 'Jaga' },
-      en: { hadir: 'Present', sakit: 'Sick', izin: 'Permit', alfa: 'Absent', jaga: 'Guard' },
-      ar: { hadir: 'حاضر', sakit: 'مريض', izin: 'إذن', alfa: 'غائب', jaga: 'حارس' }
-    };
-
-    function getStatusLabel(status) {
-      const lang = getLang();
-      return STATUS_LABELS[lang]?.[status] || STATUS_LABELS['id'][status] || status;
-    }
-
-    // ═══ MAIN LOGIC ═══
     const absensiState = {};
     let isSaving = false;
+    let isLocked = false; // ═══ KUNCI OTOMATIS ═══
     let halaqohId = null, halaqohData = null;
     let isPengganti = false;
     let anggotaList = [];
@@ -365,9 +228,7 @@
 
     function updateSummary() {
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
-      Object.values(absensiState).forEach(s => { 
-        if (counts[s] !== undefined) counts[s]++; 
-      });
+      Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
       ['sumHadir','sumSakit','sumIzin','sumAlfa'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -378,24 +239,51 @@
     }
 
     window.setStatus = function(mhsId, status) {
+      if (isLocked) return; // ═══ TOLAK JIKA TERKUNCI ═══
       absensiState[mhsId] = status;
       const sel = document.getElementById(`sel_${mhsId}`);
-      if (sel) { 
-        sel.className = `status-select ${status}`; 
-        sel.value = status; 
-      }
+      if (sel) { sel.className = `status-select ${status}`; sel.value = status; }
       updateSummary();
     };
 
     window.markAllHadir = function() {
+      if (isLocked) return; // ═══ TOLAK JIKA TERKUNCI ═══
       Object.keys(absensiState).forEach(id => setStatus(id, 'hadir'));
     };
 
-    // ═══ REFRESH UI (setelah ganti bahasa) ═══
-    function refreshUI() {
-      if (anggotaList.length > 0) {
-        renderAnggota();
-      }
+    // ═══ KUNCI ABSENSI ═══
+    function lockAbsensi() {
+      isLocked = true;
+      const btn = document.getElementById('btnSimpan');
+      btn.disabled = true;
+      btn.classList.add('locked');
+      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Absensi Terkunci (Hari Ini)';
+      
+      const lockBadge = document.getElementById('lockBadge');
+      lockBadge.style.display = 'inline-block';
+      lockBadge.className = 'badge badge-terkunci';
+
+      // Disable semua select
+      document.querySelectorAll('.status-select').forEach(sel => {
+        sel.disabled = true;
+      });
+
+      // Tandai row sebagai locked
+      document.querySelectorAll('.santri-row').forEach(row => {
+        row.classList.add('locked');
+      });
+    }
+
+    // ═══ CEK APAKAH SUDAH ADA ABSENSI HARI INI ═══
+    async function cekSudahAbsen() {
+      const today = getLocalDate();
+      try {
+        const snap = await db.collection('absensiHalaqoh')
+          .where('halaqohId', '==', halaqohId)
+          .where('tanggal', '==', today)
+          .get();
+        return !snap.empty;
+      } catch(e) { return false; }
     }
 
     function renderAnggota() {
@@ -406,30 +294,29 @@
       const counts = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0 };
       Object.values(absensiState).forEach(s => { if (counts[s] !== undefined) counts[s]++; });
 
-      const roleLabel = isPengganti ? (t('pengganti') || 'Pengganti') : (t('tetap') || 'Tetap');
+      const roleLabel = isPengganti ? 'Pengganti' : 'Tetap';
       const roleBadge = isPengganti ? 'badge-pengganti' : 'badge-tetap';
-      const labelAnggota = t('anggota') || 'anggota';
-      const labelSemuaHadir = t('semuaHadir') || 'Semua Hadir';
-      const labelHadir = t('hadir') || 'Hadir';
-      const labelSakit = t('sakit') || 'Sakit';
-      const labelIzin = t('izin') || 'Izin';
-      const labelAlfa = t('alfa') || 'Alfa';
 
       let listHtml = '';
       anggotaList.forEach((m, i) => {
         const status = absensiState[m.id];
-        listHtml += `<div class="santri-row">
+        listHtml += `<div class="santri-row ${isLocked ? 'locked' : ''}">
           <div class="santri-num">${i+1}</div>
           <div class="santri-nama">${m.nama}</div>
-          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)">
-            <option value="hadir" ${status==='hadir'?'selected':''}>${getStatusLabel('hadir')}</option>
-            <option value="sakit" ${status==='sakit'?'selected':''}>${getStatusLabel('sakit')}</option>
-            <option value="izin" ${status==='izin'?'selected':''}>${getStatusLabel('izin')}</option>
-            <option value="alfa" ${status==='alfa'?'selected':''}>${getStatusLabel('alfa')}</option>
-            <option value="jaga" ${status==='jaga'?'selected':''}>${getStatusLabel('jaga')}</option>
+          <select class="status-select ${status}" id="sel_${m.id}" onchange="setStatus('${m.id}', this.value)" ${isLocked ? 'disabled' : ''}>
+            <option value="hadir" ${status==='hadir'?'selected':''}>Hadir</option>
+            <option value="sakit" ${status==='sakit'?'selected':''}>Sakit</option>
+            <option value="izin" ${status==='izin'?'selected':''}>Izin</option>
+            <option value="alfa" ${status==='alfa'?'selected':''}>Alfa</option>
+            <option value="jaga" ${status==='jaga'?'selected':''}>Jaga</option>
           </select>
         </div>`;
       });
+
+      const lockInfo = isLocked ? `
+        <div class="locked-info">
+          <i class="fa-solid fa-lock"></i> Absensi hari ini sudah disimpan dan terkunci.
+        </div>` : '';
 
       container.innerHTML = `
         <div class="info-card">
@@ -437,14 +324,16 @@
           <div class="info-row">
             <div class="info-chip"><span class="badge ${roleBadge}">${roleLabel}</span></div>
             ${halaqohData.musyrifNama ? `<div class="info-chip"><i class="fa-solid fa-user"></i> ${halaqohData.musyrifNama}</div>` : ''}
-            <div class="info-chip"><i class="fa-solid fa-users"></i> ${anggotaList.length} ${labelAnggota}</div>
+            <div class="info-chip"><i class="fa-solid fa-users"></i> ${anggotaList.length} anggota</div>
             <div class="info-chip"><i class="fa-solid fa-calendar-day"></i> ${today}</div>
           </div>
         </div>
         
+        ${lockInfo}
+        
         <div class="list-header">
-          <span>${anggotaList.length} ${labelAnggota}</span>
-          <button class="mark-all-btn" onclick="markAllHadir()">${labelSemuaHadir}</button>
+          <span>${anggotaList.length} anggota</span>
+          <button class="mark-all-btn" onclick="markAllHadir()" ${isLocked ? 'disabled' : ''}>Semua Hadir</button>
         </div>
         
         <div class="santri-list">${listHtml}</div>
@@ -452,34 +341,34 @@
         <div class="summary-card">
           <div class="summary-item">
             <div class="summary-val" id="sumHadir">${counts.hadir}</div>
-            <div class="summary-lbl">${labelHadir}</div>
+            <div class="summary-lbl">Hadir</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumSakit" style="color:#d97706;">${counts.sakit}</div>
-            <div class="summary-lbl">${labelSakit}</div>
+            <div class="summary-lbl">Sakit</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumIzin" style="color:#2563eb;">${counts.izin}</div>
-            <div class="summary-lbl">${labelIzin}</div>
+            <div class="summary-lbl">Izin</div>
           </div>
           <div class="summary-item">
             <div class="summary-val" id="sumAlfa" style="color:#e53935;">${counts.alfa}</div>
-            <div class="summary-lbl">${labelAlfa}</div>
+            <div class="summary-lbl">Alfa</div>
           </div>
         </div>`;
     }
 
     async function simpanAbsensi() {
-      if (isSaving) return;
-      if (Object.keys(absensiState).length === 0) { 
-        showToast(t('tidakAdaAnggota') || 'Tidak ada anggota'); 
-        return; 
-      }
+      if (isSaving || isLocked) return; // ═══ TOLAK JIKA SUDAH TERKUNCI ═══
+      if (Object.keys(absensiState).length === 0) { showToast('Tidak ada anggota'); return; }
+
+      // Konfirmasi sebelum simpan
+      if (!confirm('Simpan absensi hari ini? Setelah disimpan tidak bisa diubah!')) return;
 
       isSaving = true;
       const btn = document.getElementById('btnSimpan');
       btn.disabled = true; 
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (t('menyimpan') || 'Menyimpan...');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
         const today = getLocalDate();
@@ -516,20 +405,20 @@
         }
 
         await batch.commit();
-        const roleLabel = isPengganti ? ' (' + (t('pengganti') || 'Pengganti') + ')' : '';
-        showToast((t('absensiTersimpan') || 'Absensi tersimpan') + '!' + roleLabel);
+        
+        // ═══ KUNCI SETELAH SIMPAN ═══
+        lockAbsensi();
+        showToast('✅ Absensi tersimpan & terkunci!');
       } catch(e) {
-        showToast((t('gagal') || 'Gagal') + ': ' + e.message);
+        showToast('Gagal: ' + e.message);
       } finally {
         isSaving = false;
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span data-lang="simpanAbsensi">' + (t('simpanAbsensi') || 'Simpan Absensi') + '</span>';
       }
     }
 
     async function init() {
       const container = document.getElementById('mainContent');
-      container.innerHTML = '<p style="text-align:center;">' + (t('mencariHalaqoh') || 'Mencari halaqoh...') + '</p>';
+      container.innerHTML = '<p style="text-align:center;">Mencari halaqoh...</p>';
 
       try {
         let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
@@ -540,33 +429,20 @@
           
           if (!penggantiSnap.empty) {
             isPengganti = true;
-            let html = `
-              <div class="info-box">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>${t('andaMusyrifPengganti') || 'Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk mengisi absensi:'}</span>
-              </div>`;
-
+            let html = '<div class="info-box"><i class="fa-solid fa-circle-info"></i><span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh:</span></div>';
             penggantiSnap.forEach(d => {
               const hData = d.data();
-              html += `
-                <div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
-                  <h4>${hData.nama} <span class="badge badge-pengganti">${t('pengganti') || 'Pengganti'}</span></h4>
-                  <p>${t('musyrifTetap') || 'Musyrif tetap'}: ${hData.musyrifNama || '-'}</p>
-                </div>`;
+              html += `<div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
+                <h4>${hData.nama} <span class="badge badge-pengganti">Pengganti</span></h4>
+                <p>Musyrif tetap: ${hData.musyrifNama || '-'}</p>
+              </div>`;
             });
-
             container.innerHTML = html;
-            document.getElementById('headerTitle').textContent = t('absensiHalaqoh') || 'Absensi Halaqoh';
-            document.getElementById('headerSub').textContent = t('pilihHalaqoh') || 'Pilih halaqoh';
+            document.getElementById('headerSub').textContent = 'Pilih halaqoh';
             return;
           }
 
-          container.innerHTML = `
-            <div class="warning-box">
-              <i class="fa-solid fa-circle-exclamation" style="font-size:30px;display:block;margin-bottom:10px;"></i>
-              <strong>${t('belumPunyaHalaqoh') || 'Anda belum memiliki Halaqoh.'}</strong>
-              <p style="margin-top:8px;font-size:13px;">${t('hubungiOperator') || 'Hubungi Operator Halaqoh.'}</p>
-            </div>`;
+          container.innerHTML = '<div class="warning-box"><strong>Anda belum memiliki Halaqoh.</strong></div>';
           return;
         }
 
@@ -575,26 +451,22 @@
         halaqohData = hSnap.docs[0].data();
         await loadAnggota(container);
       } catch(e) {
-        container.innerHTML = `<div class="warning-box">${t('gagal') || 'Gagal'}: ${e.message}</div>`;
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
       }
     }
 
     window.pilihHalaqoh = async function(hId) {
       const container = document.getElementById('mainContent');
-      container.innerHTML = '<p style="text-align:center;">' + (t('memuatAnggota') || 'Memuat anggota...') + '</p>';
+      container.innerHTML = '<p style="text-align:center;">Memuat anggota...</p>';
 
       try {
         const hDoc = await db.collection('halaqoh').doc(hId).get();
-        if (!hDoc.exists) { 
-          container.innerHTML = '<div class="warning-box">' + (t('halaqohTidakDitemukan') || 'Halaqoh tidak ditemukan') + '</div>'; 
-          return; 
-        }
-
+        if (!hDoc.exists) { container.innerHTML = '<div class="warning-box">Halaqoh tidak ditemukan</div>'; return; }
         halaqohId = hId;
         halaqohData = hDoc.data();
         await loadAnggota(container);
       } catch(e) {
-        container.innerHTML = `<div class="warning-box">${t('gagal') || 'Gagal'}: ${e.message}</div>`;
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
       }
     };
 
@@ -606,7 +478,7 @@
         const mhsIds = pSnap.docs.map(d => d.data().mahasiswaId);
 
         if (mhsIds.length === 0) {
-          container.innerHTML = '<p style="text-align:center;">' + (t('belumAdaAnggota') || 'Belum ada anggota di halaqoh ini.') + '</p>';
+          container.innerHTML = '<p style="text-align:center;">Belum ada anggota di halaqoh ini.</p>';
           return;
         }
 
@@ -630,13 +502,21 @@
 
         mhsList.forEach(m => { absensiState[m.id] = existingMap[m.id] || 'hadir'; });
 
-        document.getElementById('headerTitle').textContent = halaqohData.nama || (t('absensiHalaqoh') || 'Absensi Halaqoh');
-        document.getElementById('headerSub').textContent = `${anggotaList.length} ${t('anggota') || 'anggota'} · ${today}`;
+        // ═══ CEK APAKAH SUDAH TERKUNCI ═══
+        isLocked = !absensiSnap.empty;
+
+        document.getElementById('headerTitle').textContent = halaqohData.nama || 'Absensi Halaqoh';
+        document.getElementById('headerSub').textContent = `${anggotaList.length} anggota · ${today}`;
 
         renderAnggota();
 
+        // ═══ JIKA SUDAH ADA DATA, KUNCI LANGSUNG ═══
+        if (isLocked) {
+          lockAbsensi();
+        }
+
       } catch(e) {
-        container.innerHTML = `<div class="warning-box">${t('gagal') || 'Gagal'}: ${e.message}</div>`;
+        container.innerHTML = `<div class="warning-box">Gagal: ${e.message}</div>`;
       }
     }
 
