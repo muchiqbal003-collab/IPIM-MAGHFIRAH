@@ -4,52 +4,153 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Kehadiran Mahasiswa - Duty Lecturer</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
   <link rel="stylesheet" href="../../css/duty-style.css">
+  
   <style>
-    .status-filter { display: flex; gap: 4px; margin-bottom: 12px; background: var(--gray-100); border-radius: 40px; padding: 4px; }
-    .status-tab { flex: 1; padding: 8px; text-align: center; border-radius: 40px; font-size: 10px; font-weight: 600; cursor: pointer; border: none; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--gray-600); }
-    .status-tab.active { background: white; color: var(--maroon); font-weight: 700; }
-    
+    /* ── Filter Tabs ── */
+    .status-filter {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      background: var(--gray-100);
+      border-radius: 40px;
+      padding: 4px;
+    }
+    .status-tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      border-radius: 40px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--gray-600);
+      transition: all 0.2s;
+    }
+    .status-tab.active {
+      background: white;
+      color: var(--maroon);
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* ── Share Button (Top) ── */
     .btn-share-top {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 16px; border: none; border-radius: 40px;
-      background: #25d366; color: white; font-size: 13px; font-weight: 700;
-      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
-      margin-bottom: 12px; box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 40px;
+      background: #25d366;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
       width: 100%;
+      transition: all 0.2s;
     }
-    .btn-share-top:active { transform: scale(0.97); }
-    
-    .group-by-mhs { display: flex; flex-direction: column; gap: 8px; }
+    .btn-share-top:active {
+      transform: scale(0.97);
+    }
+    .btn-share-top svg {
+      flex-shrink: 0;
+    }
+
+    /* ── Grouped List ── */
+    .group-by-mhs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
     .mhs-group-card {
-      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.5); padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 12px 14px;
+      transition: all 0.2s;
     }
-    .mhs-group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .mhs-group-card:hover {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: var(--maroon);
+    }
+
+    /* ── Header Card ── */
+    .mhs-group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
     .mhs-group-header .avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: var(--maroon); color: white; display: flex; align-items: center;
-      justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--maroon);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(122, 21, 21, 0.2);
     }
-    .mhs-group-header .info { flex: 1; }
-    .mhs-group-header .name { font-size: 13px; font-weight: 700; }
-    .mhs-group-header .nim { font-size: 10px; color: var(--gray-600); }
-    .jp-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 48px; }
+    .mhs-group-header .info {
+      flex: 1;
+      min-width: 0;
+    }
+    .mhs-group-header .name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .mhs-group-header .nim {
+      font-size: 10px;
+      color: var(--gray-600);
+      margin-top: 1px;
+    }
+
+    /* ── JP Chips ── */
+    .jp-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding-left: 48px;
+    }
     .jp-chip {
-      padding: 4px 10px; border-radius: 14px; font-size: 10px; font-weight: 600;
-      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
     }
     .jp-chip.sakit { background: #fff3e0; color: #e65100; }
-    .jp-chip.izin { background: #e3f2fd; color: #0d47a1; }
-    .jp-chip.alfa { background: #fce4ec; color: #b71c1c; }
-    .jp-chip.jaga { background: #ede9fe; color: #6d28d9; }
+    .jp-chip.izin  { background: #e3f2fd; color: #0d47a1; }
+    .jp-chip.alfa  { background: #fce4ec; color: #b71c1c; }
+    .jp-chip.jaga  { background: #ede9fe; color: #6d28d9; }
   </style>
 </head>
 <body>
 
+  <!-- ═══ HEADER ═══ -->
   <header class="app-header">
     <div class="header-info">
       <h3>👥 Kehadiran Mahasiswa</h3>
@@ -57,14 +158,18 @@
     </div>
   </header>
 
+  <!-- ═══ CONTENT ═══ -->
   <div class="content">
-    <!-- SHARE WA DI ATAS -->
+
+    <!-- Tombol Share WA (di atas) -->
     <button class="btn-share-top" onclick="shareMhsWA()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.25-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.36 14.1c-.23.65-1.34 1.24-1.86 1.31-.52.08-1.19.12-1.92-.12-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.6-4.02-4.74-4.21-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.23.57.79 1.95.86 2.09.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.17-.3.38-.42.51-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.16-.19.7-.82.88-1.1.18-.28.37-.23.62-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.32.07.12.07.67-.16 1.32z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.25-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.36 14.1c-.23.65-1.34 1.24-1.86 1.31-.52.08-1.19.12-1.92-.12-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.6-4.02-4.74-4.21-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.23.57.79 1.95.86 2.09.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.17-.3.38-.42.51-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.16-.19.7-.82.88-1.1.18-.28.37-.23.62-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.32.07.12.07.67-.16 1.32z"/>
+      </svg>
       Share WA
     </button>
 
-    <!-- FILTER STATUS -->
+    <!-- Filter Status -->
     <div class="status-filter">
       <button class="status-tab active" onclick="filterStatus('semua', this)">Semua</button>
       <button class="status-tab" onclick="filterStatus('sakit', this)">Sakit</button>
@@ -73,31 +178,36 @@
       <button class="status-tab" onclick="filterStatus('jaga', this)">Jaga</button>
     </div>
 
-    <!-- DAFTAR MHS TIDAK HADIR (GROUPED PER MHS) -->
+    <!-- Daftar Mahasiswa Tidak Hadir -->
     <div class="card">
       <div class="card-title">
         Mahasiswa Tidak Hadir
-        <span id="totalTidakHadir" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700;"></span>
+        <span id="totalTidakHadir" style="margin-left:auto; font-size:11px; color:var(--red); font-weight:700;"></span>
       </div>
       <div class="group-by-mhs" id="mhsList">
-        <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
+        <p style="text-align:center; color:var(--gray-600);">Memuat...</p>
       </div>
     </div>
+
   </div>
 
+  <!-- ═══ SCRIPTS ═══ -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/bottom-nav-duty.js"></script>
+
   <script>
     const user = checkRole(['duty-lecturer', 'pusat-data']);
     if (!user) window.location.href = '../../index.html';
 
+    // ── STATE ──
     let allMhsTidakHadir = [];
     let currentFilter = 'semua';
 
+    // ── HELPER ──
     function getWIBDate() {
       const now = new Date();
       const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -109,10 +219,17 @@
       return map[status] || status;
     }
 
+    // ── LOAD DATA ──
     async function loadMhs() {
       const today = getWIBDate();
-      document.getElementById('headerDate').textContent = 
-        new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('headerDate').textContent =
+        new Date().toLocaleDateString('id-ID', {
+          timeZone: 'Asia/Jakarta',
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
 
       try {
         const [absenSnap, mhsSnap] = await Promise.all([
@@ -124,7 +241,7 @@
         const mhsMap = {};
         mhsSnap.forEach(d => { mhsMap[d.id] = d.data(); });
 
-        // ═══ GROUPING: 1 mahasiswa bisa punya BANYAK JP tidak hadir ═══
+        // Grouping: 1 mahasiswa → banyak JP tidak hadir
         const groupedMap = new Map();
 
         absen
@@ -132,7 +249,7 @@
           .forEach(a => {
             const mhsId = a.mahasiswaId;
             const nama = mhsMap[mhsId]?.nama || mhsId;
-            
+
             if (!groupedMap.has(mhsId)) {
               groupedMap.set(mhsId, {
                 nama: nama,
@@ -141,7 +258,7 @@
                 jpList: []
               });
             }
-            
+
             groupedMap.get(mhsId).jpList.push({
               jamKe: a.jamKe,
               status: a.status,
@@ -149,37 +266,40 @@
             });
           });
 
-        allMhsTidakHadir = [...groupedMap.values()].map(m => {
-          // Urutkan JP
-          m.jpList.sort((a,b) => a.jamKe - b.jamKe);
-          return m;
-        }).sort((a,b) => a.nama.localeCompare(b.nama));
+        allMhsTidakHadir = [...groupedMap.values()]
+          .map(m => {
+            m.jpList.sort((a, b) => a.jamKe - b.jamKe);
+            return m;
+          })
+          .sort((a, b) => a.nama.localeCompare(b.nama));
 
-        document.getElementById('totalTidakHadir').textContent = 
+        document.getElementById('totalTidakHadir').textContent =
           `(${allMhsTidakHadir.length} mhs)`;
 
         updateDutyBadge('hadir', allMhsTidakHadir.length);
         renderMhs();
-      } catch(e) { console.error(e); }
+      } catch (e) {
+        console.error('Gagal load data:', e);
+      }
     }
 
+    // ── RENDER LIST ──
     function renderMhs() {
       const container = document.getElementById('mhsList');
-      
+
       let filtered = allMhsTidakHadir;
       if (currentFilter !== 'semua') {
-        filtered = allMhsTidakHadir.filter(m => 
+        filtered = allMhsTidakHadir.filter(m =>
           m.jpList.some(jp => jp.status === currentFilter)
         );
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#1b5e20;padding:20px;">✅ Semua mahasiswa hadir!</p>';
+        container.innerHTML = '<p style="text-align:center; color:#1b5e20; padding:20px;">✅ Semua mahasiswa hadir!</p>';
         return;
       }
 
       container.innerHTML = filtered.map(m => {
-        // Filter JP sesuai status yang dipilih
         let jpList = m.jpList;
         if (currentFilter !== 'semua') {
           jpList = m.jpList.filter(jp => jp.status === currentFilter);
@@ -187,14 +307,14 @@
 
         const jpChips = jpList.map(jp => `
           <span class="jp-chip ${jp.status}">
-            JP ${jp.jamKe} · ${jp.status.toUpperCase()}
+            JP ${jp.jamKe} · ${getStatusLabel(jp.status)}
           </span>
         `).join('');
 
         return `
           <div class="mhs-group-card">
             <div class="mhs-group-header">
-              <div class="avatar">${(m.nama||'?')[0]}</div>
+              <div class="avatar">${(m.nama || '?')[0]}</div>
               <div class="info">
                 <div class="name">${m.nama}</div>
                 <div class="nim">${m.nim} · ${m.kelas}</div>
@@ -206,6 +326,7 @@
       }).join('');
     }
 
+    // ── FILTER STATUS ──
     function filterStatus(filter, btn) {
       currentFilter = filter;
       document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
@@ -214,23 +335,34 @@
     }
     window.filterStatus = filterStatus;
 
-    // ═══ SHARE WA — HANYA NAMA MAHASISWA ═══
+    // ── SHARE WA ──
     function shareMhsWA() {
-      const dateStr = new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      
-      let text = `⚠️ *MAHASISWA TIDAK HADIR*\n📅 ${dateStr}\n━━━━━━━━━━━━━━━━\n\n`;
+      const dateStr = new Date().toLocaleDateString('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      let text = `⚠️ *MAHASISWA TIDAK HADIR*\n`;
+      text += `📅 ${dateStr}\n`;
+      text += `━━━━━━━━━━━━━━━━\n\n`;
       text += `📊 Total: ${allMhsTidakHadir.length} mahasiswa\n\n`;
       text += `📋 *DAFTAR:*\n`;
-      
+
       allMhsTidakHadir.forEach((m, i) => {
-        text += `${i+1}. ${m.nama}\n`;
+        text += `${i + 1}. ${m.nama}\n`;
       });
-      
-      text += `\n━━━━━━━━━━━━━━━━\n📱 © IPIM Maghfirah`;
+
+      text += `\n━━━━━━━━━━━━━━━━\n`;
+      text += `📱 © IPIM Maghfirah`;
+
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
     window.shareMhsWA = shareMhsWA;
 
+    // ── INIT ──
     loadMhs();
     setInterval(loadMhs, 60000);
   </script>
