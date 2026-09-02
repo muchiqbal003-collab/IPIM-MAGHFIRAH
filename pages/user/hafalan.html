@@ -15,6 +15,7 @@
             --gold:#f5c842;--gold-light:#fffbee;
             --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
             --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+            --red:#e53935;--orange:#f57c00;--orange-light:#fff3e0;
             --radius-sm:10px;--radius:14px;--radius-lg:18px;
             --transition:all 0.3s ease;--header-height:56px;
         }
@@ -77,6 +78,15 @@
             padding: 10px 14px; font-size: 11px; color: #e65100;
             display: flex; align-items: center; gap: 8px;
         }
+        .halaqoh-card {
+            background: white; border-radius: var(--radius-sm);
+            padding: 14px; border: 1px solid var(--gray-200);
+            cursor: pointer; margin-bottom: 8px;
+        }
+        .halaqoh-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .halaqoh-card p { font-size: 11px; color: var(--gray-600); }
+        .badge-pengganti { background: var(--orange-light); color: var(--orange); padding: 2px 8px; border-radius: 12px; font-size: 9px; font-weight: 700; }
+        .badge-tetap { background: var(--green-light); color: var(--green-dark); padding: 2px 8px; border-radius: 12px; font-size: 9px; font-weight: 700; }
 
         .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
         .alert-success { background: var(--green-light); color: #1b5e20; border-left: 4px solid var(--green); }
@@ -87,14 +97,16 @@
             background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 24px; display: flex; align-items: center; justify-content: space-around; z-index: 100;
-            box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
             padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
         .nav-item i { font-size: 20px; }
         .nav-item.active { color: var(--green-dark); font-weight: 700; }
-        .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
+        .nav-item.active i { color: var(--green); }
         .nav-item.active::before { content: ''; position: absolute; top: 2px; width: 28px; height: 3px; background: var(--green); border-radius: 0 0 4px 4px; }
+
+        @media (max-width: 480px) { .content { padding: 10px; } }
     </style>
 </head>
 <body>
@@ -104,68 +116,8 @@
         <h3>📖 Setoran Hafalan</h3>
     </header>
 
-    <div class="content">
-        <div id="alertSuccess" class="alert alert-success"></div>
-
-        <!-- Form Input -->
-        <div class="card">
-            <div class="card-title"><i class="fa-solid fa-book-open"></i> Tambah Setoran Hafalan</div>
-            <form id="hafalanForm" onsubmit="return false;">
-                
-                <!-- Mahasiswa -->
-                <div class="form-group">
-                    <label>👨‍🎓 Mahasiswa</label>
-                    <select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select>
-                </div>
-
-                <!-- Juz -->
-                <div class="form-group">
-                    <label>📚 Juz</label>
-                    <select id="juz" onchange="onJuzChange()" required>
-                        <option value="">Pilih Juz...</option>
-                    </select>
-                </div>
-
-                <!-- Dari Surah - Sampai Surah -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>📖 Dari Surah</label>
-                        <select id="dariSurah" required>
-                            <option value="">Pilih Juz dulu...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>📖 Sampai Surah</label>
-                        <select id="sampaiSurah" required>
-                            <option value="">Pilih Juz dulu...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Ayat -->
-                <div class="form-group">
-                    <label>🔢 Ayat</label>
-                    <input type="text" id="ayat" placeholder="Contoh: 1-5, 10, 15-20" required>
-                </div>
-
-                <!-- Nilai -->
-                <div class="form-group">
-                    <label>⭐ Nilai Hafalan</label>
-                    <div class="grade-grid" id="gradeGrid"></div>
-                    <input type="hidden" id="nilai" value="">
-                </div>
-
-                <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanHafalan()">
-                    <i class="fa-solid fa-save"></i> Simpan Setoran
-                </button>
-            </form>
-        </div>
-
-        <!-- Info -->
-        <div class="info-box">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Pilih Juz terlebih dahulu, lalu pilih Surah awal dan akhir. Ayat diisi manual.</span>
-        </div>
+    <div class="content" id="mainContent">
+        <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
     </div>
 
     <nav class="bottom-nav">
@@ -188,8 +140,10 @@
 
         let allSurahData = [];
         let selectedNilai = '';
+        let isPengganti = false;
+        let activeHalaqohId = null;
+        let activeHalaqohData = null;
 
-        // Nilai Hafalan
         const GRADES = [
             { arabic: 'ممتاز', latin: 'Mumtaz', color: '#1b5e20' },
             { arabic: 'جيد جداً', latin: 'Jayyid Jiddan', color: '#2e7d32' },
@@ -200,8 +154,7 @@
 
         function showAlert(text) {
             const el = document.getElementById('alertSuccess');
-            el.textContent = text; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 4000);
+            if (el) { el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 4000); }
         }
 
         // ═══ DATA SURAH PER JUZ ═══
@@ -275,6 +228,7 @@
         // ═══ RENDER JUZ ═══
         function renderJuz() {
             const sel = document.getElementById('juz');
+            if (!sel) return;
             sel.innerHTML = '<option value="">Pilih Juz...</option>';
             for (let i = 1; i <= 30; i++) {
                 const o = document.createElement('option'); o.value = i; o.textContent = `Juz ${i}`; sel.appendChild(o);
@@ -283,7 +237,9 @@
 
         // ═══ RENDER NILAI ═══
         function renderGrades() {
-            document.getElementById('gradeGrid').innerHTML = GRADES.map((g, i) => `
+            const grid = document.getElementById('gradeGrid');
+            if (!grid) return;
+            grid.innerHTML = GRADES.map((g) => `
                 <div class="grade-btn" data-grade="${g.latin}" onclick="selectGrade('${g.latin}', this)" style="border-left:3px solid ${g.color};">
                     <span class="arabic">${g.arabic}</span>
                     <span class="latin">${g.latin}</span>
@@ -317,22 +273,78 @@
             });
         };
 
+        // ═══ RENDER FORM INPUT ═══
+        function renderForm() {
+            const container = document.getElementById('mainContent');
+            container.innerHTML = `
+                <div id="alertSuccess" class="alert alert-success"></div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-book-open"></i> Tambah Setoran Hafalan
+                        ${isPengganti ? '<span class="badge-pengganti">Pengganti</span>' : '<span class="badge-tetap">Tetap</span>'}
+                    </div>
+                    <form id="hafalanForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <label>👨‍🎓 Mahasiswa</label>
+                            <select id="mhsId" required><option value="">Pilih Mahasiswa...</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>📚 Juz</label>
+                            <select id="juz" onchange="onJuzChange()" required><option value="">Pilih Juz...</option></select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>📖 Dari Surah</label>
+                                <select id="dariSurah" required><option value="">Pilih Juz dulu...</option></select>
+                            </div>
+                            <div class="form-group">
+                                <label>📖 Sampai Surah</label>
+                                <select id="sampaiSurah" required><option value="">Pilih Juz dulu...</option></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>🔢 Ayat</label>
+                            <input type="text" id="ayat" placeholder="Contoh: 1-5, 10, 15-20" required>
+                        </div>
+                        <div class="form-group">
+                            <label>⭐ Nilai Hafalan</label>
+                            <div class="grade-grid" id="gradeGrid"></div>
+                            <input type="hidden" id="nilai" value="">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btnSimpan" onclick="simpanHafalan()">
+                            <i class="fa-solid fa-save"></i> Simpan Setoran
+                        </button>
+                    </form>
+                </div>
+
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Pilih Juz terlebih dahulu, lalu pilih Surah awal dan akhir. Ayat diisi manual.</span>
+                </div>`;
+
+            renderJuz();
+            renderGrades();
+            loadMahasiswa();
+        }
+
         // ═══ LOAD MAHASISWA ═══
         async function loadMahasiswa() {
             try {
-                const hSnap = await db.collection('halaqoh').where('musyrifId','==',user.uid).get();
-                if (hSnap.empty) {
-                    document.getElementById('mhsId').innerHTML = '<option value="">Tidak ada halaqoh</option>';
-                    return;
-                }
-                const halaqohId = hSnap.docs[0].id;
-                const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId','==',halaqohId).get();
                 const sel = document.getElementById('mhsId');
+                if (!sel) return;
+                sel.innerHTML = '<option value="">Memuat...</option>';
+
+                const pSnap = await db.collection('pembagianHalaqoh').where('halaqohId', '==', activeHalaqohId).get();
                 sel.innerHTML = '<option value="">Pilih Mahasiswa...</option>';
+
                 for (const d of pSnap.docs) {
                     const mhsDoc = await db.collection('mahasiswa').doc(d.data().mahasiswaId).get();
                     if (mhsDoc.exists) {
-                        const o = document.createElement('option'); o.value = mhsDoc.id; o.textContent = mhsDoc.data().nama; sel.appendChild(o);
+                        const o = document.createElement('option');
+                        o.value = mhsDoc.id;
+                        o.textContent = mhsDoc.data().nama;
+                        sel.appendChild(o);
                     }
                 }
             } catch(e) { console.error(e); }
@@ -356,6 +368,8 @@
             try {
                 await db.collection('hafalan').add({
                     mahasiswaId: mhsId,
+                    halaqohId: activeHalaqohId,
+                    halaqohNama: activeHalaqohData?.nama || '',
                     juz: parseInt(juz),
                     dariSurah: dariSurah,
                     sampaiSurah: sampaiSurah,
@@ -364,6 +378,7 @@
                     nilai: nilai,
                     musyrifId: user.uid,
                     musyrifNama: user.nama || '-',
+                    isPengganti: isPengganti,
                     tanggal: new Date().toISOString().split('T')[0],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -377,11 +392,75 @@
             finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Setoran'; }
         };
 
-        // Init
-        generateSurahData();
-        renderJuz();
-        renderGrades();
-        loadMahasiswa();
+        // ═══ INIT ═══
+        async function init() {
+            const container = document.getElementById('mainContent');
+            
+            try {
+                generateSurahData();
+
+                // Cek halaqoh tetap
+                let hSnap = await db.collection('halaqoh').where('musyrifId', '==', user.uid).get();
+                if (hSnap.empty) hSnap = await db.collection('halaqoh').where('userId', '==', user.uid).get();
+
+                if (!hSnap.empty) {
+                    // Musyrif tetap — langsung ke form
+                    isPengganti = false;
+                    activeHalaqohId = hSnap.docs[0].id;
+                    activeHalaqohData = hSnap.docs[0].data();
+                    renderForm();
+                    return;
+                }
+
+                // Cek halaqoh pengganti
+                const penggantiSnap = await db.collection('halaqoh').where('musyrifPenggantiId', '==', user.uid).get();
+
+                if (!penggantiSnap.empty) {
+                    isPengganti = true;
+                    let html = `
+                        <div class="info-box">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>Anda adalah <strong>Musyrif Pengganti</strong>. Pilih halaqoh untuk input setoran hafalan:</span>
+                        </div>`;
+
+                    penggantiSnap.forEach(d => {
+                        const hData = d.data();
+                        html += `
+                            <div class="halaqoh-card" onclick="pilihHalaqoh('${d.id}')">
+                                <h4>${hData.nama} <span class="badge-pengganti">Pengganti</span></h4>
+                                <p>Musyrif tetap: ${hData.musyrifNama || '-'}</p>
+                            </div>`;
+                    });
+
+                    container.innerHTML = html;
+                    return;
+                }
+
+                // Tidak punya halaqoh
+                container.innerHTML = `
+                    <div class="info-box" style="background:#fce4ec;color:#b71c1c;">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Anda belum memiliki halaqoh. Hubungi Operator Halaqoh.</span>
+                    </div>`;
+
+            } catch(e) {
+                container.innerHTML = `<p style="text-align:center;color:#b71c1c;">Error: ${e.message}</p>`;
+            }
+        }
+
+        // ═══ PILIH HALAQOH (PENGGANTI) ═══
+        window.pilihHalaqoh = async function(hId) {
+            try {
+                const hDoc = await db.collection('halaqoh').doc(hId).get();
+                if (!hDoc.exists) { alert('Halaqoh tidak ditemukan!'); return; }
+                activeHalaqohId = hId;
+                activeHalaqohData = hDoc.data();
+                isPengganti = true;
+                renderForm();
+            } catch(e) { alert('Gagal: ' + e.message); }
+        };
+
+        init();
     </script>
 </body>
 </html>
