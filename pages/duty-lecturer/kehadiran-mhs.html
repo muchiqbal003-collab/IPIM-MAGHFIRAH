@@ -12,6 +12,40 @@
     .status-filter { display: flex; gap: 4px; margin-bottom: 12px; background: var(--gray-100); border-radius: 40px; padding: 4px; }
     .status-tab { flex: 1; padding: 8px; text-align: center; border-radius: 40px; font-size: 10px; font-weight: 600; cursor: pointer; border: none; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--gray-600); }
     .status-tab.active { background: white; color: var(--maroon); font-weight: 700; }
+    
+    .btn-share-top {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 16px; border: none; border-radius: 40px;
+      background: #25d366; color: white; font-size: 13px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      margin-bottom: 12px; box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      width: 100%;
+    }
+    .btn-share-top:active { transform: scale(0.97); }
+    
+    .group-by-mhs { display: flex; flex-direction: column; gap: 8px; }
+    .mhs-group-card {
+      background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.5); padding: 12px 14px;
+    }
+    .mhs-group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .mhs-group-header .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--maroon); color: white; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0;
+    }
+    .mhs-group-header .info { flex: 1; }
+    .mhs-group-header .name { font-size: 13px; font-weight: 700; }
+    .mhs-group-header .nim { font-size: 10px; color: var(--gray-600); }
+    .jp-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 48px; }
+    .jp-chip {
+      padding: 4px 10px; border-radius: 14px; font-size: 10px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .jp-chip.sakit { background: #fff3e0; color: #e65100; }
+    .jp-chip.izin { background: #e3f2fd; color: #0d47a1; }
+    .jp-chip.alfa { background: #fce4ec; color: #b71c1c; }
+    .jp-chip.jaga { background: #ede9fe; color: #6d28d9; }
   </style>
 </head>
 <body>
@@ -24,6 +58,13 @@
   </header>
 
   <div class="content">
+    <!-- SHARE WA DI ATAS -->
+    <button class="btn-share-top" onclick="shareMhsWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.25-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.36 14.1c-.23.65-1.34 1.24-1.86 1.31-.52.08-1.19.12-1.92-.12-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.6-4.02-4.74-4.21-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.23.57.79 1.95.86 2.09.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.17-.3.38-.42.51-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.16-.19.7-.82.88-1.1.18-.28.37-.23.62-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.32.07.12.07.67-.16 1.32z"/></svg>
+      Share WA
+    </button>
+
+    <!-- FILTER STATUS -->
     <div class="status-filter">
       <button class="status-tab active" onclick="filterStatus('semua', this)">Semua</button>
       <button class="status-tab" onclick="filterStatus('sakit', this)">Sakit</button>
@@ -32,15 +73,16 @@
       <button class="status-tab" onclick="filterStatus('jaga', this)">Jaga</button>
     </div>
 
+    <!-- DAFTAR MHS TIDAK HADIR (GROUPED PER MHS) -->
     <div class="card">
-      <div class="card-title">Mahasiswa Tidak Hadir</div>
-      <div id="mhsList"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+      <div class="card-title">
+        Mahasiswa Tidak Hadir
+        <span id="totalTidakHadir" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700;"></span>
+      </div>
+      <div class="group-by-mhs" id="mhsList">
+        <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
+      </div>
     </div>
-
-    <button class="btn-share-wa" onclick="shareMhsWA()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.25-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.36 14.1c-.23.65-1.34 1.24-1.86 1.31-.52.08-1.19.12-1.92-.12-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.6-4.02-4.74-4.21-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.23.57.79 1.95.86 2.09.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.17-.3.38-.42.51-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.16-.19.7-.82.88-1.1.18-.28.37-.23.62-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.32.07.12.07.67-.16 1.32z"/></svg>
-      Share WA
-    </button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -62,6 +104,11 @@
       return new Intl.DateTimeFormat('en-CA', options).format(now);
     }
 
+    function getStatusLabel(status) {
+      const map = { sakit: 'Sakit', izin: 'Izin', alfa: 'Alfa', jaga: 'Jaga' };
+      return map[status] || status;
+    }
+
     async function loadMhs() {
       const today = getWIBDate();
       document.getElementById('headerDate').textContent = 
@@ -77,17 +124,39 @@
         const mhsMap = {};
         mhsSnap.forEach(d => { mhsMap[d.id] = d.data(); });
 
-        allMhsTidakHadir = absen
+        // ═══ GROUPING: 1 mahasiswa bisa punya BANYAK JP tidak hadir ═══
+        const groupedMap = new Map();
+
+        absen
           .filter(a => a.status && a.status !== 'hadir')
-          .map(a => ({
-            nama: mhsMap[a.mahasiswaId]?.nama || a.mahasiswaId,
-            nim: mhsMap[a.mahasiswaId]?.nim || '-',
-            kelas: a.kelasNama || mhsMap[a.mahasiswaId]?.kelasNama || '-',
-            status: a.status,
-            jamKe: a.jamKe,
-            mkNama: a.mkNama || '-'
-          }))
-          .sort((a,b) => a.nama.localeCompare(b.nama));
+          .forEach(a => {
+            const mhsId = a.mahasiswaId;
+            const nama = mhsMap[mhsId]?.nama || mhsId;
+            
+            if (!groupedMap.has(mhsId)) {
+              groupedMap.set(mhsId, {
+                nama: nama,
+                nim: mhsMap[mhsId]?.nim || '-',
+                kelas: a.kelasNama || mhsMap[mhsId]?.kelasNama || '-',
+                jpList: []
+              });
+            }
+            
+            groupedMap.get(mhsId).jpList.push({
+              jamKe: a.jamKe,
+              status: a.status,
+              mkNama: a.mkNama || '-'
+            });
+          });
+
+        allMhsTidakHadir = [...groupedMap.values()].map(m => {
+          // Urutkan JP
+          m.jpList.sort((a,b) => a.jamKe - b.jamKe);
+          return m;
+        }).sort((a,b) => a.nama.localeCompare(b.nama));
+
+        document.getElementById('totalTidakHadir').textContent = 
+          `(${allMhsTidakHadir.length} mhs)`;
 
         updateDutyBadge('hadir', allMhsTidakHadir.length);
         renderMhs();
@@ -95,22 +164,46 @@
     }
 
     function renderMhs() {
-      const filtered = currentFilter === 'semua' ? allMhsTidakHadir : allMhsTidakHadir.filter(m => m.status === currentFilter);
       const container = document.getElementById('mhsList');
+      
+      let filtered = allMhsTidakHadir;
+      if (currentFilter !== 'semua') {
+        filtered = allMhsTidakHadir.filter(m => 
+          m.jpList.some(jp => jp.status === currentFilter)
+        );
+      }
+
       if (filtered.length === 0) {
         container.innerHTML = '<p style="text-align:center;color:#1b5e20;padding:20px;">✅ Semua mahasiswa hadir!</p>';
         return;
       }
-      container.innerHTML = filtered.map(m => `
-        <div class="list-item">
-          <div class="avatar">${(m.nama||'?')[0]}</div>
-          <div class="info">
-            <div class="name">${m.nama}</div>
-            <div class="detail">${m.kelas} · JP ${m.jamKe} · ${m.mkNama}</div>
+
+      container.innerHTML = filtered.map(m => {
+        // Filter JP sesuai status yang dipilih
+        let jpList = m.jpList;
+        if (currentFilter !== 'semua') {
+          jpList = m.jpList.filter(jp => jp.status === currentFilter);
+        }
+
+        const jpChips = jpList.map(jp => `
+          <span class="jp-chip ${jp.status}">
+            JP ${jp.jamKe} · ${jp.status.toUpperCase()}
+          </span>
+        `).join('');
+
+        return `
+          <div class="mhs-group-card">
+            <div class="mhs-group-header">
+              <div class="avatar">${(m.nama||'?')[0]}</div>
+              <div class="info">
+                <div class="name">${m.nama}</div>
+                <div class="nim">${m.nim} · ${m.kelas}</div>
+              </div>
+            </div>
+            <div class="jp-chips">${jpChips}</div>
           </div>
-          <span class="badge badge-${m.status}">${m.status.toUpperCase()}</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function filterStatus(filter, btn) {
@@ -121,13 +214,18 @@
     }
     window.filterStatus = filterStatus;
 
+    // ═══ SHARE WA — HANYA NAMA MAHASISWA ═══
     function shareMhsWA() {
       const dateStr = new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      
       let text = `⚠️ *MAHASISWA TIDAK HADIR*\n📅 ${dateStr}\n━━━━━━━━━━━━━━━━\n\n`;
-      text += `📊 Total: ${allMhsTidakHadir.length}\n\n`;
+      text += `📊 Total: ${allMhsTidakHadir.length} mahasiswa\n\n`;
+      text += `📋 *DAFTAR:*\n`;
+      
       allMhsTidakHadir.forEach((m, i) => {
-        text += `${i+1}. ${m.nama} (${m.kelas})\n   ${m.status.toUpperCase()} · JP ${m.jamKe} · ${m.mkNama}\n`;
+        text += `${i+1}. ${m.nama}\n`;
       });
+      
       text += `\n━━━━━━━━━━━━━━━━\n📱 © IPIM Maghfirah`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
