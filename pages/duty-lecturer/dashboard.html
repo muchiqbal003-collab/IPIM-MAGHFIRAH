@@ -8,6 +8,132 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/duty-style.css">
+  <style>
+    /* ═══ JP BERJALAN HERO CARD ═══ */
+    .jp-hero {
+      background: linear-gradient(135deg, #3d0a0a 0%, #7a1515 100%);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      color: white;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(61,10,10,0.3);
+    }
+    .jp-hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .jp-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      right: 30px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+    .jp-hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .jp-hero-status .dot {
+      width: 8px;
+      height: 8px;
+      background: #4caf50;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .jp-hero-mk {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .jp-hero-detail {
+      font-size: 12px;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .jp-hero-waktu {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 6px;
+    }
+
+    /* No JP */
+    .jp-empty {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(255,255,255,0.5);
+      border-radius: var(--radius-lg);
+      border: 1px dashed rgba(61,10,10,0.2);
+      margin-bottom: 16px;
+    }
+    .jp-empty svg {
+      width: 48px;
+      height: 48px;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+    .jp-empty p {
+      font-size: 13px;
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    /* ═══ QUICK ACTIONS ═══ */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .quick-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      border: 1px solid rgba(255,255,255,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .quick-card:active { transform: scale(0.96); }
+    .quick-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .quick-icon.orange { background: var(--orange-light); color: var(--orange); }
+    .quick-icon.red { background: var(--red-light); color: var(--red); }
+    .quick-icon.green { background: var(--green-light); color: #1b5e20; }
+    .quick-info h4 { font-size: 12px; font-weight: 700; color: var(--gray-800); }
+    .quick-info p { font-size: 10px; color: var(--gray-600); }
+  </style>
 </head>
 <body>
 
@@ -19,11 +145,8 @@
   </header>
 
   <div class="content">
+    <!-- STATS -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="statJalan">-</div>
-        <div class="stat-label">JP Berjalan</div>
-      </div>
       <div class="stat-card">
         <div class="stat-value" id="statDosenBelum" style="color:#e53935;">-</div>
         <div class="stat-label">Dosen Belum Absen</div>
@@ -36,16 +159,47 @@
         <div class="stat-value" id="statKelasAktif" style="color:#1b5e20;">-</div>
         <div class="stat-label">Kelas Aktif</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalJP" style="color:var(--maroon);">-</div>
+        <div class="stat-label">Total JP Hari Ini</div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">🔴 JP Sedang Berjalan</div>
-      <div id="jpBerjalan"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+    <!-- JP SEDANG BERJALAN -->
+    <div id="jpSection">
+      <p style="text-align:center;color:var(--gray-600);">Memuat...</p>
     </div>
 
-    <div class="card">
-      <div class="card-title">📅 Jadwal Hari Ini</div>
-      <div id="jadwalRingkas"><p style="text-align:center;color:var(--gray-600);">Memuat...</p></div>
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions">
+      <div class="quick-card" onclick="goTo('jadwal-harian.html')">
+        <div class="quick-icon orange">📅</div>
+        <div class="quick-info">
+          <h4>Jadwal Harian</h4>
+          <p>Lihat semua JP</p>
+        </div>
+      </div>
+      <div class="quick-card" onclick="goTo('pantau-dosen.html')">
+        <div class="quick-icon red">👁️</div>
+        <div class="quick-info">
+          <h4>Pantau Dosen</h4>
+          <p>Status absensi</p>
+        </div>
+      </div>
+      <div class="quick-card" onclick="goTo('kehadiran-mhs.html')">
+        <div class="quick-icon orange">👥</div>
+        <div class="quick-info">
+          <h4>Kehadiran MHS</h4>
+          <p>Mhs tidak hadir</p>
+        </div>
+      </div>
+      <div class="quick-card" onclick="goTo('dashboard.html')">
+        <div class="quick-icon green">🔄</div>
+        <div class="quick-info">
+          <h4>Refresh</h4>
+          <p>Muat ulang data</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -58,6 +212,7 @@
   <script>
     const user = checkRole(['duty-lecturer', 'pusat-data']);
     if (!user) window.location.href = '../../index.html';
+    window.goTo = page => window.location.href = page;
 
     function getWIBDate() {
       const now = new Date();
@@ -72,9 +227,24 @@
       return names[date.getDay()];
     }
 
+    function getCurrentMinutes() {
+      const now = new Date();
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    function parseWaktu(waktuStr) {
+      if (!waktuStr) return null;
+      const parts = waktuStr.split('-');
+      if (parts.length < 2) return null;
+      const [h, m] = parts[0].trim().split(':').map(Number);
+      if (isNaN(h) || isNaN(m)) return null;
+      return { start: h * 60 + m, end: (h * 60 + m) + 50 };
+    }
+
     async function loadDashboard() {
       const today = getWIBDate();
       const dayName = getDayName(today);
+      const nowMin = getCurrentMinutes();
 
       document.getElementById('headerDate').textContent = 
         new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -89,53 +259,79 @@
           .sort((a,b) => (a.jamKe||0) - (b.jamKe||0));
         const absen = absenSnap.docs.map(d => d.data());
 
+        // Stats
         const dosenIds = [...new Set(jadwal.map(j => j.dosenId))];
         const dosenSudah = [...new Set(absen.map(a => a.dosenId))];
         const dosenBelum = dosenIds.filter(id => !dosenSudah.includes(id));
         const mhsTidakHadir = absen.filter(a => a.status && a.status !== 'hadir');
 
-        document.getElementById('statJalan').textContent = jadwal.length;
         document.getElementById('statDosenBelum').textContent = dosenBelum.length;
         document.getElementById('statMhsTidakHadir').textContent = mhsTidakHadir.length;
         document.getElementById('statKelasAktif').textContent = [...new Set(jadwal.map(j => j.kelasId))].length;
+        document.getElementById('statTotalJP').textContent = jadwal.length;
 
-        const container = document.getElementById('jadwalRingkas');
-        if (jadwal.length === 0) {
-          container.innerHTML = '<p style="text-align:center;color:var(--gray-600);">Tidak ada jadwal</p>';
-        } else {
-          container.innerHTML = jadwal.slice(0, 10).map(j => `
-            <div class="list-item">
-              <div class="avatar">${(j.dosenNama||'?')[0]}</div>
-              <div class="info">
-                <div class="name">${j.mkNama || '-'}</div>
-                <div class="detail">JP ${j.jamKe} · ${j.kelasNama || '-'} · ${j.dosenNama || '-'}</div>
-              </div>
-            </div>
-          `).join('');
-        }
+        // Update badge di bottom nav
+        updateDutyBadge('pantau', dosenBelum.length);
+        updateDutyBadge('hadir', mhsTidakHadir.length);
 
-        // JP berjalan
-        const now = new Date();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        // ═══ CARI JP SEDANG BERJALAN ═══
         const jpBerjalan = jadwal.find(j => {
-          if (!j.waktu) return false;
-          const [start] = j.waktu.split('-');
-          const [h, m] = start.trim().split(':').map(Number);
-          const startMin = h * 60 + m;
-          return currentMinutes >= startMin && currentMinutes < startMin + 50;
+          const waktu = parseWaktu(j.waktu);
+          if (!waktu) return false;
+          return nowMin >= waktu.start && nowMin < waktu.end;
         });
 
-        document.getElementById('jpBerjalan').innerHTML = jpBerjalan
-          ? `<div class="list-item" style="border-left:4px solid var(--green);">
-              <div class="info"><div class="name">${jpBerjalan.mkNama}</div>
-              <div class="detail">JP ${jpBerjalan.jamKe} · ${jpBerjalan.kelasNama} · ${jpBerjalan.waktu}</div></div>
-              <span class="badge badge-sudah">Berjalan</span>
-            </div>`
-          : '<p style="text-align:center;color:var(--gray-600);">Tidak ada JP berjalan</p>';
+        const jpSection = document.getElementById('jpSection');
+
+        if (jpBerjalan) {
+          // Cek apakah dosen sudah absen untuk JP ini
+          const sudahAbsen = absen.some(a => 
+            a.dosenId === jpBerjalan.dosenId && 
+            a.jamKe === jpBerjalan.jamKe
+          );
+
+          jpSection.innerHTML = `
+            <div class="jp-hero">
+              <div class="jp-hero-status">
+                <span class="dot"></span> SEDANG BERJALAN
+              </div>
+              <div class="jp-hero-mk">${jpBerjalan.mkNama || '-'}</div>
+              <div class="jp-hero-detail">
+                <span>🏫 ${jpBerjalan.kelasNama || '-'}</span>
+                <span>·</span>
+                <span>👨‍🏫 ${jpBerjalan.dosenNama || '-'}</span>
+              </div>
+              <div class="jp-hero-waktu">🕐 ${jpBerjalan.waktu || '-'} · JP ${jpBerjalan.jamKe}</div>
+              ${sudahAbsen 
+                ? '<div style="margin-top:10px;"><span class="badge badge-sudah">✅ Dosen Sudah Absen</span></div>'
+                : '<div style="margin-top:10px;"><span class="badge badge-belum">❌ Dosen Belum Absen</span></div>'
+              }
+            </div>
+          `;
+        } else {
+          // Cari JP berikutnya
+          const jpBerikutnya = jadwal.find(j => {
+            const waktu = parseWaktu(j.waktu);
+            if (!waktu) return false;
+            return waktu.start > nowMin;
+          });
+
+          jpSection.innerHTML = jpBerikutnya
+            ? `<div class="jp-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                <p>⏳ JP Berikutnya: <strong>${jpBerikutnya.mkNama}</strong> (${jpBerikutnya.waktu})</p>
+                <p style="font-size:10px;color:#aaa;">${jpBerikutnya.kelasNama} · ${jpBerikutnya.dosenNama}</p>
+              </div>`
+            : `<div class="jp-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+                <p>✅ Semua JP hari ini sudah selesai</p>
+              </div>`;
+        }
       } catch(e) { console.error(e); }
     }
 
     loadDashboard();
+    setInterval(loadDashboard, 60000);
   </script>
 </body>
 </html>
