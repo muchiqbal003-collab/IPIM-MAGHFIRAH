@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Profil Mahasiswa - IPIM</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- SheetJS -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--red-light:#fce4ec;
+      --blue:#1565c0;--blue-light:#e3f2fd;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --purple:#7c3aed;--purple-light:#ede9fe;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --transition:all 0.3s ease;--header-height:56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f0faf5 40%, #f9f9f9 100%);
+      color: var(--gray-800); padding-top: var(--header-height); padding-bottom: 100px;
+      -webkit-tap-highlight-color: transparent; min-height: 100vh;
+    }
+
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      color: white; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,61,51,0.35);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: white; font-size: 16px; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .content { padding: 14px; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+      overflow-x: auto;
+    }
+    .card-title {
+      font-size: 14px; font-weight: 700; color: var(--green-dark);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 4px; }
+    .form-group select {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: white;
+    }
+
+    .mhs-card {
+      background: white; border-radius: var(--radius-sm);
+      padding: 12px 14px; border: 1px solid var(--gray-200);
+      cursor: pointer; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+      transition: var(--transition);
+    }
+    .mhs-card:hover { background: var(--gray-50); }
+    .mhs-card:active { transform: scale(0.98); }
+    .mhs-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--green-light); color: var(--green-dark);
+      font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .mhs-info { flex: 1; }
+    .mhs-info .nama { font-size: 13px; font-weight: 700; }
+    .mhs-info .detail { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
+
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 12px; }
+    .info-item { background: white; border-radius: var(--radius-sm); padding: 10px; border: 1px solid var(--gray-200); text-align: center; }
+    .info-item .i-val { font-size: 13px; font-weight: 800; color: var(--green-dark); }
+    .info-item .i-lbl { font-size: 9px; color: var(--gray-600); margin-top: 2px; font-weight: 600; }
+
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+    .badge-green { background: var(--green-light); color: #1b5e20; }
+    .badge-red { background: var(--red-light); color: #b71c1c; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 550px; }
+    th { background: var(--gray-100); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); border-bottom: 2px solid var(--gray-200); white-space: nowrap; text-transform: uppercase; }
+    td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
+    tbody tr:hover { background: var(--gray-50); }
+
+    .warning-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-sm); padding: 16px; text-align: center; color: #856404; }
+    .empty-state { text-align: center; padding: 30px; color: var(--gray-600); }
+    .btn { padding: 8px 16px; border: none; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; background: var(--green-dark); color: white; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .info-row { font-size: 11px; color: var(--gray-600); margin-bottom: 8px; }
+
+    @media (max-width: 480px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <h3>👨‍🎓 Profil Mahasiswa</h3>
+  </header>
+
+  <div class="content" id="mainContent">
+    <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="../../js/firebase-config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const user = checkRole(['dosen', 'dosen-musyrif', 'pusat-data']);
+    if (!user) window.location.href = '../../index.html';
+
+    // ── STATE ──
+    let allKelas = [];
+    let selectedKelasId = '';
+    let selectedMhsId = '';
+
+    // ── INIT ──
+    async function init() {
+      const container = document.getElementById('mainContent');
+      try {
+        const kelasSnap = await db.collection('kelas').get();
+        allKelas = kelasSnap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+        renderKelasFilter(container);
+      } catch (e) {
+        container.innerHTML = `<p style="text-align:center;color:var(--red);">Error: ${e.message}</p>`;
+      }
+    }
+
+    // ── RENDER FILTER KELAS ──
+    function renderKelasFilter(container) {
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-filter"></i> Filter Kelas</div>
+          <div class="form-group">
+            <label>🏫 Pilih Kelas</label>
+            <select id="filterKelas" onchange="onKelasChange()">
+              <option value="">Pilih Kelas...</option>
+              ${allKelas.map(k => `<option value="${k.id}">${k.nama || k.id}</option>`).join('')}
+            </select>
+          </div>
+          <div id="mhsList"></div>
+        </div>`;
+    }
+
+    // ── ON KELAS CHANGE ──
+    window.onKelasChange = async function () {
+      selectedKelasId = document.getElementById('filterKelas').value;
+      selectedMhsId = '';
+      const container = document.getElementById('mhsList');
+      if (!container) return;
+
+      if (!selectedKelasId) {
+        container.innerHTML = '<p class="empty-state">Pilih kelas untuk menampilkan mahasiswa.</p>';
+        return;
+      }
+
+      container.innerHTML = '<p style="text-align:center;">Memuat mahasiswa...</p>';
+
+      try {
+        const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', selectedKelasId).get();
+        const mhsList = mhsSnap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+        if (mhsList.length === 0) {
+          container.innerHTML = '<p class="empty-state">Tidak ada mahasiswa di kelas ini.</p>';
+          return;
+        }
+
+        container.innerHTML = mhsList.map(m => `
+          <div class="mhs-card" onclick="pilihMahasiswa('${m.id}')">
+            <div class="mhs-avatar">${(m.nama || '?')[0]}</div>
+            <div class="mhs-info">
+              <div class="nama">${m.nama}</div>
+              <div class="detail">NIM: ${m.nim || '-'} · JK: ${m.jk === 'L' ? 'Laki-laki' : m.jk === 'P' ? 'Perempuan' : '-'}</div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:var(--gray-600);"></i>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = `<p style="color:red;">Gagal: ${e.message}</p>`;
+      }
+    };
+
+    // ── PILIH MAHASISWA ──
+    window.pilihMahasiswa = async function (mhsId) {
+      selectedMhsId = mhsId;
+      const container = document.getElementById('mainContent');
+      container.innerHTML = '<p style="text-align:center;">Memuat profil mahasiswa...</p>';
+
+      try {
+        const mhsDoc = await db.collection('mahasiswa').doc(mhsId).get();
+        if (!mhsDoc.exists) {
+          container.innerHTML = '<p class="empty-state">Mahasiswa tidak ditemukan.</p>';
+          return;
+        }
+        await renderProfilMahasiswa(container, { id: mhsId, ...mhsDoc.data() });
+      } catch (e) {
+        container.innerHTML = `<p style="color:red;">Gagal: ${e.message}</p>`;
+      }
+    };
+
+    // ── LOAD REKAP MATAKULIAH ──
+    async function loadRekapMatkul(mhsId, mhsNim, mhsNama) {
+      const rekapMatkul = {};
+      try {
+        let absenSnap = await db.collection('absensi').where('mahasiswaId', '==', mhsId).get();
+
+        if (absenSnap.empty && mhsNim) {
+          absenSnap = await db.collection('absensi').where('nim', '==', mhsNim).get();
+        }
+        if (absenSnap.empty && mhsNama) {
+          absenSnap = await db.collection('absensi').where('nama', '==', mhsNama).get();
+        }
+        if (absenSnap.empty) {
+          const allAbsen = await db.collection('absensi').get();
+          absenSnap = {
+            docs: allAbsen.docs.filter(d => {
+              const data = d.data();
+              return data.mahasiswaId === mhsId || data.nim === mhsNim || data.nama === mhsNama || data.mahasiswaNama === mhsNama;
+            })
+          };
+        }
+
+        absenSnap.docs.forEach(d => {
+          const data = d.data();
+          const mkNama = data.mkNama || data.matakuliahNama || data.namaMatakuliah || data.mataKuliah || 'Tanpa Nama';
+          const key = mkNama;
+
+          if (!rekapMatkul[key]) {
+            rekapMatkul[key] = { mkNama, hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 };
+          }
+          const status = (data.status || 'hadir').toLowerCase();
+          if (rekapMatkul[key][status] !== undefined) rekapMatkul[key][status]++;
+          rekapMatkul[key].total++;
+        });
+      } catch (e) { console.error(e); }
+      return rekapMatkul;
+    }
+
+    // ── RENDER PROFIL ──
+    async function renderProfilMahasiswa(container, mhs) {
+      const kelasNama = allKelas.find(k => k.id === mhs.kelasId)?.nama || '-';
+
+      // Halaqoh info
+      let halaqohInfo = null;
+      try {
+        const pSnap = await db.collection('pembagianHalaqoh').where('mahasiswaId', '==', mhs.id).get();
+        if (!pSnap.empty) {
+          halaqohInfo = { ...pSnap.docs[0].data() };
+          const hSnap = await db.collection('halaqoh').doc(halaqohInfo.halaqohId).get();
+          if (hSnap.exists) {
+            halaqohInfo.namaHalaqoh = hSnap.data().nama;
+            halaqohInfo.musyrifNama = hSnap.data().musyrifNama || hSnap.data().musyrifId || '-';
+          }
+        }
+      } catch (e) {}
+
+      // Rekap halaqoh
+      let rekapHalaqoh = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 };
+      try {
+        if (halaqohInfo?.halaqohId) {
+          const aSnap = await db.collection('absensiHalaqoh').where('mahasiswaId', '==', mhs.id).get();
+          aSnap.forEach(d => {
+            const status = (d.data().status || 'hadir').toLowerCase();
+            if (rekapHalaqoh[status] !== undefined) rekapHalaqoh[status]++;
+            rekapHalaqoh.total++;
+          });
+        }
+      } catch (e) {}
+
+      const hadirHalaqoh = rekapHalaqoh.hadir + rekapHalaqoh.jaga;
+      const persentaseHalaqoh = rekapHalaqoh.total > 0 ? Math.round((hadirHalaqoh / rekapHalaqoh.total) * 100) : 0;
+
+      const rekapMatkul = await loadRekapMatkul(mhs.id, mhs.nim, mhs.nama);
+
+      let html = `
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+          <button onclick="backToKelas()" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+          <button onclick="exportProfilExcel('${mhs.id}')" class="btn"><i class="fa-solid fa-file-excel"></i> Download Excel</button>
+        </div>
+
+        <!-- Data Mahasiswa -->
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-user"></i> Data Mahasiswa</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="i-val">${mhs.nama || '-'}</div><div class="i-lbl">Nama</div></div>
+            <div class="info-item"><div class="i-val">${mhs.nim || '-'}</div><div class="i-lbl">NIM</div></div>
+            <div class="info-item"><div class="i-val">${kelasNama}</div><div class="i-lbl">Kelas</div></div>
+            <div class="info-item"><div class="i-val">${halaqohInfo?.namaHalaqoh || '-'}</div><div class="i-lbl">Halaqoh</div></div>
+            <div class="info-item"><div class="i-val">${mhs.angkatan || mhs.tahunMasuk || '-'}</div><div class="i-lbl">Angkatan</div></div>
+            <div class="info-item"><div class="i-val">${mhs.jk === 'L' ? 'Laki-laki' : mhs.jk === 'P' ? 'Perempuan' : '-'}</div><div class="i-lbl">JK</div></div>
+          </div>
+        </div>
+
+        <!-- Kehadiran Halaqoh -->
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-clipboard-check"></i> Kehadiran Halaqoh</div>
+          ${halaqohInfo ? `
+            <div class="info-row">
+              🕌 Halaqoh: <strong>${halaqohInfo.namaHalaqoh}</strong> · 👤 Musyrif: <strong>${halaqohInfo.musyrifNama}</strong>
+            </div>
+            <div class="info-grid">
+              <div class="info-item"><div class="i-val" style="color:#1b5e20;">${rekapHalaqoh.hadir}</div><div class="i-lbl">Hadir</div></div>
+              <div class="info-item"><div class="i-val" style="color:#e65100;">${rekapHalaqoh.sakit}</div><div class="i-lbl">Sakit</div></div>
+              <div class="info-item"><div class="i-val" style="color:#2563eb;">${rekapHalaqoh.izin}</div><div class="i-lbl">Izin</div></div>
+              <div class="info-item"><div class="i-val" style="color:#b71c1c;">${rekapHalaqoh.alfa}</div><div class="i-lbl">Alfa</div></div>
+              <div class="info-item"><div class="i-val" style="color:#6d28d9;">${rekapHalaqoh.jaga}</div><div class="i-lbl">Jaga</div></div>
+              <div class="info-item"><div class="i-val">${persentaseHalaqoh}%</div><div class="i-lbl">Persentase</div></div>
+            </div>`
+            : '<p class="empty-state">Belum terdaftar di halaqoh.</p>'}
+        </div>
+
+        <!-- Kehadiran per Matakuliah -->
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-book"></i> Kehadiran per Matakuliah (${Object.keys(rekapMatkul).length})</div>
+          ${Object.keys(rekapMatkul).length > 0 ? `
+            <table>
+              <thead>
+                <tr>
+                  <th>Matakuliah</th>
+                  <th>Hadir</th>
+                  <th>Sakit</th>
+                  <th>Izin</th>
+                  <th>Alfa</th>
+                  <th>Jaga</th>
+                  <th>Total</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Object.values(rekapMatkul).map(r => {
+                  const hadirTotal = r.hadir + r.jaga;
+                  const pct = r.total > 0 ? Math.round((hadirTotal / r.total) * 100) : 0;
+                  const badge = pct >= 75 ? 'badge-green' : pct >= 50 ? 'badge-yellow' : 'badge-red';
+                  return `<tr>
+                    <td style="text-align:left;font-weight:600;">${r.mkNama}</td>
+                    <td style="color:#1b5e20;font-weight:700;">${r.hadir}</td>
+                    <td style="color:#e65100;">${r.sakit}</td>
+                    <td style="color:#2563eb;">${r.izin}</td>
+                    <td style="color:#b71c1c;font-weight:700;">${r.alfa}</td>
+                    <td style="color:#6d28d9;">${r.jaga}</td>
+                    <td><strong>${r.total}</strong></td>
+                    <td><span class="badge ${badge}">${pct}%</span></td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>`
+            : '<p class="empty-state">Tidak ada data kehadiran matakuliah.</p>'}
+        </div>`;
+
+      container.innerHTML = html;
+    }
+
+    // ── EXPORT EXCEL ──
+    window.exportProfilExcel = async function (mhsId) {
+      try {
+        const mhsDoc = await db.collection('mahasiswa').doc(mhsId).get();
+        if (!mhsDoc.exists) { alert('Mahasiswa tidak ditemukan!'); return; }
+        const mhs = { id: mhsId, ...mhsDoc.data() };
+        const kelasNama = allKelas.find(k => k.id === mhs.kelasId)?.nama || '-';
+
+        let halaqohInfo = null;
+        try {
+          const pSnap = await db.collection('pembagianHalaqoh').where('mahasiswaId', '==', mhsId).get();
+          if (!pSnap.empty) {
+            halaqohInfo = { ...pSnap.docs[0].data() };
+            const hSnap = await db.collection('halaqoh').doc(halaqohInfo.halaqohId).get();
+            if (hSnap.exists) {
+              halaqohInfo.namaHalaqoh = hSnap.data().nama;
+              halaqohInfo.musyrifNama = hSnap.data().musyrifNama || '-';
+            }
+          }
+        } catch (e) {}
+
+        let rekapHalaqoh = { hadir: 0, sakit: 0, izin: 0, alfa: 0, jaga: 0, total: 0 };
+        try {
+          if (halaqohInfo?.halaqohId) {
+            const aSnap = await db.collection('absensiHalaqoh').where('mahasiswaId', '==', mhsId).get();
+            aSnap.forEach(d => {
+              const status = (d.data().status || 'hadir').toLowerCase();
+              if (rekapHalaqoh[status] !== undefined) rekapHalaqoh[status]++;
+              rekapHalaqoh.total++;
+            });
+          }
+        } catch (e) {}
+
+        const rekapMatkul = await loadRekapMatkul(mhsId, mhs.nim, mhs.nama);
+
+        const excelData = [
+          { 'Kategori': 'Data Mahasiswa', 'Item': 'Nama', 'Nilai': mhs.nama || '-' },
+          { 'Kategori': 'Data Mahasiswa', 'Item': 'NIM', 'Nilai': mhs.nim || '-' },
+          { 'Kategori': 'Data Mahasiswa', 'Item': 'Kelas', 'Nilai': kelasNama },
+          { 'Kategori': 'Data Mahasiswa', 'Item': 'Halaqoh', 'Nilai': halaqohInfo?.namaHalaqoh || '-' },
+          { 'Kategori': 'Data Mahasiswa', 'Item': 'Musyrif', 'Nilai': halaqohInfo?.musyrifNama || '-' },
+          { 'Kategori': 'Kehadiran Halaqoh', 'Item': 'Hadir', 'Nilai': rekapHalaqoh.hadir },
+          { 'Kategori': 'Kehadiran Halaqoh', 'Item': 'Sakit', 'Nilai': rekapHalaqoh.sakit },
+          { 'Kategori': 'Kehadiran Halaqoh', 'Item': 'Izin', 'Nilai': rekapHalaqoh.izin },
+          { 'Kategori': 'Kehadiran Halaqoh', 'Item': 'Alfa', 'Nilai': rekapHalaqoh.alfa },
+          { 'Kategori': 'Kehadiran Halaqoh', 'Item': 'Jaga', 'Nilai': rekapHalaqoh.jaga }
+        ];
+
+        Object.values(rekapMatkul).forEach(r => {
+          const hadirTotal = r.hadir + r.jaga;
+          const pct = r.total > 0 ? Math.round((hadirTotal / r.total) * 100) : 0;
+          excelData.push({
+            'Kategori': 'Matakuliah',
+            'Item': r.mkNama,
+            'Nilai': `Hadir:${r.hadir}, Sakit:${r.sakit}, Izin:${r.izin}, Alfa:${r.alfa}, Jaga:${r.jaga}, %:${pct}%`
+          });
+        });
+
+        const ws = XLSX.utils.json_to_sheet(excelData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Profil');
+        XLSX.writeFile(wb, `profil-${mhs.nim || mhs.nama || 'mahasiswa'}.xlsx`);
+        alert('✅ Excel berhasil di-download!');
+      } catch (e) {
+        alert('❌ Gagal export: ' + e.message);
+      }
+    };
+
+    // ── BACK TO KELAS ──
+    window.backToKelas = function () {
+      const container = document.getElementById('mainContent');
+      renderKelasFilter(container);
+      if (selectedKelasId) {
+        document.getElementById('filterKelas').value = selectedKelasId;
+        onKelasChange();
+      }
+    };
+
+    // Init
+    init();
+  </script>
+</body>
+</html>
