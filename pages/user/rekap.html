@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Catatan - IPIM</title>
+  <title>Rekap - IPI MAGHFIRAH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -15,7 +15,11 @@
       --gold:#f5c842;--gold-light:#fffbee;
       --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
       --gray-200:#d1ead8;--gray-600:#666666;--gray-800:#222222;
-      --red:#e53935;--orange:#f57c00;--blue:#1565c0;--blue-light:#e3f2fd;
+      --red:#e53935;--red-light:#fce4ec;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --blue:#1565c0;--blue-light:#e3f2fd;
+      --purple:#7c3aed;--purple-light:#ede9fe;
+      --teal:#00695c;--teal-light:#e0f2f1;
       --radius-sm:10px;--radius:14px;--radius-lg:18px;
       --transition:all 0.3s ease;--header-height:56px;
     }
@@ -30,62 +34,41 @@
     .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #003d33 0%, #006644 100%); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,61,51,0.35); }
     .btn-back { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .app-header h3 { font-size: 16px; font-weight: 700; flex: 1; }
-    .btn-add { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
 
     .content { padding: 14px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.5); border-radius: 40px; padding: 4px; margin-bottom: 4px; }
-    .tab { flex: 1; padding: 9px 12px; text-align: center; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--gray-600); font-family: inherit; transition: var(--transition); }
-    .tab.active { background: white; color: var(--green-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
-    /* Card */
+    /* Card — 1 baris full */
     .card {
-      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg);
-      padding: 16px; border: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
       box-shadow: 0 2px 12px rgba(0, 61, 51, 0.06);
+      transition: all 0.3s ease;
     }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 61, 51, 0.1); }
+    .card:active { transform: scale(0.98); }
 
-    /* Input Area */
-    .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
-    .input-row input {
-      flex: 1; padding: 10px 14px; border: 1.5px solid var(--gray-200);
-      border-radius: 40px; font-size: 13px; font-family: inherit; outline: none;
-      background: white; transition: var(--transition);
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
     }
-    .input-row input:focus { border-color: var(--green); }
-    .input-row button {
-      width: 42px; height: 42px; border-radius: 50%; border: none;
-      background: var(--green); color: white; font-size: 18px; cursor: pointer; flex-shrink: 0;
-    }
-    .input-row textarea {
-      flex: 1; padding: 10px 14px; border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; outline: none;
-      background: white; resize: vertical; min-height: 60px;
-    }
+    .card-icon.green { background: var(--green-light); color: #1b5e20; }
+    .card-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .card-icon.orange { background: var(--orange-light); color: var(--orange); }
 
-    /* List */
-    .item-list { display: flex; flex-direction: column; gap: 6px; }
-    .list-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      background: rgba(255,255,255,0.5); border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-    .list-item.done .item-text { text-decoration: line-through; opacity: 0.5; }
-    .item-check {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--gray-300);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 11px; color: white; transition: var(--transition);
-    }
-    .list-item.done .item-check { background: var(--green); border-color: var(--green); }
-    .item-text { flex: 1; font-size: 12px; word-break: break-word; }
-    .item-date { font-size: 9px; color: var(--gray-400); }
-    .item-delete { color: var(--red); cursor: pointer; font-size: 13px; opacity: 0.5; }
-    .item-delete:active { opacity: 1; }
+    .card-info { flex: 1; }
+    .card-info h4 { font-size: 15px; font-weight: 800; color: #1a3c34; margin-bottom: 4px; }
+    .card-info p { font-size: 11px; color: var(--gray-600); line-height: 1.4; }
 
-    .empty-state { text-align: center; padding: 30px; color: var(--gray-400); font-size: 13px; }
-    .count-badge { font-size: 10px; color: var(--gray-600); margin-left: 4px; }
+    .card-arrow { color: var(--gray-600); font-size: 16px; flex-shrink: 0; }
 
     /* Bottom Nav */
     .bottom-nav {
@@ -94,10 +77,10 @@
       background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 24px; display: flex; align-items: center; justify-content: space-around;
-      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      z-index: 100; box-shadow: 0 8px 32px rgba(0, 61, 51, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
       padding: 0 8px; padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-decoration: none; padding: 8px 0; flex: 1; border-radius: 18px; transition: all 0.3s; position: relative; }
     .nav-item i { font-size: 20px; }
     .nav-item.active { color: var(--green-dark); font-weight: 700; }
     .nav-item.active i { color: var(--green); filter: drop-shadow(0 2px 4px rgba(0, 168, 89, 0.3)); }
@@ -108,48 +91,47 @@
 
   <header class="app-header">
     <button class="btn-back" onclick="goTo('dashboard.html')"><i class="fa-solid fa-arrow-left"></i></button>
-    <h3 data-lang="catatan">📝 Catatan</h3>
-    <button class="btn-add" onclick="showAddForm()"><i class="fa-solid fa-plus"></i> <span data-lang="tambah">Tambah</span></button>
+    <h3>📊 Rekap</h3>
   </header>
 
   <div class="content">
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab active" data-tab="todo" onclick="switchTab('todo')">✅ <span data-lang="todoList">To-Do</span> <span class="count-badge" id="todoCount">0</span></button>
-      <button class="tab" data-tab="notes" onclick="switchTab('notes')">📝 <span data-lang="catatanTab">Catatan</span> <span class="count-badge" id="noteCount">0</span></button>
-      <button class="tab" data-tab="problem" onclick="switchTab('problem')">⚠️ <span data-lang="problemTab">Masalah</span> <span class="count-badge" id="problemCount">0</span></button>
+    <!-- Rekap Halaqoh -->
+    <div class="card" onclick="goTo('rekap-halaqoh.html')">
+      <div class="card-icon green"><i class="fa-solid fa-mosque"></i></div>
+      <div class="card-info">
+        <h4>Rekap Halaqoh</h4>
+        <p>Absensi · Setoran Hafalan · Ujian Quran</p>
+      </div>
+      <i class="fa-solid fa-chevron-right card-arrow"></i>
     </div>
 
-    <!-- Add Form (hidden by default) -->
-    <div class="card" id="addForm" style="display:none;">
-      <div class="input-row">
-        <input type="text" id="newItemInput" data-lang-placeholder="tulisCatatan" placeholder="Tulis catatan..." onkeydown="if(event.key==='Enter')addItem()">
-        <button onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+    <!-- Rekap Absensi -->
+    <div class="card" onclick="goTo('rekap-absensi-kelas.html')">
+      <div class="card-icon blue"><i class="fa-solid fa-clipboard-check"></i></div>
+      <div class="card-info">
+        <h4>Rekap Absensi</h4>
+        <p>Kehadiran mahasiswa per matakuliah</p>
       </div>
-      <div style="display:flex;gap:4px;margin-top:6px;">
-        <select id="newItemTab" style="padding:6px 10px;border-radius:20px;border:1.5px solid var(--gray-200);font-size:11px;font-family:inherit;">
-          <option value="todo">✅ To-Do</option>
-          <option value="notes">📝 Catatan</option>
-          <option value="problem">⚠️ Masalah</option>
-        </select>
-        <button class="tab" style="padding:6px 14px;font-size:11px;" onclick="document.getElementById('addForm').style.display='none'">Batal</button>
-      </div>
+      <i class="fa-solid fa-chevron-right card-arrow"></i>
     </div>
 
-    <!-- List -->
-    <div class="card" id="listCard">
-      <div class="item-list" id="itemList">
-        <div class="empty-state">Memuat...</div>
+    <!-- Rekap Nilai -->
+    <div class="card" onclick="goTo('rekap-nilai-matkul.html')">
+      <div class="card-icon orange"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="card-info">
+        <h4>Rekap Nilai</h4>
+        <p>Nilai mahasiswa per matakuliah</p>
       </div>
+      <i class="fa-solid fa-chevron-right card-arrow"></i>
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span data-lang="home">Home</span></div>
-    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span data-lang="kalender">Kalender</span></div>
-    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span data-lang="menu">Menu</span></div>
-    <div class="nav-item active" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span data-lang="rekap">Rekap</span></div>
-    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span data-lang="profil">Profil</span></div>
+    <div class="nav-item" onclick="goTo('dashboard.html')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('kalender.html')"><i class="fa-solid fa-calendar-days"></i><span>Kalender</span></div>
+    <div class="nav-item" onclick="goTo('menu-cepat.html')"><i class="fa-solid fa-grip"></i><span>Menu</span></div>
+    <div class="nav-item active" onclick="goTo('rekap.html')"><i class="fa-solid fa-chart-simple"></i><span>Rekap</span></div>
+    <div class="nav-item" onclick="goTo('profil.html')"><i class="fa-solid fa-circle-user"></i><span>Profil</span></div>
   </nav>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -157,103 +139,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
-  <script src="../../js/lang.js"></script>
   <script>
     const user = checkRole(['dosen', 'musyrif', 'dosen-musyrif', 'umum']);
     if (!user) window.location.href = '../../index.html';
     window.goTo = page => window.location.href = page;
-
-    let currentTab = 'todo';
-    const STORAGE_KEY = `catatan_${user.uid}`;
-
-    // ═══ DATA ═══
-    function getData() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
-    }
-    function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-
-    // ═══ SWITCH TAB ═══
-    window.switchTab = function(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-      document.getElementById('newItemTab').value = tab;
-      renderList();
-    };
-
-    // ═══ SHOW ADD FORM ═══
-    window.showAddForm = function() {
-      document.getElementById('newItemTab').value = currentTab;
-      const form = document.getElementById('addForm');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-      if (form.style.display === 'block') document.getElementById('newItemInput').focus();
-    };
-
-    // ═══ ADD ITEM ═══
-    window.addItem = function() {
-      const input = document.getElementById('newItemInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const tab = document.getElementById('newItemTab').value;
-      const data = getData();
-      data.unshift({
-        id: Date.now(),
-        type: tab,
-        text: text,
-        done: false,
-        date: new Date().toISOString()
-      });
-      saveData(data);
-      input.value = '';
-      renderList();
-    };
-
-    // ═══ TOGGLE DONE ═══
-    window.toggleDone = function(id) {
-      const data = getData();
-      const item = data.find(d => d.id === id);
-      if (item) { item.done = !item.done; saveData(data); renderList(); }
-    };
-
-    // ═══ DELETE ═══
-    window.deleteItem = function(id) {
-      if (!confirm('Hapus catatan ini?')) return;
-      const data = getData().filter(d => d.id !== id);
-      saveData(data);
-      renderList();
-    };
-
-    // ═══ RENDER ═══
-    function renderList() {
-      const allData = getData();
-      const filtered = allData.filter(d => d.type === currentTab);
-      const container = document.getElementById('itemList');
-
-      // Update counts
-      document.getElementById('todoCount').textContent = allData.filter(d => d.type === 'todo').length;
-      document.getElementById('noteCount').textContent = allData.filter(d => d.type === 'notes').length;
-      document.getElementById('problemCount').textContent = allData.filter(d => d.type === 'problem').length;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state">📭 Belum ada ${currentTab === 'todo' ? 'to-do' : currentTab === 'notes' ? 'catatan' : 'catatan masalah'}</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.map(d => `
-        <div class="list-item ${d.done ? 'done' : ''}">
-          <div class="item-check" onclick="toggleDone(${d.id})">${d.done ? '✓' : ''}</div>
-          <div class="item-text">${d.text}</div>
-          <div class="item-date">${new Date(d.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</div>
-          <div class="item-delete" onclick="deleteItem(${d.id})"><i class="fa-solid fa-trash"></i></div>
-        </div>
-      `).join('');
-    }
-
-    renderList();
-
-    // Multi-bahasa
-    if (typeof applyLang === 'function') setTimeout(applyLang, 200);
   </script>
 </body>
 </html>
