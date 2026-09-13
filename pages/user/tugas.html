@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Input Tugas - IPIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --green-dark:#003d33;--green-mid:#006644;--green:#00a859;
+      --green-light:#e8f5e9;--green-pale:#f0faf5;
+      --gold:#f5c842;--gold-light:#fffbee;
+      --white:#ffffff;--gray-50:#f9f9f9;--gray-100:#f0f0f0;
+      --gray-200:#d1ead8;--gray-300:#cccccc;--gray-600:#666666;--gray-800:#222222;
+      --red:#e53935;--red-light:#fce4ec;
+      --orange:#f57c00;--orange-light:#fff3e0;
+      --blue:#1565c0;--blue-light:#e3f2fd;
+      --purple:#7b1fa2;--purple-light:#f3e5f5;
+      --radius-sm:10px;--radius:14px;--radius-lg:18px;
+      --header-height:56px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:linear-gradient(180deg,#e8f5e9 0%,#f0faf5 40%,#f9f9f9 100%);
+      color:var(--gray-800);
+      padding-top:var(--header-height);
+      padding-bottom:100px;
+      -webkit-tap-highlight-color:transparent;
+      min-height:100vh;
+    }
+
+    /* ═══ HEADER ═══ */
+    .app-header{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      background:linear-gradient(135deg,#003d33 0%,#006644 100%);
+      color:white;padding:12px 16px;
+      display:flex;align-items:center;gap:12px;
+      box-shadow:0 4px 20px rgba(0,61,51,0.35);
+    }
+    .btn-back{
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.18);
+      color:white;font-size:16px;width:36px;height:36px;
+      border-radius:50%;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .header-info{flex:1;min-width:0;}
+    .header-info h3{font-size:15px;font-weight:700;line-height:1.2;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .header-info .sub{font-size:10px;opacity:0.8;margin-top:2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+    /* ═══ CONTENT ═══ */
+    .content{padding:14px;max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+
+    .info-card{
+      background:white;border-radius:var(--radius-lg);
+      padding:14px 16px;border:1px solid var(--gray-200);
+      box-shadow:0 2px 8px rgba(0,61,51,0.05);
+    }
+    .info-card h4{font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:4px;}
+    .info-card p{font-size:11px;color:var(--gray-600);}
+
+    .card{
+      background:rgba(255,255,255,0.75);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-radius:var(--radius-lg);padding:16px;
+      border:1px solid rgba(255,255,255,0.6);
+      box-shadow:0 2px 12px rgba(0,61,51,0.06);
+    }
+    .card-title{
+      font-size:13px;font-weight:700;color:var(--green-dark);
+      margin-bottom:12px;display:flex;align-items:center;gap:7px;
+    }
+    .card-title i{color:var(--green);}
+
+    .form-group{margin-bottom:12px;}
+    .form-group label{display:block;font-size:11px;font-weight:600;
+      color:var(--gray-600);margin-bottom:4px;}
+    .form-group input,.form-group select,.form-group textarea{
+      width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);
+      border-radius:var(--radius-sm);font-size:13px;
+      font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:white;
+      transition:all 0.2s ease;
+    }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+      border-color:var(--green);box-shadow:0 0 0 3px rgba(0,168,89,0.1);
+    }
+    .form-group textarea{resize:vertical;min-height:60px;}
+
+    .form-row{display:flex;gap:10px;}
+    .form-row .form-group{flex:1;}
+
+    /* ═══ LIST MAHASISWA ═══ */
+    .mhs-list{display:flex;flex-direction:column;gap:6px;}
+    .mhs-row{
+      background:white;border-radius:var(--radius-sm);
+      padding:10px 14px;border:1px solid var(--gray-200);
+      display:flex;align-items:center;gap:10px;
+      transition:all 0.2s ease;
+    }
+    .mhs-row.locked{opacity:0.75;background:var(--gray-50);}
+    .mhs-num{
+      width:28px;height:28px;border-radius:50%;
+      background:var(--green-light);color:var(--green-mid);
+      font-size:11px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .mhs-nama{flex:1;font-size:13px;font-weight:600;min-width:0;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .mhs-nim{font-size:10px;color:var(--gray-600);margin-top:1px;font-weight:400;}
+
+    .nilai-input{
+      width:70px;padding:8px;border:1.5px solid var(--gray-200);
+      border-radius:8px;text-align:center;font-size:13px;font-weight:700;
+      font-family:inherit;outline:none;background:white;
+      transition:all 0.2s ease;
+    }
+    .nilai-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,168,89,0.1);}
+    .nilai-input:disabled{background:var(--gray-100);cursor:not-allowed;}
+
+    /* ═══ SUMMARY ═══ */
+    .summary-row{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+      margin-top:12px;
+    }
+    .summary-item{
+      background:white;border-radius:var(--radius-sm);
+      padding:10px 6px;text-align:center;
+      border:1px solid var(--gray-200);
+    }
+    .summary-val{font-size:18px;font-weight:800;color:var(--green-dark);}
+    .summary-lbl{font-size:9px;color:var(--gray-600);margin-top:2px;font-weight:600;}
+
+    /* ═══ BUTTONS ═══ */
+    .btn{
+      padding:9px 16px;border:none;border-radius:40px;
+      font-size:12px;font-weight:700;font-family:inherit;
+      cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+      transition:all 0.2s ease;white-space:nowrap;
+    }
+    .btn-primary{
+      width:100%;padding:13px;justify-content:center;
+      background:linear-gradient(135deg,#004d40,#006644);color:white;
+      box-shadow:0 4px 12px rgba(0,61,51,0.3);
+    }
+    .btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+    .btn-success{
+      width:100%;padding:13px;justify-content:center;
+      background:linear-gradient(135deg,#10b981,#059669);color:white;
+      box-shadow:0 4px 12px rgba(16,185,129,0.3);
+    }
+    .btn-outline{
+      background:white;border:1.5px solid var(--gray-200);color:var(--gray-600);
+    }
+    .btn-sm{padding:6px 12px;font-size:11px;}
+
+    /* ═══ LOCK INFO ═══ */
+    .lock-info{
+      background:var(--red-light);border:1px solid #fca5a5;
+      border-radius:var(--radius-sm);padding:12px;
+      text-align:center;color:#991b1b;font-size:12px;font-weight:600;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+
+    /* ═══ EMPTY STATE ═══ */
+    .empty-state{text-align:center;padding:40px 20px;color:var(--gray-600);}
+    .empty-state i{font-size:48px;color:var(--gray-300);margin-bottom:12px;display:block;}
+    .empty-state p{font-size:13px;}
+
+    /* ═══ TOAST ═══ */
+    .toast{
+      position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+      background:var(--gray-800);color:white;
+      border-radius:20px;padding:10px 20px;
+      font-size:13px;font-weight:600;z-index:200;
+      opacity:0;transition:opacity 0.3s;white-space:nowrap;
+      pointer-events:none;
+    }
+    .toast.show{opacity:1;}
+
+    @media(max-width:480px){
+      .mhs-nim{display:none;}
+      .nilai-input{width:60px;}
+    }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+  <div class="header-info">
+    <h3 id="headerTitle">Input Tugas</h3>
+    <div class="sub" id="headerSub">Memuat...</div>
+  </div>
+</header>
+
+<div class="content" id="mainContent">
+  <p style="text-align:center;color:var(--gray-600);">Memuat data...</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../../js/firebase-config.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  const user = checkRole(['dosen', 'dosen-musyrif']);
+  if (!user) window.location.href = '../../index.html';
+
+  // ═══ PARAMETER URL ═══
+  const urlParams = new URLSearchParams(window.location.search);
+  const jadwalId = urlParams.get('jadwalId');
+  const kelasId = urlParams.get('kelasId');
+  const mapelId = urlParams.get('mapelId');
+
+  let jadwalData = null;
+  let mhsList = [];
+  let nilaiTugas = {};
+  let isLocked = false;
+  let isSaving = false;
+  let pertemuanKe = 1;
+  let namaTugas = '';
+
+  function getLocalDate() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show';
+    setTimeout(() => { el.className = 'toast'; }, 3000);
+  }
+
+  // ═══ INIT ═══
+  async function init() {
+    const container = document.getElementById('mainContent');
+
+    if (!jadwalId || !kelasId) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-triangle-exclamation" style="color:#e53935;"></i>
+          <p><strong>Parameter tidak lengkap</strong></p>
+          <p style="font-size:12px;margin-top:6px;">URL harus menyertakan <code>?jadwalId=xxx&kelasId=xxx</code></p>
+          <button class="btn btn-primary" style="max-width:220px;margin:20px auto 0;" onclick="history.back()">
+            <i class="fa-solid fa-arrow-left"></i> Kembali
+          </button>
+        </div>`;
+      return;
+    }
+
+    try {
+      // Ambil data jadwal
+      const jDoc = await db.collection('jadwal').doc(jadwalId).get();
+      if (!jDoc.exists) {
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-xmark"></i><p>Jadwal tidak ditemukan</p></div>';
+        return;
+      }
+      jadwalData = { id: jDoc.id, ...jDoc.data() };
+
+      document.getElementById('headerTitle').textContent = 'Input Tugas';
+      document.getElementById('headerSub').textContent = `${jadwalData.mkNama || '-'} · ${jadwalData.kelasNama || '-'}`;
+
+      // Ambil mahasiswa dari kelas
+      const mhsSnap = await db.collection('mahasiswa').where('kelasId', '==', kelasId).get();
+      mhsList = mhsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+      if (mhsList.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-user-slash"></i><p>Tidak ada mahasiswa di kelas ini</p></div>';
+        return;
+      }
+
+      renderForm();
+    } catch(e) {
+      console.error(e);
+      container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-xmark"></i><p>Gagal: ${e.message}</p></div>`;
+    }
+  }
+
+  function renderForm() {
+    const container = document.getElementById('mainContent');
+    const today = getLocalDate();
+
+    container.innerHTML = `
+      <div class="info-card">
+        <h4>📚 ${jadwalData.mkNama || '-'}</h4>
+        <p>🏫 ${jadwalData.kelasNama || '-'} · 📅 ${today}</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-pen"></i> Info Tugas</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>📝 Pertemuan Ke-</label>
+            <select id="fPertemuan" onchange="cekExistingTugas()">
+              ${[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].map(n =>
+                `<option value="${n}">Pertemuan ${n}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>📖 Nama Tugas</label>
+            <input type="text" id="fNamaTugas" placeholder="Contoh: Tugas 1" value="">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-users"></i>
+          <span>Daftar Mahasiswa</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--gray-600);">${mhsList.length} mahasiswa</span>
+        </div>
+        <div id="lockInfoContainer"></div>
+        <div class="mhs-list" id="mhsListContainer"></div>
+        <div class="summary-row">
+          <div class="summary-item">
+            <div class="summary-val" id="sumTotal">0</div>
+            <div class="summary-lbl">Terisi</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumKosong" style="color:#e65100;">0</div>
+            <div class="summary-lbl">Kosong</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumRata" style="color:#1565c0;">0</div>
+            <div class="summary-lbl">Rata²</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" id="sumMax" style="color:#1b5e20;">0</div>
+            <div class="summary-lbl">Tertinggi</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="btnSimpan" onclick="simpanTugas()">
+        <i class="fa-solid fa-save"></i> Simpan Tugas
+      </button>
+    `;
+
+    renderMhsList();
+    cekExistingTugas();
+  }
+
+  function renderMhsList() {
+    const container = document.getElementById('mhsListContainer');
+    if (!container) return;
+
+    container.innerHTML = mhsList.map((m, i) => `
+      <div class="mhs-row ${isLocked ? 'locked' : ''}">
+        <div class="mhs-num">${i + 1}</div>
+        <div class="mhs-nama">
+          ${m.nama}
+          <div class="mhs-nim">${m.nim || '-'}</div>
+        </div>
+        <input type="number" class="nilai-input"
+          id="nilai_${m.id}"
+          value="${nilaiTugas[m.id] ?? ''}"
+          min="0" max="100"
+          placeholder="0-100"
+          ${isLocked ? 'disabled' : ''}
+          oninput="updateSummary()">
+      </div>
+    `).join('');
+
+    updateSummary();
+  }
+
+  window.updateSummary = function() {
+    let total = 0, kosong = 0, sum = 0, max = 0;
+    mhsList.forEach(m => {
+      const el = document.getElementById('nilai_' + m.id);
+      const val = el ? parseInt(el.value) : NaN;
+      if (!isNaN(val) && el.value !== '') {
+        total++;
+        sum += val;
+        if (val > max) max = val;
+      } else {
+        kosong++;
+      }
+    });
+    const rata = total > 0 ? Math.round(sum / total) : 0;
+
+    document.getElementById('sumTotal').textContent = total;
+    document.getElementById('sumKosong').textContent = kosong;
+    document.getElementById('sumRata').textContent = rata;
+    document.getElementById('sumMax').textContent = max;
+  };
+
+  // ═══ CEK TUGAS EXISTING ═══
+  window.cekExistingTugas = async function() {
+    const pEl = document.getElementById('fPertemuan');
+    if (!pEl) return;
+    pertemuanKe = parseInt(pEl.value) || 1;
+
+    try {
+      const snap = await db.collection('tugas')
+        .where('jadwalId', '==', jadwalId)
+        .where('pertemuanKe', '==', pertemuanKe)
+        .get();
+
+      if (!snap.empty) {
+        const data = snap.docs[0].data();
+        isLocked = true;
+        namaTugas = data.namaTugas || '';
+        document.getElementById('fNamaTugas').value = namaTugas;
+
+        // Load nilai existing
+        nilaiTugas = {};
+        const nilaiSnap = await db.collection('nilaiTugas')
+          .where('jadwalId', '==', jadwalId)
+          .where('pertemuanKe', '==', pertemuanKe)
+          .get();
+        nilaiSnap.forEach(d => {
+          const data = d.data();
+          if (data.mahasiswaId) nilaiTugas[data.mahasiswaId] = data.nilai;
+        });
+
+        // Tampilkan lock info
+        document.getElementById('lockInfoContainer').innerHTML = `
+          <div class="lock-info" style="margin-bottom:10px;">
+            <i class="fa-solid fa-lock"></i>
+            Tugas pertemuan ${pertemuanKe} sudah tersimpan
+          </div>`;
+
+        // Update button
+        const btn = document.getElementById('btnSimpan');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-lock"></i> Tugas Terkunci';
+        }
+
+        // Disable nama tugas
+        document.getElementById('fNamaTugas').disabled = true;
+      } else {
+        isLocked = false;
+        namaTugas = '';
+        nilaiTugas = {};
+        document.getElementById('fNamaTugas').value = '';
+        document.getElementById('fNamaTugas').disabled = false;
+        document.getElementById('lockInfoContainer').innerHTML = '';
+
+        const btn = document.getElementById('btnSimpan');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Tugas';
+        }
+      }
+
+      renderMhsList();
+    } catch(e) {
+      console.error(e);
+    }
+  };
+
+  // ═══ SIMPAN TUGAS ═══
+  window.simpanTugas = async function() {
+    if (isSaving || isLocked) return;
+
+    const namaTugasInput = document.getElementById('fNamaTugas').value.trim();
+    if (!namaTugasInput) {
+      showToast('⚠️ Isi nama tugas terlebih dahulu!');
+      return;
+    }
+
+    // Cek apakah ada nilai yang diisi
+    let adaNilai = false;
+    mhsList.forEach(m => {
+      const el = document.getElementById('nilai_' + m.id);
+      if (el && el.value !== '') adaNilai = true;
+    });
+
+    if (!adaNilai) {
+      showToast('⚠️ Isi minimal 1 nilai!');
+      return;
+    }
+
+    if (!confirm(`Simpan tugas "${namaTugasInput}" untuk pertemuan ${pertemuanKe}?`)) return;
+
+    isSaving = true;
+    const btn = document.getElementById('btnSimpan');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+    try {
+      const today = getLocalDate();
+      const batch = db.batch();
+
+      // Simpan metadata tugas
+      const tugasRef = db.collection('tugas').doc();
+      batch.set(tugasRef, {
+        jadwalId,
+        kelasId,
+        mapelId: mapelId || jadwalData.mkId || '',
+        mkNama: jadwalData.mkNama || '',
+        kelasNama: jadwalData.kelasNama || '',
+        dosenId: user.uid,
+        dosenNama: user.nama || '',
+        namaTugas: namaTugasInput,
+        pertemuanKe,
+        tanggal: today,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      // Simpan nilai per mahasiswa
+      for (const m of mhsList) {
+        const el = document.getElementById('nilai_' + m.id);
+        if (!el || el.value === '') continue;
+
+        const nilai = parseFloat(el.value);
+        if (isNaN(nilai) || nilai < 0 || nilai > 100) continue;
+
+        const ref = db.collection('nilaiTugas').doc();
+        batch.set(ref, {
+          tugasId: tugasRef.id,
+          jadwalId,
+          kelasId,
+          mapelId: mapelId || jadwalData.mkId || '',
+          mkNama: jadwalData.mkNama || '',
+          mahasiswaId: m.id,
+          mahasiswaNama: m.nama || '',
+          nim: m.nim || '',
+          pertemuanKe,
+          namaTugas: namaTugasInput,
+          nilai,
+          dosenId: user.uid,
+          dosenNama: user.nama || '',
+          tanggal: today,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      await batch.commit();
+      isLocked = true;
+      showToast('✅ Tugas berhasil disimpan!');
+
+      setTimeout(() => cekExistingTugas(), 500);
+    } catch(e) {
+      showToast('❌ Gagal: ' + e.message);
+      isSaving = false;
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Tugas';
+    }
+  };
+
+  init();
+</script>
+</body>
+</html>
