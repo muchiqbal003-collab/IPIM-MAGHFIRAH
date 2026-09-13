@@ -20,6 +20,7 @@
       --blue: #1e88e5; --blue-light: #e3f2fd;
       --orange: #f57c00; --orange-light: #fff3e0;
       --purple: #7c3aed; --purple-light: #ede9fe;
+      --pink: #ec4899; --pink-light: #fce7f3;
       --sidebar-width: 260px;
       --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
       --transition: all 0.25s ease;
@@ -32,7 +33,7 @@
       display: flex; min-height: 100vh;
     }
 
-    /* ── SIDEBAR ── */
+    /* ═══ SIDEBAR ═══ */
     .sidebar {
       width: var(--sidebar-width); background: var(--green-dark); color: white;
       height: 100vh; position: fixed; left: 0; top: 0;
@@ -50,10 +51,10 @@
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
     .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; }
 
-    /* ── MAIN ── */
+    /* ═══ MAIN ═══ */
     .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; }
 
-    /* ── PRESENTASI HERO ── */
+    /* ═══ HERO ═══ */
     .presentation-hero {
       background: linear-gradient(135deg, #003d33 0%, #006644 100%);
       border-radius: var(--radius-lg);
@@ -84,7 +85,7 @@
       color: var(--gold);
     }
 
-    /* ── FILTER BAR ── */
+    /* ═══ FILTER BAR ═══ */
     .filter-bar {
       background: white;
       border-radius: var(--radius-lg);
@@ -124,9 +125,8 @@
     .btn-success:hover { background: #1da851; }
     .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
     .btn-outline:hover { border-color: var(--green); color: var(--green); }
-    .btn-sm { padding: 8px 14px; font-size: 11px; }
 
-    /* ── STATS GRID ── */
+    /* ═══ STATS GRID ═══ */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -167,7 +167,7 @@
     .stat-value small { font-size: 14px; font-weight: 600; color: var(--gray-400); }
     .stat-label { font-size: 11px; color: var(--gray-600); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* ── CHART GRID ── */
+    /* ═══ CHART GRID ═══ */
     .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
     .chart-card {
       background: white;
@@ -187,7 +187,90 @@
     .chart-header h3 i { color: var(--green); }
     .chart-wrap { position: relative; height: 280px; }
 
-    /* ── TABLE SECTION ── */
+    /* ═══ GENDER BREAKDOWN CARDS ═══ */
+    .gender-breakdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .gender-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      transition: var(--transition);
+    }
+    .gender-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .gender-card-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .gender-card-header.putra { background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%); }
+    .gender-card-header.putri { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+    .gender-card-header .icon-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .gender-card-header .info { flex: 1; }
+    .gender-card-header .info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .gender-card-header .info p { font-size: 10px; opacity: 0.85; font-weight: 500; }
+    .gender-card-header .total-badge {
+      background: rgba(255,255,255,0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .gender-card-body {
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+      transition: var(--transition);
+    }
+    .status-item:hover { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .status-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .status-icon.sakit { background: var(--orange-light); color: var(--orange); }
+    .status-icon.izin  { background: var(--blue-light); color: var(--blue); }
+    .status-icon.alfa  { background: var(--red-light); color: var(--red); }
+    .status-icon.jaga  { background: var(--purple-light); color: var(--purple); }
+    .status-info { flex: 1; min-width: 0; }
+    .status-label {
+      font-size: 10px; font-weight: 700; color: var(--gray-600);
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .status-value {
+      font-size: 20px; font-weight: 800; color: var(--gray-800);
+      line-height: 1.1; margin-top: 2px;
+    }
+    .status-value small {
+      font-size: 10px; font-weight: 600; color: var(--gray-400);
+      margin-left: 2px;
+    }
+
+    /* ═══ TABLE ═══ */
     .table-card {
       background: white;
       border-radius: var(--radius-lg);
@@ -252,20 +335,25 @@
     }
     .empty-state i { font-size: 48px; opacity: 0.3; margin-bottom: 12px; display: block; }
 
+    /* ═══ RESPONSIVE ═══ */
     @media (max-width: 1200px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .chart-grid { grid-template-columns: 1fr; }
+      .gender-breakdown-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; padding: 16px; }
       .stats-grid { grid-template-columns: 1fr; }
     }
+    @media (max-width: 480px) {
+      .gender-card-body { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
+  <!-- ═══ SIDEBAR ═══ -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
@@ -286,10 +374,10 @@
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- ═══ MAIN CONTENT ═══ -->
   <main class="main-content">
 
-    <!-- HERO PRESENTASI -->
+    <!-- HERO -->
     <div class="presentation-hero">
       <div class="hero-top">
         <div class="hero-title">
@@ -359,6 +447,11 @@
       </div>
     </div>
 
+    <!-- GENDER BREAKDOWN -->
+    <div class="gender-breakdown-grid" id="genderBreakdown">
+      <!-- Diisi oleh JS -->
+    </div>
+
     <!-- TABLE -->
     <div class="table-card">
       <div class="table-header">
@@ -375,7 +468,7 @@
 
   </main>
 
-  <!-- SCRIPTS -->
+  <!-- ═══ SCRIPTS ═══ -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -422,8 +515,7 @@
       document.getElementById('tglDari').value = getWIBDate(twoWeeksAgo);
       document.getElementById('tglSampai').value = getWIBDate(now);
 
-      // Quick range
-      document.getElementById('quickRange').addEventListener('change', function() {
+      document.getElementById('quickRange').addEventListener('change', function () {
         const val = parseInt(this.value);
         if (!val) return;
         const end = new Date();
@@ -485,7 +577,6 @@
         }
 
         // ═══ HITUNG PER HARI (BUKAN PER JP) ═══
-        // Group per mahasiswa: berapa HARI tidak hadir (unique tanggal)
         const groupedMhs = {};
 
         absenList
@@ -517,9 +608,10 @@
           jumlahHari: d.tanggalSet.size
         })).sort((a, b) => b.jumlahHari - a.jumlahHari);
 
-        renderStats(absenList, currentData, tglDari, tglSampai);
+        renderStats(absenList, currentData);
         renderPerbandinganChart(absenList, tglDari, tglSampai);
         renderGenderChart(currentData);
+        renderGenderBreakdown(absenList);
         renderTable(currentData);
       } catch (e) {
         console.error(e);
@@ -528,7 +620,7 @@
     }
 
     // ── RENDER STATS ──
-    function renderStats(absenList, dataPerMhs, tglDari, tglSampai) {
+    function renderStats(absenList, dataPerMhs) {
       const totalMhs = new Set(absenList.map(a => a.mahasiswaId)).size;
       const totalTidakHadirHari = dataPerMhs.reduce((s, d) => s + d.jumlahHari, 0);
       const persenHadir = absenList.length > 0
@@ -561,7 +653,6 @@
 
     // ── RENDER PERBANDINGAN CHART (2 PEKAN) ──
     function renderPerbandinganChart(absenList, tglDari, tglSampai) {
-      // Bagi jadi 2 pekan
       const [y1, m1, d1] = tglDari.split('-').map(Number);
       const [y2, m2, d2] = tglSampai.split('-').map(Number);
       const start = new Date(y1, m1 - 1, d1);
@@ -659,6 +750,113 @@
       }
     }
 
+    // ── RENDER GENDER BREAKDOWN (Per Hari, Bukan JP) ──
+        // ── RENDER GENDER BREAKDOWN (Jumlah Mahasiswa Per Status) ──
+        function renderGenderBreakdown(absenList) {
+      const container = document.getElementById('genderBreakdown');
+      if (!container) return;
+
+      // Inisialisasi counter: Set per status per gender
+      const counts = {
+        L: {
+          sakit: new Set(),
+          izin: new Set(),
+          alfa: new Set(),
+          jaga: new Set()
+        },
+        P: {
+          sakit: new Set(),
+          izin: new Set(),
+          alfa: new Set(),
+          jaga: new Set()
+        }
+      };
+
+      absenList
+        .filter(a => a.status && a.status !== 'hadir')
+        .forEach(a => {
+          const mhsId = a.mahasiswaId;
+          if (!mhsId) return;
+
+          const mhs = mhsMap[mhsId];
+          if (!mhs) return;
+
+          const jk = mhs.jk;
+          if (jk !== 'L' && jk !== 'P') return;
+
+          const status = a.status.toLowerCase();
+          if (!counts[jk][status]) return;
+
+          // Tambah mhsId ke Set → otomatis unique
+          counts[jk][status].add(mhsId);
+        });
+
+      // Build card
+      const buildCard = (gender, label, icon, colorClass) => {
+        const c = counts[gender];
+        const sakitCount = c.sakit.size;
+        const izinCount = c.izin.size;
+        const alfaCount = c.alfa.size;
+        const jagaCount = c.jaga.size;
+
+        // Total mahasiswa unik yang pernah tidak hadir (gabungan semua status)
+        const allMhs = new Set([
+          ...c.sakit,
+          ...c.izin,
+          ...c.alfa,
+          ...c.jaga
+        ]);
+        const totalMhs = allMhs.size;
+
+        return `
+          <div class="gender-card">
+            <div class="gender-card-header ${colorClass}">
+              <div class="icon-circle">${icon}</div>
+              <div class="info">
+                <h4>${label}</h4>
+                <p>${totalMhs} mahasiswa pernah tidak hadir</p>
+              </div>
+              <div class="total-badge">${totalMhs} mhs</div>
+            </div>
+            <div class="gender-card-body">
+              <div class="status-item">
+                <div class="status-icon sakit"><i class="fa-solid fa-thermometer"></i></div>
+                <div class="status-info">
+                  <div class="status-label">Sakit</div>
+                  <div class="status-value">${sakitCount}<small>mhs</small></div>
+                </div>
+              </div>
+              <div class="status-item">
+                <div class="status-icon izin"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="status-info">
+                  <div class="status-label">Izin</div>
+                  <div class="status-value">${izinCount}<small>mhs</small></div>
+                </div>
+              </div>
+              <div class="status-item">
+                <div class="status-icon alfa"><i class="fa-solid fa-user-xmark"></i></div>
+                <div class="status-info">
+                  <div class="status-label">Alfa</div>
+                  <div class="status-value">${alfaCount}<small>mhs</small></div>
+                </div>
+              </div>
+              <div class="status-item">
+                <div class="status-icon jaga"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="status-info">
+                  <div class="status-label">Jaga</div>
+                  <div class="status-value">${jagaCount}<small>mhs</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      };
+
+      container.innerHTML =
+        buildCard('L', 'Putra', '♂', 'putra') +
+        buildCard('P', 'Putri', '♀', 'putri');
+    }
+    
     // ── RENDER TABLE ──
     function renderTable(data) {
       const wrapper = document.getElementById('tableWrapper');
