@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rekap Absensi Pekanan - Operator Akademik IPIM</title>
+  <title>Rekap Absensi - Operator Akademik IPIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,369 +11,800 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
-    :root { --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9; --gold: #d4a843; --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161; --gray-800: #333333; --red: #e53935; --red-light: #fce4ec; --blue: #1e88e5; --blue-light: #e3f2fd; --orange: #f57c00; --sidebar-width: 260px; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --transition: all 0.25s ease; }
+    :root {
+      --green-dark: #004d40; --green: #00a859; --green-light: #e8f5e9;
+      --gold: #d4a843; --gold-light: #fdf6e3;
+      --white: #ffffff; --gray-50: #fafafa; --gray-100: #f5f5f5;
+      --gray-200: #e0e0e0; --gray-400: #9e9e9e; --gray-600: #616161;
+      --gray-800: #333333; --red: #e53935; --red-light: #fce4ec;
+      --blue: #1e88e5; --blue-light: #e3f2fd;
+      --orange: #f57c00; --orange-light: #fff3e0;
+      --purple: #7c3aed; --purple-light: #ede9fe;
+      --sidebar-width: 260px;
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+      --transition: all 0.25s ease;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: #f0f4f3; color: var(--gray-800); display: flex; min-height: 100vh; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f3;
+      color: var(--gray-800);
+      display: flex; min-height: 100vh;
+    }
 
-    .sidebar { width: var(--sidebar-width); background: var(--green-dark); color: white; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-width); background: var(--green-dark); color: white;
+      height: 100vh; position: fixed; left: 0; top: 0;
+      display: flex; flex-direction: column; z-index: 100;
+    }
     .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
     .sidebar-logo { width: 40px; height: 40px; background: var(--gold); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 18px; flex-shrink: 0; }
-    .sidebar-brand h2 { font-size: 16px; font-weight: 700; color: white; } .sidebar-brand span { font-size: 10px; opacity: 0.6; }
+    .sidebar-brand h2 { font-size: 16px; font-weight: 700; }
+    .sidebar-brand span { font-size: 10px; opacity: 0.6; }
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
-    .nav-section { margin-bottom: 8px; } .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.4; padding: 12px 12px 8px; }
+    .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.4; padding: 12px 12px 8px; }
     .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
-    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; } .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
-    .nav-item i { width: 20px; text-align: center; font-size: 14px; }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: var(--gold); font-weight: 600; }
     .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 700; font-size: 14px; }
 
+    /* ── MAIN ── */
     .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 24px 28px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-    .page-title h1 { font-size: 22px; font-weight: 700; } .page-title p { font-size: 13px; color: var(--gray-600); }
-    .btn { padding: 9px 16px; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); white-space: nowrap; }
-    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); } .btn-sm { padding: 6px 12px; font-size: 11px; }
-    .btn-info { background: var(--blue-light); color: var(--blue); }
 
-    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 140px; }
-    .form-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
-    .form-group input, .form-group select { padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: white; }
+    /* ── PRESENTASI HERO ── */
+    .presentation-hero {
+      background: linear-gradient(135deg, #003d33 0%, #006644 100%);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      color: white;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,61,51,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .presentation-hero::before {
+      content: '';
+      position: absolute; top: -50%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(245,200,66,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; }
+    .hero-title h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .hero-title p { font-size: 13px; opacity: 0.75; margin-top: 6px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,200,66,0.2);
+      border: 1px solid rgba(245,200,66,0.4);
+      padding: 8px 16px; border-radius: 40px;
+      font-size: 11px; font-weight: 700;
+      color: var(--gold);
+    }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-    .stat-card { background: white; border-radius: var(--radius-lg); padding: 18px; border: 1px solid var(--gray-200); text-align: center; }
-    .stat-card .val { font-size: 28px; font-weight: 800; color: var(--green-dark); }
-    .stat-card .lbl { font-size: 11px; color: var(--gray-600); margin-top: 4px; }
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      border: 1px solid var(--gray-200);
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+    .filter-group label {
+      font-size: 11px; font-weight: 700; color: var(--gray-600);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .filter-group input, .filter-group select {
+      padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Poppins', sans-serif; outline: none;
+      transition: var(--transition);
+    }
+    .filter-group input:focus, .filter-group select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0,168,89,0.1);
+    }
+    .btn {
+      padding: 10px 20px; border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 700; font-family: 'Poppins', sans-serif;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .btn-primary { background: var(--green-dark); color: white; }
+    .btn-primary:hover { background: #00695c; transform: translateY(-1px); }
+    .btn-success { background: #25d366; color: white; }
+    .btn-success:hover { background: #1da851; }
+    .btn-outline { background: white; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-sm { padding: 8px 14px; font-size: 11px; }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .widget { background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); overflow: hidden; }
-    .widget-header { padding: 14px 18px; border-bottom: 1px solid var(--gray-100); font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
-    .widget-body { padding: 16px; }
-    .chart-wrap { height: 250px; position: relative; }
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--gray-200);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .stat-card.green::before { background: linear-gradient(90deg, #00a859, #00d46a); }
+    .stat-card.red::before { background: linear-gradient(90deg, #e53935, #ef5350); }
+    .stat-card.blue::before { background: linear-gradient(90deg, #1e88e5, #42a5f5); }
+    .stat-card.gold::before { background: linear-gradient(90deg, #d4a843, #f5c842); }
+    .stat-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 12px;
+    }
+    .stat-card.green .stat-icon { background: var(--green-light); color: var(--green); }
+    .stat-card.red .stat-icon { background: var(--red-light); color: var(--red); }
+    .stat-card.blue .stat-icon { background: var(--blue-light); color: var(--blue); }
+    .stat-card.gold .stat-icon { background: var(--gold-light); color: #8d6e00; }
+    .stat-value {
+      font-size: 32px; font-weight: 800; color: var(--gray-800);
+      letter-spacing: -1px; line-height: 1;
+    }
+    .stat-value small { font-size: 14px; font-weight: 600; color: var(--gray-400); }
+    .stat-label { font-size: 11px; color: var(--gray-600); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    thead th { background: var(--gray-50); padding: 8px 6px; text-align: center; font-size: 9px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; border-bottom: 2px solid var(--gray-200); }
-    tbody td { padding: 7px 6px; text-align: center; border-bottom: 1px solid var(--gray-100); }
-    tbody tr.highlight { background: #fce4ec; }
-    tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
+    /* ── CHART GRID ── */
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .chart-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .chart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+    }
+    .chart-header h3 {
+      font-size: 15px; font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chart-header h3 i { color: var(--green); }
+    .chart-wrap { position: relative; height: 280px; }
 
-    .badge { padding: 3px 10px; border-radius: 12px; font-size: 9px; font-weight: 600; }
+    /* ── TABLE SECTION ── */
+    .table-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      margin-bottom: 24px;
+    }
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      background: linear-gradient(90deg, #fafafa 0%, #f5f5f5 100%);
+    }
+    .table-header h3 {
+      font-size: 15px; font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .table-header h3 i { color: var(--green); }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
+    thead th {
+      background: var(--gray-50);
+      padding: 14px 12px;
+      text-align: left;
+      font-size: 10px; font-weight: 700; color: var(--gray-600);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--gray-200);
+      white-space: nowrap;
+    }
+    tbody td { padding: 12px; border-bottom: 1px solid var(--gray-100); }
+    tbody tr:hover { background: var(--gray-50); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .mhs-row-name { font-weight: 700; color: var(--gray-800); }
+    .mhs-row-nim { font-size: 10px; color: var(--gray-600); margin-top: 2px; }
+
+    .badge {
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 10px; font-weight: 700;
+      display: inline-block; white-space: nowrap;
+    }
     .badge-red { background: var(--red-light); color: #b71c1c; }
-    .badge-orange { background: #fff3e0; color: #e65100; }
+    .badge-orange { background: var(--orange-light); color: #e65100; }
     .badge-green { background: var(--green-light); color: #1b5e20; }
-    .badge-sakit { background: #fef3c7; color: #92400e; }
-    .badge-izin { background: #dbeafe; color: #1e40af; }
-    .badge-alfa { background: #fce4ec; color: #991b1b; }
-    .badge-hari { background: #fce4ec; color: #b71c1c; font-weight: 700; }
+    .badge-blue { background: var(--blue-light); color: var(--blue); }
+    .badge-purple { background: var(--purple-light); color: #6d28d9; }
 
-    .top-list { display: flex; flex-direction: column; gap: 6px; }
-    .top-item { display: flex; align-items: center; gap: 10px; padding: 8px; background: var(--gray-50); border-radius: var(--radius-sm); }
-    .top-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: white; flex-shrink: 0; }
-    .rank-1 { background: #e53935; } .rank-2 { background: #f57c00; } .rank-3 { background: #fbc02d; }
-    .rank-rest { background: var(--gray-400); }
+    .day-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      font-size: 15px; font-weight: 800;
+      background: var(--red-light); color: #b71c1c;
+    }
+    .day-count.low { background: var(--orange-light); color: #e65100; }
+    .day-count.mid { background: #fef3c7; color: #92400e; }
+    .day-count.good { background: var(--green-light); color: #1b5e20; }
 
-    @media (max-width: 1200px) { .grid-2 { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--gray-600);
+    }
+    .empty-state i { font-size: 48px; opacity: 0.3; margin-bottom: 12px; display: block; }
+
+    @media (max-width: 1200px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 16px; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div><div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div></div>
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="sidebar-brand"><h2>IPIM Panel</h2><span>Operator Akademik</span></div>
+    </div>
     <nav class="sidebar-nav">
-      <div class="nav-section"><div class="nav-section-title">Akademik</div>
-        <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
-        <a href="rekap-absensi-pekanan.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i> Rekap Pekanan</a>
-        <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-bar"></i> Rekap Nilai</a>
-      </div>
+      <div class="nav-section-title">Akademik</div>
+      <a href="rekap-absensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Rekap Absensi</a>
+      <a href="rekap-absensi-pekanan.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i> Rekap Pekanan</a>
+      <a href="rekap-nilai.html" class="nav-item"><i class="fa-solid fa-chart-bar"></i> Rekap Nilai</a>
     </nav>
-    <div class="sidebar-footer"><div class="user-avatar" id="avatarLetter">A</div><div class="user-info-sidebar"><div class="name" id="sidebarName">Operator</div><div class="role">Akademik</div></div></div>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="avatarLetter">A</div>
+      <div class="user-info-sidebar">
+        <div class="name" id="sidebarName">Operator</div>
+        <div class="role">Akademik</div>
+      </div>
+    </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content">
-    <div class="topbar">
-      <div class="page-title"><h1>📊 Rekap Absensi Pekanan</h1><p>Filter tanggal · Hari & JP · Share WA</p></div>
-      <button class="btn btn-outline" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+
+    <!-- HERO PRESENTASI -->
+    <div class="presentation-hero">
+      <div class="hero-top">
+        <div class="hero-title">
+          <h1>📊 Rekap Absensi Mahasiswa</h1>
+          <p>Analisis kehadiran · Perbandingan pekan · Presentasi</p>
+        </div>
+        <div class="hero-badge">
+          <i class="fa-solid fa-calendar-days"></i>
+          <span id="periodLabel">-</span>
+        </div>
+      </div>
     </div>
 
-    <div class="filter-row">
-      <div class="form-group"><label>🏫 Kelas</label><select id="filterKelas" onchange="loadAll()"><option value="">Semua Kelas</option></select></div>
-      <div class="form-group"><label>📅 Dari Tgl</label><input type="date" id="tglDari" onchange="loadAll()"></div>
-      <div class="form-group"><label>📅 Sampai Tgl</label><input type="date" id="tglSampai" onchange="loadAll()"></div>
-      <div class="form-group"><label>📅 Cepat</label><select id="filterPeriode" onchange="setPeriode()"><option value="">Custom</option><option value="pekan">1 Pekan</option><option value="bulan">1 Bulan</option><option value="semester">1 Semester</option></select></div>
-      <button class="btn btn-info btn-sm" onclick="shareWA()"><i class="fa-brands fa-whatsapp"></i> Share WA</button>
-      <button class="btn btn-outline btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label><i class="fa-solid fa-calendar-check"></i> Dari Tanggal</label>
+        <input type="date" id="tglDari">
+      </div>
+      <div class="filter-group">
+        <label><i class="fa-solid fa-calendar-check"></i> Sampai Tanggal</label>
+        <input type="date" id="tglSampai">
+      </div>
+      <div class="filter-group" style="max-width: 180px;">
+        <label><i class="fa-solid fa-bolt"></i> Cepat</label>
+        <select id="quickRange">
+          <option value="">Custom</option>
+          <option value="7">7 Hari</option>
+          <option value="14">14 Hari (2 Pekan)</option>
+          <option value="21">21 Hari</option>
+          <option value="30">30 Hari (1 Bulan)</option>
+        </select>
+      </div>
+      <div class="filter-group" style="max-width: 180px;">
+        <label><i class="fa-solid fa-school"></i> Kelas</label>
+        <select id="filterKelas">
+          <option value="">Semua Kelas</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="loadAll()">
+        <i class="fa-solid fa-sync"></i> Tampilkan
+      </button>
+      <button class="btn btn-success" onclick="shareWA()">
+        <i class="fa-brands fa-whatsapp"></i> Share WA
+      </button>
+      <button class="btn btn-outline" onclick="exportExcel()">
+        <i class="fa-solid fa-file-excel"></i> Excel
+      </button>
     </div>
 
+    <!-- STATS -->
     <div class="stats-grid" id="statsGrid"></div>
 
-    <div class="grid-2">
-      <div class="widget">
-        <div class="widget-header"><i class="fa-solid fa-chart-bar" style="color:var(--green);"></i> Perbandingan Kehadiran</div>
-        <div class="widget-body"><div class="chart-wrap"><canvas id="chartBatang"></canvas></div></div>
+    <!-- CHARTS -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3><i class="fa-solid fa-chart-column"></i> Perbandingan 2 Pekan</h3>
+        </div>
+        <div class="chart-wrap"><canvas id="chartPerbandingan"></canvas></div>
       </div>
-      <div class="widget">
-        <div class="widget-header"><i class="fa-solid fa-chart-pie" style="color:var(--red);"></i> Distribusi Status</div>
-        <div class="widget-body"><div class="chart-wrap"><canvas id="chartPie"></canvas></div></div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3><i class="fa-solid fa-venus-mars"></i> Perbandingan Laki-laki & Perempuan</h3>
+        </div>
+        <div class="chart-wrap"><canvas id="chartGender"></canvas></div>
       </div>
     </div>
 
-    <!-- Top Jarang Hadir -->
-    <div class="widget" style="margin-bottom:20px;">
-      <div class="widget-header">
-        <span><i class="fa-solid fa-ranking-star" style="color:var(--red);"></i> 🔴 Mahasiswa Jarang Hadir (Top 10)</span>
-        <button class="btn btn-info btn-sm" onclick="shareWA()"><i class="fa-brands fa-whatsapp"></i> Share WA</button>
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3><i class="fa-solid fa-user-xmark"></i> Daftar Mahasiswa Tidak Hadir (Per Hari)</h3>
+        <span id="totalTidakHadir" style="font-size: 12px; color: var(--gray-600); font-weight: 600;"></span>
       </div>
-      <div class="widget-body"><div class="top-list" id="topTidakHadir"></div></div>
+      <div class="table-wrapper" id="tableWrapper">
+        <div class="empty-state">
+          <i class="fa-solid fa-inbox"></i>
+          <p>Pilih periode lalu klik "Tampilkan"</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Tabel Detail -->
-    <div class="widget">
-      <div class="widget-header"><i class="fa-solid fa-table"></i> 📋 Detail Tidak Hadir — Hari & JP</div>
-      <div class="widget-body" style="overflow-x:auto;">
-        <table id="tableDetail">
-          <thead><tr>
-            <th>No</th><th>Nama</th><th>Kelas</th><th>MK</th>
-            <th>Hari Tidak Hadir</th><th>Total JP</th>
-            <th>Sakit</th><th>Izin</th><th>Alfa</th><th>Jaga</th>
-            <th>% Hadir</th>
-          </tr></thead>
-          <tbody><tr><td colspan="11">Memuat...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
   </main>
 
+  <!-- SCRIPTS -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/app.js"></script>
+
   <script>
     const user = checkRole(['operator-akademik', 'pusat-data']);
     if (!user) window.location.href = '../../index.html';
     document.getElementById('sidebarName').textContent = user.nama || 'Operator';
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
-    let allData = [], chartBatang, chartPie;
-    let mhsMapGlobal = {}, mkMapGlobal = {};
-    let currentStats = {};
-    let globalTidakHadirList = [];
+    // ── STATE ──
+    let chartPerbandingan = null;
+    let chartGender = null;
+    let allMhs = [];
+    let mhsMap = {};
+    let currentData = [];
 
-    const now = new Date();
-    document.getElementById('tglSampai').value = now.toISOString().split('T')[0];
-    const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
-    document.getElementById('tglDari').value = weekAgo.toISOString().split('T')[0];
-
-    window.setPeriode = function() {
-      const periode = document.getElementById('filterPeriode').value;
-      const now2 = new Date();
-      let start = new Date();
-      if (periode === 'pekan') start.setDate(now2.getDate() - 7);
-      else if (periode === 'bulan') start.setDate(now2.getDate() - 30);
-      else if (periode === 'semester') start.setMonth(now2.getMonth() - 6);
-      else return;
-      document.getElementById('tglDari').value = start.toISOString().split('T')[0];
-      document.getElementById('tglSampai').value = now2.toISOString().split('T')[0];
-      loadAll();
-    };
-
-    function getDateRange() {
-      return {
-        start: document.getElementById('tglDari').value,
-        end: document.getElementById('tglSampai').value
-      };
+    // ── HELPER WIB ──
+    function getWIBDate(d = new Date()) {
+      const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Intl.DateTimeFormat('en-CA', options).format(d);
     }
 
-    async function loadFilters() {
-      const kSnap = await db.collection('kelas').get();
-      const sel = document.getElementById('filterKelas');
-      kSnap.docs.sort((a,b) => (a.data().nama||'').localeCompare(b.data().nama||'')).forEach(d => {
-        const o = document.createElement('option'); o.value = d.id; o.textContent = d.data().nama; sel.appendChild(o);
+    function formatTanggalShort(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    }
+
+    function formatTanggalLong(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    // ── INIT FILTER ──
+    function initFilter() {
+      const now = new Date();
+      const twoWeeksAgo = new Date();
+      twoWeeksAgo.setDate(now.getDate() - 14);
+
+      document.getElementById('tglDari').value = getWIBDate(twoWeeksAgo);
+      document.getElementById('tglSampai').value = getWIBDate(now);
+
+      // Quick range
+      document.getElementById('quickRange').addEventListener('change', function() {
+        const val = parseInt(this.value);
+        if (!val) return;
+        const end = new Date();
+        const start = new Date();
+        start.setDate(end.getDate() - val);
+        document.getElementById('tglDari').value = getWIBDate(start);
+        document.getElementById('tglSampai').value = getWIBDate(end);
+        loadAll();
       });
     }
 
+    // ── LOAD KELAS OPTIONS ──
+    async function loadKelasOptions() {
+      const snap = await db.collection('kelas').get();
+      const sel = document.getElementById('filterKelas');
+      snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.nama || '').localeCompare(b.nama || ''))
+        .forEach(k => {
+          const o = document.createElement('option');
+          o.value = k.id;
+          o.textContent = k.nama;
+          sel.appendChild(o);
+        });
+    }
+
+    // ── LOAD MAHASISWA ──
+    async function loadMahasiswa() {
+      const snap = await db.collection('mahasiswa').get();
+      allMhs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      mhsMap = {};
+      allMhs.forEach(m => { mhsMap[m.id] = m; });
+    }
+
+    // ── LOAD ALL DATA ──
     async function loadAll() {
+      const tglDari = document.getElementById('tglDari').value;
+      const tglSampai = document.getElementById('tglSampai').value;
       const kelasFilter = document.getElementById('filterKelas').value;
-      const { start, end } = getDateRange();
-      if (!start || !end) return;
+
+      if (!tglDari || !tglSampai) {
+        alert('⚠️ Pilih tanggal dari & sampai!');
+        return;
+      }
+
+      document.getElementById('periodLabel').textContent =
+        `${formatTanggalShort(tglDari)} — ${formatTanggalShort(tglSampai)}`;
 
       try {
-        const [absensiSnap, mhsSnap, mkSnap] = await Promise.all([
-          db.collection('absensi').get(),
-          db.collection('mahasiswa').get(),
-          db.collection('matakuliah').get()
-        ]);
+        const absenSnap = await db.collection('absensi')
+          .where('tanggal', '>=', tglDari)
+          .where('tanggal', '<=', tglSampai)
+          .get();
 
-        mhsMapGlobal = {}; mhsSnap.forEach(d => { mhsMapGlobal[d.id] = d.data(); });
-        mkMapGlobal = {}; mkSnap.forEach(d => { mkMapGlobal[d.id] = d.data(); });
+        let absenList = absenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-        let absensiList = absensiSnap.docs.map(d => d.data()).filter(a => a.tanggal >= start && a.tanggal <= end);
-        if (kelasFilter) absensiList = absensiList.filter(a => a.kelasId === kelasFilter);
-
-        const totalAbsensi = absensiList.length;
-        const totalMhs = new Set(absensiList.map(a => a.mahasiswaId)).size;
-        const tidakHadirCount = absensiList.filter(a => a.status && a.status !== 'hadir').length;
-        const persenHadir = totalAbsensi > 0 ? Math.round(((totalAbsensi - tidakHadirCount) / totalAbsensi) * 100) : 0;
-        const mhsTidakHadirSet = new Set(absensiList.filter(a => a.status && a.status !== 'hadir').map(a => a.mahasiswaId));
-
-        currentStats = { totalAbsensi, totalMhs, persenHadir, tidakHadirCount, start, end, mhsTidakHadirCount: mhsTidakHadirSet.size };
-
-        // Stats
-        document.getElementById('statsGrid').innerHTML = `
-          <div class="stat-card"><div class="val">${totalAbsensi}</div><div class="lbl">Total Absensi</div></div>
-          <div class="stat-card"><div class="val">${totalMhs}</div><div class="lbl">Mahasiswa</div></div>
-          <div class="stat-card"><div class="val" style="color:#1b5e20;">${persenHadir}%</div><div class="lbl">Kehadiran</div></div>
-          <div class="stat-card"><div class="val" style="color:#b71c1c;">${mhsTidakHadirSet.size}</div><div class="lbl">Mhs Tidak Hadir</div></div>`;
-
-        // Chart Batang
-        const days = [];
-        const dStart = new Date(start), dEnd = new Date(end);
-        for (let d = new Date(dStart); d <= dEnd; d.setDate(d.getDate()+1)) {
-          days.push(new Date(d).toISOString().split('T')[0]);
+        if (kelasFilter) {
+          absenList = absenList.filter(a => a.kelasId === kelasFilter);
         }
-        const hadirPerDay = days.map(d => absensiList.filter(a => a.tanggal===d && (!a.status||a.status==='hadir')).length);
-        const tidakPerDay = days.map(d => absensiList.filter(a => a.tanggal===d && a.status&&a.status!=='hadir').length);
 
-        if (chartBatang) chartBatang.destroy();
-        chartBatang = new Chart(document.getElementById('chartBatang'), {
-          type: 'bar',
-          data: {
-            labels: days.map(d => new Date(d).toLocaleDateString('id-ID',{weekday:'short',day:'numeric'})),
-            datasets: [
-              { label: 'Hadir', data: hadirPerDay, backgroundColor: 'rgba(0,168,89,0.6)' },
-              { label: 'Tidak Hadir', data: tidakPerDay, backgroundColor: 'rgba(229,57,53,0.6)' }
-            ]
-          },
-          options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
-        });
+        // ═══ HITUNG PER HARI (BUKAN PER JP) ═══
+        // Group per mahasiswa: berapa HARI tidak hadir (unique tanggal)
+        const groupedMhs = {};
 
-        // Chart Pie
-        const sCount = absensiList.filter(a=>a.status==='sakit').length;
-        const iCount = absensiList.filter(a=>a.status==='izin').length;
-        const aCount = absensiList.filter(a=>a.status==='alfa').length;
-        const jCount = absensiList.filter(a=>a.status==='jaga').length;
-        if (chartPie) chartPie.destroy();
-        chartPie = new Chart(document.getElementById('chartPie'), {
-          type: 'doughnut',
-          data: { labels: ['Sakit','Izin','Alfa','Jaga'], datasets: [{ data: [sCount,iCount,aCount,jCount], backgroundColor: ['#f59e0b','#3b82f6','#ef4444','#8b5cf6'] }] },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
+        absenList
+          .filter(a => a.status && a.status !== 'hadir')
+          .forEach(a => {
+            const mhsId = a.mahasiswaId;
+            if (!mhsId) return;
 
-        // ═══ TOP JARANG HADIR ═══
-        const mhsGroup = {};
-        absensiList.filter(a => a.status && a.status !== 'hadir').forEach(a => {
-          const key = a.mahasiswaId;
-          if (!mhsGroup[key]) mhsGroup[key] = { sakit:0, izin:0, alfa:0, jaga:0, total:0, kelasId: a.kelasId, mkMap: {}, hariSet: new Set() };
-          mhsGroup[key][a.status] = (mhsGroup[key][a.status]||0)+1;
-          mhsGroup[key].total++;
-          mhsGroup[key].hariSet.add(a.tanggal);
-          const mkId = a.mapelId || a.mkId;
-          mhsGroup[key].mkMap[mkId] = (mhsGroup[key].mkMap[mkId]||0)+1;
-        });
+            if (!groupedMhs[mhsId]) {
+              const mhs = mhsMap[mhsId] || {};
+              groupedMhs[mhsId] = {
+                mahasiswaId: mhsId,
+                nama: mhs.nama || a.mahasiswaNama || mhsId,
+                nim: mhs.nim || '-',
+                jk: mhs.jk || '-',
+                kelasNama: mhs.kelasNama || a.kelasNama || '-',
+                tanggalSet: new Set(),
+                statuses: {}
+              };
+            }
 
-        const top10 = Object.entries(mhsGroup).sort((a,b) => b[1].total-a[1].total).slice(0,10);
+            groupedMhs[mhsId].tanggalSet.add(a.tanggal);
+            const st = a.status.toLowerCase();
+            groupedMhs[mhsId].statuses[st] = (groupedMhs[mhsId].statuses[st] || 0) + 1;
+          });
 
-        document.getElementById('topTidakHadir').innerHTML = top10.map(([id, d], i) => {
-          const m = mhsMapGlobal[id] || {};
-          const mkStr = Object.entries(d.mkMap).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([mkId,c])=> `${mkMapGlobal[mkId]?.nama||'MK'} ${c}x`).join(', ');
-          const statusStr = [];
-          if(d.sakit>0) statusStr.push(`🤒${d.sakit}`);
-          if(d.izin>0) statusStr.push(`📝${d.izin}`);
-          if(d.alfa>0) statusStr.push(`❌${d.alfa}`);
-          if(d.jaga>0) statusStr.push(`🛡️${d.jaga}`);
-          return `<div class="top-item">
-            <div class="top-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-rest'}">${i+1}</div>
-            <div style="flex:1;"><strong>${m.nama||id}</strong><br><small>${m.kelasNama||'-'} · ${d.hariSet.size} hari · ${mkStr}</small></div>
-            <div style="display:flex;gap:3px;flex-wrap:wrap;">${statusStr.map(s=>`<span class="badge badge-${s.includes('🤒')?'sakit':s.includes('📝')?'izin':s.includes('❌')?'alfa':'sakit'}">${s}</span>`).join('')}</div>
-            <span class="badge badge-red">${d.total} JP</span>
-          </div>`;
-        }).join('') || '<p style="text-align:center;">✅ Tidak ada mahasiswa tidak hadir</p>';
+        currentData = Object.values(groupedMhs).map(d => ({
+          ...d,
+          jumlahHari: d.tanggalSet.size
+        })).sort((a, b) => b.jumlahHari - a.jumlahHari);
 
-        // ═══ TABEL DETAIL: HARI & JP ═══
-        const detailMap = {};
-        absensiList.filter(a => a.status && a.status !== 'hadir').forEach(a => {
-          const key = `${a.mahasiswaId}_${a.mapelId||a.mkId}`;
-          if (!detailMap[key]) {
-            detailMap[key] = { 
-              mahasiswaId: a.mahasiswaId, mkId: a.mapelId||a.mkId, kelasId: a.kelasId,
-              sakit:0, izin:0, alfa:0, jaga:0, totalTidak:0, hariSet: new Set() 
-            };
-          }
-          detailMap[key][a.status] = (detailMap[key][a.status]||0)+1;
-          detailMap[key].totalTidak++;
-          detailMap[key].hariSet.add(a.tanggal);
-        });
-
-        globalTidakHadirList = Object.values(detailMap).map(d => {
-          const totalTidak = d.sakit + d.izin + d.alfa + (d.jaga||0);
-          const totalJPSemua = absensiList.filter(a => 
-            a.mahasiswaId === d.mahasiswaId && (a.mapelId||a.mkId) === d.mkId
-          ).length;
-          const hadir = Math.max(0, totalJPSemua - totalTidak);
-          const pct = totalJPSemua > 0 ? Math.round((hadir/totalJPSemua)*100) : 0;
-          return { ...d, hadir, totalTidak, pct, hariTidakHadir: d.hariSet.size, totalJP: totalTidak, totalJPSemua };
-        }).sort((a,b) => b.hariTidakHadir - a.hariTidakHadir || b.totalJP - a.totalJP).slice(0, 30);
-
-        document.querySelector('#tableDetail tbody').innerHTML = globalTidakHadirList.map((d, i) => {
-          const m = mhsMapGlobal[d.mahasiswaId] || {};
-          const mk = mkMapGlobal[d.mkId] || {};
-          return `<tr class="${d.pct < 60 ? 'highlight' : ''}">
-            <td>${i+1}</td>
-            <td><strong>${m.nama||'-'}</strong></td>
-            <td>${m.kelasNama||'-'}</td>
-            <td>${mk.nama||'-'}</td>
-            <td><span class="badge badge-hari">${d.hariTidakHadir} hari</span></td>
-            <td><strong>${d.totalJP} JP</strong></td>
-            <td>${d.sakit||0}</td><td>${d.izin||0}</td><td>${d.alfa||0}</td><td>${d.jaga||0}</td>
-            <td><span class="badge ${d.pct>=80?'badge-green':d.pct>=60?'badge-orange':'badge-red'}">${d.pct}%</span></td>
-          </tr>`;
-        }).join('') || '<tr><td colspan="11">Tidak ada data</td></tr>';
-
-      } catch(e) { console.error(e); }
+        renderStats(absenList, currentData, tglDari, tglSampai);
+        renderPerbandinganChart(absenList, tglDari, tglSampai);
+        renderGenderChart(currentData);
+        renderTable(currentData);
+      } catch (e) {
+        console.error(e);
+        alert('❌ Gagal load data: ' + e.message);
+      }
     }
 
-    // ═══ SHARE WA ═══
-    window.shareWA = function() {
-      const { totalAbsensi, totalMhs, persenHadir, mhsTidakHadirCount, start, end } = currentStats;
-      let text = `📊 *REKAP ABSENSI*\n📅 ${start} s/d ${end}\n━━━━━━━━━━━━━━━━\n`;
-      text += `📋 Total Absensi: *${totalAbsensi}*\n👨‍🎓 Mahasiswa: *${totalMhs}*\n✅ Kehadiran: *${persenHadir}%*\n👤 Mhs Tidak Hadir: *${mhsTidakHadirCount} orang*\n\n`;
+    // ── RENDER STATS ──
+    function renderStats(absenList, dataPerMhs, tglDari, tglSampai) {
+      const totalMhs = new Set(absenList.map(a => a.mahasiswaId)).size;
+      const totalTidakHadirHari = dataPerMhs.reduce((s, d) => s + d.jumlahHari, 0);
+      const persenHadir = absenList.length > 0
+        ? Math.round(((absenList.length - absenList.filter(a => a.status && a.status !== 'hadir').length) / absenList.length) * 100)
+        : 0;
 
-      if (globalTidakHadirList.length > 0) {
-        text += `📋 *DAFTAR TIDAK HADIR (Hari & JP):*\n`;
-        globalTidakHadirList.forEach((d, i) => {
-          const m = mhsMapGlobal[d.mahasiswaId] || {};
-          const mk = mkMapGlobal[d.mkId] || {};
-          const statusStr = [];
-          if(d.sakit>0) statusStr.push(`Sakit:${d.sakit}`);
-          if(d.izin>0) statusStr.push(`Izin:${d.izin}`);
-          if(d.alfa>0) statusStr.push(`Alfa:${d.alfa}`);
-          if(d.jaga>0) statusStr.push(`Jaga:${d.jaga}`);
-          text += `${i+1}. *${m.nama||'-'}* - ${m.kelasNama||'-'}\n   📚 ${mk.nama||'-'} | ${d.hariTidakHadir} hari | ${d.totalJP} JP\n   ${statusStr.join(' | ')}\n`;
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card green">
+          <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-value">${totalMhs}</div>
+          <div class="stat-label">Total Mahasiswa</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
+          <div class="stat-value">${dataPerMhs.length} <small>/ ${totalMhs}</small></div>
+          <div class="stat-label">Mhs Pernah Tidak Hadir</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon"><i class="fa-solid fa-calendar-xmark"></i></div>
+          <div class="stat-value">${totalTidakHadirHari} <small>hari</small></div>
+          <div class="stat-label">Total Hari Tidak Hadir</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-value">${persenHadir}<small>%</small></div>
+          <div class="stat-label">Persentase Kehadiran</div>
+        </div>
+      `;
+    }
+
+    // ── RENDER PERBANDINGAN CHART (2 PEKAN) ──
+    function renderPerbandinganChart(absenList, tglDari, tglSampai) {
+      // Bagi jadi 2 pekan
+      const [y1, m1, d1] = tglDari.split('-').map(Number);
+      const [y2, m2, d2] = tglSampai.split('-').map(Number);
+      const start = new Date(y1, m1 - 1, d1);
+      const end = new Date(y2, m2 - 1, d2);
+
+      const totalDays = Math.ceil((end - start) / 86400000) + 1;
+      const midDay = Math.floor(totalDays / 2);
+
+      const pekan1Start = new Date(start);
+      const pekan1End = new Date(start);
+      pekan1End.setDate(start.getDate() + midDay - 1);
+
+      const pekan2Start = new Date(pekan1End);
+      pekan2Start.setDate(pekan1End.getDate() + 1);
+      const pekan2End = new Date(end);
+
+      const pekan1Str = getWIBDate(pekan1Start);
+      const pekan1EndStr = getWIBDate(pekan1End);
+      const pekan2Str = getWIBDate(pekan2Start);
+      const pekan2EndStr = getWIBDate(pekan2End);
+
+      function countPerPekan(from, to) {
+        const data = absenList.filter(a => a.tanggal >= from && a.tanggal <= to);
+        const mhsTidakHadir = new Set();
+        data.filter(a => a.status && a.status !== 'hadir').forEach(a => mhsTidakHadir.add(a.mahasiswaId));
+        const totalTidakHadir = data.filter(a => a.status && a.status !== 'hadir').length;
+        return { mhs: mhsTidakHadir.size, tidakHadir: totalTidakHadir, total: data.length };
+      }
+
+      const p1 = countPerPekan(pekan1Str, pekan1EndStr);
+      const p2 = countPerPekan(pekan2Str, pekan2EndStr);
+
+      if (chartPerbandingan) chartPerbandingan.destroy();
+      const ctx = document.getElementById('chartPerbandingan');
+      if (ctx) {
+        chartPerbandingan = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [
+              `Pekan 1\n${formatTanggalShort(pekan1Str)}-${formatTanggalShort(pekan1EndStr)}`,
+              `Pekan 2\n${formatTanggalShort(pekan2Str)}-${formatTanggalShort(pekan2EndStr)}`
+            ],
+            datasets: [
+              { label: 'Mhs Tidak Hadir', data: [p1.mhs, p2.mhs], backgroundColor: 'rgba(229,57,53,0.7)', borderColor: '#e53935', borderWidth: 2, borderRadius: 8 },
+              { label: 'Total Hari Absen', data: [p1.tidakHadir, p2.tidakHadir], backgroundColor: 'rgba(245,124,0,0.7)', borderColor: '#f57c00', borderWidth: 2, borderRadius: 8 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 11, weight: '600' } } } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+          }
         });
-      } else { text += `✅ Semua mahasiswa hadir!\n`; }
-      text += `\n━━━━━━━━━━━━━━━━\n© IPIM Maghfirah`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    };
+      }
+    }
 
-    window.exportExcel = function() {
-      const data = globalTidakHadirList.map(d => {
-        const m = mhsMapGlobal[d.mahasiswaId] || {};
-        const mk = mkMapGlobal[d.mkId] || {};
-        return {
-          Nama: m.nama||'-', Kelas: m.kelasNama||'-', MK: mk.nama||'-',
-          HariTidakHadir: d.hariTidakHadir, TotalJP: d.totalJP,
-          Sakit: d.sakit||0, Izin: d.izin||0, Alfa: d.alfa||0, Jaga: d.jaga||0,
-          Persentase: d.pct+'%'
-        };
+    // ── RENDER GENDER CHART ──
+    function renderGenderChart(dataPerMhs) {
+      let putra = 0, putri = 0;
+      dataPerMhs.forEach(d => {
+        if (d.jk === 'L') putra += d.jumlahHari;
+        else if (d.jk === 'P') putri += d.jumlahHari;
       });
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Tidak Hadir');
-      XLSX.writeFile(wb, 'rekap-tidak-hadir.xlsx');
-    };
 
-    window.logout = function() { if (confirm('Keluar?')) { auth.signOut().then(() => { localStorage.removeItem('user'); window.location.href = '../../index.html'; }); } };
-    loadFilters();
-    loadAll();
+      if (chartGender) chartGender.destroy();
+      const ctx = document.getElementById('chartGender');
+      if (ctx) {
+        chartGender = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Putra (L)', 'Putri (P)'],
+            datasets: [{
+              data: [putra, putri],
+              backgroundColor: ['rgba(30,136,229,0.8)', 'rgba(236,72,153,0.8)'],
+              borderColor: ['#1e88e5', '#ec4899'],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { font: { size: 12, weight: '600' } } },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const total = putra + putri;
+                    const pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
+                    return `${context.label}: ${context.parsed} hari (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // ── RENDER TABLE ──
+    function renderTable(data) {
+      const wrapper = document.getElementById('tableWrapper');
+      document.getElementById('totalTidakHadir').textContent =
+        `${data.length} mahasiswa pernah tidak hadir`;
+
+      if (data.length === 0) {
+        wrapper.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-circle-check" style="color: #1b5e20;"></i>
+            <p>✅ Semua mahasiswa hadir pada periode ini!</p>
+          </div>`;
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50px; text-align: center;">No</th>
+              <th>Nama Mahasiswa</th>
+              <th style="text-align: center;">JK</th>
+              <th>Kelas</th>
+              <th style="text-align: center;">Jumlah Hari</th>
+              <th style="text-align: center;">Sakit</th>
+              <th style="text-align: center;">Izin</th>
+              <th style="text-align: center;">Alfa</th>
+              <th style="text-align: center;">Jaga</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      data.forEach((d, i) => {
+        const countClass = d.jumlahHari >= 5 ? 'low' : d.jumlahHari >= 3 ? 'mid' : 'good';
+        const jkLabel = d.jk === 'L' ? '♂ L' : d.jk === 'P' ? '♀ P' : '-';
+        const jkBadge = d.jk === 'L' ? 'badge-blue' : d.jk === 'P' ? 'badge-purple' : '';
+
+        html += `
+          <tr>
+            <td style="text-align: center; font-weight: 700; color: var(--gray-400);">${i + 1}</td>
+            <td>
+              <div class="mhs-row-name">${d.nama}</div>
+              <div class="mhs-row-nim">NIM: ${d.nim}</div>
+            </td>
+            <td style="text-align: center;">
+              ${d.jk !== '-' ? `<span class="badge ${jkBadge}">${jkLabel}</span>` : '-'}
+            </td>
+            <td>${d.kelasNama}</td>
+            <td style="text-align: center;">
+              <span class="day-count ${countClass}">${d.jumlahHari}</span>
+            </td>
+            <td style="text-align: center;">
+              ${d.statuses.sakit ? `<span class="badge badge-orange">${d.statuses.sakit}</span>` : '<span style="color:var(--gray-400);">-</span>'}
+            </td>
+            <td style="text-align: center;">
+              ${d.statuses.izin ? `<span class="badge badge-blue">${d.statuses.izin}</span>` : '<span style="color:var(--gray-400);">-</span>'}
+            </td>
+            <td style="text-align: center;">
+              ${d.statuses.alfa ? `<span class="badge badge-red">${d.statuses.alfa}</span>` : '<span style="color:var(--gray-400);">-</span>'}
+            </td>
+            <td style="text-align: center;">
+              ${d.statuses.jaga ? `<span class="badge badge-purple">${d.statuses.jaga}</span>` : '<span style="color:var(--gray-400);">-</span>'}
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      wrapper.innerHTML = html;
+    }
+
+    // ── SHARE WA ──
+    function shareWA() {
+      if (currentData.length === 0) {
+        alert('⚠️ Tidak ada data untuk di-share!');
+        return;
+      }
+
+      const tglDari = document.getElementById('tglDari').value;
+      const tglSampai = document.getElementById('tglSampai').value;
+
+      let text = `📊 *REKAP ABSENSI MAHASISWA*\n`;
+      text += `📅 Periode: ${formatTanggalLong(tglDari)} s/d ${formatTanggalLong(tglSampai)}\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+      text += `👥 *Total:* ${currentData.length} mahasiswa pernah tidak hadir\n\n`;
+      text += `📋 *DAFTAR MAHASISWA:*\n`;
+
+      currentData.forEach((d, i) => {
+        text += `\n${i + 1}. *${d.nama}* (${d.kelasNama})\n`;
+        text += `   📅 ${d.jumlahHari} hari tidak hadir\n`;
+        const detail = [];
+        if (d.statuses.sakit) detail.push(`🤒 Sakit: ${d.statuses.sakit}`);
+        if (d.statuses.izin) detail.push(`📝 Izin: ${d.statuses.izin}`);
+        if (d.statuses.alfa) detail.push(`❌ Alfa: ${d.statuses.alfa}`);
+        if (d.statuses.jaga) detail.push(`🛡️ Jaga: ${d.statuses.jaga}`);
+        text += `   ${detail.join(' · ')}\n`;
+      });
+
+      text += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+      text += `📱 © IPIM Maghfirah`;
+
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // ── EXPORT EXCEL ──
+    function exportExcel() {
+      if (currentData.length === 0) {
+        alert('⚠️ Tidak ada data untuk di-export!');
+        return;
+      }
+
+      const tglDari = document.getElementById('tglDari').value;
+      const tglSampai = document.getElementById('tglSampai').value;
+
+      const rows = currentData.map((d, i) => ({
+        No: i + 1,
+        Nama: d.nama,
+        NIM: d.nim,
+        JK: d.jk === 'L' ? 'Laki-laki' : d.jk === 'P' ? 'Perempuan' : '-',
+        Kelas: d.kelasNama,
+        'Jumlah Hari': d.jumlahHari,
+        Sakit: d.statuses.sakit || 0,
+        Izin: d.statuses.izin || 0,
+        Alfa: d.statuses.alfa || 0,
+        Jaga: d.statuses.jaga || 0
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+      ws['!cols'] = [
+        { wch: 5 }, { wch: 25 }, { wch: 15 }, { wch: 12 },
+        { wch: 15 }, { wch: 12 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }
+      ];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Rekap Absensi');
+      XLSX.writeFile(wb, `rekap-absensi_${tglDari}_${tglSampai}.xlsx`);
+    }
+
+    // ── INIT ──
+    (async function init() {
+      initFilter();
+      await loadKelasOptions();
+      await loadMahasiswa();
+      await loadAll();
+    })();
   </script>
 </body>
 </html>
