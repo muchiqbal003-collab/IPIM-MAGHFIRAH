@@ -94,7 +94,7 @@
 
     <div class="card">
       <div class="card-header"><span><i class="fa-solid fa-circle-check" style="color:var(--green);"></i> Halaqoh yang SUDAH Absen</span></div>
-      <div class="card-body"><div class="halaqoh-list" id="sudahList"><p style="text-align:center;color:var(--gray-400);">Memutar...</p></div></div>
+      <div class="card-body"><div class="halaqoh-list" id="sudahList"><p style="text-align:center;color:var(--gray-400);">Memuat...</p></div></div>
     </div>
   </main>
 
@@ -109,7 +109,7 @@
     document.getElementById('sidebarName').textContent = user.nama || 'Admin';
     document.getElementById('avatarLetter').textContent = (user.nama || 'A').charAt(0).toUpperCase();
 
-    // ═══ HELPER: Tanggal lokal ═══
+    // ═══ HELPER: Tanggal lokal (WIB Bogor) ═══
     function getLocalDate() {
       const now = new Date();
       const y = now.getFullYear();
@@ -119,11 +119,12 @@
     }
 
     let allHalaqohData = [];
+    let belumData = [];   // ⬅️ Simpan data mentah untuk share
+    let sudahData = [];   // ⬅️ Simpan data mentah untuk share
     let belumCount = 0, sudahCount = 0;
     let currentDate = '';
 
     async function loadData() {
-      // ⬇️ PAKAI TANGGAL LOKAL
       currentDate = getLocalDate();
       document.getElementById('dateLabel').textContent = '📅 ' + new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
@@ -139,70 +140,112 @@
         const usersMap = {}; usersSnap.forEach(d => { usersMap[d.id] = d.data(); });
 
         const halaqohSudahAbsen = new Set(allAbsensi.map(a => a.halaqohId));
-        
-        const belumList = [], sudahList = [];
+
+        belumData = [];
+        sudahData = [];
 
         allHalaqohData.forEach(h => {
           const musyrifId = h.musyrifId || h.userId;
           const musyrif = usersMap[musyrifId] || {};
           const sudah = halaqohSudahAbsen.has(h.id);
 
-          const card = `<div class="halaqoh-card ${sudah ? 'sudah' : ''}">
+          const item = {
+            nama: h.nama || '-',
+            musyrifNama: musyrif.nama || musyrifId || 'Belum ada musyrif'
+          };
+
+          if (sudah) sudahData.push(item);
+          else belumData.push(item);
+        });
+
+        // Urutkan sesuai abjad A-Z
+        belumData.sort((a, b) => a.nama.localeCompare(b.nama));
+        sudahData.sort((a, b) => a.nama.localeCompare(b.nama));
+
+        belumCount = belumData.length;
+        sudahCount = sudahData.length;
+
+        // Render card list
+        const renderCard = (item, sudah) => `
+          <div class="halaqoh-card ${sudah ? 'sudah' : ''}">
             <div class="halaqoh-icon"><i class="fa-solid fa-mosque"></i></div>
             <div class="halaqoh-info">
-              <div class="halaqoh-nama">${h.nama||'-'}</div>
-              <div class="halaqoh-musyrif">👤 ${musyrif.nama||musyrifId||'Belum ada musyrif'}</div>
+              <div class="halaqoh-nama">${item.nama}</div>
+              <div class="halaqoh-musyrif">👤 ${item.musyrifNama}</div>
             </div>
             <span class="badge ${sudah ? 'badge-sudah' : 'badge-belum'}">${sudah ? '✅ Sudah' : '❌ Belum'}</span>
           </div>`;
 
-          if (sudah) sudahList.push(card); else belumList.push(card);
-        });
-
-        belumCount = belumList.length;
-        sudahCount = sudahList.length;
-
         document.getElementById('statsGrid').innerHTML = `
           <div class="stat-card"><div class="val">${allHalaqohData.length}</div><div class="lbl">Total Halaqoh</div></div>
-          <div class="stat-card"><div class="val" style="color:#1b5e20;">${sudahList.length}</div><div class="lbl">✅ Sudah Absen</div></div>
-          <div class="stat-card"><div class="val" style="color:#b71c1c;">${belumList.length}</div><div class="lbl">❌ Belum Absen</div></div>
+          <div class="stat-card"><div class="val" style="color:#1b5e20;">${sudahCount}</div><div class="lbl">✅ Sudah Absen</div></div>
+          <div class="stat-card"><div class="val" style="color:#b71c1c;">${belumCount}</div><div class="lbl">❌ Belum Absen</div></div>
         `;
 
-        document.getElementById('belumList').innerHTML = belumList.join('') || '<p style="text-align:center;color:#1b5e20;">✅ Semua halaqoh sudah absen!</p>';
-        document.getElementById('sudahList').innerHTML = sudahList.join('') || '<p style="text-align:center;color:var(--gray-400);">Belum ada yang absen</p>';
+        document.getElementById('belumList').innerHTML =
+          belumData.map(item => renderCard(item, false)).join('') ||
+          '<p style="text-align:center;color:#1b5e20;">✅ Semua halaqoh sudah absen!</p>';
+
+        document.getElementById('sudahList').innerHTML =
+          sudahData.map(item => renderCard(item, true)).join('') ||
+          '<p style="text-align:center;color:var(--gray-400);">Belum ada yang absen</p>';
 
       } catch(e) { console.error(e); }
     }
 
-    // ═══ SHARE KE WHATSAPP ═══
+    // ═══════════════════════════════════════════
+    // SHARE KE WHATSAPP — FORMAT RAPI
+    // ═══════════════════════════════════════════
     window.shareToWA = function() {
-      const dateStr = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-      
-      let text = `📊 *MONITORING ABSENSI HALAQOH*\n`;
-      text += `📅 ${dateStr}\n`;
-      text += `━━━━━━━━━━━━━━━━\n\n`;
-      text += `📊 Total: ${allHalaqohData.length} Halaqoh\n`;
-      text += `✅ Sudah Absen: ${sudahCount}\n`;
-      text += `❌ Belum Absen: ${belumCount}\n\n`;
+      const dateStr = new Date().toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
 
+      let text = '';
+
+      // Header
+      text += `🕌 *MONITORING ABSENSI HALAQOH*\n`;
+      text += `📅 ${dateStr}\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+      // Statistik
+      text += `📊 *Ringkasan:*\n`;
+      text += `   • Total Halaqoh  : *${allHalaqohData.length}*\n`;
+      text += `   • ✅ Sudah Absen : *${sudahCount}*\n`;
+      text += `   • ❌ Belum Absen : *${belumCount}*\n\n`;
+
+      // Belum Absen
       if (belumCount > 0) {
-        text += `⚠️ *Halaqoh yang BELUM Absen:*\n`;
-        allHalaqohData.forEach(h => {
-          const sudah = document.querySelector(`.halaqoh-card.sudah`) !== null; // fallback
-          // Kita pakai data dari loadData
+        text += `━━━━━━━━━━━━━━━━━━━━\n`;
+        text += `⚠️ *HALAQOH BELUM ABSEN* (${belumCount})\n`;
+        text += `━━━━━━━━━━━━━━━━━━━━\n`;
+        belumData.forEach((item, i) => {
+          text += `${i + 1}. *${item.nama}*\n`;
+          text += `     👤 ${item.musyrifNama}\n`;
         });
-        // Lebih baik rebuild list
-        const belumNames = [];
-        document.querySelectorAll('#belumList .halaqoh-card').forEach(card => {
-          const nama = card.querySelector('.halaqoh-nama')?.textContent || '-';
-          const musyrif = card.querySelector('.halaqoh-musyrif')?.textContent || '';
-          belumNames.push(`• ${nama} (${musyrif})`);
-        });
-        text += belumNames.join('\n') + '\n\n';
+        text += `\n`;
+      } else {
+        text += `✅ *Semua halaqoh sudah absen!*\n\n`;
       }
 
-      text += `━━━━━━━━━━━━━━━━\n`;
-      text += `© IPIM Maghfirah - Pusat Data`;
+      // Sudah Absen
+      if (sudahCount > 0) {
+        text += `━━━━━━━━━━━━━━━━━━━━\n`;
+        text += `✅ *HALAQOH SUDAH ABSEN* (${sudahCount})\n`;
+        text += `━━━━━━━━━━━━━━━━━━━━\n`;
+        sudahData.forEach((item, i) => {
+          text += `${i + 1}. *${item.nama}*\n`;
+          text += `     👤 ${item.musyrifNama}\n`;
+        });
+        text += `\n`;
+      }
+
+      // Footer
+      text += `━━━━━━━━━━━━━━━━━━━━\n`;
+      text += `📱 © IPIM Maghfirah`;
 
       const encoded = encodeURIComponent(text);
       window.open(`https://wa.me/?text=${encoded}`, '_blank');
